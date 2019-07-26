@@ -55,6 +55,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
     print('photolink: ${photoList }');
 
     return Card(
+      margin: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 10.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
       child: Container(
         child: Column(
@@ -67,7 +68,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.all(5.0),
+                      padding: EdgeInsets.all(10.0),
                       margin: EdgeInsets.only(bottom: 5.0),
                       child: Row(mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
@@ -90,6 +91,8 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
                                       fit: BoxFit.cover),
                                 ),);
                             },
+                            placeholder: (context, url) => Center(child: Container(
+                              child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 150.0,)),
                             errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
                           ),
                           Container(
@@ -113,7 +116,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
                   Container(margin: EdgeInsets.only(right: 5.0),
                       child: Image.asset(isLike?'images/like_fill.png':'images/like.png', width: 18.0,height: 18.0,)),
                   Text('${like} ${myString.txt_like}', style: TextStyle(color: myColor.colorPrimary, fontSize: fontSize.textSizeSmall),),
-                  Expanded(child: Row(mainAxisAlignment: MainAxisAlignment.end,children: <Widget>[Image.asset('images/save.png', width: 18.0,height: 18.0,),],))
+                  Expanded(child: Row(mainAxisAlignment: MainAxisAlignment.end,children: <Widget>[Image.asset('images/save.png', width: 20.0,height: 20.0,),],))
                 ],
               ),
             )
@@ -135,7 +138,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
 
   Widget getNoConnectionWidget(){
     return Container(
-      margin: EdgeInsets.only(top: 45.0, bottom: 10.0, left: 20.0, right: 10.0),
+      margin: EdgeInsets.only(top: 50.0, bottom: 20.0, left: 15.0, right: 15.0),
       child: Column(
         children: <Widget>[
           Row(
@@ -149,7 +152,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
                   ],
                 ),
               ),
-              CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorPrimary, radius: 30.0,)
+              CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
             ],
           ),
           Expanded(
@@ -174,7 +177,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
   Widget _renderLoad(){
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.only(top: 60.0, bottom: 10.0, left: 15.0, right: 15.0),
+        margin: EdgeInsets.only(top: 50.0, bottom: 20.0, left: 15.0, right: 15.0),
         child: Column(
           children: <Widget>[
             Row(
@@ -188,7 +191,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
                     ],
                   ),
                 ),
-                CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorPrimary, radius: 30.0,)
+                CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
               ],
             ),
             Center(
@@ -222,7 +225,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
             backgroundColor: myColor.colorGrey,
           ),*/
           SliverList(delegate: SliverChildBuilderDelegate((context, i) =>
-              ListTile(
+              /*ListTile(
                 title: i==0?Container(
                   margin: EdgeInsets.only(top: 50.0, bottom: 20.0),
                   child: Row(
@@ -242,7 +245,36 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
                 )
                     :Container(width: 0.0,height: 0.0,),
                 subtitle: _newsFeedList(i),
-              ), childCount: _newsFeedReactModel.length))
+              )*/
+              Container(
+                child: Column(
+                  children: <Widget>[
+                    i==0?Container(
+                      margin: EdgeInsets.only(top: 50.0, bottom: 20.0, left: 15.0, right: 15.0),
+                      child: Column(
+                        children: <Widget>[
+                          Row(
+                            children: <Widget>[
+                              Expanded(
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
+                                    Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
+                                  ],
+                                ),
+                              ),
+                              CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
+                            ],
+                          ),
+                        ],
+                      ),
+                    ):Container(width: 0.0,height: 0.0,),
+                    _newsFeedList(i)
+                  ],
+                )
+              )
+              , childCount: _newsFeedReactModel.length))
         ],
       )
     );
