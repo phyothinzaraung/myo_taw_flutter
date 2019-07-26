@@ -67,7 +67,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
                 child: Column(
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.all(5.0),
+                      padding: EdgeInsets.all(15.0),
                       margin: EdgeInsets.only(bottom: 5.0),
                       child: Row(mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
