@@ -7,6 +7,7 @@ class myColor{
   static final Color colorTextBlack = Color(0xff444547);
   static final Color colorGreyDark = Color(0xffd9dadb);
   static final Color colorGrey = Color(0xfff2f3f4);
+  static final Color colorBlackSemiTranparent = Color(0xffB2000000);
 }
 
 class fontSize{

@@ -54,122 +54,71 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
     List photoList = newsFeedModel.photoList;
     print('photolink: ${photoList }');
 
-    return new  Container(
-      margin: EdgeInsets.only(bottom: 10.0),
-      color: Colors.white,
-      child: Column(
-        children: <Widget>[
-          /*newsFeedPhoto!=null?Image.network(baseUrl.NEWS_FEED_CONTENT_URL+newsFeedPhoto,
-            fit: BoxFit.cover, height: 150.0,width: double.maxFinite,) :
-              Image.asset('images/placeholder_newsfeed.jpg'),*/
-          GestureDetector(
-            onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> NewsFeedDetailScreen(newsFeedModel)));
-            },
-            child: Container(
-              child: Column(
-                children: <Widget>[
-                  CachedNetworkImage(
-                    imageUrl: newsFeedPhoto!=null?baseUrl.NEWS_FEED_CONTENT_URL+newsFeedPhoto:'',
-                    imageBuilder: (context, image){
-                      return Container(
-                        width: double.maxFinite,
-                        height: 150.0,
-                        decoration: BoxDecoration(
-                          image: DecorationImage(
-                              image: image,
-                              fit: BoxFit.cover),
-                        ),);
-                    },
-                    errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
-                  ),
-                  Container(
-                    padding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 25.0, right: 25.0),
-                    child: Column(
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(bottom: 15.0),
-                          child: Row(
-                            children: <Widget>[
-                              Image.asset('images/calendar.png',width: 18.0,height: 15.0,),
-                              Expanded(
-                                  child: Container(
-                                      margin: EdgeInsets.only(left: 10.0),
-                                      child: Text(date, style: TextStyle(color: myColor.colorTextGrey, fontSize: fontSize.textSizeSmall),)))
-                            ],
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 5.0),
-                          child: Row(mainAxisAlignment: MainAxisAlignment.start,
-                            children: <Widget>[
-                              Flexible(child: Text(title!=null?title:'---',style: TextStyle(fontSize: fontSize.textSizeLarge)))
-                            ],),
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: <Widget>[
-                            Container(
-                              alignment: Alignment.center,
-                              width: 70,
-                              height: 35,
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                    topLeft: const Radius.circular(20.0),
-                                    topRight: const Radius.circular(20.0),
-                                    bottomRight: const Radius.circular(20.0),
-                                    bottomLeft: const Radius.circular(20.0),
-                                  ),
-                                  color: myColor.colorPrimary
-                              ),
-                              child: Text('${like} Like', style: TextStyle(color: Colors.white, fontSize: fontSize.textSizeSmall),),
-                            )
-                          ],
-                        ),
-                      ],
+    return Card(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            GestureDetector(
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedDetailScreen(newsFeedModel)));
+              },
+              child: Container(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                      padding: EdgeInsets.all(5.0),
+                      margin: EdgeInsets.only(bottom: 5.0),
+                      child: Row(mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget>[
+                          Flexible(child: Text(title!=null?title:'---',style: TextStyle(fontSize: fontSize.textSizeNormal), maxLines: 2, softWrap: true,))
+                        ],),
                     ),
-                  ),
-                ],
+                    Container(
+                      child: Stack(
+                        alignment: Alignment.bottomLeft,
+                        children: <Widget>[
+                          CachedNetworkImage(
+                            imageUrl: newsFeedPhoto!=null?baseUrl.NEWS_FEED_CONTENT_URL+newsFeedPhoto:'',
+                            imageBuilder: (context, image){
+                              return Container(
+                                width: double.maxFinite,
+                                height: 150.0,
+                                decoration: BoxDecoration(
+                                  image: DecorationImage(
+                                      image: image,
+                                      fit: BoxFit.cover),
+                                ),);
+                            },
+                            errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
+                          ),
+                          Container(
+                              padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
+                              decoration: BoxDecoration(
+                                  borderRadius: BorderRadius.only(topRight: Radius.circular(10.0)),
+                                  color: Colors.black.withOpacity(0.6)
+                              ),
+                              child: Text(date, style: TextStyle(color: Colors.white),)),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
               ),
             ),
-          ),
-          Divider(
-            height: 0.0,
-            color: myColor.colorGreyDark,
-          ),
-          Card(
-            margin: EdgeInsets.all(0.0),
-            elevation: 5.0,
-            child: Container(
-              margin: EdgeInsets.only(top: 0.0, bottom: 0.0),
+            Container(
+              padding: EdgeInsets.all(10.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  FlatButton(onPressed: (){
-
-                  },
-                      child: Row(
-                        children: <Widget>[
-                          Container(margin: EdgeInsets.only(right: 10.0),
-                              child: Image.asset(isLike?'images/like_fill.png':'images/like.png', width: 23.0, height: 23.0,)),
-                          Text(myString.txt_like, style: TextStyle(color: myColor.colorPrimary),)
-                        ],
-                      )),
-                  FlatButton(onPressed: (){
-
-                  },
-                      child: Row(
-                        children: <Widget>[
-                          Container(margin: EdgeInsets.only(right: 10.0),
-                              child: Image.asset('images/save.png', width: 23.0, height: 23.0,)),
-                          Text(myString.txt_save, style: TextStyle(color: myColor.colorPrimary),)
-                        ],
-                      )),
+                  Container(margin: EdgeInsets.only(right: 5.0),
+                      child: Image.asset(isLike?'images/like_fill.png':'images/like.png', width: 18.0,height: 18.0,)),
+                  Text('${like} ${myString.txt_like}', style: TextStyle(color: myColor.colorPrimary, fontSize: fontSize.textSizeSmall),),
+                  Expanded(child: Row(mainAxisAlignment: MainAxisAlignment.end,children: <Widget>[Image.asset('images/save.png', width: 18.0,height: 18.0,),],))
                 ],
               ),
-            ),
-          ),
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
@@ -185,16 +134,38 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
   }
 
   Widget getNoConnectionWidget(){
-    return Center(
+    return Container(
+      margin: EdgeInsets.only(top: 45.0, bottom: 10.0, left: 20.0, right: 10.0),
       child: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          new Text("No Internet Connection"),
-          new FlatButton(
-              color: Colors.red,
-              child: new Text("Retry", style: TextStyle(color: Colors.white),),
-              onPressed: () => asyncLoaderState.currentState.reloadState())
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
+                    Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
+                  ],
+                ),
+              ),
+              CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorPrimary, radius: 30.0,)
+            ],
+          ),
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('No Internet Connection'),
+                  FlatButton(onPressed: (){
+                    asyncLoaderState.currentState.reloadState();
+                    }
+                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: myColor.colorPrimary,)
+                ],
+              ),
+            ),
+          )
         ],
       ),
     );
@@ -202,25 +173,30 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
 
   Widget _renderLoad(){
     return Scaffold(
-      appBar: AppBar(
-        elevation: 0.0,
-        backgroundColor: myColor.colorGrey,
-        title: Row(
+      body: Container(
+        margin: EdgeInsets.only(top: 60.0, bottom: 10.0, left: 15.0, right: 15.0),
+        child: Column(
           children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text('Myo taw', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge),),
-                  Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),)
-                ],
-              ),
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
+                      Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
+                    ],
+                  ),
+                ),
+                CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorPrimary, radius: 30.0,)
+              ],
             ),
-            CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorPrimary, radius: 20.0,)
+            Center(
+              child: CircularProgressIndicator(),
+            )
           ],
         ),
       ),
-      body: Center(child: CircularProgressIndicator(),)
     );
   }
 
@@ -234,7 +210,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
       renderError: ([error]) => getNoConnectionWidget(),
       renderSuccess: ({data}) => CustomScrollView(
         slivers: <Widget>[
-          SliverAppBar(
+          /*SliverAppBar(
             titleSpacing: 20.0,
             title: Row(
               children: <Widget>[
@@ -244,8 +220,29 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
               ],
             ),
             backgroundColor: myColor.colorGrey,
-          ),
-          SliverList(delegate: SliverChildBuilderDelegate((context, i) => _newsFeedList(i), childCount: _newsFeedReactModel.length))
+          ),*/
+          SliverList(delegate: SliverChildBuilderDelegate((context, i) =>
+              ListTile(
+                title: i==0?Container(
+                  margin: EdgeInsets.only(top: 50.0, bottom: 20.0),
+                  child: Row(
+                    children: <Widget>[
+                      Expanded(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
+                            Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
+                          ],
+                        ),
+                      ),
+                      CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorPrimary, radius: 30.0,)
+                    ],
+                  ),
+                )
+                    :Container(width: 0.0,height: 0.0,),
+                subtitle: _newsFeedList(i),
+              ), childCount: _newsFeedReactModel.length))
         ],
       )
     );
