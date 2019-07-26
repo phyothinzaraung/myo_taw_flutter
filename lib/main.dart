@@ -55,29 +55,35 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
         });
       }
     });
-    return Scaffold(
-      body: TabBarView(
-        children: [
-          newsFeedScreen(),
-          dashBoardScreen(),
-          notificationScreen(),
-        ],
-        controller: _tabController,
-      ),
-      bottomNavigationBar: Container(
-        color: Colors.white,
-        child: TabBar(
-          indicatorColor: Colors.white,
-          labelColor: myColor.colorPrimary,
-          indicatorSize: TabBarIndicatorSize.tab,
-          indicatorWeight: 2.0,
-          unselectedLabelColor: myColor.colorGreyDark,
-          controller: _tabController,
-          tabs: [
-            Tab(icon: Icon(MyFlutterApp.newsfeed, size: 20.0,)),
-            Tab(icon: Image.asset("images/dashboard.png",width: 20.0, height: 20.0,color: _isDashBoard? myColor.colorPrimary:myColor.colorGreyDark,)),
-            Tab(icon: Image.asset("images/notification.png",width: 20.0, height: 20.0,color: _isNotification? myColor.colorPrimary:myColor.colorGreyDark,))
+    return SafeArea(
+      top: false,
+      bottom: true,
+      left: false,
+      right: false,
+      child: Scaffold(
+        body: TabBarView(
+          children: [
+            newsFeedScreen(),
+            dashBoardScreen(),
+            notificationScreen(),
           ],
+          controller: _tabController,
+        ),
+        bottomNavigationBar: Container(
+          color: Colors.white,
+          child: TabBar(
+            indicatorColor: Colors.white,
+            labelColor: myColor.colorPrimary,
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicatorWeight: 2.0,
+            unselectedLabelColor: myColor.colorGreyDark,
+            controller: _tabController,
+            tabs: [
+              Tab(icon: Icon(MyFlutterApp.newsfeed, size: 20.0,)),
+              Tab(icon: Image.asset("images/dashboard.png",width: 20.0, height: 20.0,color: _isDashBoard? myColor.colorPrimary:myColor.colorGreyDark,)),
+              Tab(icon: Image.asset("images/notification.png",width: 20.0, height: 20.0,color: _isNotification? myColor.colorPrimary:myColor.colorGreyDark,))
+            ],
+          ),
         ),
       ),
     );
