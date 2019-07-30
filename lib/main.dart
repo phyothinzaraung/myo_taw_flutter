@@ -80,8 +80,8 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
             controller: _tabController,
             tabs: [
               Tab(icon: Icon(MyFlutterApp.newsfeed, size: 20.0,)),
-              Tab(icon: Image.asset("images/dashboard.png",width: 20.0, height: 20.0,color: _isDashBoard? myColor.colorPrimary:myColor.colorGreyDark,)),
-              Tab(icon: Image.asset("images/notification.png",width: 20.0, height: 20.0,color: _isNotification? myColor.colorPrimary:myColor.colorGreyDark,))
+              Tab(icon: Icon(Icons.dashboard)),
+              Tab(icon: Icon(Icons.notifications))
             ],
           ),
         ),

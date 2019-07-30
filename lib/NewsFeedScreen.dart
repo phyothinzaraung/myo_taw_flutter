@@ -10,6 +10,9 @@ import 'package:intl/intl.dart';
 import 'helper/ShowDateTimeHelper.dart';
 import 'Model/NewsFeedModel.dart';
 import 'NewsFeedDetailScreen.dart';
+import 'helper/MyLoadMore.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:connectivity/connectivity.dart';
 
 class newsFeedScreen extends StatefulWidget {
   @override
@@ -20,19 +23,52 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   Response response;
   List<NewsFeedReactModel> _newsFeedReactModel = new List<NewsFeedReactModel>();
+  ScrollController _scrollController = new ScrollController();
+  bool _isEnd , _isCon= false;
+  int page = 1;
+  int pageCount = 10;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _checkCon();
   }
 
-  _getNewsFeed() async{
-    response = await ServiceHelper().getNewsFeed(8, 1, 10, "0fc9d06a-a622-4288-975d-b5f414a9ad73");
-    var result = response.data['Results'];
-    for(var model in result){
-      _newsFeedReactModel.add(NewsFeedReactModel.fromJson(model));
+  _checkCon()async{
+    var conResult = await(Connectivity().checkConnectivity());
+    if (conResult == ConnectivityResult.none) {
+      _isCon = false;
+    }else{
+      _isCon = true;
     }
+    print('isCon : ${_isCon}');
+  }
+
+  _getNewsFeed(int p) async{
+    response = await ServiceHelper().getNewsFeed(8, p, pageCount, "0fc9d06a-a622-4288-975d-b5f414a9ad73");
+    List result = response.data['Results'];
+    print('loadmore: ${p}');
+    Fluttertoast.showToast(msg: 'page: ${p}', backgroundColor: Colors.black.withOpacity(0.6));
+    if(response.data != null){
+      if(result.length > 0){
+        for(var model in result){
+          _newsFeedReactModel.add(NewsFeedReactModel.fromJson(model));
+        }
+        setState(() {
+          _isEnd = false;
+        });
+      }else{
+        setState(() {
+          _isEnd = true;
+        });
+      }
+    }else{
+      setState(() {
+        _isEnd = true;
+      });
+    }
+    print('isEnd: ${_isEnd}');
   }
 
   bool _isLike(String reactType){
@@ -52,7 +88,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
     String like = newsFeedModel.likeCount.toString();
     bool isLike = _isLike(_newsFeedReactModel[i].reactType);
     List photoList = newsFeedModel.photoList;
-    print('photolink: ${photoList }');
+    //print('photolink: ${photoList }');
 
     return Card(
       margin: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 10.0),
@@ -62,7 +98,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
           children: <Widget>[
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedDetailScreen(newsFeedModel)));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedDetailScreen(newsFeedModel, photoList)));
               },
               child: Container(
                 child: Column(
@@ -129,16 +165,37 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
   Widget _listView(){
     return ListView.builder(
         itemCount: _newsFeedReactModel.length,
+        controller: _scrollController,
         physics: AlwaysScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int position){
-          return _newsFeedList(position);
+          return position==0?Container(
+            margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
+                          Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
+                        ],
+                      ),
+                    ),
+                    CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
+                  ],
+                ),
+              ],
+            ),
+          ):_newsFeedList(position);
         }
     );
   }
 
   Widget getNoConnectionWidget(){
     return Container(
-      margin: EdgeInsets.only(top: 50.0, bottom: 20.0, left: 15.0, right: 15.0),
+      margin: EdgeInsets.only(top: 48.0, bottom: 20.0, left: 15.0, right: 15.0),
       child: Column(
         children: <Widget>[
           Row(
@@ -163,6 +220,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
                   Text('No Internet Connection'),
                   FlatButton(onPressed: (){
                     asyncLoaderState.currentState.reloadState();
+                    _checkCon();
                     }
                     , child: Text('Retry', style: TextStyle(color: Colors.white),),color: myColor.colorPrimary,)
                 ],
@@ -174,10 +232,20 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
     );
   }
 
+  Future<bool> _loadMore() async {
+    await _checkCon();
+    if(_isCon){
+      page++;
+      await _getNewsFeed(page);
+      //Fluttertoast.showToast(msg: 'call loadmore');
+    }
+    return _isCon;
+  }
+
   Widget _renderLoad(){
     return Scaffold(
       body: Container(
-        margin: EdgeInsets.only(top: 50.0, bottom: 20.0, left: 15.0, right: 15.0),
+        margin: EdgeInsets.only(top: 48.0, bottom: 20.0, left: 15.0, right: 15.0),
         child: Column(
           children: <Widget>[
             Row(
@@ -203,97 +271,85 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
     );
   }
 
+  Future<Null> _handleRefresh() async {
+    await _checkCon();
+   if(_isCon){
+     _newsFeedReactModel.clear();
+     page = 0;
+     page++;
+     await _getNewsFeed(page);
+   }else{
+     Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: fontSize.textSizeSmall);
+   }
+    return null;
+  }
+
 
   @override
   Widget build(BuildContext context) {
     var _asyncLoader = new AsyncLoader(
       key: asyncLoaderState,
-      initState: () async => await _getNewsFeed(),
+      initState: () async => await _getNewsFeed(page),
       renderLoad: () => _renderLoad(),
       renderError: ([error]) => getNoConnectionWidget(),
-      renderSuccess: ({data}) => CustomScrollView(
-        slivers: <Widget>[
-          /*SliverAppBar(
-            titleSpacing: 20.0,
-            title: Row(
-              children: <Widget>[
-              Expanded(child: Text('သတင်းများ(တောင်ကြီး)', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge),)),
-              //Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge),),
-                CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorPrimary, radius: 20.0,)
-              ],
-            ),
-            backgroundColor: myColor.colorGrey,
-          ),*/
-          SliverList(delegate: SliverChildBuilderDelegate((context, i) =>
-              /*ListTile(
-                title: i==0?Container(
-                  margin: EdgeInsets.only(top: 50.0, bottom: 20.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
-                            Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
-                          ],
-                        ),
-                      ),
-                      CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorPrimary, radius: 30.0,)
-                    ],
-                  ),
-                )
-                    :Container(width: 0.0,height: 0.0,),
-                subtitle: _newsFeedList(i),
-              )*/
-              Container(
-                child: Column(
-                  children: <Widget>[
-                    i==0?Container(
-                      margin: EdgeInsets.only(top: 50.0, bottom: 20.0, left: 15.0, right: 15.0),
+      renderSuccess: ({data}) => Container(
+        child: RefreshIndicator(
+          onRefresh: _handleRefresh,
+          child: LoadMore(
+            isFinish: _isEnd,
+            onLoadMore: _loadMore,
+            delegate: DefaultLoadMoreDelegate(),
+            textBuilder: DefaultLoadMoreTextBuilder.english,
+            child: _listView()
+            /*CustomScrollView(
+              controller: _scrollController,
+              slivers: <Widget>[
+                SliverList(delegate: SliverChildBuilderDelegate((context, i) =>
+                    Container(
                       child: Column(
                         children: <Widget>[
-                          Row(
-                            children: <Widget>[
-                              Expanded(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
+                          i==0?Container(
+                            margin: EdgeInsets.only(top: 50.0, bottom: 20.0, left: 15.0, right: 15.0),
+                            child: Column(
+                              children: <Widget>[
+                                Row(
                                   children: <Widget>[
-                                    Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
-                                    Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: <Widget>[
+                                          Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
+                                          Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
+                                        ],
+                                      ),
+                                    ),
+                                    CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
                                   ],
                                 ),
-                              ),
-                              CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
-                            ],
-                          ),
+                              ],
+                            ),
+                          ):Container(width: 0.0,height: 0.0,),
+                          _newsFeedList(i)
                         ],
-                      ),
-                    ):Container(width: 0.0,height: 0.0,),
-                    _newsFeedList(i)
-                  ],
-                )
-              )
-              , childCount: _newsFeedReactModel.length))
-        ],
+                      )
+                    )
+                    , childCount: _newsFeedReactModel.length))
+              ],
+            ),*/
+          ),
+        ),
       )
     );
     return Scaffold(
       body: _asyncLoader,
     );
-    /*return Scaffold(
-      *//*appBar: AppBar(
-        title: Column(
-          children: <Widget>[
-            Text('Myo taw', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge),),
-            Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),)
-          ],
-        ),
-        elevation: 0.0,
-        backgroundColor: Colors.white,
-      ),*//*
-      body: _asyncLoader
-    );*/
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _scrollController.dispose();
   }
 
   @override
