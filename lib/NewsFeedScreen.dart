@@ -49,7 +49,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
   _getNewsFeed(int p) async{
     response = await ServiceHelper().getNewsFeed(8, p, pageCount, "0fc9d06a-a622-4288-975d-b5f414a9ad73");
     var result = response.data['Results'];
-    print('loadmore: ${result}');
+    print('loadmore: ${p}');
     Fluttertoast.showToast(msg: 'page: ${p}', backgroundColor: Colors.black.withOpacity(0.6));
     if(response.data != null){
       if(result.length > 0){
