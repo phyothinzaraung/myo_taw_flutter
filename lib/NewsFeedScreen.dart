@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myotaw/helper/myoTawConstant.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:dio/dio.dart';
-import 'helper/serviceHelper.dart';
+import 'helper/ServiceHelper.dart';
 import 'Model/NewsFeedReactModel.dart';
 import 'package:myotaw/helper/myoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -27,6 +27,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
   bool _isEnd , _isCon= false;
   int page = 1;
   int pageCount = 10;
+  Stream updateItemStream;
 
   @override
   void initState() {
@@ -79,15 +80,42 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
     }
   }
 
+  String photoOrThumbNail(String photo, String thumbNail, bool isPhoto){
+    String url = '';
+    if(isPhoto){
+      if(photo != null && photo.isNotEmpty){
+        url = baseUrl.NEWS_FEED_CONTENT_URL+photo;
+      }else{
+        url = '';
+      }
+    }else{
+      if(thumbNail != null && thumbNail.isNotEmpty){
+        url = thumbNail;
+      }else{
+        url = '';
+      }
+    }
+    return url;
+  }
 
-  Widget _newsFeedList(int i){
-    NewsFeedModel newsFeedModel = _newsFeedReactModel[i].newsFeedModel;
+  bool _isPhoto(String type){
+    if(type == 'Photo'){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
+
+  Widget _newsFeedList(NewsFeedReactModel newsFeedReactModel){
+    NewsFeedModel newsFeedModel = newsFeedReactModel.newsFeedModel;
     String newsFeedPhoto = newsFeedModel.photoUrl;
+    String newsFeedThumbNail = newsFeedModel.thumbNail;
     String title = newsFeedModel.title;
     String date = showDateTime(newsFeedModel.accesstime);
-    String like = newsFeedModel.likeCount.toString();
-    bool isLike = _isLike(_newsFeedReactModel[i].reactType);
-    List photoList = newsFeedModel.photoList;
+    int likeCount = newsFeedModel.likeCount;
+    bool isLike = _isLike(newsFeedReactModel.reactType);
+    bool isPhoto = _isPhoto(newsFeedModel.uploadType);
     //print('photolink: ${photoList }');
 
     return Card(
@@ -98,7 +126,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
           children: <Widget>[
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedDetailScreen(newsFeedModel, photoList)));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedDetailScreen(newsFeedModel)));
               },
               child: Container(
                 child: Column(
@@ -108,7 +136,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
                       margin: EdgeInsets.only(bottom: 5.0),
                       child: Row(mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Flexible(child: Text(title!=null?title:'---',style: TextStyle(fontSize: fontSize.textSizeNormal), maxLines: 2, softWrap: true,))
+                          Flexible(child: Text(title!=null?title:'---',style: TextStyle(fontSize: fontSize.textSizeSmall), maxLines: 2, softWrap: true,))
                         ],),
                     ),
                     Container(
@@ -116,7 +144,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
                         alignment: Alignment.bottomLeft,
                         children: <Widget>[
                           CachedNetworkImage(
-                            imageUrl: newsFeedPhoto!=null?baseUrl.NEWS_FEED_CONTENT_URL+newsFeedPhoto:'',
+                            imageUrl: photoOrThumbNail(newsFeedPhoto, newsFeedThumbNail, isPhoto),
                             imageBuilder: (context, image){
                               return Container(
                                 width: double.maxFinite,
@@ -149,10 +177,19 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
               padding: EdgeInsets.all(10.0),
               child: Row(
                 children: <Widget>[
-                  Container(margin: EdgeInsets.only(right: 5.0),
-                      child: Image.asset(isLike?'images/like_fill.png':'images/like.png', width: 18.0,height: 18.0,)),
-                  Text('${like} ${myString.txt_like}', style: TextStyle(color: myColor.colorPrimary, fontSize: fontSize.textSizeSmall),),
-                  Expanded(child: Row(mainAxisAlignment: MainAxisAlignment.end,children: <Widget>[Image.asset('images/save.png', width: 20.0,height: 20.0,),],))
+                  GestureDetector(
+                    onTap: (){
+                      Fluttertoast.showToast(msg: isLike?'Unlike':'Like');
+                      setState(() {
+                        likeCount++;
+                      });
+                    },
+                    child: Container(margin: EdgeInsets.only(right: 5.0),
+                        child: Image.asset(isLike?'images/like_fill.png':'images/like.png', width: 20.0,height: 20.0,)),
+                  ),
+                  Text('${likeCount} ${myString.txt_like}', style: TextStyle(color: myColor.colorPrimary, fontSize: fontSize.textSizeSmall),),
+                  Expanded(child: Row(mainAxisAlignment: MainAxisAlignment.end,
+                    children: <Widget>[Image.asset('images/save.png', width: 20.0,height: 20.0,),],))
                 ],
               ),
             )
@@ -188,7 +225,11 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
                 ),
               ],
             ),
-          ):_newsFeedList(position);
+          ):StreamBuilder(
+            initialData: _newsFeedReactModel[position],
+              stream: updateItemStream.where((item) => item.id == _newsFeedReactModel[position].newsFeedModel.id),
+              builder: (ctx, snapshot) => _newsFeedList(snapshot.data)
+          );
         }
     );
   }
@@ -301,41 +342,6 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
             delegate: DefaultLoadMoreDelegate(),
             textBuilder: DefaultLoadMoreTextBuilder.english,
             child: _listView()
-            /*CustomScrollView(
-              controller: _scrollController,
-              slivers: <Widget>[
-                SliverList(delegate: SliverChildBuilderDelegate((context, i) =>
-                    Container(
-                      child: Column(
-                        children: <Widget>[
-                          i==0?Container(
-                            margin: EdgeInsets.only(top: 50.0, bottom: 20.0, left: 15.0, right: 15.0),
-                            child: Column(
-                              children: <Widget>[
-                                Row(
-                                  children: <Widget>[
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
-                                          Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
-                                        ],
-                                      ),
-                                    ),
-                                    CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ):Container(width: 0.0,height: 0.0,),
-                          _newsFeedList(i)
-                        ],
-                      )
-                    )
-                    , childCount: _newsFeedReactModel.length))
-              ],
-            ),*/
           ),
         ),
       )

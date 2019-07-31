@@ -11,9 +11,9 @@ class myColor{
 }
 
 class fontSize{
-  static final double textSizeLarge = 18;
-  static final double textSizeNormal = 15;
-  static final double textSizeSmall = 13;
+  static final double textSizeLarge = 20;
+  static final double textSizeNormal = 17;
+  static final double textSizeSmall = 14;
 }
 
 class baseUrl{
