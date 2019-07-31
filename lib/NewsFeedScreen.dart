@@ -47,7 +47,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
-    response = await ServiceHelper().getNewsFeed(8, p, pageCount, "0fc9d06a-a622-4288-975d-b5f414a9ad73");
+    response = await ServiceHelper().getNewsFeed(8, 1, 10, "0fc9d06a-a622-4288-975d-b5f414a9ad73");
     var result = response.data['Results'];
     print('loadmore: ${result}');
     Fluttertoast.showToast(msg: 'page: ${p}', backgroundColor: Colors.black.withOpacity(0.6));
@@ -200,33 +200,40 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
   }
 
   Widget _listView(){
-    return ListView.builder(
-        itemCount: _newsFeedReactModel.length,
-        controller: _scrollController,
-        physics: AlwaysScrollableScrollPhysics(),
-        itemBuilder: (BuildContext context, int position){
-          return position==0?Container(
-            margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
-            child: Column(
-              children: <Widget>[
-                Row(
-                  children: <Widget>[
-                    Expanded(
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
-                          Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
-                        ],
-                      ),
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top: 48.0, left: 15.0, right: 15.0),
+          child: Column(
+            children: <Widget>[
+              Row(
+                children: <Widget>[
+                  Expanded(
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
+                        Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
+                      ],
                     ),
-                    CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
-                  ],
-                ),
-              ],
-            ),
-          ):_newsFeedList(position);
-        }
+                  ),
+                  CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
+                ],
+              ),
+            ],
+          ),
+        ),
+        Expanded(child: Container(
+          child: ListView.builder(
+              itemCount: _newsFeedReactModel.length,
+              controller: _scrollController,
+              physics: AlwaysScrollableScrollPhysics(),
+              itemBuilder: (BuildContext context, int i){
+                return _newsFeedList(i);
+              }
+          ),
+        ))
+      ],
     );
   }
 
