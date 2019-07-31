@@ -48,8 +48,8 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
 
   _getNewsFeed(int p) async{
     response = await ServiceHelper().getNewsFeed(8, p, pageCount, "0fc9d06a-a622-4288-975d-b5f414a9ad73");
-    List result = response.data['Results'];
-    print('loadmore: ${p}');
+    var result = response.data['Results'];
+    print('loadmore: ${result}');
     Fluttertoast.showToast(msg: 'page: ${p}', backgroundColor: Colors.black.withOpacity(0.6));
     if(response.data != null){
       if(result.length > 0){
@@ -107,14 +107,14 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
   }
 
 
-  Widget _newsFeedList(NewsFeedReactModel newsFeedReactModel){
-    NewsFeedModel newsFeedModel = newsFeedReactModel.newsFeedModel;
+  Widget _newsFeedList(int i){
+    NewsFeedModel newsFeedModel = _newsFeedReactModel[i].newsFeedModel;
     String newsFeedPhoto = newsFeedModel.photoUrl;
     String newsFeedThumbNail = newsFeedModel.thumbNail;
     String title = newsFeedModel.title;
     String date = showDateTime(newsFeedModel.accesstime);
     int likeCount = newsFeedModel.likeCount;
-    bool isLike = _isLike(newsFeedReactModel.reactType);
+    bool isLike = _isLike(_newsFeedReactModel[i].reactType);
     bool isPhoto = _isPhoto(newsFeedModel.uploadType);
     //print('photolink: ${photoList }');
 
@@ -225,11 +225,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
                 ),
               ],
             ),
-          ):StreamBuilder(
-            initialData: _newsFeedReactModel[position],
-              stream: updateItemStream.where((item) => item.id == _newsFeedReactModel[position].newsFeedModel.id),
-              builder: (ctx, snapshot) => _newsFeedList(snapshot.data)
-          );
+          ):_newsFeedList(position);
         }
     );
   }

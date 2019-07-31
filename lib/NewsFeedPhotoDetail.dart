@@ -39,6 +39,7 @@ class NewsFeedPhotoDetail extends StatelessWidget {
   Widget build(BuildContext context) {
     addPhoto();
     return Scaffold(
+      appBar: AppBar(),
       backgroundColor: Colors.black,
       body: Center(
         child: _photoList.isNotEmpty?

@@ -29,6 +29,7 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: AppBar(),
       backgroundColor: Colors.black,
       body: Center(
         child: Column(
