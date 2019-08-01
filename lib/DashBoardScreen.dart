@@ -1,17 +1,35 @@
 import 'package:flutter/material.dart';
+import 'helper/myoTawConstant.dart';
 
-class dashBoardScreen extends StatefulWidget {
+class DashBoardScreen extends StatefulWidget {
   @override
-  _dashBoardScreenState createState() => _dashBoardScreenState();
+  _DashBoardScreenState createState() => _DashBoardScreenState();
 }
 
-class _dashBoardScreenState extends State<dashBoardScreen> {
+class _DashBoardScreenState extends State<DashBoardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Text("Dashboard"),
-      ),
+      body: Container(
+        margin: EdgeInsets.only(top: 48.0, bottom: 20.0, left: 15.0, right: 15.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
+                      Text('ကဏ္ဍများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      )
     );
   }
 }

@@ -15,7 +15,7 @@ class ServiceHelper{
   return response;
  }
 
- likeReact<Response>(int userUniqueKey, int newsFeedId, int react) async{
+ likeReact<Response>(String userUniqueKey, String newsFeedId, String react) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(baseUrl.WEB_SERVICE_ROOT_ADDRESS_NEWSFEED+"newsfeedposted/iosreact",

@@ -14,12 +14,12 @@ import 'helper/MyLoadMore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:connectivity/connectivity.dart';
 
-class newsFeedScreen extends StatefulWidget {
+class NewsFeedScreen extends StatefulWidget {
   @override
-  _newsFeedScreenState createState() => _newsFeedScreenState();
+  _NewsFeedScreenState createState() => _NewsFeedScreenState();
 }
 
-class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAliveClientMixin {
+class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAliveClientMixin {
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   Response response;
   List<NewsFeedReactModel> _newsFeedReactModel = new List<NewsFeedReactModel>();
@@ -47,7 +47,7 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
-    response = await ServiceHelper().getNewsFeed(8, p, pageCount, "0fc9d06a-a622-4288-975d-b5f414a9ad73");
+    response = await ServiceHelper().getNewsFeed(8, p, pageCount, '0fc9d06a-a622-4288-975d-b5f414a9ad73');
     var result = response.data['Results'];
     print('loadmore: ${p}');
     Fluttertoast.showToast(msg: 'page: ${p}', backgroundColor: Colors.black.withOpacity(0.6));
@@ -113,10 +113,8 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
     String newsFeedThumbNail = newsFeedModel.thumbNail;
     String title = newsFeedModel.title;
     String date = showDateTime(newsFeedModel.accesstime);
-    int likeCount = newsFeedModel.likeCount;
     bool isLike = _isLike(_newsFeedReactModel[i].reactType);
     bool isPhoto = _isPhoto(newsFeedModel.uploadType);
-    //print('photolink: ${photoList }');
 
     return Card(
       margin: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 10.0),
@@ -179,15 +177,30 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
                 children: <Widget>[
                   GestureDetector(
                     onTap: (){
-                      Fluttertoast.showToast(msg: isLike?'Unlike':'Like');
+                      print('like: ${isLike}');
                       setState(() {
-                        likeCount++;
+                        if(_newsFeedReactModel[i].reactType == null){
+                          newsFeedModel.likeCount++;
+                          _newsFeedReactModel[i].reactType = 'like';
+                        }else{
+                          _newsFeedReactModel[i].reactType = null;
+                          if(newsFeedModel.likeCount >= 0){
+                            newsFeedModel.likeCount--;
+                          }
+                        }
+                        _callLikeWebService(newsFeedModel.uniqueKey);
                       });
                     },
-                    child: Container(margin: EdgeInsets.only(right: 5.0),
-                        child: Image.asset(isLike?'images/like_fill.png':'images/like.png', width: 20.0,height: 20.0,)),
+                    child: Row(
+                      children: <Widget>[
+                        Container(margin: EdgeInsets.only(right: 5.0),
+                            child: Image.asset(_newsFeedReactModel[i].reactType!=null?'images/like_fill.png':'images/like.png',
+                              width: 20.0,height: 20.0,)),
+                        Text('${newsFeedModel.likeCount} ${myString.txt_like}',
+                          style: TextStyle(color: myColor.colorPrimary, fontSize: fontSize.textSizeSmall),)
+                      ],
+                    ),
                   ),
-                  Text('${likeCount} ${myString.txt_like}', style: TextStyle(color: myColor.colorPrimary, fontSize: fontSize.textSizeSmall),),
                   Expanded(child: Row(mainAxisAlignment: MainAxisAlignment.end,
                     children: <Widget>[Image.asset('images/save.png', width: 20.0,height: 20.0,),],))
                 ],
@@ -197,6 +210,11 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
         ),
       ),
     );
+  }
+
+  void _callLikeWebService(String newsFeedId)async{
+    response = await ServiceHelper().likeReact('0fc9d06a-a622-4288-975d-b5f414a9ad73', newsFeedId, 'like');
+    print('responseLike: ${response}');
   }
 
   Widget _listView(){
@@ -285,30 +303,28 @@ class _newsFeedScreenState extends State<newsFeedScreen> with AutomaticKeepAlive
   }
 
   Widget _renderLoad(){
-    return Scaffold(
-      body: Container(
-        margin: EdgeInsets.only(top: 48.0, bottom: 20.0, left: 15.0, right: 15.0),
-        child: Column(
-          children: <Widget>[
-            Row(
-              children: <Widget>[
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
-                      Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
-                    ],
-                  ),
+    return Container(
+      margin: EdgeInsets.only(top: 48.0, bottom: 20.0, left: 15.0, right: 15.0),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
+                    Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
+                  ],
                 ),
-                CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
-              ],
-            ),
-            Center(
-              child: CircularProgressIndicator(),
-            )
-          ],
-        ),
+              ),
+              CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
+            ],
+          ),
+          Center(
+            child: CircularProgressIndicator(),
+          )
+        ],
       ),
     );
   }

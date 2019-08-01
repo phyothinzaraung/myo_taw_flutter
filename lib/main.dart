@@ -23,9 +23,6 @@ class MainScreen extends StatefulWidget {
 
 class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   TabController _tabController;
-  bool _isNewsFeed = true;
-  bool _isDashBoard = false;
-  bool _isNotification = false;
   @override
   void initState() {
     // TODO: implement initState
@@ -34,27 +31,6 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   }
   @override
   Widget build(BuildContext context) {
-    _tabController.addListener((){
-      if(_tabController.index == 0){
-        setState(() {
-          _isNewsFeed = true;
-          _isDashBoard = false;
-          _isNotification = false;
-        });
-      }else if(_tabController.index == 1){
-        setState(() {
-          _isNewsFeed = false;
-          _isDashBoard = true;
-          _isNotification = false;
-        });
-      }else{
-        setState(() {
-          _isNewsFeed = false;
-          _isDashBoard = false;
-          _isNotification = true;
-        });
-      }
-    });
     return SafeArea(
       top: false,
       bottom: true,
@@ -63,9 +39,9 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
       child: Scaffold(
         body: TabBarView(
           children: [
-            newsFeedScreen(),
-            dashBoardScreen(),
-            notificationScreen(),
+            NewsFeedScreen(),
+            DashBoardScreen(),
+            NotificationScreen(),
           ],
           controller: _tabController,
         ),

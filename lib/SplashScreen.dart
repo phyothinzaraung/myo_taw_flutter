@@ -3,6 +3,7 @@ import 'main.dart';
 import 'package:flutter/services.dart';
 import 'package:myotaw/helper/myoTawConstant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'LoginScreen.dart';
 
 class splashScreen extends StatefulWidget {
   @override
@@ -23,7 +24,7 @@ class _splashScreenState extends State<splashScreen> {
   navigateMainScreen() async{
     Future.delayed(Duration(seconds: 2), (){
       Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
-      MainScreen()));
+      LoginScreen()));
     });
   }
 
@@ -46,8 +47,8 @@ class _splashScreenState extends State<splashScreen> {
           children: <Widget>[
             Image.asset("images/myo_taw_splash_screen.jpg", scale: 7,),
             Padding(padding: EdgeInsets.only(bottom: 5.0),
-                child: Text('Myo Taw', style: TextStyle(fontSize: fontSize.textSizeLarge, color: myColor.colorPrimary),)),
-            Text("Version 1.0", style: TextStyle(fontSize: fontSize.textSizeNormal, color: myColor.colorTextGrey),)
+                child: Text('Myo Taw', style: TextStyle(fontSize: fontSize.textSizeNormal, color: myColor.colorPrimary),)),
+            Text("Version 1.0", style: TextStyle(fontSize: fontSize.textSizeSmall, color: myColor.colorTextGrey),)
           ],
         ),
       )
