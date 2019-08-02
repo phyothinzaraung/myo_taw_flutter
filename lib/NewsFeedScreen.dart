@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:myotaw/helper/myoTawConstant.dart';
+import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'Model/NewsFeedReactModel.dart';
-import 'package:myotaw/helper/myoTawConstant.dart';
+import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'helper/ShowDateTimeHelper.dart';
@@ -13,6 +13,9 @@ import 'NewsFeedDetailScreen.dart';
 import 'helper/MyLoadMore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:connectivity/connectivity.dart';
+import 'helper/SharePreferencesHelper.dart';
+import 'helper/UserDb.dart';
+import 'model/UserModel.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   @override
@@ -27,7 +30,9 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   bool _isEnd , _isCon= false;
   int page = 1;
   int pageCount = 10;
-  Stream updateItemStream;
+  Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
+  UserDb _userDb = UserDb.instance;
+  String _userName;
 
   @override
   // TODO: implement wantKeepAlive
@@ -38,6 +43,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     // TODO: implement initState
     super.initState();
     _checkCon();
+    _sharepreferenceshelper.initSharePref();
+    userName();
   }
 
   _checkCon()async{
@@ -55,23 +62,27 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     var result = response.data['Results'];
     print('loadmore: ${p}');
     Fluttertoast.showToast(msg: 'page: ${p}', backgroundColor: Colors.black.withOpacity(0.6));
-    if(response.data != null){
-      if(result.length > 0){
-        for(var model in result){
-          _newsFeedReactModel.add(NewsFeedReactModel.fromJson(model));
+    if(response.statusCode == 200){
+      if(result != null){
+        if(result.length > 0){
+          for(var model in result){
+            _newsFeedReactModel.add(NewsFeedReactModel.fromJson(model));
+          }
+          setState(() {
+            _isEnd = false;
+          });
+        }else{
+          setState(() {
+            _isEnd = true;
+          });
         }
-        setState(() {
-          _isEnd = false;
-        });
       }else{
         setState(() {
           _isEnd = true;
         });
       }
     }else{
-      setState(() {
-        _isEnd = true;
-      });
+      Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
     }
     print('isEnd: ${_isEnd}');
   }
@@ -108,6 +119,16 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     }else{
       return false;
     }
+  }
+
+  void userName() async{
+    var result = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    result.map((UserModel){
+      setState(() {
+        _userName = UserModel.name;
+      });
+    });
+    print('usernamesqlite: ${_userName}');
   }
 
 

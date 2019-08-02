@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'helper/myoTawConstant.dart';
+import 'helper/MyoTawConstant.dart';
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 

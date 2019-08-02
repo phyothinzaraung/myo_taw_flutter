@@ -7,7 +7,7 @@ class myColor{
   static final Color colorTextBlack = Color(0xff444547);
   static final Color colorGreyDark = Color(0xffd9dadb);
   static final Color colorGrey = Color(0xfff2f3f4);
-  static final Color colorBlackSemiTranparent = Color(0xffB2000000);
+  static final Color colorBlackSemiTransparent = Color(0xffB2000000);
 }
 
 class fontSize{
@@ -17,6 +17,7 @@ class fontSize{
 }
 
 class baseUrl{
+  static final String WEB_SERVICE_ROOT_ADDRESS = "https://cityappapi.azurewebsites.net/api/";
   static final String WEB_SERVICE_ROOT_ADDRESS_NEWSFEED = "https://generalcontentproviderapi.azurewebsites.net/api/";
   static final String NEWS_FEED_CONTENT_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/NewsFeed/";
 }

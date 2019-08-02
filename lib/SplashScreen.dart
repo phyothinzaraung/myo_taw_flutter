@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'main.dart';
 import 'package:flutter/services.dart';
-import 'package:myotaw/helper/myoTawConstant.dart';
+import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'LoginScreen.dart';
 

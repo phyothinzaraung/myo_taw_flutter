@@ -1,6 +1,6 @@
 import 'dart:core';
 import 'package:dio/dio.dart';
-import 'package:myotaw/helper/myoTawConstant.dart';
+import 'package:myotaw/helper/MyoTawConstant.dart';
 
 class ServiceHelper{
  var response;
@@ -20,6 +20,14 @@ class ServiceHelper{
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(baseUrl.WEB_SERVICE_ROOT_ADDRESS_NEWSFEED+"newsfeedposted/iosreact",
       queryParameters: {"userguid": userUniqueKey, "nfguid": newsFeedId, "react": react});
+  return response;
+ }
+
+ userLogin<Response>(String PhoneNo, String RegionCode, String Token, String Resource) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(baseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/LoginForAndroid",
+      queryParameters: {"PhoneNO": PhoneNo, "RegionCode": RegionCode, "Token": Token, "Resource": Resource});
   return response;
  }
 

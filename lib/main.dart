@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:myotaw/helper/myoTawConstant.dart';
+import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'SplashScreen.dart';
 import 'NewsFeedScreen.dart';
 import 'DashBoardScreen.dart';

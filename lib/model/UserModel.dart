@@ -1,0 +1,133 @@
+
+class UserModel{
+  String _uniqueKey;
+  String _name;
+  String _phoneNo;
+  String _photoUrl;
+  String _state;
+  String _township;
+  String _address;
+  String _registeredDate;
+  String _accesstime;
+  bool _isDeleted;
+  String _resource;
+  String _androidToken;
+  String _currentRegionCode;
+  int _pinCode;
+  int _amount;
+
+
+  String get uniqueKey => _uniqueKey;
+
+  set uniqueKey(String value) {
+    _uniqueKey = value;
+  }
+
+  String get name => _name;
+
+  String get currentRegionCode => _currentRegionCode;
+
+  set currentRegionCode(String value) {
+    _currentRegionCode = value;
+  }
+
+  String get androidToken => _androidToken;
+
+  set androidToken(String value) {
+    _androidToken = value;
+  }
+
+  String get resource => _resource;
+
+  set resource(String value) {
+    _resource = value;
+  }
+
+  bool get isDeleted => _isDeleted;
+
+  set isDeleted(bool value) {
+    _isDeleted = value;
+  }
+
+  String get accesstime => _accesstime;
+
+  set accesstime(String value) {
+    _accesstime = value;
+  }
+
+  String get registeredDate => _registeredDate;
+
+  set registeredDate(String value) {
+    _registeredDate = value;
+  }
+
+  String get address => _address;
+
+  set address(String value) {
+    _address = value;
+  }
+
+  String get township => _township;
+
+  set township(String value) {
+    _township = value;
+  }
+
+  String get state => _state;
+
+  set state(String value) {
+    _state = value;
+  }
+
+  String get photoUrl => _photoUrl;
+
+  set photoUrl(String value) {
+    _photoUrl = value;
+  }
+
+  String get phoneNo => _phoneNo;
+
+  set phoneNo(String value) {
+    _phoneNo = value;
+  }
+
+  set name(String value) {
+    _name = value;
+  }
+
+
+  int get pinCode => _pinCode;
+
+  set pinCode(int value) {
+    _pinCode = value;
+  }
+
+  int get amount => _amount;
+
+  set amount(int value) {
+    _amount = value;
+  }
+
+  UserModel.map(dynamic obj){
+    _uniqueKey = obj['_id'];
+    _name = obj['_name'];
+    _phoneNo = obj['_phNo'];
+  }
+
+  UserModel.fromJson(Map<String, dynamic> json):
+        _uniqueKey = json['UniqueKey'],
+        _name = json['Name'],
+        _phoneNo = json['PhoneNo'],
+        _photoUrl = json['PhotoUrl'],
+        _state = json['State'],
+        _township = json['Township'],
+        _address = json['Address'],
+        _registeredDate = json['RegisteredDate'],
+        _accesstime = json['Accesstime'],
+        _isDeleted = json['IsDeleted'],
+        _resource = json['Resource'],
+        _androidToken = json['AndroidToken'],
+        _currentRegionCode = json['CurrentRegionCode'],
+        _pinCode = json['PinCode'],
+        _amount = json['Amount'];
+}

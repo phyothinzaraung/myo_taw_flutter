@@ -1,4 +1,3 @@
-import 'NewsFeedPhotoModel.dart';
 
 class NewsFeedModel{
   String _uniqueKey;
