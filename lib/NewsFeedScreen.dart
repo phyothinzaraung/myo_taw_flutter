@@ -19,7 +19,7 @@ class NewsFeedScreen extends StatefulWidget {
   _NewsFeedScreenState createState() => _NewsFeedScreenState();
 }
 
-class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAliveClientMixin {
+class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAliveClientMixin<NewsFeedScreen> {
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   Response response;
   List<NewsFeedReactModel> _newsFeedReactModel = new List<NewsFeedReactModel>();
@@ -28,6 +28,10 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   int page = 1;
   int pageCount = 10;
   Stream updateItemStream;
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -374,8 +378,4 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     super.dispose();
     _scrollController.dispose();
   }
-
-  @override
-  // TODO: implement wantKeepAlive
-  bool get wantKeepAlive => true;
 }
