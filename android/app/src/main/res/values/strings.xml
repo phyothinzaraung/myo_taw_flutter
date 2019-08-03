@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">myo_taw_flutter</string>
+    <string name="app_name">Myo Taw</string>
     <string name="FACEBOOK_APP_ID">466885550709623</string>
     <string name="ACCOUNT_KIT_CLIENT_TOKEN">531cf532411381bb0f91151fd1e4eefe</string>
 </resources>

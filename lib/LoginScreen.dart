@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
           ),
           facebookNotificationsEnabled: true,
           receiveSMS: true,
-          readPhoneStateEnabled: true,
+          readPhoneStateEnabled: false,
         )
       );
     }on PlatformException{
