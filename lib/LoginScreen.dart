@@ -46,13 +46,23 @@ class _LoginScreenState extends State<LoginScreen> {
       await _flutterAccountKit.configure(
         Config(
           theme: AccountKitTheme(
-              headerBackgroundColor: Colors.lightBlueAccent,
+              headerBackgroundColor: myColor.colorPrimaryDark,
               buttonBackgroundColor: Colors.white,
-              buttonBorderColor: Colors.lightBlue,
-              buttonTextColor: Colors.teal,
-              backgroundColor: Colors.teal,
+              buttonBorderColor: Colors.white,
+              buttonTextColor: myColor.colorPrimary,
+              backgroundColor: myColor.colorPrimary,
               statusBarStyle: StatusBarStyle.defaultStyle,
-              inputBackgroundColor: Colors.teal
+              inputBackgroundColor: Colors.white,
+              headerButtonTextColor: Colors.white,
+              inputBorderColor: Colors.white,
+              inputTextColor: myColor.colorBlackSemiTransparent,
+              buttonDisabledBackgroundColor: myColor.colorGreyDark,
+              buttonDisabledBorderColor: myColor.colorGrey,
+              buttonDisabledTextColor: myColor.colorBlackSemiTransparent,
+              titleColor: Colors.white,
+              headerTextColor: Colors.white,
+              textColor: Colors.white,
+              iconColor: Colors.white
           ),
           facebookNotificationsEnabled: true,
           receiveSMS: true,

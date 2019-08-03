@@ -1,7 +1,6 @@
 import 'package:myotaw/helper/DbHelper.dart';
-import 'package:scoped_model/scoped_model.dart';
 
-class UserModel extends Model{
+class UserModel{
   String _uniqueKey;
   String _name;
   String _phoneNo;
