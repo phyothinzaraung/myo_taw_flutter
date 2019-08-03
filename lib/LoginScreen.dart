@@ -42,27 +42,28 @@ class _LoginScreenState extends State<LoginScreen> {
     print('Init account kit called');
     bool initialized = false;
     try{
-      final theme =
       await _flutterAccountKit.configure(
         Config(
           theme: AccountKitTheme(
-              headerBackgroundColor: myColor.colorPrimaryDark,
-              buttonBackgroundColor: Colors.white,
-              buttonBorderColor: Colors.white,
-              buttonTextColor: myColor.colorPrimary,
-              backgroundColor: myColor.colorPrimary,
-              statusBarStyle: StatusBarStyle.defaultStyle,
-              inputBackgroundColor: Colors.white,
+              headerBackgroundColor: myColor.colorPrimary,
+              backgroundColor: myColor.colorPrimaryDark,
+              statusBarStyle: StatusBarStyle.lightStyle,
               headerButtonTextColor: Colors.white,
-              inputBorderColor: Colors.white,
-              inputTextColor: myColor.colorBlackSemiTransparent,
-              buttonDisabledBackgroundColor: myColor.colorGreyDark,
-              buttonDisabledBorderColor: myColor.colorGrey,
-              buttonDisabledTextColor: myColor.colorBlackSemiTransparent,
               titleColor: Colors.white,
               headerTextColor: Colors.white,
               textColor: Colors.white,
-              iconColor: Colors.white
+              iconColor: Colors.white,
+
+              buttonBackgroundColor: myColor.colorPrimaryDark,
+              buttonBorderColor: Colors.white,
+              buttonTextColor: Colors.white,
+              buttonDisabledBackgroundColor: myColor.colorGreyDark,
+              buttonDisabledBorderColor: myColor.colorGrey,
+              buttonDisabledTextColor: myColor.colorGrey,
+
+              inputBackgroundColor: myColor.colorPrimaryDark,
+              inputBorderColor: Colors.white,
+              inputTextColor: Colors.white,
           ),
           facebookNotificationsEnabled: true,
           receiveSMS: true,

@@ -50,7 +50,7 @@ class _splashScreenState extends State<splashScreen> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
       statusBarColor: myColor.colorPrimaryDark,
       systemNavigationBarIconBrightness: Brightness.dark,
-      statusBarBrightness: Brightness.dark
+      statusBarBrightness: Brightness.light
     ));
     return Scaffold(
       backgroundColor: Colors.white,
