@@ -11,6 +11,7 @@ import 'model/UserModel.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'helper/UserDb.dart';
+import 'helper/DbHelper.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -94,9 +95,9 @@ class _LoginScreenState extends State<LoginScreen> {
       if(result != null){
         _userModel = UserModel.fromJson(result);
         _sharePrefHelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, _userModel.currentRegionCode);
-        //await _insert(_userModel);
+        await _insert(_userModel);
         Fluttertoast.showToast(msg: 'Login Success', backgroundColor: Colors.black.withOpacity(0.7));
-        //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
         print('userModel: ${_userModel.uniqueKey} ${_userModel.state}');
       }else{
         Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
@@ -108,21 +109,21 @@ class _LoginScreenState extends State<LoginScreen> {
 
  void _insert(UserModel model)async{
    Map<String, dynamic> row = {
-     UserDb.COLUMN_USER_UNIQUE : model.uniqueKey,
-     UserDb.COLUMN_USER_NAME : model.name,
-     UserDb.COLUMN_USER_PHONE_NO : model.phoneNo,
-     UserDb.COLUMN_USER_PHOTO_URL : model.photoUrl,
-     UserDb.COLUMN_USER_STATE : model.state,
-     UserDb.COLUMN_USER_TOWNSHIP : model.township,
-     UserDb.COLUMN_USER_ADDRESS : model.address,
-     UserDb.COLUMN_USER_REGISTERED_DATE : model.registeredDate,
-     UserDb.COLUMN_USER_ACCESSTIME : model.accesstime,
-     UserDb.COLUMN_USER_IS_DELETED : model.isDeleted,
-     UserDb.COLUMN_USER_RESOURCE : model.resource,
-     UserDb.COLUMN_USER_ANDROID_TOKEN : model.androidToken,
-     UserDb.COLUMN_USER_CURRENT_REGION_CODE : model.currentRegionCode,
-     UserDb.COLUMN_USER_PIN_CODE : model.pinCode,
-     UserDb.COLUMN_USER_AMOUNT : model.amount
+     DbHelper.COLUMN_USER_UNIQUE : model.uniqueKey,
+     DbHelper.COLUMN_USER_NAME : model.name,
+     DbHelper.COLUMN_USER_PHONE_NO : model.phoneNo,
+     DbHelper.COLUMN_USER_PHOTO_URL : model.photoUrl,
+     DbHelper.COLUMN_USER_STATE : model.state,
+     DbHelper.COLUMN_USER_TOWNSHIP : model.township,
+     DbHelper.COLUMN_USER_ADDRESS : model.address,
+     DbHelper.COLUMN_USER_REGISTERED_DATE : model.registeredDate,
+     DbHelper.COLUMN_USER_ACCESSTIME : model.accesstime,
+     DbHelper.COLUMN_USER_IS_DELETED : model.isDeleted,
+     DbHelper.COLUMN_USER_RESOURCE : model.resource,
+     DbHelper.COLUMN_USER_ANDROID_TOKEN : model.androidToken,
+     DbHelper.COLUMN_USER_CURRENT_REGION_CODE : model.currentRegionCode,
+     DbHelper.COLUMN_USER_PIN_CODE : model.pinCode,
+     DbHelper.COLUMN_USER_AMOUNT : model.amount
    };
    await userDb.insert(row);
  }
@@ -212,7 +213,8 @@ class _LoginScreenState extends State<LoginScreen> {
                         await _checkCon();
                         if(_isCon){
                           //_loginAccountKit();
-                          webService('+959254900916');
+                          //webService('+959254900916');
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => MainScreen()));
                         }else{
                           Fluttertoast.showToast(msg: 'No Internet Connection', backgroundColor: Colors.black.withOpacity(0.7));
                         }

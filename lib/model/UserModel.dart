@@ -1,3 +1,4 @@
+import 'package:myotaw/helper/DbHelper.dart';
 
 class UserModel{
   String _uniqueKey;
@@ -130,4 +131,21 @@ class UserModel{
         _currentRegionCode = json['CurrentRegionCode'],
         _pinCode = json['PinCode'],
         _amount = json['Amount'];
+
+  UserModel.fromMap(Map<String, dynamic> map):
+        _uniqueKey = map[DbHelper.COLUMN_USER_UNIQUE],
+        _name = map[DbHelper.COLUMN_USER_NAME],
+        _phoneNo = map[DbHelper.COLUMN_USER_PHONE_NO],
+        _photoUrl = map[DbHelper.COLUMN_USER_PHOTO_URL],
+        _state = map[DbHelper.COLUMN_USER_STATE],
+        _township = map[DbHelper.COLUMN_USER_TOWNSHIP],
+        _address = map[DbHelper.COLUMN_USER_ADDRESS],
+        _registeredDate = map[DbHelper.COLUMN_USER_REGISTERED_DATE],
+        _accesstime = map[DbHelper.COLUMN_USER_ACCESSTIME],
+        _isDeleted = map[DbHelper.COLUMN_USER_IS_DELETED],
+        _resource = map[DbHelper.COLUMN_USER_RESOURCE],
+        _androidToken = map[DbHelper.COLUMN_USER_ANDROID_TOKEN],
+        _currentRegionCode = map[DbHelper.COLUMN_USER_CURRENT_REGION_CODE],
+        _pinCode = map[DbHelper.COLUMN_USER_PIN_CODE],
+        _amount = map[DbHelper.COLUMN_USER_AMOUNT];
 }
