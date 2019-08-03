@@ -42,8 +42,7 @@
             android:value="false"/>
         <activity
             android:name="com.facebook.accountkit.ui.AccountKitActivity"
-            android:screenOrientation="portrait"
-            android:theme="@style/CustomFbAccountkitStyle"
+            android:theme="@style/accountKitTheme"
             tools:replace="android:theme" />
     </application>
 </manifest>
