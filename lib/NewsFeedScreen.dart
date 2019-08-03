@@ -17,8 +17,10 @@ import 'model/UserModel.dart';
 import 'helper/MyoTawConstant.dart';
 
 class NewsFeedScreen extends StatefulWidget {
+  UserModel model;
+  NewsFeedScreen(this.model);
   @override
-  _NewsFeedScreenState createState() => _NewsFeedScreenState();
+  _NewsFeedScreenState createState() => _NewsFeedScreenState(this.model);
 }
 
 class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAliveClientMixin<NewsFeedScreen> {
@@ -32,7 +34,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   UserDb _userDb = UserDb.instance;
   UserModel _userModel;
-  String _userName;
+  _NewsFeedScreenState(this._userModel);
 
   @override
   // TODO: implement wantKeepAlive
@@ -43,7 +45,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     // TODO: implement initState
     super.initState();
     _checkCon();
-    getUserData();
   }
 
   _checkCon()async{
@@ -57,7 +58,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
-    response = await ServiceHelper().getNewsFeed(8, p, pageCount, '0fc9d06a-a622-4288-975d-b5f414a9ad73');
+    response = await ServiceHelper().getNewsFeed(8, p, pageCount, _userModel.uniqueKey);
     var result = response.data['Results'];
     print('loadmore: ${p}');
     Fluttertoast.showToast(msg: 'page: ${p}', backgroundColor: Colors.black.withOpacity(0.6));
@@ -120,11 +121,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     }
   }
 
-  Future getUserData() async{
-   await _sharepreferenceshelper.initSharePref();
+  /*void getUserData() async{
+    await _sharepreferenceshelper.initSharePref();
     final model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
     _userModel = model;
-  }
+  }*/
 
 
   Widget _newsFeedList(int i){
@@ -290,7 +291,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   ],
                 ),
               ),
-              CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
+              CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(baseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                backgroundColor: myColor.colorGrey, radius: 25.0,)
             ],
           ),
           Expanded(
@@ -339,7 +341,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   ],
                 ),
               ),
-              CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
+              CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(baseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                backgroundColor: myColor.colorGrey, radius: 25.0,)
             ],
           ),
           Center(

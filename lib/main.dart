@@ -5,6 +5,7 @@ import 'NewsFeedScreen.dart';
 import 'DashBoardScreen.dart';
 import 'NotificationScreen.dart';
 import 'customIcons/my_flutter_app_icons.dart';
+import 'model/UserModel.dart';
 
 void main() => runApp(MaterialApp(
       home: splashScreen(),
@@ -17,12 +18,17 @@ void main() => runApp(MaterialApp(
 ));
 
 class MainScreen extends StatefulWidget {
+  UserModel model;
+  MainScreen(this.model);
+
   @override
-  _mainState createState() => _mainState();
+  _mainState createState() => _mainState(this.model);
 }
 
 class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   TabController _tabController;
+  UserModel userModel;
+  _mainState(this.userModel);
   @override
   void initState() {
     // TODO: implement initState
@@ -39,7 +45,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
       child: Scaffold(
         body: TabBarView(
           children: [
-            NewsFeedScreen(),
+            NewsFeedScreen(userModel),
             DashBoardScreen(),
             NotificationScreen(),
           ],

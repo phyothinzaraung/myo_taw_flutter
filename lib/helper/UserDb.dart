@@ -58,8 +58,25 @@ class UserDb {
   // Inserts a row in the database where each key in the Map is a column name
   // and the value is the column value. The return value is the id of the
   // inserted row.
-  Future<int> insert(Map<String, dynamic> row) async {
+  Future<int> insert(UserModel model) async {
     Database db = await instance.database;
+    Map<String, dynamic> row = {
+      DbHelper.COLUMN_USER_UNIQUE : model.uniqueKey,
+      DbHelper.COLUMN_USER_NAME : model.name,
+      DbHelper.COLUMN_USER_PHONE_NO : model.phoneNo,
+      DbHelper.COLUMN_USER_PHOTO_URL : model.photoUrl,
+      DbHelper.COLUMN_USER_STATE : model.state,
+      DbHelper.COLUMN_USER_TOWNSHIP : model.township,
+      DbHelper.COLUMN_USER_ADDRESS : model.address,
+      DbHelper.COLUMN_USER_REGISTERED_DATE : model.registeredDate,
+      DbHelper.COLUMN_USER_ACCESSTIME : model.accesstime,
+      DbHelper.COLUMN_USER_IS_DELETED : model.isDeleted,
+      DbHelper.COLUMN_USER_RESOURCE : model.resource,
+      DbHelper.COLUMN_USER_ANDROID_TOKEN : model.androidToken,
+      DbHelper.COLUMN_USER_CURRENT_REGION_CODE : model.currentRegionCode,
+      DbHelper.COLUMN_USER_PIN_CODE : model.pinCode,
+      DbHelper.COLUMN_USER_AMOUNT : model.amount
+    };
     print('sqlInsert: ${row}');
     return await db.insert(DbHelper.TABLE_NAME_USER, row);
   }
@@ -113,12 +130,23 @@ class UserDb {
     Database dbClient = await instance.database;
     UserModel userModel;
     var result = await dbClient.query(DbHelper.TABLE_NAME_USER,
-        columns: [DbHelper.COLUMN_USER_UNIQUE,DbHelper.COLUMN_USER_NAME,DbHelper.COLUMN_USER_PHONE_NO,DbHelper.COLUMN_USER_PHOTO_URL,DbHelper.COLUMN_USER_STATE,DbHelper.COLUMN_USER_TOWNSHIP,
-          DbHelper.COLUMN_USER_ADDRESS, DbHelper.COLUMN_USER_REGISTERED_DATE,DbHelper.COLUMN_USER_ACCESSTIME,DbHelper.COLUMN_USER_IS_DELETED,DbHelper.COLUMN_USER_RESOURCE,DbHelper.COLUMN_USER_ANDROID_TOKEN,
-          DbHelper.COLUMN_USER_CURRENT_REGION_CODE, DbHelper.COLUMN_USER_PIN_CODE,DbHelper.COLUMN_USER_AMOUNT],
+        columns: [DbHelper.COLUMN_USER_UNIQUE,
+          DbHelper.COLUMN_USER_NAME,
+          DbHelper.COLUMN_USER_PHONE_NO,
+          DbHelper.COLUMN_USER_PHOTO_URL,
+          DbHelper.COLUMN_USER_STATE,
+          DbHelper.COLUMN_USER_TOWNSHIP,
+          DbHelper.COLUMN_USER_ADDRESS,
+          DbHelper.COLUMN_USER_REGISTERED_DATE,
+          DbHelper.COLUMN_USER_ACCESSTIME,
+          DbHelper.COLUMN_USER_IS_DELETED,
+          DbHelper.COLUMN_USER_RESOURCE,
+          DbHelper.COLUMN_USER_ANDROID_TOKEN,
+          DbHelper.COLUMN_USER_CURRENT_REGION_CODE,
+          DbHelper.COLUMN_USER_PIN_CODE,
+          DbHelper.COLUMN_USER_AMOUNT],
         where: '${DbHelper.COLUMN_USER_UNIQUE} = ?', whereArgs: ['$uniqueKey']);
     if (result.length == 0) return null;
-    List<UserModel> list = new List();
     for(var i in result){
       userModel = UserModel.fromMap(i);
     }

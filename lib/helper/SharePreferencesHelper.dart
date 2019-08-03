@@ -24,4 +24,8 @@ class Sharepreferenceshelper{
   String getUniqueKey(){
     return sharedPreferences.get(USER_UNIQUE_KEY);
   }
+
+  String getUserPhoneNo(){
+    return sharedPreferences.get(USER_PHONE_KEY);
+  }
 }
