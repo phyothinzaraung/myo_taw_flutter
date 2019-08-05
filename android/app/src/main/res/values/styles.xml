@@ -6,14 +6,14 @@
         <item name="android:windowBackground">@drawable/launch_background</item>
     </style>
 
-    <style name="accountKitTheme" parent="Theme.AccountKit.Outline">
+    <style name="accountKitTheme" parent="Theme.AccountKit">
+
         <item name="com_accountkit_background_color">@color/colorPrimaryDark</item>
         <item name="com_accountkit_status_bar_color">@color/colorPrimary</item>
         <item name="com_accountkit_header_text_color">@color/color_white</item>
         <item name="com_accountkit_title_text_color">@color/color_white</item>
         <item name="com_accountkit_icon_color">@color/color_white</item>
         <item name="com_accountkit_text_color">@color/color_white</item>
-        <item name="com_accountkit_primary_color">@color/colorPrimary</item>
 
         //buttoncolor
         <item name="com_accountkit_button_background_color">@color/colorPrimary</item>

@@ -50,7 +50,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                 alignment: Alignment.bottomLeft,
                 children: <Widget>[
                   CachedNetworkImage(
-                    imageUrl: i.photoUrl!=null?baseUrl.NEWS_FEED_CONTENT_URL+i.photoUrl:'',
+                    imageUrl: i.photoUrl!=null?BaseUrl.NEWS_FEED_CONTENT_URL+i.photoUrl:'',
                     imageBuilder: (context, image){
                       return Container(
                         width: double.maxFinite,
@@ -72,7 +72,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                           color: Colors.black.withOpacity(0.6)
                       ),
                       child: Text('${MyanNumConvertHelper().getMyanNumInt(index)}${'.'} ${_title}  ',
-                        style: TextStyle(color: Colors.white, fontSize: fontSize.textSizeSmall),)),
+                        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),)),
                 ],
               ),));
       }
@@ -124,7 +124,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                   margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
                   decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      color: _currentPhoto==i?myColor.colorPrimaryDark:Colors.grey
+                      color: _currentPhoto==i?MyColor.colorPrimaryDark:Colors.grey
                   ),
                 )
             ],
@@ -138,7 +138,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         },
         child: CachedNetworkImage(
           width: double.maxFinite,
-          imageUrl: _photo!=null?baseUrl.NEWS_FEED_CONTENT_URL+_photo:'',
+          imageUrl: _photo!=null?BaseUrl.NEWS_FEED_CONTENT_URL+_photo:'',
           imageBuilder: (context, image){
             return Container(
               width: double.maxFinite,
@@ -198,7 +198,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(_title, style: TextStyle(fontSize: fontSize.textSizeNormal),),
+        title: Text(_title, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
       body: ListView(
         children: <Widget>[
@@ -217,7 +217,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                           Expanded(
                               child: Container(
                                   margin: EdgeInsets.only(left: 10.0),
-                                  child: Text(_date, style: TextStyle(color: myColor.colorTextGrey, fontSize: fontSize.textSizeSmall),)))
+                                  child: Text(_date, style: TextStyle(color: MyColor.colorTextGrey, fontSize: FontSize.textSizeSmall),)))
                         ],
                       ),
                     ),
@@ -225,7 +225,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                       margin: EdgeInsets.only(bottom: 25.0),
                       child: Row(mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Flexible(child: Text(_title!=null?_title:'---',style: TextStyle(fontSize: fontSize.textSizeLarge)))
+                          Flexible(child: Text(_title!=null?_title:'---',style: TextStyle(fontSize: FontSize.textSizeLarge)))
                         ],),
                     ),
                     Container(

@@ -44,7 +44,6 @@ class UserDb {
             ${DbHelper.COLUMN_USER_ADDRESS} TEXT,
             ${DbHelper.COLUMN_USER_REGISTERED_DATE} TEXT,
             ${DbHelper.COLUMN_USER_ACCESSTIME} TEXT,
-            ${DbHelper.COLUMN_USER_IS_DELETED} INTEGER,
             ${DbHelper.COLUMN_USER_RESOURCE} TEXT,
             ${DbHelper.COLUMN_USER_ANDROID_TOKEN} TEXT,
             ${DbHelper.COLUMN_USER_CURRENT_REGION_CODE} TEXT,
@@ -70,7 +69,6 @@ class UserDb {
       DbHelper.COLUMN_USER_ADDRESS : model.address,
       DbHelper.COLUMN_USER_REGISTERED_DATE : model.registeredDate,
       DbHelper.COLUMN_USER_ACCESSTIME : model.accesstime,
-      DbHelper.COLUMN_USER_IS_DELETED : model.isDeleted,
       DbHelper.COLUMN_USER_RESOURCE : model.resource,
       DbHelper.COLUMN_USER_ANDROID_TOKEN : model.androidToken,
       DbHelper.COLUMN_USER_CURRENT_REGION_CODE : model.currentRegionCode,
@@ -121,9 +119,16 @@ class UserDb {
 
   // Deletes the row specified by the id. The number of affected rows is
   // returned. This should be 1 as long as the row exists.
-  Future<int> delete(int id) async {
+  Future<int> delete(String uniqueKey) async {
     Database db = await instance.database;
-    return await db.delete(DbHelper.TABLE_NAME_USER, where: '${DbHelper.COLUMN_USER_UNIQUE} = ?', whereArgs: [id]);
+    return await db.delete(DbHelper.TABLE_NAME_USER, where: '${DbHelper.COLUMN_USER_UNIQUE} = ?', whereArgs: [uniqueKey]).whenComplete((){
+      db.close();
+    });
+  }
+
+  Future deleteUser()async{
+    Database db = await instance.database;
+    return await db.delete(DbHelper.TABLE_NAME_USER, where: null, whereArgs: null);
   }
 
   Future<UserModel> getUserById(String uniqueKey) async {
@@ -139,7 +144,6 @@ class UserDb {
           DbHelper.COLUMN_USER_ADDRESS,
           DbHelper.COLUMN_USER_REGISTERED_DATE,
           DbHelper.COLUMN_USER_ACCESSTIME,
-          DbHelper.COLUMN_USER_IS_DELETED,
           DbHelper.COLUMN_USER_RESOURCE,
           DbHelper.COLUMN_USER_ANDROID_TOKEN,
           DbHelper.COLUMN_USER_CURRENT_REGION_CODE,

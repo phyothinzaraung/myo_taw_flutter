@@ -12,6 +12,7 @@ import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'helper/UserDb.dart';
 import 'helper/DbHelper.dart';
+import 'dart:io';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -20,7 +21,7 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   List<String> _cityList;
-  String _dropDownCity = 'နေရပ်ရွေးပါ', _phoneNo;
+  String _dropDownCity = 'နေရပ်ရွေးပါ', _regionCode, _platForm;
   FlutterAccountKit _flutterAccountKit = new FlutterAccountKit();
   bool _isInitialized, _showLoading = false;
   bool _isCon = false;
@@ -33,9 +34,17 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _cityList = [_dropDownCity,'တောင်ကြီးမြို့','မော်လမြိုင်မြို့'];
+    _cityList = [_dropDownCity,MyString.TGY_CITY,MyString.MLM_CITY];
     initAccountkit();
     _sharePrefHelper.initSharePref();
+  }
+
+  _initTargetPlatform(){
+    if(Theme.of(context).platform == TargetPlatform.android){
+      _platForm = 'Android';
+    }else{
+      _platForm = 'ios';
+    }
   }
 
   Future<void> initAccountkit()async{
@@ -45,8 +54,8 @@ class _LoginScreenState extends State<LoginScreen> {
       await _flutterAccountKit.configure(
         Config(
           theme: AccountKitTheme(
-              headerBackgroundColor: myColor.colorPrimary,
-              backgroundColor: myColor.colorPrimaryDark,
+              headerBackgroundColor: MyColor.colorPrimary,
+              backgroundColor: MyColor.colorPrimaryDark,
               statusBarStyle: StatusBarStyle.lightStyle,
               headerButtonTextColor: Colors.white,
               titleColor: Colors.white,
@@ -54,14 +63,14 @@ class _LoginScreenState extends State<LoginScreen> {
               textColor: Colors.white,
               iconColor: Colors.white,
 
-              buttonBackgroundColor: myColor.colorPrimaryDark,
+              buttonBackgroundColor: MyColor.colorPrimaryDark,
               buttonBorderColor: Colors.white,
               buttonTextColor: Colors.white,
-              buttonDisabledBackgroundColor: myColor.colorGreyDark,
-              buttonDisabledBorderColor: myColor.colorGrey,
-              buttonDisabledTextColor: myColor.colorGrey,
+              buttonDisabledBackgroundColor: MyColor.colorGreyDark,
+              buttonDisabledBorderColor: MyColor.colorGrey,
+              buttonDisabledTextColor: MyColor.colorGrey,
 
-              inputBackgroundColor: myColor.colorPrimaryDark,
+              inputBackgroundColor: MyColor.colorPrimaryDark,
               inputBorderColor: Colors.white,
               inputTextColor: Colors.white,
           ),
@@ -97,7 +106,7 @@ class _LoginScreenState extends State<LoginScreen> {
       _showLoading = true;
     });
     String fcmtoken = 'doRMZhpJvpY:APA91bG4XW1tHVIxf_jbUAT8WekmgAlDd4JZAKQm9o3DUDYqVCoWmmmaznHTgbyMxXXNZZ9FwFewZz5DcSE7ooxdLZAPdUDXeD7iD16IUP1P0DwGzzWlsRxovB1zq16FHKUcdgDGud4t';
-    response = await ServiceHelper().userLogin(phoneNo, 'TGY', fcmtoken, 'Android');
+    response = await ServiceHelper().userLogin(phoneNo, _regionCode, fcmtoken, _platForm);
     var result = response.data;
     setState(() {
       _showLoading = false;
@@ -105,11 +114,11 @@ class _LoginScreenState extends State<LoginScreen> {
     if(response.statusCode == 200){
       if(result != null){
         _userModel = UserModel.fromJson(result);
-        _sharePrefHelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, _userModel.currentRegionCode);
+        _sharePrefHelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, _regionCode);
         await userDb.insert(_userModel);
         Fluttertoast.showToast(msg: 'Login Success', backgroundColor: Colors.black.withOpacity(0.7));
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
-        print('userModel: ${_userModel.uniqueKey} ${_userModel.state}');
+        print('userModel: ${_userModel.uniqueKey}');
       }else{
         Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
       }
@@ -138,8 +147,8 @@ class _LoginScreenState extends State<LoginScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: fontSize.textSizeNormal, color: Colors.black))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(myColor.colorPrimary))
+                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.black))),
+              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
             ],
           ),
         ),
@@ -162,12 +171,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 children: <Widget>[
                   Image.asset("images/myo_taw_splash_screen.jpg"),
                   Padding(padding: EdgeInsets.only(bottom: 5.0),
-                      child: Text('Myo Taw', style: TextStyle(fontSize: fontSize.textSizeNormal, color: myColor.colorPrimary),)),
-                  Text("Version 1.0", style: TextStyle(fontSize: fontSize.textSizeSmall, color: myColor.colorTextGrey),),
+                      child: Text('Myo Taw', style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),)),
+                  Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),),
                   Container(
                     width: 300.0,
                     decoration: BoxDecoration(
-                      border: Border.all(color: myColor.colorPrimary, width: 1.0),
+                      border: Border.all(color: MyColor.colorPrimary, width: 1.0),
                       borderRadius: BorderRadius.all(Radius.circular(10.0))
                     ),
                     padding: EdgeInsets.only(left:10.0, right: 10.0),
@@ -177,7 +186,7 @@ class _LoginScreenState extends State<LoginScreen> {
                         style: new TextStyle(fontSize: 13.0, color: Colors.black87),
                         isExpanded: true,
                         icon: Icon(Icons.location_city),
-                        iconEnabledColor: myColor.colorPrimary,
+                        iconEnabledColor: MyColor.colorPrimary,
                         value: _dropDownCity,
                         onChanged: (String value){
                           setState(() {
@@ -202,15 +211,25 @@ class _LoginScreenState extends State<LoginScreen> {
                       }else{
                         await _checkCon();
                         if(_isCon){
-                          _loginAccountKit();
-                          //webService('+959254900916');
+                          _initTargetPlatform();
+                          switch(_dropDownCity){
+                            case MyString.TGY_CITY:
+                              _regionCode = MyString.TGY_REGIONCODE;
+                              break;
+                            case MyString.MLM_CITY:
+                              _regionCode = MyString.MLM_REGIONCODE;
+                              break;
+                            default:
+                          }
+                          //_loginAccountKit();
+                          webService('+959254900916');
                           //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
                         }else{
                           Fluttertoast.showToast(msg: 'No Internet Connection', backgroundColor: Colors.black.withOpacity(0.7));
                         }
                       }
                       },child: Text('ဝင်မည်',style: TextStyle(color: Colors.white),),
-                      color: myColor.colorPrimary,
+                      color: MyColor.colorPrimary,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
                   )
                 ],

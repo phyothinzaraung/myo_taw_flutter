@@ -8,12 +8,12 @@ import 'customIcons/my_flutter_app_icons.dart';
 import 'model/UserModel.dart';
 
 void main() => runApp(MaterialApp(
-      home: splashScreen(),
+      home: SplashScreen(),
       theme: ThemeData(
         appBarTheme: AppBarTheme(
-          color: myColor.colorPrimary
+          color: MyColor.colorPrimary
         ),
-        scaffoldBackgroundColor: myColor.colorGrey,
+        scaffoldBackgroundColor: MyColor.colorGrey,
       ),
 ));
 
@@ -46,8 +46,8 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
         body: TabBarView(
           children: [
             NewsFeedScreen(userModel),
-            DashBoardScreen(),
-            NotificationScreen(),
+            DashBoardScreen(userModel),
+            NotificationScreen(userModel),
           ],
           controller: _tabController,
         ),
@@ -55,10 +55,10 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
           color: Colors.white,
           child: TabBar(
             indicatorColor: Colors.white,
-            labelColor: myColor.colorPrimary,
+            labelColor: MyColor.colorPrimary,
             indicatorSize: TabBarIndicatorSize.tab,
             indicatorWeight: 2.0,
-            unselectedLabelColor: myColor.colorGreyDark,
+            unselectedLabelColor: MyColor.colorGreyDark,
             controller: _tabController,
             tabs: [
               Tab(icon: Icon(MyFlutterApp.newsfeed, size: 20.0,)),

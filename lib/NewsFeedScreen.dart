@@ -15,6 +15,7 @@ import 'helper/SharePreferencesHelper.dart';
 import 'helper/UserDb.dart';
 import 'model/UserModel.dart';
 import 'helper/MyoTawConstant.dart';
+import 'SplashScreen.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   UserModel model;
@@ -31,9 +32,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   bool _isEnd , _isCon= false;
   int page = 1;
   int pageCount = 10;
-  Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   UserDb _userDb = UserDb.instance;
   UserModel _userModel;
+  String _city;
+  int _organizationId;
+  Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   _NewsFeedScreenState(this._userModel);
 
   @override
@@ -45,6 +48,20 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     // TODO: implement initState
     super.initState();
     _checkCon();
+    _initHeaderTitle();
+    _sharepreferenceshelper.initSharePref();
+  }
+
+  _initHeaderTitle(){
+    switch(_userModel.currentRegionCode){
+      case MyString.TGY_REGIONCODE:
+        _city = MyString.TGY_CITY;
+        _organizationId = OrganizationId.TGY_ORGANIZATION_ID;
+        break;
+      case MyString.MLM_REGIONCODE:
+        _city = MyString.MLM_CITY;
+        _organizationId = OrganizationId.MLM_ORGANIZATION_ID;
+    }
   }
 
   _checkCon()async{
@@ -58,7 +75,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
-    response = await ServiceHelper().getNewsFeed(8, p, pageCount, _userModel.uniqueKey);
+    response = await ServiceHelper().getNewsFeed(_organizationId, p, pageCount, _userModel.uniqueKey);
     var result = response.data['Results'];
     print('loadmore: ${p}');
     Fluttertoast.showToast(msg: 'page: ${p}', backgroundColor: Colors.black.withOpacity(0.6));
@@ -99,7 +116,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     String url = '';
     if(isPhoto){
       if(photo != null && photo.isNotEmpty){
-        url = baseUrl.NEWS_FEED_CONTENT_URL+photo;
+        url = BaseUrl.NEWS_FEED_CONTENT_URL+photo;
       }else{
         url = '';
       }
@@ -120,12 +137,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       return false;
     }
   }
-
-  /*void getUserData() async{
-    await _sharepreferenceshelper.initSharePref();
-    final model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
-    _userModel = model;
-  }*/
 
 
   Widget _newsFeedList(int i){
@@ -155,7 +166,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       margin: EdgeInsets.only(bottom: 5.0),
                       child: Row(mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Flexible(child: Text(title!=null?title:'---',style: TextStyle(fontSize: fontSize.textSizeSmall), maxLines: 2, softWrap: true,))
+                          Flexible(child: Text(title!=null?title:'---',style: TextStyle(fontSize: FontSize.textSizeNormal), maxLines: 2, softWrap: true,))
                         ],),
                     ),
                     Container(
@@ -167,7 +178,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                             imageBuilder: (context, image){
                               return Container(
                                 width: double.maxFinite,
-                                height: 150.0,
+                                height: 180.0,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                       image: image,
@@ -217,8 +228,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                         Container(margin: EdgeInsets.only(right: 5.0),
                             child: Image.asset(_newsFeedReactModel[i].reactType!=null?'images/like_fill.png':'images/like.png',
                               width: 20.0,height: 20.0,)),
-                        Text('${newsFeedModel.likeCount} ${myString.txt_like}',
-                          style: TextStyle(color: myColor.colorPrimary, fontSize: fontSize.textSizeSmall),)
+                        Text('${newsFeedModel.likeCount} ${MyString.txt_like}',
+                          style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeSmall),)
                       ],
                     ),
                   ),
@@ -256,13 +267,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
-                              Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
+                              Text(_city, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                              Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                             ],
                           ),
                         ),
-                        CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(baseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                          backgroundColor: myColor.colorGrey, radius: 25.0,)
+                        CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                          backgroundColor: MyColor.colorGrey, radius: 25.0,)
                       ],
                     ),
                   ],
@@ -286,13 +297,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
-                    Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
+                    Text(_city, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                    Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                   ],
                 ),
               ),
-              CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(baseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                backgroundColor: myColor.colorGrey, radius: 25.0,)
+              CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                backgroundColor: MyColor.colorGrey, radius: 25.0,)
             ],
           ),
           Expanded(
@@ -305,7 +316,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     asyncLoaderState.currentState.reloadState();
                     _checkCon();
                     }
-                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: myColor.colorPrimary,)
+                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
                 ],
               ),
             ),
@@ -336,13 +347,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    Text('တောင်ကြီး', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeLarge)),
-                    Text('သတင်းများ', style: TextStyle(color: myColor.colorTextBlack, fontSize: fontSize.textSizeNormal),),
+                    Text(_city, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                    Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                   ],
                 ),
               ),
-              CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(baseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                backgroundColor: myColor.colorGrey, radius: 25.0,)
+              CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                backgroundColor: MyColor.colorGrey, radius: 25.0,)
             ],
           ),
           Center(
@@ -361,7 +372,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
      page++;
      await _getNewsFeed(page);
    }else{
-     Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: fontSize.textSizeSmall);
+     Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
    }
     return null;
   }

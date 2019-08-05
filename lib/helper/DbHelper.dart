@@ -14,7 +14,6 @@ class DbHelper{
   static final COLUMN_USER_ADDRESS = 'address';
   static final COLUMN_USER_REGISTERED_DATE = 'registeredDate';
   static final COLUMN_USER_ACCESSTIME = 'accesstime';
-  static final COLUMN_USER_IS_DELETED = 'isDeleted';
   static final COLUMN_USER_RESOURCE = 'resource';
   static final COLUMN_USER_ANDROID_TOKEN = 'androidToken';
   static final COLUMN_USER_CURRENT_REGION_CODE = 'currentRegionCode';

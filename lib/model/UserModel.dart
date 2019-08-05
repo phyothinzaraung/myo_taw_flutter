@@ -144,7 +144,6 @@ class UserModel{
         _address = map[DbHelper.COLUMN_USER_ADDRESS],
         _registeredDate = map[DbHelper.COLUMN_USER_REGISTERED_DATE],
         _accesstime = map[DbHelper.COLUMN_USER_ACCESSTIME],
-        _isDeleted = map[DbHelper.COLUMN_USER_IS_DELETED],
         _resource = map[DbHelper.COLUMN_USER_RESOURCE],
         _androidToken = map[DbHelper.COLUMN_USER_ANDROID_TOKEN],
         _currentRegionCode = map[DbHelper.COLUMN_USER_CURRENT_REGION_CODE],

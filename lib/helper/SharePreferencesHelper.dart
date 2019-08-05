@@ -28,4 +28,8 @@ class Sharepreferenceshelper{
   String getUserPhoneNo(){
     return sharedPreferences.get(USER_PHONE_KEY);
   }
+
+  void logOutSharePref(){
+    sharedPreferences.clear();
+  }
 }

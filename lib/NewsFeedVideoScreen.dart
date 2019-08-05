@@ -20,7 +20,7 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _videoPlayerController = VideoPlayerController.network(baseUrl.NEWS_FEED_CONTENT_URL+_videoUrl)
+    _videoPlayerController = VideoPlayerController.network(BaseUrl.NEWS_FEED_CONTENT_URL+_videoUrl)
     ..initialize().then((_){
         setState(() {
 

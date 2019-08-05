@@ -15,7 +15,7 @@ class NewsFeedPhotoDetail extends StatelessWidget {
     for(var i in photoModelList){
       _photoWidget.add(CachedNetworkImage(
         width: double.maxFinite,
-        imageUrl: i.photoUrl!=null?baseUrl.NEWS_FEED_CONTENT_URL+i.photoUrl:'',
+        imageUrl: i.photoUrl!=null?BaseUrl.NEWS_FEED_CONTENT_URL+i.photoUrl:'',
         imageBuilder: (context, image){
           return Container(
             width: double.maxFinite,
@@ -50,7 +50,7 @@ class NewsFeedPhotoDetail extends StatelessWidget {
         ) :
         CachedNetworkImage(
           width: double.maxFinite,
-          imageUrl: _photoUrl!=null?baseUrl.NEWS_FEED_CONTENT_URL+_photoUrl:'',
+          imageUrl: _photoUrl!=null?BaseUrl.NEWS_FEED_CONTENT_URL+_photoUrl:'',
           imageBuilder: (context, image){
             return Container(
               width: double.maxFinite,

@@ -70,6 +70,24 @@ flutter:
     - images/save.png
     - images/profile_placeholder.png
     - images/video_play.png
+    - images/tgy_logo.png
+    - images/mlm_logo.png
+    - images/dao.png
+    - images/about_tax.png
+    - images/suggestion.png
+    - images/business_license.png
+    - images/online_tax.png
+    - images/tax_used.png
+    - images/calculate_tax.png
+    - images/questions.png
+    - images/save_file.png
+    - images/referral.png
+    - images/profile.png
+    - images/photo_edit.png
+    - images/apply_biz_list.png
+    - images/edit_profile.png
+    - images/log_out.png
+    - images/logout_icon.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
