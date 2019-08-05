@@ -11,6 +11,7 @@ import 'model/UserModel.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'helper/UserDb.dart';
+import 'helper/DbHelper.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -41,21 +42,32 @@ class _LoginScreenState extends State<LoginScreen> {
     print('Init account kit called');
     bool initialized = false;
     try{
-      final theme =
       await _flutterAccountKit.configure(
         Config(
           theme: AccountKitTheme(
-              headerBackgroundColor: Colors.lightBlueAccent,
-              buttonBackgroundColor: Colors.white,
-              buttonBorderColor: Colors.lightBlue,
-              buttonTextColor: Colors.teal,
-              backgroundColor: Colors.teal,
-              statusBarStyle: StatusBarStyle.defaultStyle,
-              inputBackgroundColor: Colors.teal
+              headerBackgroundColor: myColor.colorPrimary,
+              backgroundColor: myColor.colorPrimaryDark,
+              statusBarStyle: StatusBarStyle.lightStyle,
+              headerButtonTextColor: Colors.white,
+              titleColor: Colors.white,
+              headerTextColor: Colors.white,
+              textColor: Colors.white,
+              iconColor: Colors.white,
+
+              buttonBackgroundColor: myColor.colorPrimaryDark,
+              buttonBorderColor: Colors.white,
+              buttonTextColor: Colors.white,
+              buttonDisabledBackgroundColor: myColor.colorGreyDark,
+              buttonDisabledBorderColor: myColor.colorGrey,
+              buttonDisabledTextColor: myColor.colorGrey,
+
+              inputBackgroundColor: myColor.colorPrimaryDark,
+              inputBorderColor: Colors.white,
+              inputTextColor: Colors.white,
           ),
           facebookNotificationsEnabled: true,
           receiveSMS: true,
-          readPhoneStateEnabled: true,
+          readPhoneStateEnabled: false,
         )
       );
     }on PlatformException{
@@ -94,9 +106,9 @@ class _LoginScreenState extends State<LoginScreen> {
       if(result != null){
         _userModel = UserModel.fromJson(result);
         _sharePrefHelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, _userModel.currentRegionCode);
-        //await _insert(_userModel);
+        await userDb.insert(_userModel);
         Fluttertoast.showToast(msg: 'Login Success', backgroundColor: Colors.black.withOpacity(0.7));
-        //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
         print('userModel: ${_userModel.uniqueKey} ${_userModel.state}');
       }else{
         Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
@@ -105,27 +117,6 @@ class _LoginScreenState extends State<LoginScreen> {
       Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
     }
   }
-
- void _insert(UserModel model)async{
-   Map<String, dynamic> row = {
-     UserDb.COLUMN_USER_UNIQUE : model.uniqueKey,
-     UserDb.COLUMN_USER_NAME : model.name,
-     UserDb.COLUMN_USER_PHONE_NO : model.phoneNo,
-     UserDb.COLUMN_USER_PHOTO_URL : model.photoUrl,
-     UserDb.COLUMN_USER_STATE : model.state,
-     UserDb.COLUMN_USER_TOWNSHIP : model.township,
-     UserDb.COLUMN_USER_ADDRESS : model.address,
-     UserDb.COLUMN_USER_REGISTERED_DATE : model.registeredDate,
-     UserDb.COLUMN_USER_ACCESSTIME : model.accesstime,
-     UserDb.COLUMN_USER_IS_DELETED : model.isDeleted,
-     UserDb.COLUMN_USER_RESOURCE : model.resource,
-     UserDb.COLUMN_USER_ANDROID_TOKEN : model.androidToken,
-     UserDb.COLUMN_USER_CURRENT_REGION_CODE : model.currentRegionCode,
-     UserDb.COLUMN_USER_PIN_CODE : model.pinCode,
-     UserDb.COLUMN_USER_AMOUNT : model.amount
-   };
-   await userDb.insert(row);
- }
 
   _checkCon()async{
     var conResult = await(Connectivity().checkConnectivity());
@@ -211,8 +202,9 @@ class _LoginScreenState extends State<LoginScreen> {
                       }else{
                         await _checkCon();
                         if(_isCon){
-                          //_loginAccountKit();
-                          webService('+959254900916');
+                          _loginAccountKit();
+                          //webService('+959254900916');
+                          //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
                         }else{
                           Fluttertoast.showToast(msg: 'No Internet Connection', backgroundColor: Colors.black.withOpacity(0.7));
                         }

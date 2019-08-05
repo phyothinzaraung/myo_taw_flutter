@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'Model/NewsFeedReactModel.dart';
-import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 import 'helper/ShowDateTimeHelper.dart';
@@ -16,10 +14,13 @@ import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'helper/UserDb.dart';
 import 'model/UserModel.dart';
+import 'helper/MyoTawConstant.dart';
 
 class NewsFeedScreen extends StatefulWidget {
+  UserModel model;
+  NewsFeedScreen(this.model);
   @override
-  _NewsFeedScreenState createState() => _NewsFeedScreenState();
+  _NewsFeedScreenState createState() => _NewsFeedScreenState(this.model);
 }
 
 class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAliveClientMixin<NewsFeedScreen> {
@@ -32,7 +33,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   int pageCount = 10;
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   UserDb _userDb = UserDb.instance;
-  String _userName;
+  UserModel _userModel;
+  _NewsFeedScreenState(this._userModel);
 
   @override
   // TODO: implement wantKeepAlive
@@ -43,8 +45,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     // TODO: implement initState
     super.initState();
     _checkCon();
-    _sharepreferenceshelper.initSharePref();
-    userName();
   }
 
   _checkCon()async{
@@ -58,7 +58,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
-    response = await ServiceHelper().getNewsFeed(8, p, pageCount, '0fc9d06a-a622-4288-975d-b5f414a9ad73');
+    response = await ServiceHelper().getNewsFeed(8, p, pageCount, _userModel.uniqueKey);
     var result = response.data['Results'];
     print('loadmore: ${p}');
     Fluttertoast.showToast(msg: 'page: ${p}', backgroundColor: Colors.black.withOpacity(0.6));
@@ -121,15 +121,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     }
   }
 
-  void userName() async{
-    var result = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
-    result.map((UserModel){
-      setState(() {
-        _userName = UserModel.name;
-      });
-    });
-    print('usernamesqlite: ${_userName}');
-  }
+  /*void getUserData() async{
+    await _sharepreferenceshelper.initSharePref();
+    final model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    _userModel = model;
+  }*/
 
 
   Widget _newsFeedList(int i){
@@ -265,7 +261,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                             ],
                           ),
                         ),
-                        CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
+                        CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(baseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                          backgroundColor: myColor.colorGrey, radius: 25.0,)
                       ],
                     ),
                   ],
@@ -294,7 +291,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   ],
                 ),
               ),
-              CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
+              CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(baseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                backgroundColor: myColor.colorGrey, radius: 25.0,)
             ],
           ),
           Expanded(
@@ -343,7 +341,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   ],
                 ),
               ),
-              CircleAvatar(child: Image.asset('images/profile_placeholder.png'), backgroundColor: myColor.colorGrey, radius: 25.0,)
+              CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(baseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                backgroundColor: myColor.colorGrey, radius: 25.0,)
             ],
           ),
           Center(

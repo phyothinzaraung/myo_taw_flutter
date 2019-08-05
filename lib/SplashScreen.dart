@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'main.dart';
 import 'package:flutter/services.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'helper/SharePreferencesHelper.dart';
 import 'LoginScreen.dart';
+import 'helper/UserDb.dart';
+import 'model/UserModel.dart';
 
 class splashScreen extends StatefulWidget {
   @override
@@ -11,25 +13,36 @@ class splashScreen extends StatefulWidget {
 }
 
 class _splashScreenState extends State<splashScreen> {
-  SharedPreferences sharedPreferences;
+  Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
+  UserDb _userDb = UserDb.instance;
+  UserModel _userModel;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     navigateMainScreen();
-    initSharePref();
   }
 
   navigateMainScreen() async{
-    Future.delayed(Duration(seconds: 2), (){
-      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
-      LoginScreen()));
-    });
+    await _sharepreferenceshelper.initSharePref();
+    await getUserData();
+    if(_sharepreferenceshelper.getUserPhoneNo()!=null){
+      Future.delayed(Duration(seconds: 2), (){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
+            MainScreen(_userModel)));
+      });
+    }else{
+      Future.delayed(Duration(seconds: 2), (){
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) =>
+            LoginScreen()));
+      });
+    }
   }
 
-  initSharePref()async{
-    sharedPreferences = await SharedPreferences.getInstance();
+   getUserData() async{
+    final model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    _userModel = model;
   }
 
   @override
@@ -37,7 +50,7 @@ class _splashScreenState extends State<splashScreen> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
       statusBarColor: myColor.colorPrimaryDark,
       systemNavigationBarIconBrightness: Brightness.dark,
-      statusBarBrightness: Brightness.dark
+      statusBarBrightness: Brightness.light
     ));
     return Scaffold(
       backgroundColor: Colors.white,

@@ -20,6 +20,7 @@ class baseUrl{
   static final String WEB_SERVICE_ROOT_ADDRESS = "https://cityappapi.azurewebsites.net/api/";
   static final String WEB_SERVICE_ROOT_ADDRESS_NEWSFEED = "https://generalcontentproviderapi.azurewebsites.net/api/";
   static final String NEWS_FEED_CONTENT_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/NewsFeed/";
+  static final String USER_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/Member/";
 }
 
 class myString{
