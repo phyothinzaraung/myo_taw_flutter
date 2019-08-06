@@ -10,7 +10,7 @@ import 'helper/ServiceHelper.dart';
 import 'model/UserModel.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
-import 'helper/UserDb.dart';
+import 'package:myotaw/Database/UserDb.dart';
 import 'helper/DbHelper.dart';
 import 'dart:io';
 
@@ -28,7 +28,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Response response;
   UserModel _userModel;
   Sharepreferenceshelper _sharePrefHelper = new Sharepreferenceshelper();
-  final userDb = UserDb.instance;
+  UserDb _userDb = UserDb();
 
   @override
   void initState() {
@@ -115,7 +115,9 @@ class _LoginScreenState extends State<LoginScreen> {
       if(result != null){
         _userModel = UserModel.fromJson(result);
         _sharePrefHelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, _regionCode);
-        await userDb.insert(_userModel);
+        await _userDb.openUserDb();
+        await _userDb.insert(_userModel);
+        await _userDb.closeUserDb();
         Fluttertoast.showToast(msg: 'Login Success', backgroundColor: Colors.black.withOpacity(0.7));
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
         print('userModel: ${_userModel.uniqueKey}');

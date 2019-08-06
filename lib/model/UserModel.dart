@@ -16,9 +16,14 @@ class UserModel{
   String _currentRegionCode;
   int _pinCode;
   int _amount;
+  int _isDeletedDb;
 
-  UserModel();
 
+  int get isDeletedDb => _isDeletedDb;
+
+  set isDeletedDb(int value) {
+    _isDeletedDb = value;
+  }
 
   String get uniqueKey => _uniqueKey;
 
@@ -143,6 +148,7 @@ class UserModel{
         _township = map[DbHelper.COLUMN_USER_TOWNSHIP],
         _address = map[DbHelper.COLUMN_USER_ADDRESS],
         _registeredDate = map[DbHelper.COLUMN_USER_REGISTERED_DATE],
+        _isDeletedDb = map[DbHelper.COLUMN_USER_ISDELETED],
         _accesstime = map[DbHelper.COLUMN_USER_ACCESSTIME],
         _resource = map[DbHelper.COLUMN_USER_RESOURCE],
         _androidToken = map[DbHelper.COLUMN_USER_ANDROID_TOKEN],

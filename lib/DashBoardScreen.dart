@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
 import 'package:myotaw/ProfileScreen.dart';
+import 'SaveNewsFeedScreen.dart';
 
 class DashBoardScreen extends StatefulWidget {
   UserModel model;
@@ -22,10 +23,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     // TODO: implement initState
     super.initState();
     _initHeaderTitle();
-    if(_userModel.resource == 'Android'){
-      _addAndroidWidget();
-    }else{
-      _addIosWidget();
+    _addWidget();
+    if(_userModel.resource != 'Android'){
+      _widget.removeLast();
     }
   }
 
@@ -39,53 +39,57 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     }
   }
 
-  _addAndroidWidget(){
+  _addWidget(){
     _widget = [
+      //dao
       GestureDetector(
         child: Container(child: Column(children: <Widget>[Image.asset('images/dao.png',width: 120, height: 120,),
           Text(MyString.txt_municipal,style: TextStyle(fontSize: FontSize.textSizeSmall),)],),),
       ),
-
+      //about tax
       GestureDetector(
         child: Container(child: Column(children: <Widget>[Image.asset('images/about_tax.png',width: 120, height: 120,),
           Text(MyString.txt_tax,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
       ),
-
+      //suggestion
       GestureDetector(
         child: Container(child: Column(children: <Widget>[Image.asset('images/suggestion.png',width: 120, height: 120,),
           Text(MyString.txt_suggestion,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
       ),
-
+      //business license
       GestureDetector(
         child: Container(child: Column(children: <Widget>[Image.asset('images/business_license.png',width: 120, height: 120,),
           Text(MyString.txt_business_tax,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
       ),
-
+      //online tax
       GestureDetector(
         child: Container(child: Column(children: <Widget>[Image.asset('images/online_tax.png',width: 120, height: 120,),
           Text(MyString.txt_online_tax,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
       ),
-
+      //tax use
       GestureDetector(
         child: Container(child: Column(children: <Widget>[Image.asset('images/tax_used.png',width: 120, height: 120,),
           Text(MyString.txt_tax_use,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
       ),
-
+      //calculate tax
       GestureDetector(
         child: Container(child: Column(children: <Widget>[Image.asset('images/calculate_tax.png',width: 120, height: 120,),
           Text(MyString.txt_calculate_tax,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
       ),
-
+      //faq
       GestureDetector(
         child: Container(child: Column(children: <Widget>[Image.asset('images/questions.png',width: 120, height: 120,),
           Text(MyString.txt_faq,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
       ),
-
+      //save news feed
       GestureDetector(
+        onTap: (){
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedScreen()));
+        },
         child: Container(child: Column(children: <Widget>[Image.asset('images/save_file.png',width: 120, height: 120,),
           Text(MyString.txt_save_newsFeed,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
       ),
-
+      //profile
       GestureDetector(
         onTap: (){
           Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ProfileScreen(_userModel)));
@@ -93,64 +97,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         child: Container(child: Column(children: <Widget>[Image.asset('images/profile_placeholder.png',width: 120, height: 120,),
           Text(MyString.txt_profile,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
       ),
-
+      //referral
       GestureDetector(
         child: Container(child: Column(children: <Widget>[Image.asset('images/referral.png',width: 120, height: 120,),
           Text(MyString.txt_referral,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-    ];
-  }
-
-  _addIosWidget(){
-    _widget = [
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/dao.png',width: 120, height: 120,),
-          Text(MyString.txt_municipal,style: TextStyle(fontSize: FontSize.textSizeSmall),)],),),
-      ),
-
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/about_tax.png',width: 120, height: 120,),
-          Text(MyString.txt_tax,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/suggestion.png',width: 120, height: 120,),
-          Text(MyString.txt_suggestion,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/business_license.png',width: 120, height: 120,),
-          Text(MyString.txt_business_tax,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/online_tax.png',width: 120, height: 120,),
-          Text(MyString.txt_online_tax,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/tax_used.png',width: 120, height: 120,),
-          Text(MyString.txt_tax_use,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/calculate_tax.png',width: 120, height: 120,),
-          Text(MyString.txt_calculate_tax,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/questions.png',width: 120, height: 120,),
-          Text(MyString.txt_faq,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/save_file.png',width: 120, height: 120,),
-          Text(MyString.txt_save_newsFeed,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/profile_placeholder.png',width: 120, height: 120,),
-          Text(MyString.txt_profile,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
       ),
     ];
   }

@@ -55,6 +55,7 @@ class MyString{
   static const String txt_tax_record = 'အခွန်မှတ်တမ်း';
   static const String txt_tax_new_record = 'အခွန်မှတ်တမ်းအသစ် မှတ်ရန်';
   static const String txt_are_u_sure = 'သေချာပါသလား';
+  static const String title_save_nf = 'သိမ်းဆည်းထားသည်များ';
 }
 
 class OrganizationId{

@@ -4,7 +4,7 @@ import 'package:flutter/services.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'LoginScreen.dart';
-import 'helper/UserDb.dart';
+import 'package:myotaw/Database/UserDb.dart';
 import 'model/UserModel.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -14,7 +14,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
-  UserDb _userDb = UserDb.instance;
+  UserDb _userDb = UserDb();
   UserModel _userModel;
   String _logo, _title;
 
@@ -26,8 +26,8 @@ class _SplashScreenState extends State<SplashScreen> {
   }
   _init()async{
     await _sharepreferenceshelper.initSharePref();
-    await getUserData();
     if(_sharepreferenceshelper.getRegionCode()!=null){
+      await getUserData();
       switch(_sharepreferenceshelper.getRegionCode()){
         case MyString.TGY_REGIONCODE:
           setState(() {
@@ -48,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   navigateMainScreen() {
-    if(_sharepreferenceshelper.getUserPhoneNo()!=null){
+    if(_sharepreferenceshelper.isLogin()){
       Future.delayed(Duration(seconds: 2), (){
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
       });
@@ -60,14 +60,16 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
    getUserData() async{
+     await _userDb.openUserDb();
     final model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
     _userModel = model;
+    await _userDb.closeUserDb();
   }
 
   @override
   Widget build(BuildContext context) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: MyColor.colorPrimary,
+      statusBarColor: MyColor.colorPrimaryDark,
       systemNavigationBarIconBrightness: Brightness.dark,
       statusBarBrightness: Brightness.light
     ));
@@ -84,7 +86,7 @@ class _SplashScreenState extends State<SplashScreen> {
               _title!=null?Container(
                 margin: EdgeInsets.only(bottom: 20.0),
                 child: Text(_title,
-                  style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeSmall,),softWrap: true,maxLines: 3, textAlign: TextAlign.center,),
+                  style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeNormal,),softWrap: true,maxLines: 3, textAlign: TextAlign.center,),
               ):Container(width: 0.0,height: 0.0,),
               Image.asset('images/myo_taw_splash_screen.jpg', width: 250.0, height: 250.0,),
               Padding(padding: EdgeInsets.only(bottom: 5.0),

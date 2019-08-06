@@ -9,6 +9,7 @@ import 'Model/NewsFeedPhotoModel.dart';
 import 'NewsFeedPhotoDetail.dart';
 import 'helper/MyanNumConvertHelper.dart';
 import 'NewsFeedVideoScreen.dart';
+import 'helper/ShowDateTimeHelper.dart';
 
 class NewsFeedDetailScreen extends StatefulWidget {
   NewsFeedModel _model;
@@ -225,7 +226,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                       margin: EdgeInsets.only(bottom: 25.0),
                       child: Row(mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Flexible(child: Text(_title!=null?_title:'---',style: TextStyle(fontSize: FontSize.textSizeLarge)))
+                          Flexible(child: Text(_title!=null?_title:'---',style: TextStyle(fontSize: FontSize.textSizeSmall)))
                         ],),
                     ),
                     Container(

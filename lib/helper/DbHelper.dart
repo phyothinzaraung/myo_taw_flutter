@@ -1,9 +1,12 @@
 
 class DbHelper{
+
+  //UserTable
+
   static final TABLE_NAME_USER = 'UserTable';
 
-  static final DATABASE_NAME = "User.db";
-  static final DATABASE_VERSION = 1;
+  static final USER_DATABASE_NAME = "User.db";
+  static final USER_DATABASE_VERSION = 1;
 
   static final COLUMN_USER_UNIQUE = 'uniqueKey';
   static final COLUMN_USER_NAME = 'name';
@@ -13,10 +16,29 @@ class DbHelper{
   static final COLUMN_USER_TOWNSHIP = 'township';
   static final COLUMN_USER_ADDRESS = 'address';
   static final COLUMN_USER_REGISTERED_DATE = 'registeredDate';
+  static final COLUMN_USER_ISDELETED = 'isDeleted';
   static final COLUMN_USER_ACCESSTIME = 'accesstime';
   static final COLUMN_USER_RESOURCE = 'resource';
   static final COLUMN_USER_ANDROID_TOKEN = 'androidToken';
   static final COLUMN_USER_CURRENT_REGION_CODE = 'currentRegionCode';
   static final COLUMN_USER_PIN_CODE = 'pinCode';
   static final COLUMN_USER_AMOUNT = 'amount';
+  //---------------------------------------------------------------------------------------------------------------------//
+
+  //SaveNewsFeedTable
+
+  static final TABLE_NAME_SAVE_NEWS_FEED = 'SaveNewsFeedTable';
+
+  static final SAVE_NEWS_FEED_DATABASE_NAME = 'SaveNewsFeed.db';
+  static final SAVE_NEWS_FEED_DATABASE_VERSION = 1;
+
+  static final COLUMN_SAVE_NF_ID = 'id';
+  static final COLUMN_SAVE_NF_TITLE = 'title';
+  static final COLUMN_SAVE_NF_BODY = 'body';
+  static final COLUMN_SAVE_NF_PHOTO_URL = 'photoUrl';
+  static final COLUMN_SAVE_NF_VIDEO_URL = 'videoUrl';
+  static final COLUMN_SAVE_NF_THUMBNAIL = 'thumbnail';
+  static final COLUMN_SAVE_NF_ACCESSTIME = 'accesstime';
+
 }
+

@@ -3,8 +3,9 @@ import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
 import 'helper/MyanNumConvertHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
-import 'helper/UserDb.dart';
+import 'package:myotaw/Database/UserDb.dart';
 import 'SplashScreen.dart';
+import 'Database/SaveNewsFeedDb.dart';
 
 class ProfileScreen extends StatefulWidget {
   UserModel model;
@@ -15,7 +16,8 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> {
   UserModel _userModel;
-  UserDb _userDb;
+  UserDb _userDb = UserDb();
+  SaveNewsFeedDb _saveNewsFeedDb = SaveNewsFeedDb();
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   _ProfileScreenState(this._userModel);
 
@@ -28,9 +30,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _logOutClear()async{
     await _sharepreferenceshelper.initSharePref();
-    _userDb = UserDb.instance;
-    _sharepreferenceshelper.logOutSharePref();
-    _userDb.deleteUser();
+    await _sharepreferenceshelper.logOutSharePref();
+    await _userDb.openUserDb();
+    await _userDb.deleteUser();
+    await _userDb.closeUserDb();
+    await _saveNewsFeedDb.openSaveNfDb();
+    await _saveNewsFeedDb.deleteSavedNewsFeed();
+    await _saveNewsFeedDb.closeSaveNfDb();
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => SplashScreen()),(Route<dynamic>route) => false);
   }
 

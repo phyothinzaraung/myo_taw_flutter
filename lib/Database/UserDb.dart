@@ -3,32 +3,22 @@ import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:myotaw/model/UserModel.dart';
-import 'DbHelper.dart';
+import 'package:myotaw/helper/DbHelper.dart';
 
 class UserDb {
-
-  // make this a singleton class
-  UserDb._privateConstructor();
-  static final UserDb instance = UserDb._privateConstructor();
-
-  // only have a single app-wide reference to the database
   static Database _database;
 
-  Future<Database> get database async {
-    if (_database != null) return _database;
-    // lazily instantiate the db the first time it is accessed
-    _database = await _initUserDb();
-    return _database;
-  }
-
-  // this opens the database (and creates it if it doesn't exist)
-  _initUserDb() async {
+  openUserDb() async {
     Directory documentsDirectory = await getApplicationDocumentsDirectory();
-    String path = join(documentsDirectory.path, DbHelper.DATABASE_NAME);
-    return await openDatabase(path,
-        version: DbHelper.DATABASE_VERSION,
+    String path = join(documentsDirectory.path, DbHelper.USER_DATABASE_NAME);
+    _database = await openDatabase(path,
+        version: DbHelper.USER_DATABASE_VERSION,
         onCreate: _onCreate,
       );
+  }
+
+  closeUserDb(){
+    _database.close();
   }
 
   // SQL code to create the database table
@@ -43,6 +33,7 @@ class UserDb {
             ${DbHelper.COLUMN_USER_TOWNSHIP} TEXT,
             ${DbHelper.COLUMN_USER_ADDRESS} TEXT,
             ${DbHelper.COLUMN_USER_REGISTERED_DATE} TEXT,
+            ${DbHelper.COLUMN_USER_ISDELETED} INTEGER,
             ${DbHelper.COLUMN_USER_ACCESSTIME} TEXT,
             ${DbHelper.COLUMN_USER_RESOURCE} TEXT,
             ${DbHelper.COLUMN_USER_ANDROID_TOKEN} TEXT,
@@ -52,13 +43,7 @@ class UserDb {
           ''');
   }
 
-  // Helper methods
-
-  // Inserts a row in the database where each key in the Map is a column name
-  // and the value is the column value. The return value is the id of the
-  // inserted row.
   Future<int> insert(UserModel model) async {
-    Database db = await instance.database;
     Map<String, dynamic> row = {
       DbHelper.COLUMN_USER_UNIQUE : model.uniqueKey,
       DbHelper.COLUMN_USER_NAME : model.name,
@@ -68,6 +53,7 @@ class UserDb {
       DbHelper.COLUMN_USER_TOWNSHIP : model.township,
       DbHelper.COLUMN_USER_ADDRESS : model.address,
       DbHelper.COLUMN_USER_REGISTERED_DATE : model.registeredDate,
+      DbHelper.COLUMN_USER_ISDELETED : model.isDeleted,
       DbHelper.COLUMN_USER_ACCESSTIME : model.accesstime,
       DbHelper.COLUMN_USER_RESOURCE : model.resource,
       DbHelper.COLUMN_USER_ANDROID_TOKEN : model.androidToken,
@@ -76,65 +62,52 @@ class UserDb {
       DbHelper.COLUMN_USER_AMOUNT : model.amount
     };
     print('sqlInsert: ${row}');
-    return await db.insert(DbHelper.TABLE_NAME_USER, row);
+    return await _database.insert(DbHelper.TABLE_NAME_USER, row, conflictAlgorithm: ConflictAlgorithm.replace);
   }
 
-  // All of the rows are returned as a list of maps, where each map is
-  // a key-value list of columns.
+
   Future<List<Map<String, dynamic>>> queryAllRows() async {
-    Database db = await instance.database;
-    return await db.query(DbHelper.TABLE_NAME_USER);
+    return await _database.query(DbHelper.TABLE_NAME_USER);
   }
 
-  Future<List<UserModel>> getUserModel() async {
-    Database dbClient = await instance.database;
+  Future<List<UserModel>> getUser() async {
     String sql;
     sql = "SELECT * FROM ${DbHelper.TABLE_NAME_USER}";
 
-    var result = await dbClient.rawQuery(sql);
+    var result = await _database.rawQuery(sql);
     if (result.length == 0) return [];
 
     List<UserModel> list = result.map((item) {
-      return UserModel.fromJson(item);
+      return UserModel.fromMap(item);
     }).toList();
 
     print(result);
     return list;
   }
 
-  // All of the methods (insert, query, update, delete) can also be done using
-  // raw SQL commands. This method uses a raw query to give the row count.
+
   Future<int> queryRowCount() async {
-    Database db = await instance.database;
-    return Sqflite.firstIntValue(await db.rawQuery('SELECT COUNT(*) FROM ${DbHelper.TABLE_NAME_USER}'));
+    return Sqflite.firstIntValue(await _database.rawQuery('SELECT COUNT(*) FROM ${DbHelper.TABLE_NAME_USER}'));
   }
 
-  // We are assuming here that the id column in the map is set. The other
-  // column values will be used to update the row.
+
   Future<int> update(Map<String, dynamic> row) async {
-    Database db = await instance.database;
     int id = row[DbHelper.COLUMN_USER_UNIQUE];
-    return await db.update(DbHelper.TABLE_NAME_USER, row, where: '${DbHelper.COLUMN_USER_UNIQUE} = ?', whereArgs: [id]);
+    return await _database.update(DbHelper.TABLE_NAME_USER, row, where: '${DbHelper.COLUMN_USER_UNIQUE} = ?', whereArgs: [id]);
   }
 
-  // Deletes the row specified by the id. The number of affected rows is
-  // returned. This should be 1 as long as the row exists.
+
   Future<int> delete(String uniqueKey) async {
-    Database db = await instance.database;
-    return await db.delete(DbHelper.TABLE_NAME_USER, where: '${DbHelper.COLUMN_USER_UNIQUE} = ?', whereArgs: [uniqueKey]).whenComplete((){
-      db.close();
-    });
+    await _database.delete(DbHelper.TABLE_NAME_USER, where: '${DbHelper.COLUMN_USER_UNIQUE} = ?', whereArgs: [uniqueKey]);
   }
 
   Future deleteUser()async{
-    Database db = await instance.database;
-    return await db.delete(DbHelper.TABLE_NAME_USER, where: null, whereArgs: null);
+    await _database.delete(DbHelper.TABLE_NAME_USER);
   }
 
   Future<UserModel> getUserById(String uniqueKey) async {
-    Database dbClient = await instance.database;
     UserModel userModel;
-    var result = await dbClient.query(DbHelper.TABLE_NAME_USER,
+    var result = await _database.query(DbHelper.TABLE_NAME_USER,
         columns: [DbHelper.COLUMN_USER_UNIQUE,
           DbHelper.COLUMN_USER_NAME,
           DbHelper.COLUMN_USER_PHONE_NO,
@@ -143,6 +116,7 @@ class UserDb {
           DbHelper.COLUMN_USER_TOWNSHIP,
           DbHelper.COLUMN_USER_ADDRESS,
           DbHelper.COLUMN_USER_REGISTERED_DATE,
+          DbHelper.COLUMN_USER_ISDELETED,
           DbHelper.COLUMN_USER_ACCESSTIME,
           DbHelper.COLUMN_USER_RESOURCE,
           DbHelper.COLUMN_USER_ANDROID_TOKEN,
@@ -154,7 +128,6 @@ class UserDb {
     for(var i in result){
       userModel = UserModel.fromMap(i);
     }
-    await dbClient.close();
     print('getuserid ${userModel.name}');
     return userModel;
   }

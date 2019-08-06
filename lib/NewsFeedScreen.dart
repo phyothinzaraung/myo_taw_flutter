@@ -4,7 +4,6 @@ import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'Model/NewsFeedReactModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:intl/intl.dart';
 import 'helper/ShowDateTimeHelper.dart';
 import 'Model/NewsFeedModel.dart';
 import 'NewsFeedDetailScreen.dart';
@@ -12,10 +11,10 @@ import 'helper/MyLoadMore.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
-import 'helper/UserDb.dart';
 import 'model/UserModel.dart';
 import 'helper/MyoTawConstant.dart';
-import 'SplashScreen.dart';
+import 'Database/SaveNewsFeedDb.dart';
+import 'model/SaveNewsFeedModel.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   UserModel model;
@@ -32,11 +31,12 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   bool _isEnd , _isCon= false;
   int page = 1;
   int pageCount = 10;
-  UserDb _userDb = UserDb.instance;
   UserModel _userModel;
   String _city;
+  SaveNewsFeedDb _saveNewsFeedDb = SaveNewsFeedDb();
   int _organizationId;
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
+  SaveNewsFeedModel _saveNewsFeedModel = SaveNewsFeedModel();
   _NewsFeedScreenState(this._userModel);
 
   @override
@@ -85,18 +85,25 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
           for(var model in result){
             _newsFeedReactModel.add(NewsFeedReactModel.fromJson(model));
           }
-          setState(() {
-            _isEnd = false;
-          });
+          //prevent set state is called after NewsFeedScreen is disposed
+          if(this.mounted){
+            setState(() {
+              _isEnd = false;
+            });
+          }
         }else{
+          if(this.mounted){
+            setState(() {
+              _isEnd = true;
+            });
+          }
+        }
+      }else{
+        if(this.mounted){
           setState(() {
             _isEnd = true;
           });
         }
-      }else{
-        setState(() {
-          _isEnd = true;
-        });
       }
     }else{
       Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
@@ -166,7 +173,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       margin: EdgeInsets.only(bottom: 5.0),
                       child: Row(mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Flexible(child: Text(title!=null?title:'---',style: TextStyle(fontSize: FontSize.textSizeNormal), maxLines: 2, softWrap: true,))
+                          Expanded(child: Text(title!=null?title:'---',style: TextStyle(fontSize: FontSize.textSizeNormal), maxLines: 1, overflow: TextOverflow.ellipsis,))
                         ],),
                     ),
                     Container(
@@ -233,8 +240,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       ],
                     ),
                   ),
-                  Expanded(child: Row(mainAxisAlignment: MainAxisAlignment.end,
-                    children: <Widget>[Image.asset('images/save.png', width: 20.0,height: 20.0,),],))
+                  Expanded(child: GestureDetector(onTap: (){
+                    _saveNewsFeed(newsFeedModel);
+
+                  },
+                    child: Row(mainAxisAlignment: MainAxisAlignment.end,
+                      children: <Widget>[Image.asset('images/save.png', width: 20.0,height: 20.0,),],),
+                  ))
                 ],
               ),
             )
@@ -242,6 +254,20 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
         ),
       ),
     );
+  }
+
+  void _saveNewsFeed(NewsFeedModel model)async{
+    await _saveNewsFeedDb.openSaveNfDb();
+    _saveNewsFeedModel.id = model.uniqueKey;
+    _saveNewsFeedModel.title = model.title;
+    _saveNewsFeedModel.body = model.body;
+    _saveNewsFeedModel.photoUrl = model.photoUrl;
+    _saveNewsFeedModel.videoUrl = model.videoUrl;
+    _saveNewsFeedModel.thumbNail = model.thumbNail;
+    _saveNewsFeedModel.accessTime = DateTime.now().toString();
+    await _saveNewsFeedDb.insert(_saveNewsFeedModel);
+    await _saveNewsFeedDb.closeSaveNfDb();
+    Fluttertoast.showToast(msg: 'Save Successful', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
   }
 
   void _callLikeWebService(String newsFeedId)async{

@@ -32,4 +32,12 @@ class Sharepreferenceshelper{
   void logOutSharePref(){
     sharedPreferences.clear();
   }
+
+  bool isLogin(){
+    if(sharedPreferences.containsKey(USER_PHONE_KEY)){
+      return true;
+    }else{
+      return false;
+    }
+  }
 }
