@@ -6,6 +6,16 @@ import 'helper/SharePreferencesHelper.dart';
 import 'package:myotaw/Database/UserDb.dart';
 import 'SplashScreen.dart';
 import 'Database/SaveNewsFeedDb.dart';
+import 'package:dio/dio.dart';
+import 'package:async_loader/async_loader.dart';
+import 'helper/ServiceHelper.dart';
+import 'package:connectivity/connectivity.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'helper/MyLoadMore.dart';
+import 'model/TaxRecordModel.dart';
+import 'helper/ShowDateTimeHelper.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'ProfileFormScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   UserModel model;
@@ -19,6 +29,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
   UserDb _userDb = UserDb();
   SaveNewsFeedDb _saveNewsFeedDb = SaveNewsFeedDb();
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
+  final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
+  bool _isEnd , _isCon, _isLoading = false;
+  int page = 1;
+  int pageCount = 10;
+  Response response;
+  List<TaxRecordModel> _taxRecordModelList = new List<TaxRecordModel>();
   _ProfileScreenState(this._userModel);
 
 
@@ -26,6 +42,52 @@ class _ProfileScreenState extends State<ProfileScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _checkCon();
+  }
+
+  _getAllTaxRecord(int p)async{
+    response = await ServiceHelper().getAllTaxRecord(p, pageCount, _userModel.currentRegionCode, _userModel.uniqueKey);
+    var result = response.data['Results'];
+    if(response.statusCode == 200){
+      if(result != null){
+        if(result.length > 0){
+          for(var model in result){
+            _taxRecordModelList.add(TaxRecordModel.fromJson(model));
+          }
+          //prevent set state is called after NewsFeedScreen is disposed
+          if(this.mounted){
+            setState(() {
+              _isEnd = false;
+            });
+          }
+        }else{
+          if(this.mounted){
+            setState(() {
+              _isEnd = true;
+            });
+          }
+        }
+      }else{
+        if(this.mounted){
+          setState(() {
+            _isEnd = true;
+          });
+        }
+      }
+    }else{
+      Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+    }
+
+  }
+
+  _checkCon()async{
+    var conResult = await(Connectivity().checkConnectivity());
+    if (conResult == ConnectivityResult.none) {
+      _isCon = false;
+    }else{
+      _isCon = true;
+    }
+    print('isCon : ${_isCon}');
   }
 
   _logOutClear()async{
@@ -80,106 +142,211 @@ class _ProfileScreenState extends State<ProfileScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(MyString.txt_profile, style: TextStyle(fontSize: FontSize.textSizeNormal),),
+  Widget modalProgressIndicator(){
+    return Center(
+      child: Card(
+        child: Container(
+          width: 220.0,
+          height: 80.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(margin: EdgeInsets.only(right: 30.0),
+                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.black))),
+              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
+            ],
+          ),
+        ),
       ),
-      body: Container(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-              child: Row(
-                children: <Widget>[
-                  Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
-                  Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall),)
-                ],
-              ),
-            ),
-            Card(
+    );
+  }
+
+  void _deleteTaxRecord(int id)async{
+    response = await ServiceHelper().deleteTaxRecord(id);
+    await _handleRefresh();
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  _dialogDelete(int id){
+    showDialog(
+        context: context,
+        builder: (ctxt){
+          return Dialog(
+            child: Container(
+              margin: EdgeInsets.all(10.0),
+              height: 160.0,
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+                  Container(margin: EdgeInsets.only(bottom: 10.0),child: Image.asset('images/confirm_icon.png', width: 60.0, height: 60.0,)),
+                  Text(MyString.txt_are_u_sure, style: TextStyle(fontSize: FontSize.textSizeSmall),),
                   Container(
-                    margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0, bottom: 10.0),
-                      alignment: Alignment.topLeft,
-                      child: Row(
-                        children: <Widget>[
-                          Stack(
-                            children: <Widget>[
-                              CircleAvatar(backgroundImage: _userModel.photoUrl!=null?
-                              NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                                backgroundColor: MyColor.colorGrey, radius: 50.0,),
-                              Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
-                            ],
-                          ),
-                          Container(
-                            margin: EdgeInsets.only(left: 40.0),
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(margin: EdgeInsets.only(bottom: 10.0),
-                                    child: Text(_userModel.name, style: TextStyle(fontSize: FontSize.textSizeSmall,),)),
-                                Text(MyanNumConvertHelper().getMyanNumString(_userModel.phoneNo), style: TextStyle(fontSize: FontSize.textSizeSmall),),
-                              ],
-                            ),
-                          )
-                        ],
-                      )
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    margin: EdgeInsets.only(top: 10.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        Container(margin: EdgeInsets.only(bottom: 5.0),child: Text(MyString.txt_setting, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
-                        Container(
-                          child: Row(
-                            children: <Widget>[
-                                Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/edit_profile.png',width: 30.0, height: 38.0,)),
-                                Text(MyString.txt_edit_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                            ],
-                          ),
-                        ),
-                        Divider(color: MyColor.colorPrimary,),
-                        Container(
-                          child: Row(
-                            children: <Widget>[
-                              Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/apply_biz_list.png',width: 30.0, height: 38.0,)),
-                              Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                            ],
-                          ),
-                        ),
-                        Divider(color: MyColor.colorPrimary,),
-                        GestureDetector(
-                          onTap: (){
-                            _dialogLogOut();
-                          },
-                          child: Container(
-                            child: Row(
-                              children: <Widget>[
-                                Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/log_out.png',width: 30.0, height: 38.0,)),
-                                Text(MyString.txt_log_out, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                              ],
-                            ),
-                          ),
-                        ),
+                        RaisedButton(onPressed: (){
+                          Navigator.of(context).pop();
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          _deleteTaxRecord(id);
+                        },child: Text(MyString.txt_delete,
+                          style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,),
+                        RaisedButton(onPressed: (){
+                          Navigator.of(context).pop();
+                        },child: Text(MyString.txt_delete_cancel, style: TextStyle(fontSize: FontSize.textSizeSmall),),color: MyColor.colorGrey,)
                       ],
                     ),
                   )
                 ],
               ),
             ),
-            Container(
-              margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
+          );
+        });
+  }
+
+  Widget _taxRecordList(int i){
+    TaxRecordModel taxRecordModel = _taxRecordModelList[i];
+    return Card(
+      margin: EdgeInsets.only(bottom: 1.0),
+      elevation: 0.5,
+      child: Container(
+        margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
+        child: Row(
+          children: <Widget>[
+           Image.asset('images/tax_record.png', width: 50.0, height: 50.0,),
+            Expanded(
+              child: Container(
+                margin: EdgeInsets.all(15.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(margin: EdgeInsets.only(bottom: 5.0),
+                        child: Text(taxRecordModel.subject,style: TextStyle(fontSize: FontSize.textSizeNormal),overflow: TextOverflow.ellipsis,maxLines: 1,)),
+                    Text(showDateTime(taxRecordModel.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall),)
+                  ],
+                ),
+              ),
+            ),
+            GestureDetector(onTap: (){
+              _dialogDelete(taxRecordModel.id);
+            },child: Icon(Icons.delete, color: MyColor.colorPrimary,))
+          ],
+        ),
+      ),
+    );
+
+  }
+
+  Widget _listView(){
+    return ListView.builder(
+        itemCount: _taxRecordModelList.length,
+        itemBuilder: (context, i){
+          return Column(
+            children: <Widget>[
+          i==0?Container(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
+                child: Row(
+                  children: <Widget>[
+                    Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
+                    Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall),)
+                  ],
+                ),
+              ),
+              Card(
+                child: Column(
+                  children: <Widget>[
+                    Container(
+                        margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0, bottom: 10.0),
+                        alignment: Alignment.topLeft,
+                        child: Row(
+                          children: <Widget>[
+                            Stack(
+                              children: <Widget>[
+                                CircleAvatar(backgroundImage: _userModel.photoUrl!=null?
+                                NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                                  backgroundColor: MyColor.colorGrey, radius: 50.0,),
+                                Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
+                              ],
+                            ),
+                            Container(
+                              margin: EdgeInsets.only(left: 40.0),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(margin: EdgeInsets.only(bottom: 10.0),
+                                      child: Text(_userModel.name, style: TextStyle(fontSize: FontSize.textSizeSmall,),)),
+                                  Text(MyanNumConvertHelper().getMyanNumString(_userModel.phoneNo), style: TextStyle(fontSize: FontSize.textSizeSmall),),
+                                ],
+                              ),
+                            )
+                          ],
+                        )
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(margin: EdgeInsets.only(bottom: 5.0),child: Text(MyString.txt_setting, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
+                          GestureDetector(
+                            onTap: (){
+                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_userModel)));
+                            },
+                            child: Container(
+                              child: Row(
+                                children: <Widget>[
+                                  Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/edit_profile.png',width: 30.0, height: 38.0,)),
+                                  Text(MyString.txt_edit_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                                ],
+                              ),
+                            ),
+                          ),
+                          Divider(color: MyColor.colorPrimary,),
+                          Container(
+                            child: Row(
+                              children: <Widget>[
+                                Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/apply_biz_list.png',width: 30.0, height: 38.0,)),
+                                Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                              ],
+                            ),
+                          ),
+                          Divider(color: MyColor.colorPrimary,),
+                          GestureDetector(
+                            onTap: (){
+                              _dialogLogOut();
+                            },
+                            child: Container(
+                              child: Row(
+                                children: <Widget>[
+                                  Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/log_out.png',width: 30.0, height: 38.0,)),
+                                  Text(MyString.txt_log_out, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(margin: EdgeInsets.only(bottom: 5.0),
                         child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
                     Container(
+                      margin: EdgeInsets.only(bottom: 20.0),
                       height: 50.0,
                       width: 300.0,
                       child: RaisedButton(onPressed: (){
@@ -193,10 +360,424 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     )
                   ],
                 ),
-            )
-          ],
-        ),
+              )
+            ],
+          ),
+          ): Container(width: 0.0, height: 0.0,),
+              _taxRecordList(i)
+            ],
+          );
+        });
+
+  }
+
+  Widget getNoConnectionWidget(){
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
+            child: Row(
+              children: <Widget>[
+                Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
+                Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall),)
+              ],
+            ),
+          ),
+          Card(
+            child: Column(
+              children: <Widget>[
+                Container(
+                    margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0, bottom: 10.0),
+                    alignment: Alignment.topLeft,
+                    child: Row(
+                      children: <Widget>[
+                        Stack(
+                          children: <Widget>[
+                            CircleAvatar(backgroundImage: _userModel.photoUrl!=null?
+                            NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                              backgroundColor: MyColor.colorGrey, radius: 50.0,),
+                            Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 40.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(margin: EdgeInsets.only(bottom: 10.0),
+                                  child: Text(_userModel.name, style: TextStyle(fontSize: FontSize.textSizeSmall,),)),
+                              Text(MyanNumConvertHelper().getMyanNumString(_userModel.phoneNo), style: TextStyle(fontSize: FontSize.textSizeSmall),),
+                            ],
+                          ),
+                        )
+                      ],
+                    )
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(margin: EdgeInsets.only(bottom: 5.0),child: Text(MyString.txt_setting, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
+                      Container(
+                        child: Row(
+                          children: <Widget>[
+                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/edit_profile.png',width: 30.0, height: 38.0,)),
+                            Text(MyString.txt_edit_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                          ],
+                        ),
+                      ),
+                      Divider(color: MyColor.colorPrimary,),
+                      Container(
+                        child: Row(
+                          children: <Widget>[
+                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/apply_biz_list.png',width: 30.0, height: 38.0,)),
+                            Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                          ],
+                        ),
+                      ),
+                      Divider(color: MyColor.colorPrimary,),
+                      GestureDetector(
+                        onTap: (){
+                          _dialogLogOut();
+                        },
+                        child: Container(
+                          child: Row(
+                            children: <Widget>[
+                              Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/log_out.png',width: 30.0, height: 38.0,)),
+                              Text(MyString.txt_log_out, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(margin: EdgeInsets.only(bottom: 5.0),
+                    child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
+                Container(
+                  height: 50.0,
+                  width: 300.0,
+                  child: RaisedButton(onPressed: (){
+                  },child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(margin: EdgeInsets.only(right: 10.0),child: Text(MyString.txt_tax_new_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
+                      Icon(Icons.add, color: Colors.white,)
+                    ],
+                  ),color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('No Internet Connection'),
+                  FlatButton(onPressed: (){
+                    asyncLoaderState.currentState.reloadState();
+                    _checkCon();
+                  }
+                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
+                ],
+              ),
+            ),
+          )
+        ],
       ),
+    );
+  }
+
+  Widget _renderLoad(){
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
+            child: Row(
+              children: <Widget>[
+                Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
+                Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall),)
+              ],
+            ),
+          ),
+          Card(
+            child: Column(
+              children: <Widget>[
+                Container(
+                    margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0, bottom: 10.0),
+                    alignment: Alignment.topLeft,
+                    child: Row(
+                      children: <Widget>[
+                        Stack(
+                          children: <Widget>[
+                            CircleAvatar(backgroundImage: _userModel.photoUrl!=null?
+                            NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                              backgroundColor: MyColor.colorGrey, radius: 50.0,),
+                            Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 40.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(margin: EdgeInsets.only(bottom: 10.0),
+                                  child: Text(_userModel.name, style: TextStyle(fontSize: FontSize.textSizeSmall,),)),
+                              Text(MyanNumConvertHelper().getMyanNumString(_userModel.phoneNo), style: TextStyle(fontSize: FontSize.textSizeSmall),),
+                            ],
+                          ),
+                        )
+                      ],
+                    )
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(margin: EdgeInsets.only(bottom: 5.0),child: Text(MyString.txt_setting, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
+                      Container(
+                        child: Row(
+                          children: <Widget>[
+                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/edit_profile.png',width: 30.0, height: 38.0,)),
+                            Text(MyString.txt_edit_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                          ],
+                        ),
+                      ),
+                      Divider(color: MyColor.colorPrimary,),
+                      Container(
+                        child: Row(
+                          children: <Widget>[
+                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/apply_biz_list.png',width: 30.0, height: 38.0,)),
+                            Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                          ],
+                        ),
+                      ),
+                      Divider(color: MyColor.colorPrimary,),
+                      GestureDetector(
+                        onTap: (){
+                          _dialogLogOut();
+                        },
+                        child: Container(
+                          child: Row(
+                            children: <Widget>[
+                              Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/log_out.png',width: 30.0, height: 38.0,)),
+                              Text(MyString.txt_log_out, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(margin: EdgeInsets.only(bottom: 5.0),
+                    child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
+                Container(
+                  margin: EdgeInsets.only(bottom: 20.0),
+                  height: 50.0,
+                  width: 300.0,
+                  child: RaisedButton(onPressed: (){
+                  },child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(margin: EdgeInsets.only(right: 10.0),child: Text(MyString.txt_tax_new_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
+                      Icon(Icons.add, color: Colors.white,)
+                    ],
+                  ),color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
+                )
+              ],
+            ),
+          ),
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
+        ],
+      ),
+    );
+  }
+
+  Widget _headerProfile(){
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
+            child: Row(
+              children: <Widget>[
+                Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
+                Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall),)
+              ],
+            ),
+          ),
+          Card(
+            child: Column(
+              children: <Widget>[
+                Container(
+                    margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0, bottom: 10.0),
+                    alignment: Alignment.topLeft,
+                    child: Row(
+                      children: <Widget>[
+                        Stack(
+                          children: <Widget>[
+                            CircleAvatar(backgroundImage: _userModel.photoUrl!=null?
+                            NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                              backgroundColor: MyColor.colorGrey, radius: 50.0,),
+                            Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
+                          ],
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(left: 40.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Container(margin: EdgeInsets.only(bottom: 10.0),
+                                  child: Text(_userModel.name, style: TextStyle(fontSize: FontSize.textSizeSmall,),)),
+                              Text(MyanNumConvertHelper().getMyanNumString(_userModel.phoneNo), style: TextStyle(fontSize: FontSize.textSizeSmall),),
+                            ],
+                          ),
+                        )
+                      ],
+                    )
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(margin: EdgeInsets.only(bottom: 5.0),child: Text(MyString.txt_setting, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
+                      Container(
+                        child: Row(
+                          children: <Widget>[
+                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/edit_profile.png',width: 30.0, height: 38.0,)),
+                            Text(MyString.txt_edit_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                          ],
+                        ),
+                      ),
+                      Divider(color: MyColor.colorPrimary,),
+                      Container(
+                        child: Row(
+                          children: <Widget>[
+                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/apply_biz_list.png',width: 30.0, height: 38.0,)),
+                            Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                          ],
+                        ),
+                      ),
+                      Divider(color: MyColor.colorPrimary,),
+                      GestureDetector(
+                        onTap: (){
+                          _dialogLogOut();
+                        },
+                        child: Container(
+                          child: Row(
+                            children: <Widget>[
+                              Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/log_out.png',width: 30.0, height: 38.0,)),
+                              Text(MyString.txt_log_out, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
+          Container(
+            margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Container(margin: EdgeInsets.only(bottom: 5.0),
+                    child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
+                Container(
+                  height: 50.0,
+                  width: 300.0,
+                  child: RaisedButton(onPressed: (){
+                  },child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(margin: EdgeInsets.only(right: 10.0),child: Text(MyString.txt_tax_new_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
+                      Icon(Icons.add, color: Colors.white,)
+                    ],
+                  ),color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Future<Null> _handleRefresh() async {
+    await _checkCon();
+    if(_isCon){
+      _taxRecordModelList.clear();
+      page = 0;
+      page++;
+      await _getAllTaxRecord(page);
+    }else{
+      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
+    }
+    return null;
+  }
+
+  Future<bool> _loadMore() async {
+    await _checkCon();
+    if(_isCon){
+      page++;
+      await _getAllTaxRecord(page);
+      //Fluttertoast.showToast(msg: 'call loadmore');
+    }
+    return _isCon;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    var _asyncLoader = new AsyncLoader(
+        key: asyncLoaderState,
+        initState: () async => await _getAllTaxRecord(page),
+        renderLoad: () => _renderLoad(),
+        renderError: ([error]) => getNoConnectionWidget(),
+        renderSuccess: ({data}) => Container(
+          child: RefreshIndicator(
+            onRefresh: _handleRefresh,
+            child: LoadMore(
+                isFinish: _isEnd,
+                onLoadMore: _loadMore,
+                delegate: DefaultLoadMoreDelegate(),
+                textBuilder: DefaultLoadMoreTextBuilder.english,
+                child: _taxRecordModelList.isNotEmpty?_listView(): _headerProfile()
+            ),
+          ),
+        )
+    );
+    return Scaffold(
+      appBar: AppBar(
+        title: Text(MyString.txt_profile, style: TextStyle(fontSize: FontSize.textSizeNormal),),
+      ),
+      body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: modalProgressIndicator(),child: _asyncLoader),
     );
   }
 }

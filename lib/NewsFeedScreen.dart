@@ -15,6 +15,7 @@ import 'model/UserModel.dart';
 import 'helper/MyoTawConstant.dart';
 import 'Database/SaveNewsFeedDb.dart';
 import 'model/SaveNewsFeedModel.dart';
+import 'ProfileScreen.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   UserModel model;
@@ -62,6 +63,10 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
         _city = MyString.MLM_CITY;
         _organizationId = OrganizationId.MLM_ORGANIZATION_ID;
     }
+  }
+
+  _navigateToProfile(){
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
   }
 
   _checkCon()async{
@@ -264,6 +269,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     _saveNewsFeedModel.photoUrl = model.photoUrl;
     _saveNewsFeedModel.videoUrl = model.videoUrl;
     _saveNewsFeedModel.thumbNail = model.thumbNail;
+    _saveNewsFeedModel.contentType = model.uploadType;
     _saveNewsFeedModel.accessTime = DateTime.now().toString();
     await _saveNewsFeedDb.insert(_saveNewsFeedModel);
     await _saveNewsFeedDb.closeSaveNfDb();
@@ -298,8 +304,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                             ],
                           ),
                         ),
-                        CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                          backgroundColor: MyColor.colorGrey, radius: 25.0,)
+                        GestureDetector(
+                          onTap: (){
+                            _navigateToProfile();
+                          },
+                          child: CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                            backgroundColor: MyColor.colorGrey, radius: 25.0,),
+                        )
                       ],
                     ),
                   ],
@@ -328,8 +339,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   ],
                 ),
               ),
-              CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                backgroundColor: MyColor.colorGrey, radius: 25.0,)
+              GestureDetector(
+                onTap: (){
+                  _navigateToProfile();
+                },
+                child: CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                  backgroundColor: MyColor.colorGrey, radius: 25.0,),
+              )
             ],
           ),
           Expanded(
@@ -378,8 +394,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   ],
                 ),
               ),
-              CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                backgroundColor: MyColor.colorGrey, radius: 25.0,)
+              GestureDetector(
+                onTap: (){
+                  _navigateToProfile();
+                },
+                child: CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
+                  backgroundColor: MyColor.colorGrey, radius: 25.0,),
+              )
             ],
           ),
           Center(
@@ -406,6 +427,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var _asyncLoader = new AsyncLoader(
       key: asyncLoaderState,
       initState: () async => await _getNewsFeed(page),

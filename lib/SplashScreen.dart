@@ -6,6 +6,10 @@ import 'helper/SharePreferencesHelper.dart';
 import 'LoginScreen.dart';
 import 'package:myotaw/Database/UserDb.dart';
 import 'model/UserModel.dart';
+import 'Database/LocationDb.dart';
+import 'model/LocationModel.dart';
+import 'dart:convert';
+import 'package:flutter/services.dart' show rootBundle;
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -15,6 +19,7 @@ class SplashScreen extends StatefulWidget {
 class _SplashScreenState extends State<SplashScreen> {
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   UserDb _userDb = UserDb();
+  LocationDb _locationDb = LocationDb();
   UserModel _userModel;
   String _logo, _title;
 
@@ -44,7 +49,24 @@ class _SplashScreenState extends State<SplashScreen> {
         default:
       }
     }
+    await _locationInit();
     navigateMainScreen();
+  }
+
+  _locationInit()async{
+    await _locationDb.openLocationDb();
+    bool isSetup = await _locationDb.isLocationDbSetup();
+    await _locationDb.closeLocationDb();
+    if(!isSetup){
+      var stringJson = await rootBundle.loadString('assets/location.json');
+      var list = jsonDecode(stringJson);
+      for(var i in list){
+        await _locationDb.openLocationDb();
+        await _locationDb.insert(LocationModel.fromJson(i));
+        await _locationDb.closeLocationDb();
+      }
+      print('locationDbsetup');
+    }
   }
 
   navigateMainScreen() {

@@ -34,7 +34,7 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
       looping: false,
       errorBuilder: (context, errormessage){
         return Center(
-          child: Text(errormessage, style: TextStyle(color: Colors.white),),
+          child: Text('Need internet connection to watch video', style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),
         );
       }
     );

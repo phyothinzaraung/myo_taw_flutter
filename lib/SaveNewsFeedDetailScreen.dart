@@ -3,6 +3,8 @@ import 'model/SaveNewsFeedModel.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/ShowDateTimeHelper.dart';
 import 'package:flutter_html_textview_render/html_text_view.dart';
+import 'NewsFeedPhotoDetail.dart';
+import 'NewsFeedVideoScreen.dart';
 
 class SaveNewsFeedDetailScreen extends StatefulWidget {
   SaveNewsFeedModel model;
@@ -26,12 +28,29 @@ class _SaveNewsFeedDetailScreenState extends State<SaveNewsFeedDetailScreen> {
           Container(
             child: Column(
               children: <Widget>[
-                Hero(
-                  tag: _saveNewsFeedModel.photoUrl,
-                  child: _saveNewsFeedModel.photoUrl!=null?Image.network(BaseUrl.NEWS_FEED_CONTENT_URL+_saveNewsFeedModel.photoUrl,
-                    width: double.maxFinite, height: 180.0, fit: BoxFit.cover,):
-                  Image.asset('images/placeholder_newsfeed.jpg', width: double.maxFinite, height: 180.0, fit: BoxFit.cover,),
-                ),
+                _saveNewsFeedModel.contentType==MyString.NEWS_FEED_CONTENT_TYPE_PHOTO?
+                _saveNewsFeedModel.photoUrl!=null?GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetail([], _saveNewsFeedModel.photoUrl)));
+                  },
+                  child: Image.network(BaseUrl.NEWS_FEED_CONTENT_URL+_saveNewsFeedModel.photoUrl,
+                    width: double.maxFinite, height: 180.0, fit: BoxFit.cover,),
+                ):
+                Image.asset('images/placeholder_newsfeed.jpg', width: double.maxFinite, height: 180.0, fit: BoxFit.cover,):
+                _saveNewsFeedModel.thumbNail!=null?GestureDetector(
+                  onTap: (){
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedVideoScreen(_saveNewsFeedModel.videoUrl)));
+                  },
+                  child: Stack(
+                    alignment: Alignment.center,
+                    children: <Widget>[
+                      Image.network(_saveNewsFeedModel.thumbNail, width: double.maxFinite,height: 180.0, fit: BoxFit.cover,),
+                      Container(width: double.maxFinite, height: 180.0,color: Colors.black.withOpacity(0.6),),
+                      Image.asset('images/video_play.png', width: 80.0, height: 80.0, fit: BoxFit.cover,)
+                    ],
+                  ),
+                ):
+                Image.asset('images/placeholder_newsfeed.jpg', width: double.maxFinite, height: 180.0, fit: BoxFit.cover,),
                 Container(
                   padding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 25.0, right: 25.0),
                   child: Column(

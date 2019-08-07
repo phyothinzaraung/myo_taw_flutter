@@ -7,8 +7,16 @@ class SaveNewsFeedModel{
   String _videoUrl;
   String _thumbNail;
   String _accessTime;
+  String _contentType;
 
   SaveNewsFeedModel();
+
+
+  String get contentType => _contentType;
+
+  set contentType(String value) {
+    _contentType = value;
+  }
 
   String get id => _id;
 
@@ -59,5 +67,6 @@ class SaveNewsFeedModel{
         _photoUrl = map[DbHelper.COLUMN_SAVE_NF_PHOTO_URL],
         _videoUrl = map[DbHelper.COLUMN_SAVE_NF_VIDEO_URL],
         _thumbNail = map[DbHelper.COLUMN_SAVE_NF_THUMBNAIL],
-        _accessTime = map[DbHelper.COLUMN_SAVE_NF_ACCESSTIME];
+        _accessTime = map[DbHelper.COLUMN_SAVE_NF_ACCESSTIME],
+        _contentType = map[DbHelper.COLUMN_SAVE_NF_CONTENT_TYPE];
 }

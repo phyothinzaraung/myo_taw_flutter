@@ -60,6 +60,7 @@ flutter:
 
 
   assets:
+    - assets/location.json
     - images/myo_taw_splash_screen.jpg
     - images/newsfeed.png
     - images/dashboard.png
@@ -91,6 +92,9 @@ flutter:
     - images/logout_icon.png
     - images/file_save.png
     - images/popup_menu.png
+    - images/confirm_icon.png
+    - images/empty_box.png
+    - images/tax_record.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

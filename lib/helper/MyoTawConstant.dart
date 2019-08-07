@@ -56,6 +56,15 @@ class MyString{
   static const String txt_tax_new_record = 'အခွန်မှတ်တမ်းအသစ် မှတ်ရန်';
   static const String txt_are_u_sure = 'သေချာပါသလား';
   static const String title_save_nf = 'သိမ်းဆည်းထားသည်များ';
+  static const String txt_delete = 'ဖျက်မည်';
+  static const String txt_delete_cancel = 'မဖျက်ပါ';
+  static const String NEWS_FEED_CONTENT_TYPE_PHOTO = 'Photo';
+  static const String NEWS_FEED_CONTENT_TYPE_VIDEO = 'Video';
+  static const String txt_user_name = 'အမည်';
+  static const String txt_user_address = 'လိပ်စာ';
+  static const String txt_user_state = 'တိုင်း/ဒေသကြီး';
+  static const String txt_user_township = 'မြို့နယ်';
+  static const String txt_save_user_profile = 'သိမ်းဆည်းမည်';
 }
 
 class OrganizationId{

@@ -31,6 +31,22 @@ class ServiceHelper{
   return response;
  }
 
+ getAllTaxRecord<Response>(int page, int pageSize, String regionCode, String unique) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"TaxRecord/GetTaxRecord",
+      queryParameters: {"page": page, "pageSize": pageSize, "RegionCode": regionCode, "UniqueKey": unique});
+  return response;
+ }
+
+ deleteTaxRecord<Response>(int id) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"TaxRecord/DeleteTaxRecord",
+      queryParameters: {"ID": id});
+  return response;
+ }
+
 }
 
 

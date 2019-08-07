@@ -39,6 +39,22 @@ class DbHelper{
   static final COLUMN_SAVE_NF_VIDEO_URL = 'videoUrl';
   static final COLUMN_SAVE_NF_THUMBNAIL = 'thumbnail';
   static final COLUMN_SAVE_NF_ACCESSTIME = 'accesstime';
+  static final COLUMN_SAVE_NF_CONTENT_TYPE = 'contentType';
+  //--------------------------------------------------------------------------------------------------------------------------//
 
+  //LocationTable
+
+  static final TABLE_NAME_LOCATION = 'LocationTable';
+
+  static final LOCATION_DATABASE_NAME = 'Location.db';
+  static final LOCATION_DATABASE_VERSION = 1;
+
+  static final COLUMN_LOCATION_ID = 'id';
+  static final COLUMN_STATE_DIVISION = 'state_division';
+  static final COLUMN_STATE_DIVISION_UNICODE = 'state_division_unicode';
+  static final COLUMN_STATE_DIVISION_CODE = 'state_devision_code';
+  static final COLUMN_TOWNHIP = 'township';
+  static final COLUMN_TOWNSHIP_UNICODE = 'township_unicode';
+  static final COLUMN_TOWNSHIP_CODE = 'township_code';
 }
 

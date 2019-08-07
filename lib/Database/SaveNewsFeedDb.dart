@@ -32,7 +32,8 @@ class SaveNewsFeedDb{
             ${DbHelper.COLUMN_SAVE_NF_PHOTO_URL} TEXT,
             ${DbHelper.COLUMN_SAVE_NF_VIDEO_URL} TEXT,
             ${DbHelper.COLUMN_SAVE_NF_THUMBNAIL} TEXT,
-            ${DbHelper.COLUMN_SAVE_NF_ACCESSTIME} TEXT)
+            ${DbHelper.COLUMN_SAVE_NF_ACCESSTIME} TEXT,
+            ${DbHelper.COLUMN_SAVE_NF_CONTENT_TYPE} TEXT)
           ''');
   }
 
@@ -45,6 +46,7 @@ class SaveNewsFeedDb{
       DbHelper.COLUMN_SAVE_NF_VIDEO_URL : model.videoUrl,
       DbHelper.COLUMN_SAVE_NF_THUMBNAIL : model.thumbNail,
       DbHelper.COLUMN_SAVE_NF_ACCESSTIME : model.accessTime,
+      DbHelper.COLUMN_SAVE_NF_CONTENT_TYPE : model.contentType,
     };
     print('sqlInsert: ${row}');
     return await _database.insert(DbHelper.TABLE_NAME_SAVE_NEWS_FEED, row, conflictAlgorithm: ConflictAlgorithm.replace);
@@ -87,7 +89,7 @@ class SaveNewsFeedDb{
     await _database.delete(DbHelper.TABLE_NAME_SAVE_NEWS_FEED);
   }
 
-  Future<SaveNewsFeedModel> getUserById(String uniqueKey) async {
+  Future<SaveNewsFeedModel> getNewsFeedById(String uniqueKey) async {
     SaveNewsFeedModel saveModel;
     var result = await _database.query(DbHelper.TABLE_NAME_SAVE_NEWS_FEED,
         columns: [DbHelper.COLUMN_SAVE_NF_ID,
@@ -96,7 +98,8 @@ class SaveNewsFeedDb{
           DbHelper.COLUMN_SAVE_NF_PHOTO_URL,
           DbHelper.COLUMN_SAVE_NF_VIDEO_URL,
           DbHelper.COLUMN_SAVE_NF_THUMBNAIL,
-          DbHelper.COLUMN_SAVE_NF_ACCESSTIME,],
+          DbHelper.COLUMN_SAVE_NF_ACCESSTIME,
+          DbHelper.COLUMN_SAVE_NF_CONTENT_TYPE,],
         where: '${DbHelper.COLUMN_SAVE_NF_ID} = ?', whereArgs: ['$uniqueKey']);
     if (result.length == 0) return null;
     for(var i in result){
