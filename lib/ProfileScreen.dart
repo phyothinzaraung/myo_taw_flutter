@@ -16,6 +16,7 @@ import 'model/TaxRecordModel.dart';
 import 'helper/ShowDateTimeHelper.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'ProfileFormScreen.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfileScreen extends StatefulWidget {
   UserModel model;
@@ -34,6 +35,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int page = 1;
   int pageCount = 10;
   Response response;
+  ImageProvider _profilePhoto;
   List<TaxRecordModel> _taxRecordModelList = new List<TaxRecordModel>();
   _ProfileScreenState(this._userModel);
 
@@ -46,6 +48,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _getAllTaxRecord(int p)async{
+    _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
     response = await ServiceHelper().getAllTaxRecord(p, pageCount, _userModel.currentRegionCode, _userModel.uniqueKey);
     var result = response.data['Results'];
     if(response.statusCode == 200){
@@ -241,6 +244,132 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   }
 
+  void _navigateToProfileScreen()async{
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_userModel)));
+    if(result != null && result.containsKey('isNeedRefresh') == true){
+      _handleRefresh();
+    }
+  }
+
+  Widget _headerProfile(){
+    return Column(
+      children: <Widget>[
+        Container(
+          margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
+          child: Row(
+            children: <Widget>[
+              Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
+              Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall),)
+            ],
+          ),
+        ),
+        Card(
+          margin: EdgeInsets.all(0.0),
+          child: Column(
+            children: <Widget>[
+              Container(
+                  margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0, bottom: 10.0),
+                  alignment: Alignment.topLeft,
+                  child: Row(
+                    children: <Widget>[
+                      Stack(
+                        children: <Widget>[
+                          CircleAvatar(backgroundImage: _userModel.photoUrl!=null?
+                          _profilePhoto:AssetImage('images/profile_placeholder.png'),
+                            backgroundColor: MyColor.colorGrey, radius: 50.0,),
+                          Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
+                        ],
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(left: 40.0),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(margin: EdgeInsets.only(bottom: 10.0),
+                                child: Text(_userModel.name, style: TextStyle(fontSize: FontSize.textSizeSmall,),)),
+                            Text(MyanNumConvertHelper().getMyanNumString(_userModel.phoneNo), style: TextStyle(fontSize: FontSize.textSizeSmall),),
+                          ],
+                        ),
+                      )
+                    ],
+                  )
+              ),
+              Container(
+                margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Container(margin: EdgeInsets.only(bottom: 5.0),child: Text(MyString.txt_setting, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
+                    GestureDetector(
+                      onTap: (){
+                        _navigateToProfileScreen();
+                      },
+                      child: Container(
+                        child: Row(
+                          children: <Widget>[
+                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/edit_profile.png',width: 30.0, height: 38.0,)),
+                            Text(MyString.txt_edit_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                          ],
+                        ),
+                      ),
+                    ),
+                    Divider(color: MyColor.colorPrimary,),
+                    Container(
+                      child: Row(
+                        children: <Widget>[
+                          Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/apply_biz_list.png',width: 30.0, height: 38.0,)),
+                          Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                        ],
+                      ),
+                    ),
+                    Divider(color: MyColor.colorPrimary,),
+                    GestureDetector(
+                      onTap: (){
+                        _dialogLogOut();
+                      },
+                      child: Container(
+                        child: Row(
+                          children: <Widget>[
+                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/log_out.png',width: 30.0, height: 38.0,)),
+                            Text(MyString.txt_log_out, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              )
+            ],
+          ),
+        ),
+        Container(
+          margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(margin: EdgeInsets.only(bottom: 5.0),
+                  child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
+              Container(
+                margin: EdgeInsets.only(bottom: 20.0),
+                height: 50.0,
+                width: 300.0,
+                child: RaisedButton(onPressed: (){
+                },child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Container(margin: EdgeInsets.only(right: 10.0),child: Text(MyString.txt_tax_new_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
+                    Icon(Icons.add, color: Colors.white,)
+                  ],
+                ),color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
+
   Widget _listView(){
     return ListView.builder(
         itemCount: _taxRecordModelList.length,
@@ -251,116 +380,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-                child: Row(
-                  children: <Widget>[
-                    Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
-                    Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall),)
-                  ],
-                ),
-              ),
-              Card(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                        margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0, bottom: 10.0),
-                        alignment: Alignment.topLeft,
-                        child: Row(
-                          children: <Widget>[
-                            Stack(
-                              children: <Widget>[
-                                CircleAvatar(backgroundImage: _userModel.photoUrl!=null?
-                                NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                                  backgroundColor: MyColor.colorGrey, radius: 50.0,),
-                                Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
-                              ],
-                            ),
-                            Container(
-                              margin: EdgeInsets.only(left: 40.0),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(margin: EdgeInsets.only(bottom: 10.0),
-                                      child: Text(_userModel.name, style: TextStyle(fontSize: FontSize.textSizeSmall,),)),
-                                  Text(MyanNumConvertHelper().getMyanNumString(_userModel.phoneNo), style: TextStyle(fontSize: FontSize.textSizeSmall),),
-                                ],
-                              ),
-                            )
-                          ],
-                        )
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(margin: EdgeInsets.only(bottom: 5.0),child: Text(MyString.txt_setting, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
-                          GestureDetector(
-                            onTap: (){
-                              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_userModel)));
-                            },
-                            child: Container(
-                              child: Row(
-                                children: <Widget>[
-                                  Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/edit_profile.png',width: 30.0, height: 38.0,)),
-                                  Text(MyString.txt_edit_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                                ],
-                              ),
-                            ),
-                          ),
-                          Divider(color: MyColor.colorPrimary,),
-                          Container(
-                            child: Row(
-                              children: <Widget>[
-                                Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/apply_biz_list.png',width: 30.0, height: 38.0,)),
-                                Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                              ],
-                            ),
-                          ),
-                          Divider(color: MyColor.colorPrimary,),
-                          GestureDetector(
-                            onTap: (){
-                              _dialogLogOut();
-                            },
-                            child: Container(
-                              child: Row(
-                                children: <Widget>[
-                                  Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/log_out.png',width: 30.0, height: 38.0,)),
-                                  Text(MyString.txt_log_out, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                                ],
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(margin: EdgeInsets.only(bottom: 5.0),
-                        child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      height: 50.0,
-                      width: 300.0,
-                      child: RaisedButton(onPressed: (){
-                      },child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: <Widget>[
-                          Container(margin: EdgeInsets.only(right: 10.0),child: Text(MyString.txt_tax_new_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
-                          Icon(Icons.add, color: Colors.white,)
-                        ],
-                      ),color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
-                    )
-                  ],
-                ),
-              )
+              _headerProfile(),
             ],
           ),
           ): Container(width: 0.0, height: 0.0,),
@@ -376,110 +396,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-            child: Row(
-              children: <Widget>[
-                Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
-                Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall),)
-              ],
-            ),
-          ),
-          Card(
-            child: Column(
-              children: <Widget>[
-                Container(
-                    margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0, bottom: 10.0),
-                    alignment: Alignment.topLeft,
-                    child: Row(
-                      children: <Widget>[
-                        Stack(
-                          children: <Widget>[
-                            CircleAvatar(backgroundImage: _userModel.photoUrl!=null?
-                            NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                              backgroundColor: MyColor.colorGrey, radius: 50.0,),
-                            Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
-                          ],
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 40.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(margin: EdgeInsets.only(bottom: 10.0),
-                                  child: Text(_userModel.name, style: TextStyle(fontSize: FontSize.textSizeSmall,),)),
-                              Text(MyanNumConvertHelper().getMyanNumString(_userModel.phoneNo), style: TextStyle(fontSize: FontSize.textSizeSmall),),
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(margin: EdgeInsets.only(bottom: 5.0),child: Text(MyString.txt_setting, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/edit_profile.png',width: 30.0, height: 38.0,)),
-                            Text(MyString.txt_edit_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                          ],
-                        ),
-                      ),
-                      Divider(color: MyColor.colorPrimary,),
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/apply_biz_list.png',width: 30.0, height: 38.0,)),
-                            Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                          ],
-                        ),
-                      ),
-                      Divider(color: MyColor.colorPrimary,),
-                      GestureDetector(
-                        onTap: (){
-                          _dialogLogOut();
-                        },
-                        child: Container(
-                          child: Row(
-                            children: <Widget>[
-                              Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/log_out.png',width: 30.0, height: 38.0,)),
-                              Text(MyString.txt_log_out, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(margin: EdgeInsets.only(bottom: 5.0),
-                    child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
-                Container(
-                  height: 50.0,
-                  width: 300.0,
-                  child: RaisedButton(onPressed: (){
-                  },child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(margin: EdgeInsets.only(right: 10.0),child: Text(MyString.txt_tax_new_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
-                      Icon(Icons.add, color: Colors.white,)
-                    ],
-                  ),color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
-                )
-              ],
-            ),
-          ),
+          _headerProfile(),
           Expanded(
             child: Center(
               child: Column(
@@ -505,226 +422,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-            child: Row(
-              children: <Widget>[
-                Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
-                Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall),)
-              ],
-            ),
-          ),
-          Card(
-            child: Column(
-              children: <Widget>[
-                Container(
-                    margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0, bottom: 10.0),
-                    alignment: Alignment.topLeft,
-                    child: Row(
-                      children: <Widget>[
-                        Stack(
-                          children: <Widget>[
-                            CircleAvatar(backgroundImage: _userModel.photoUrl!=null?
-                            NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                              backgroundColor: MyColor.colorGrey, radius: 50.0,),
-                            Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
-                          ],
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 40.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(margin: EdgeInsets.only(bottom: 10.0),
-                                  child: Text(_userModel.name, style: TextStyle(fontSize: FontSize.textSizeSmall,),)),
-                              Text(MyanNumConvertHelper().getMyanNumString(_userModel.phoneNo), style: TextStyle(fontSize: FontSize.textSizeSmall),),
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(margin: EdgeInsets.only(bottom: 5.0),child: Text(MyString.txt_setting, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/edit_profile.png',width: 30.0, height: 38.0,)),
-                            Text(MyString.txt_edit_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                          ],
-                        ),
-                      ),
-                      Divider(color: MyColor.colorPrimary,),
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/apply_biz_list.png',width: 30.0, height: 38.0,)),
-                            Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                          ],
-                        ),
-                      ),
-                      Divider(color: MyColor.colorPrimary,),
-                      GestureDetector(
-                        onTap: (){
-                          _dialogLogOut();
-                        },
-                        child: Container(
-                          child: Row(
-                            children: <Widget>[
-                              Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/log_out.png',width: 30.0, height: 38.0,)),
-                              Text(MyString.txt_log_out, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(margin: EdgeInsets.only(bottom: 5.0),
-                    child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
-                Container(
-                  margin: EdgeInsets.only(bottom: 20.0),
-                  height: 50.0,
-                  width: 300.0,
-                  child: RaisedButton(onPressed: (){
-                  },child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(margin: EdgeInsets.only(right: 10.0),child: Text(MyString.txt_tax_new_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
-                      Icon(Icons.add, color: Colors.white,)
-                    ],
-                  ),color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
-                )
-              ],
-            ),
-          ),
+          _headerProfile(),
           Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
-        ],
-      ),
-    );
-  }
-
-  Widget _headerProfile(){
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Container(
-            margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-            child: Row(
-              children: <Widget>[
-                Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
-                Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall),)
-              ],
-            ),
-          ),
-          Card(
-            child: Column(
-              children: <Widget>[
-                Container(
-                    margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0, bottom: 10.0),
-                    alignment: Alignment.topLeft,
-                    child: Row(
-                      children: <Widget>[
-                        Stack(
-                          children: <Widget>[
-                            CircleAvatar(backgroundImage: _userModel.photoUrl!=null?
-                            NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                              backgroundColor: MyColor.colorGrey, radius: 50.0,),
-                            Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
-                          ],
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(left: 40.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Container(margin: EdgeInsets.only(bottom: 10.0),
-                                  child: Text(_userModel.name, style: TextStyle(fontSize: FontSize.textSizeSmall,),)),
-                              Text(MyanNumConvertHelper().getMyanNumString(_userModel.phoneNo), style: TextStyle(fontSize: FontSize.textSizeSmall),),
-                            ],
-                          ),
-                        )
-                      ],
-                    )
-                ),
-                Container(
-                  margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(margin: EdgeInsets.only(bottom: 5.0),child: Text(MyString.txt_setting, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/edit_profile.png',width: 30.0, height: 38.0,)),
-                            Text(MyString.txt_edit_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                          ],
-                        ),
-                      ),
-                      Divider(color: MyColor.colorPrimary,),
-                      Container(
-                        child: Row(
-                          children: <Widget>[
-                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/apply_biz_list.png',width: 30.0, height: 38.0,)),
-                            Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                          ],
-                        ),
-                      ),
-                      Divider(color: MyColor.colorPrimary,),
-                      GestureDetector(
-                        onTap: (){
-                          _dialogLogOut();
-                        },
-                        child: Container(
-                          child: Row(
-                            children: <Widget>[
-                              Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/log_out.png',width: 30.0, height: 38.0,)),
-                              Text(MyString.txt_log_out, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
-          Container(
-            margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: <Widget>[
-                Container(margin: EdgeInsets.only(bottom: 5.0),
-                    child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
-                Container(
-                  height: 50.0,
-                  width: 300.0,
-                  child: RaisedButton(onPressed: (){
-                  },child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Container(margin: EdgeInsets.only(right: 10.0),child: Text(MyString.txt_tax_new_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
-                      Icon(Icons.add, color: Colors.white,)
-                    ],
-                  ),color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
-                )
-              ],
-            ),
-          )
         ],
       ),
     );

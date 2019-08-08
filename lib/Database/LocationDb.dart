@@ -96,16 +96,27 @@ class LocationDb{
     await _database.delete(DbHelper.TABLE_NAME_SAVE_NEWS_FEED);
   }*/
 
-  Future<List<LocationModel>> getState() async {
+  Future<List<String>> getState() async {
     var result = await _database.query(DbHelper.TABLE_NAME_LOCATION, distinct: true,
         columns: [DbHelper.COLUMN_STATE_DIVISION_UNICODE]);
     if (result.length == 0) return null;
-    List<LocationModel> list = new List<LocationModel>();
+    List<String> stateList = new List<String>();
     for(var i in result){
-      list.add(LocationModel.fromMap(i));
+      stateList.add(LocationModel.fromMap(i).stateDivision_Unicode);
     }
 
-    return list;
+    return stateList;
+  }
+
+  Future<List<String>> getTownshipByState(String state) async {
+    var result = await _database.query(DbHelper.TABLE_NAME_LOCATION,where: '${DbHelper.COLUMN_STATE_DIVISION_UNICODE} = ?',whereArgs: [state],
+        columns: [DbHelper.COLUMN_TOWNSHIP_UNICODE]);
+    if (result.length == 0) return null;
+    List<String> townshipList = new List<String>();
+    for(var i in result){
+      townshipList.add(LocationModel.fromMap(i).township_Unicode);
+    }
+    return townshipList;
   }
 
 /* _onUpgrade(Database db, int oldVersion, int newVersion) async{

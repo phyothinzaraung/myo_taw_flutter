@@ -1,6 +1,7 @@
 import 'dart:core';
 import 'package:dio/dio.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
+import 'package:myotaw/model/UserModel.dart';
 
 class ServiceHelper{
  var response;
@@ -44,6 +45,37 @@ class ServiceHelper{
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"TaxRecord/DeleteTaxRecord",
       queryParameters: {"ID": id});
+  return response;
+ }
+
+ updateUserInfo<Response>(UserModel model) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/UpdateUser", data: {
+   'UniqueKey' : model.uniqueKey,
+   'Name': model.name,
+   'PhoneNo': model.phoneNo,
+   'PhotoUrl': model.photoUrl,
+   'State': model.state,
+   'Township': model.township,
+   'Address': model.address,
+   'RegisteredDate': model.registeredDate,
+   'Accesstime': model.accesstime,
+   'IsDeleted': model.isDeleted,
+   'Resource': model.resource,
+   'AndroidToken': model.androidToken,
+   'CurrentRegionCode': model.currentRegionCode,
+   'PinCode': model.pinCode,
+   'Amount': model.amount
+  });
+  return response;
+ }
+
+ getAllFaq<Response>(String regionCode, int page, int pageSize, String category) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"FAQ/GetFAQListwithCategory",
+      queryParameters: {"RegionCode": regionCode, "page": page, "pageSize": pageSize, "Category": category});
   return response;
  }
 

@@ -65,6 +65,7 @@ class MyString{
   static const String txt_user_state = 'တိုင်း/ဒေသကြီး';
   static const String txt_user_township = 'မြို့နယ်';
   static const String txt_save_user_profile = 'သိမ်းဆည်းမည်';
+  static const String title_faq = 'အမေးများသောမေးခွန်းများ';
 }
 
 class OrganizationId{

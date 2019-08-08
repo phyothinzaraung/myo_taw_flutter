@@ -53,22 +53,38 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
         ),
         bottomNavigationBar: Container(
           color: Colors.white,
-          child: TabBar(
-            indicatorColor: Colors.white,
-            labelColor: MyColor.colorPrimary,
-            indicatorSize: TabBarIndicatorSize.tab,
-            indicatorWeight: 2.0,
-            unselectedLabelColor: MyColor.colorGreyDark,
-            controller: _tabController,
-            tabs: [
-              Tab(icon: Icon(MyFlutterApp.newsfeed, size: 20.0,)),
-              Tab(icon: Icon(Icons.dashboard)),
-              Tab(icon: Icon(Icons.notifications))
-            ],
+          child: WillPopScope(
+            onWillPop: onWillPop,
+            child: TabBar(
+              onTap: (index){
+                if(index == 0){
+
+                }
+              },
+              indicatorColor: Colors.white,
+              labelColor: MyColor.colorPrimary,
+              indicatorSize: TabBarIndicatorSize.tab,
+              indicatorWeight: 2.0,
+              unselectedLabelColor: MyColor.colorGreyDark,
+              controller: _tabController,
+              tabs: [
+                Tab(icon: Icon(MyFlutterApp.newsfeed, size: 20.0,)),
+                Tab(icon: Icon(Icons.dashboard)),
+                Tab(icon: Icon(Icons.notifications))
+              ],
+            ),
           ),
         ),
       ),
     );
+  }
+
+  Future<bool> onWillPop() {
+    if (_tabController.index == 0) {
+      return Future.value(true);
+    }
+    _tabController.animateTo(0);
+    return Future.value(false);
   }
 
   @override

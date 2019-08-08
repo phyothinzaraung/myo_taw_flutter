@@ -3,6 +3,7 @@ import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
 import 'package:myotaw/ProfileScreen.dart';
 import 'SaveNewsFeedScreen.dart';
+import 'FaqScreen.dart';
 
 class DashBoardScreen extends StatefulWidget {
   UserModel model;
@@ -78,6 +79,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       ),
       //faq
       GestureDetector(
+        onTap: (){
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => FaqScreen()));
+        },
         child: Container(child: Column(children: <Widget>[Image.asset('images/questions.png',width: 120, height: 120,),
           Text(MyString.txt_faq,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
       ),

@@ -38,6 +38,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   int _organizationId;
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   SaveNewsFeedModel _saveNewsFeedModel = SaveNewsFeedModel();
+  ImageProvider _profilePhoto;
   _NewsFeedScreenState(this._userModel);
 
   @override
@@ -62,11 +63,9 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       case MyString.MLM_REGIONCODE:
         _city = MyString.MLM_CITY;
         _organizationId = OrganizationId.MLM_ORGANIZATION_ID;
+        break;
+      default:
     }
-  }
-
-  _navigateToProfile(){
-    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
   }
 
   _checkCon()async{
@@ -80,6 +79,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
+    _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
     response = await ServiceHelper().getNewsFeed(_organizationId, p, pageCount, _userModel.uniqueKey);
     var result = response.data['Results'];
     print('loadmore: ${p}');
@@ -281,6 +281,34 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     print('responseLike: ${response}');
   }
 
+  Widget _headerNewsFeed(){
+    return Column(
+      children: <Widget>[
+        Row(
+          children: <Widget>[
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Text(_city, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                  Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
+                ],
+              ),
+            ),
+            GestureDetector(
+              onTap: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              },
+              child: CircleAvatar(backgroundImage: _userModel.photoUrl!=null?
+              _profilePhoto:AssetImage('images/profile_placeholder.png'),
+                backgroundColor: MyColor.colorGrey, radius: 25.0,),
+            )
+          ],
+        ),
+      ],
+    );
+  }
+
   Widget _listView(){
     return ListView.builder(
         itemCount: _newsFeedReactModel.length,
@@ -293,26 +321,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
                 child: Column(
                   children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(_city, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
-                              Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
-                            ],
-                          ),
-                        ),
-                        GestureDetector(
-                          onTap: (){
-                            _navigateToProfile();
-                          },
-                          child: CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                            backgroundColor: MyColor.colorGrey, radius: 25.0,),
-                        )
-                      ],
-                    ),
+                    _headerNewsFeed(),
                   ],
                 ),
               ):Container(width: 0.0,height: 0.0,),
@@ -328,26 +337,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       margin: EdgeInsets.only(top: 48.0, bottom: 20.0, left: 15.0, right: 15.0),
       child: Column(
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(_city, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
-                    Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: (){
-                  _navigateToProfile();
-                },
-                child: CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                  backgroundColor: MyColor.colorGrey, radius: 25.0,),
-              )
-            ],
-          ),
+          _headerNewsFeed(),
           Expanded(
             child: Center(
               child: Column(
@@ -368,6 +358,20 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     );
   }
 
+  Widget _renderLoad(){
+    return Container(
+      margin: EdgeInsets.only(top: 48.0, bottom: 20.0, left: 15.0, right: 15.0),
+      child: Column(
+        children: <Widget>[
+          _headerNewsFeed(),
+          Center(
+            child: CircularProgressIndicator(),
+          )
+        ],
+      ),
+    );
+  }
+
   Future<bool> _loadMore() async {
     await _checkCon();
     if(_isCon){
@@ -376,39 +380,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       //Fluttertoast.showToast(msg: 'call loadmore');
     }
     return _isCon;
-  }
-
-  Widget _renderLoad(){
-    return Container(
-      margin: EdgeInsets.only(top: 48.0, bottom: 20.0, left: 15.0, right: 15.0),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Text(_city, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
-                    Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: (){
-                  _navigateToProfile();
-                },
-                child: CircleAvatar(backgroundImage: _userModel.photoUrl!=null? NetworkImage(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):AssetImage('images/profile_placeholder.png'),
-                  backgroundColor: MyColor.colorGrey, radius: 25.0,),
-              )
-            ],
-          ),
-          Center(
-            child: CircularProgressIndicator(),
-          )
-        ],
-      ),
-    );
   }
 
   Future<Null> _handleRefresh() async {

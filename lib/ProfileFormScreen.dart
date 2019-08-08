@@ -4,6 +4,11 @@ import 'model/UserModel.dart';
 import 'model/LocationModel.dart';
 import 'Database/LocationDb.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:dio/dio.dart';
+import 'helper/ServiceHelper.dart';
+import 'helper/SharePreferencesHelper.dart';
+import 'package:connectivity/connectivity.dart';
+import 'Database/UserDb.dart';
 
 class ProfileFormScreen extends StatefulWidget {
   UserModel model;
@@ -21,38 +26,67 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   String _dropDownTownship = 'နေရပ်ရွေးပါ';
   List<String> _stateList;
   List<String> _townshipList;
-  bool _isLoading = false;
+  bool _isLoading, _isCon = false;
   LocationDb _locationDb = LocationDb();
-  List<LocationModel> _locationList = new List<LocationModel>();
+  Response _response;
+  Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
+  GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
+  UserDb _userDb = UserDb();
   _ProfileFormScreenState(this._userModel);
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _initLocation();
+    _init();
     _stateList = [_dropDownState];
-    _townshipList = [_dropDownState];
-    _nameController.text = _userModel.name;
-    _addressController.text = _userModel.address;
+    _townshipList = [_dropDownTownship];
   }
 
-  _initLocation()async{
+  _checkCon()async{
+    var conResult = await(Connectivity().checkConnectivity());
+    if (conResult == ConnectivityResult.none) {
+      _isCon = false;
+    }else{
+      _isCon = true;
+    }
+    print('isCon : ${_isCon}');
+  }
+
+  _init()async{
     setState(() {
       _isLoading = true;
     });
+    await _sharepreferenceshelper.initSharePref();
+    _nameController.text = _userModel.name;
+    _addressController.text = _userModel.address;
     await _locationDb.openLocationDb();
     var state = await _locationDb.getState();
     await _locationDb.closeLocationDb();
     for(var i in state){
-      _locationList.add(i);
-      _stateList.add(i.stateDivision_Unicode);
+      _stateList.add(i);
+      print('stateList: ${i}');
     }
-    print('prifilelist: ${_locationList.length}');
-
+    await _getTownshipByState(_userModel.state);
     setState(() {
       _dropDownState = _userModel.state;
+      _dropDownTownship = _userModel.township;
       _isLoading = false;
+    });
+    print('initlocation');
+  }
+
+  _getTownshipByState(String state)async{
+    await _locationDb.openLocationDb();
+    var township = await _locationDb.getTownshipByState(state);
+    await _locationDb.closeLocationDb();
+
+    for(var i in township){
+      _townshipList.add(i);
+      print('townshipList: ${i}');
+    }
+    setState(() {
+
     });
   }
 
@@ -75,9 +109,45 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     );
   }
 
+  void _updateUser()async{
+    await _checkCon();
+    setState(() {
+      _isLoading = true;
+    });
+    if(_isCon){
+      _userModel.name = _nameController.text;
+      _userModel.address = _addressController.text;
+      _userModel.state = _dropDownState;
+      _userModel.township = _dropDownTownship;
+      _response = await ServiceHelper().updateUserInfo(_userModel);
+      await _userDb.openUserDb();
+      await _userDb.insert(UserModel.fromJson(_response.data));
+      await _userDb.closeUserDb();
+      print('usermodel: ${_userModel.name} ${_userModel.address} ${_userModel.state} '
+          '${_userModel.township} ${_userModel.currentRegionCode} ${_userModel.androidToken}');
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop({'isNeedRefresh' : true});
+    }else{
+      setState(() {
+        _isLoading = false;
+      });
+      _scaffoldState.currentState.showSnackBar(SnackBar(
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(margin: EdgeInsets.only(right: 20.0),child: Image.asset('images/no_connection.png', width: 30.0, height: 30.0,)),
+              Text('Check internet connection', style: TextStyle(fontSize: FontSize.textSizeNormal),),
+            ],
+          ),duration: Duration(seconds: 5),backgroundColor: Colors.red,));
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldState,
       appBar: AppBar(
         title: Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
@@ -165,6 +235,12 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                           setState(() {
                             _dropDownState = value;
                           });
+                          _townshipList.clear();
+                          setState(() {
+                            _dropDownTownship = 'နေရပ်ရွေးပါ';
+                          });
+                          _townshipList = [_dropDownTownship];
+                          _getTownshipByState(value);
                         },
                         items: _stateList.map<DropdownMenuItem<String>>((String str){
                           return DropdownMenuItem<String>(
@@ -214,7 +290,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                     height: 50.0,
                     child: RaisedButton(
                         onPressed: (){
-
+                          _updateUser();
                         },color: MyColor.colorPrimary,
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(8.0)
