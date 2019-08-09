@@ -8,6 +8,7 @@ import 'helper/SharePreferencesHelper.dart';
 import 'model/DaoModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'model/DaoViewModel.dart';
+import 'DaoDetailScreen.dart';
 
 class DaoScreen extends StatefulWidget {
   String str;
@@ -52,7 +53,6 @@ class _DaoScreenState extends State<DaoScreen> {
         _daoViewModelList.add(DaoViewModel.fromJson(i));
         print('daoviewmodel :${_daoViewModelList}');
       }
-
     }
   }
 
@@ -62,15 +62,21 @@ class _DaoScreenState extends State<DaoScreen> {
           slivers: <Widget>[
             SliverGrid(
                 delegate: SliverChildBuilderDelegate((context, index){
-                  return Container(
-                    child: Column(
-                      children: <Widget>[
-                        Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[index].daoModel.icon, width: 120,),
-                        Text(_daoViewModelList[index].daoModel.title,style: TextStyle(fontSize: FontSize.textSizeSmall),)],),);
+                  return GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoDetailScreen(_daoViewModelList[index])));
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(top: 20.0),
+                      child: Column(
+                        children: <Widget>[
+                          Flexible(flex: 4,child: Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[index].daoModel.icon, width: 120,)),
+                          Flexible(flex: 1,child: Text(_daoViewModelList[index].daoModel.title,textAlign: TextAlign.center,style: TextStyle(fontSize: FontSize.textSizeSmall),))],),),
+                  );
                 },childCount: _daoViewModelList.length),
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 200.0,
-                    crossAxisSpacing: 50.0))
+                    crossAxisSpacing: 30.0))
           ],
         )
     );
@@ -103,6 +109,7 @@ class _DaoScreenState extends State<DaoScreen> {
 
   Widget _renderLoad(){
     return Container(
+      margin: EdgeInsets.only(top: 10.0),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -115,8 +122,8 @@ class _DaoScreenState extends State<DaoScreen> {
   Future<Null> _handleRefresh() async {
     await _checkCon();
     if(_isCon){
-      //_taxRecordModelList.clear();
-      //await _getAllTaxRecord(page);
+      _daoViewModelList.clear();
+      await _getAllDao();
     }else{
       Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
     }
@@ -139,7 +146,7 @@ class _DaoScreenState extends State<DaoScreen> {
     );
     return Scaffold(
       appBar: AppBar(
-        title: Text(MyString.txt_municipal, style: TextStyle(fontSize: FontSize.textSizeNormal),),
+        title: Text(display.isEmpty?MyString.txt_municipal:MyString.txt_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
       body: _asyncLoader,
     );

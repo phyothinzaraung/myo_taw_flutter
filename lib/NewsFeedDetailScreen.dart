@@ -24,7 +24,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   List _photoList = new List();
   int _currentPhoto = 0;
   List<Widget> _photoWidget = List();
-  int index;
+  int index = 0;
 
   _NewsFeedDetailScreenState(this._newsFeedModel);
 
@@ -37,7 +37,6 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   }
 
   void addPhoto(){
-    index = 0;
     if(_photoList.isNotEmpty){
       var photoModelList = _photoList.map((i) => NewsFeedPhotoModel.fromJson(i));
       for(var i in photoModelList){

@@ -97,7 +97,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoScreen('')));
               break;
             case MyString.txt_tax:
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoScreen('Tax')));
               break;
             case MyString.txt_suggestion:
               //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
