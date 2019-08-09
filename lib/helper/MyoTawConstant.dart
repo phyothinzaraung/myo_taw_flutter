@@ -22,6 +22,7 @@ class BaseUrl{
   static const String WEB_SERVICE_ROOT_ADDRESS_NEWSFEED = "https://generalcontentproviderapi.azurewebsites.net/api/";
   static const String NEWS_FEED_CONTENT_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/NewsFeed/";
   static const String USER_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/Member/";
+  static const String DAO_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/AboutDAO/";
 }
 
 class MyString{

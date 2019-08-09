@@ -21,9 +21,9 @@ class _FaqScreenState extends State<FaqScreen> {
   int page = 1;
   int pageSize = 100;
   List<FaqModel> _faqList = new List<FaqModel>();
-  List<dynamic> _categoryList = new List<dynamic>();
-  List<FaqCategoryModel> _list = new List<FaqCategoryModel>();
+  List<FaqCategoryModel> _categoryList = new List<FaqCategoryModel>();
   bool _isCon, _isVisible;
+  var faqModelList;
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
 
   @override
@@ -33,16 +33,18 @@ class _FaqScreenState extends State<FaqScreen> {
     _isVisible = false;
   }
 
-  _getAllFaq(int p, String category)async{
+  _getAllFaq(String category)async{
     await _sharepreferenceshelper.initSharePref();
     _regionCode = await _sharepreferenceshelper.getRegionCode();
-    _response = await ServiceHelper().getAllFaq(_regionCode, p, pageSize, category);
+    _response = await ServiceHelper().getAllFaq(_regionCode, page, pageSize, category);
     if(_response.data != null){
       var categoryList = _response.data['CategoryList'];
-      var faqModelList = _response.data['FAQwithPaging']['Results'];
+      faqModelList = _response.data['FAQwithPaging']['Results'];
       for(var i in categoryList){
         if(i != null){
-          _categoryList.add(i);
+          FaqCategoryModel model = FaqCategoryModel();
+          model.category = i;
+          _categoryList.add(model);
         }
       }
       for(var i in faqModelList){
@@ -53,10 +55,24 @@ class _FaqScreenState extends State<FaqScreen> {
     }
   }
 
+  _getAllFaqByCategory(String category)async{
+    await _sharepreferenceshelper.initSharePref();
+    _regionCode = await _sharepreferenceshelper.getRegionCode();
+    _response = await ServiceHelper().getAllFaq(_regionCode, page, pageSize, category);
+    if(_response.data != null){
+      faqModelList = _response.data['FAQwithPaging']['Results'];
+      for(var i in faqModelList){
+        setState(() {
+          _faqList.add(FaqModel.fromJson(i));
+        });
+      }
+    }
+
+  }
+
   _getFaqByCategory(String category){
     _faqList.clear();
-    _categoryList.clear();
-    _getAllFaq(page, category);
+    _getAllFaqByCategory(category);
   }
 
   _categoryListView(){
@@ -66,11 +82,21 @@ class _FaqScreenState extends State<FaqScreen> {
         itemBuilder: (context, i){
           return GestureDetector(
             onTap: (){
-              _getFaqByCategory(_categoryList[i].toString());
+              setState(() {
+                _categoryList[i].isSelect = true;
+              });
+              _getFaqByCategory(_categoryList[i].category);
             },
             child: Container(
               margin: EdgeInsets.only(left: 10.0),
-              child: Text(_categoryList[i].toString(), style: TextStyle(fontSize: FontSize.textSizeSmall),),
+              child: Row(
+                children: <Widget>[
+                  Container(margin: EdgeInsets.only(right: 5.0),
+                      child: Text(_categoryList[i].category, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                  _categoryList[i].isSelect?Image.asset('images/tick.png', width: 15.0, height: 15.0,):
+                      Container(width: 0.0, height: 0.0,)
+                ],
+              ),
             ),
           );
         });
@@ -130,7 +156,7 @@ class _FaqScreenState extends State<FaqScreen> {
       child: Row(
         children: <Widget>[
           Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
-          Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall),)
+          Text(MyString.title_faq, style: TextStyle(fontSize: FontSize.textSizeSmall),)
         ],
       ),
     );
@@ -177,7 +203,7 @@ class _FaqScreenState extends State<FaqScreen> {
       _categoryList.clear();
       _faqList.clear();
       _category = '';
-      await _getAllFaq(page, _category);
+      await _getAllFaq(_category);
     }else{
       Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
     }
@@ -201,7 +227,7 @@ class _FaqScreenState extends State<FaqScreen> {
   Widget build(BuildContext context) {
     var _asyncLoader = new AsyncLoader(
         key: asyncLoaderState,
-        initState: () async => await _getAllFaq(page, _category),
+        initState: () async => await _getAllFaq(_category),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => getNoConnectionWidget(),
         renderSuccess: ({data}) => Container(

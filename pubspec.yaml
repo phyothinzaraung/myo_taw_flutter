@@ -98,6 +98,7 @@ flutter:
     - images/questions_mark_no_circle.png
     - images/down_arrow.png
     - images/question_mark.png
+    - images/tick.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

@@ -4,6 +4,8 @@ import 'model/UserModel.dart';
 import 'package:myotaw/ProfileScreen.dart';
 import 'SaveNewsFeedScreen.dart';
 import 'FaqScreen.dart';
+import 'model/DashBoardModel.dart';
+import 'DaoScreen.dart';
 
 class DashBoardScreen extends StatefulWidget {
   UserModel model;
@@ -16,7 +18,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   UserModel _userModel;
   String _city;
   List _widget = new List();
-
+  List<DashBoardModel> _dashBoardModelList = new List<DashBoardModel>();
   _DashBoardScreenState(this._userModel);
 
   @override
@@ -24,7 +26,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     // TODO: implement initState
     super.initState();
     _initHeaderTitle();
-    _addWidget();
+    _initDashBoardWidget();
     if(_userModel.resource != 'Android'){
       _widget.removeLast();
     }
@@ -40,73 +42,99 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     }
   }
 
-  _addWidget(){
-    _widget = [
-      //dao
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/dao.png',width: 120, height: 120,),
-          Text(MyString.txt_municipal,style: TextStyle(fontSize: FontSize.textSizeSmall),)],),),
-      ),
-      //about tax
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/about_tax.png',width: 120, height: 120,),
-          Text(MyString.txt_tax,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-      //suggestion
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/suggestion.png',width: 120, height: 120,),
-          Text(MyString.txt_suggestion,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-      //business license
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/business_license.png',width: 120, height: 120,),
-          Text(MyString.txt_business_tax,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-      //online tax
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/online_tax.png',width: 120, height: 120,),
-          Text(MyString.txt_online_tax,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-      //tax use
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/tax_used.png',width: 120, height: 120,),
-          Text(MyString.txt_tax_use,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-      //calculate tax
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/calculate_tax.png',width: 120, height: 120,),
-          Text(MyString.txt_calculate_tax,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-      //faq
-      GestureDetector(
+  _initDashBoardWidget(){
+    DashBoardModel model1 = new DashBoardModel();
+    model1.image = 'images/dao.png';
+    model1.title = MyString.txt_municipal;
+
+    DashBoardModel model2 = new DashBoardModel();
+    model2.image = 'images/about_tax.png';
+    model2.title = MyString.txt_tax;
+
+    DashBoardModel model3 = new DashBoardModel();
+    model3.image = 'images/suggestion.png';
+    model3.title = MyString.txt_suggestion;
+
+    DashBoardModel model4 = new DashBoardModel();
+    model4.image = 'images/business_license.png';
+    model4.title = MyString.txt_business_tax;
+
+    DashBoardModel model5 = new DashBoardModel();
+    model5.image = 'images/online_tax.png';
+    model5.title = MyString.txt_online_tax;
+
+    DashBoardModel model6 = new DashBoardModel();
+    model6.image = 'images/tax_used.png';
+    model6.title = MyString.txt_tax_use;
+
+    DashBoardModel model7 = new DashBoardModel();
+    model7.image = 'images/calculate_tax.png';
+    model7.title = MyString.txt_calculate_tax;
+
+    DashBoardModel model8 = new DashBoardModel();
+    model8.image = 'images/questions.png';
+    model8.title = MyString.txt_faq;
+
+    DashBoardModel model9 = new DashBoardModel();
+    model9.image = 'images/save_file.png';
+    model9.title = MyString.txt_save_newsFeed;
+
+    DashBoardModel model10 = new DashBoardModel();
+    model10.image = 'images/profile_placeholder.png';
+    model10.title = MyString.txt_profile;
+
+    DashBoardModel model11 = new DashBoardModel();
+    model11.image = 'images/referral.png';
+    model11.title = MyString.txt_referral;
+
+    _dashBoardModelList = [model1,model2,model3,model4,model5,model6,model7,model8,model9,model10,model11];
+
+    for(var i in _dashBoardModelList){
+      _widget.add(GestureDetector(
         onTap: (){
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => FaqScreen()));
+          switch(i.title){
+            case MyString.txt_municipal:
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoScreen('')));
+              break;
+            case MyString.txt_tax:
+              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              break;
+            case MyString.txt_suggestion:
+              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              break;
+            case MyString.txt_business_tax:
+              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              break;
+            case MyString.txt_online_tax:
+              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              break;
+            case MyString.txt_tax_use:
+              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              break;
+            case MyString.txt_calculate_tax:
+              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              break;
+            case MyString.txt_faq:
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => FaqScreen()));
+              break;
+            case MyString.txt_save_newsFeed:
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedScreen()));
+              break;
+            case MyString.txt_profile:
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              break;
+            case MyString.txt_referral:
+              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              break;
+            default:
+          }
         },
-        child: Container(child: Column(children: <Widget>[Image.asset('images/questions.png',width: 120, height: 120,),
-          Text(MyString.txt_faq,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-      //save news feed
-      GestureDetector(
-        onTap: (){
-            Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedScreen()));
-        },
-        child: Container(child: Column(children: <Widget>[Image.asset('images/save_file.png',width: 120, height: 120,),
-          Text(MyString.txt_save_newsFeed,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-      //profile
-      GestureDetector(
-        onTap: (){
-          Navigator.of(context).push(MaterialPageRoute(builder: (context)=> ProfileScreen(_userModel)));
-        },
-        child: Container(child: Column(children: <Widget>[Image.asset('images/profile_placeholder.png',width: 120, height: 120,),
-          Text(MyString.txt_profile,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-      //referral
-      GestureDetector(
-        child: Container(child: Column(children: <Widget>[Image.asset('images/referral.png',width: 120, height: 120,),
-          Text(MyString.txt_referral,style: TextStyle(fontSize: FontSize.textSizeSmall))],),),
-      ),
-    ];
+        child: Container(
+          child: Column(children: <Widget>[
+            Flexible(flex: 3,child: Image.asset(i.image,width: 120, height: 120,)),
+            Flexible(flex: 1,child: Text(i.title,style: TextStyle(fontSize: FontSize.textSizeSmall),))],),),
+      ));
+    }
   }
 
   @override
