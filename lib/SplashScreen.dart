@@ -103,16 +103,25 @@ class _SplashScreenState extends State<SplashScreen> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              _logo!=null?
-              Container(margin: EdgeInsets.only(bottom: 20.0),child: Image.asset(_logo, width: 100.0, height: 100.0,)):Container(width: 0.0,height: 0.0,),
-              _title!=null?Container(
-                margin: EdgeInsets.only(bottom: 20.0),
-                child: Text(_title,
-                  style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeNormal,),softWrap: true,maxLines: 3, textAlign: TextAlign.center,),
-              ):Container(width: 0.0,height: 0.0,),
-              Image.asset('images/myo_taw_splash_screen.jpg', width: 250.0, height: 250.0,),
-              Padding(padding: EdgeInsets.only(bottom: 5.0),
-                  child: Text('Myo Taw', style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),)),
+              Flexible(
+                flex: 1,
+                child: _logo!=null?
+                Container(margin: EdgeInsets.only(bottom: 20.0),child: Image.asset(_logo, width: 100.0, height: 100.0,)):Container(width: 0.0,height: 0.0,),
+              ),
+              Flexible(
+                flex: 1,
+                child: _title!=null?Container(
+                  margin: EdgeInsets.only(bottom: 20.0),
+                  child: Text(_title,
+                    style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeNormal,),softWrap: true,maxLines: 3, textAlign: TextAlign.center,),
+                ):Container(width: 0.0,height: 0.0,),
+              ),
+              Flexible(flex: 3,child: Image.asset('images/myo_taw_splash_screen.jpg', width: 250.0, height: 250.0,)),
+              Flexible(
+                flex: 1,
+                child: Padding(padding: EdgeInsets.only(bottom: 5.0),
+                    child: Text('Myo Taw', style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),)),
+              ),
               Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)
             ],
           ),

@@ -419,13 +419,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _renderLoad(){
     return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
         children: <Widget>[
           _headerProfile(),
           Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
         ],
-      ),
+      )
     );
   }
 
