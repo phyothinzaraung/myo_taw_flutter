@@ -35,7 +35,7 @@ class MyString{
   static const String TGY_REGIONCODE = "TGY";
   static const String MLM_REGIONCODE = "MLM";
 
-  //dashboard title
+
   static const String txt_municipal = 'စည်ပင်အကြောင်း';
   static const String txt_tax = 'စည်ပင်အခွန်';
   static const String txt_suggestion = 'အကြံပြုစာပို့မည်';
@@ -67,6 +67,9 @@ class MyString{
   static const String txt_user_township = 'မြို့နယ်';
   static const String txt_save_user_profile = 'သိမ်းဆည်းမည်';
   static const String title_faq = 'အမေးများသောမေးခွန်းများ';
+  static const String txt_dept_manager = 'စီမံခန့်ခွဲမှုဌာနခွဲ';
+  static const String txt_dept_engineer = 'အင်ဂျင်နီယာဌာနခွဲ';
+  static const String txt_biz_license = 'လိုင်စင်နှင့်လျှောက်လွှာများသို့';
 }
 
 class OrganizationId{

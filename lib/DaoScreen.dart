@@ -9,6 +9,7 @@ import 'model/DaoModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'model/DaoViewModel.dart';
 import 'DaoDetailScreen.dart';
+import 'DepartmentListScreen.dart';
 
 class DaoScreen extends StatefulWidget {
   String str;
@@ -64,7 +65,11 @@ class _DaoScreenState extends State<DaoScreen> {
                 delegate: SliverChildBuilderDelegate((context, index){
                   return GestureDetector(
                     onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoDetailScreen(_daoViewModelList[index])));
+                      if(_daoViewModelList[index].daoModel.title.contains('ဌာနများ')){
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DepartmentListScreen(_daoViewModelList[index])));
+                      }else{
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoDetailScreen(_daoViewModelList[index])));
+                      }
                     },
                     child: Container(
                       margin: EdgeInsets.only(top: 20.0),

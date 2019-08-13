@@ -77,11 +77,11 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
 
 
   Widget _imageView(){
-    return Container(
+    return _daoViewModel.photoList.isNotEmpty?
+    Container(
       width: double.maxFinite,
       height: 230.0,
-      child: _daoViewModel.photoList.isNotEmpty?
-      Column(
+      child: Column(
         children: <Widget>[
           CarouselSlider(
             items: _photoWidget,
@@ -101,7 +101,6 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
               });
             },),
           Container(
-            color: Colors.white,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -119,14 +118,19 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
             ),
           )
         ],
-      ) :Center(
-        child: Container(
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModel.daoModel.icon, width: 100.0, height: 100.0,)
-            ],
-          ),
+      )
+    ) :
+    Center(
+      child: Container(
+        color: MyColor.colorGrey,
+        width: double.maxFinite,
+        height: 180.0,
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModel.daoModel.icon, width: 100.0, height: 100.0,)
+          ],
         ),
       ),
     );
@@ -139,6 +143,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
         title: Text(_daoViewModel.daoModel.title, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
       body: Container(
+        color: Colors.white,
         child: Column(
           children: <Widget>[
             Flexible(
@@ -165,7 +170,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
                   onPressed: (){
 
                   },
-                  child: Text(MyString.txt_suggestion,
+                  child: Text(_daoViewModel.daoModel.title.contains('လိုင်စင်')?MyString.txt_biz_license:MyString.txt_suggestion,
                     style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),color: MyColor.colorPrimary,),
             )
           ],

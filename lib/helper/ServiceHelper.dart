@@ -87,6 +87,14 @@ class ServiceHelper{
   return response;
  }
 
+ getDaoByDeptType<Response>(int page, int pageSize, String regionCode, String deptType) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"AboutDAO/GetAboutDAOByDeptType",
+      queryParameters: {"page": page, "pageSize": pageSize, "RegionCode": regionCode, "DeptType": deptType});
+  return response;
+ }
+
 }
 
 

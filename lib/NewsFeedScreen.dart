@@ -75,7 +75,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     }else{
       _isCon = true;
     }
-    print('isCon : ${_isCon}');
+    //print('isCon : ${_isCon}');
   }
 
   _getNewsFeed(int p) async{
@@ -83,7 +83,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     response = await ServiceHelper().getNewsFeed(_organizationId, p, pageCount, _userModel.uniqueKey);
     var result = response.data['Results'];
     print('loadmore: ${p}');
-    Fluttertoast.showToast(msg: 'page: ${p}', backgroundColor: Colors.black.withOpacity(0.6));
+    //Fluttertoast.showToast(msg: 'page: ${p}', backgroundColor: Colors.black.withOpacity(0.6));
     if(response.statusCode == 200){
       if(result != null){
         if(result.length > 0){
