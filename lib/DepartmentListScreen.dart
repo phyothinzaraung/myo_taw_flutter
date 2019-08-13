@@ -245,12 +245,12 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
     return _daoViewModel.photoList.isNotEmpty?
     Container(
         width: double.maxFinite,
-        height: 230.0,
+        height: 200.0,
         child: Column(
           children: <Widget>[
             CarouselSlider(
               items: _photoWidget,
-              height: 200.0,
+              height: 170.0,
               initialPage: 0,
               autoPlay: true,
               autoPlayInterval: Duration(seconds: 3),
@@ -337,16 +337,12 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
       appBar: AppBar(
         title: Text(_daoViewModel.daoModel.title, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
-      body: ModalProgressHUD(
-        inAsyncCall: _isLoading,
-        progressIndicator: modalProgressIndicator(),
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              _header(),
-              Expanded(child: _asyncLoader),
-            ],
-          ),
+      body: Container(
+        child: Column(
+          children: <Widget>[
+            _header(),
+            Expanded(child: _asyncLoader),
+          ],
         ),
       ),
     );
