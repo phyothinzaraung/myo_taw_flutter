@@ -16,12 +16,11 @@ import 'helper/MyoTawConstant.dart';
 import 'Database/SaveNewsFeedDb.dart';
 import 'model/SaveNewsFeedModel.dart';
 import 'ProfileScreen.dart';
+import 'Database/UserDb.dart';
 
 class NewsFeedScreen extends StatefulWidget {
-  UserModel model;
-  NewsFeedScreen(this.model);
   @override
-  _NewsFeedScreenState createState() => _NewsFeedScreenState(this.model);
+  _NewsFeedScreenState createState() => _NewsFeedScreenState();
 }
 
 class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAliveClientMixin<NewsFeedScreen> {
@@ -39,7 +38,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   SaveNewsFeedModel _saveNewsFeedModel = SaveNewsFeedModel();
   ImageProvider _profilePhoto;
-  _NewsFeedScreenState(this._userModel);
+  UserDb _userDb = UserDb();
 
   @override
   // TODO: implement wantKeepAlive
@@ -50,11 +49,22 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     // TODO: implement initState
     super.initState();
     _checkCon();
+  }
+
+  _getUser()async{
+    await _sharepreferenceshelper.initSharePref();
+    await _userDb.openUserDb();
+    var model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    await _userDb.closeUserDb();
+    setState(() {
+      _userModel = model;
+    });
     _initHeaderTitle();
-    _sharepreferenceshelper.initSharePref();
+    await _getNewsFeed(page);
   }
 
   _initHeaderTitle(){
+    _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
     switch(_userModel.currentRegionCode){
       case MyString.TGY_REGIONCODE:
         _city = MyString.TGY_CITY;
@@ -79,7 +89,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
-    _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
     response = await ServiceHelper().getNewsFeed(_organizationId, p, pageCount, _userModel.uniqueKey);
     var result = response.data['Results'];
     print('loadmore: ${p}');
@@ -290,22 +299,53 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(_city, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                  Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
                   Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                 ],
               ),
             ),
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
               },
-              child: CircleAvatar(backgroundImage: _userModel.photoUrl!=null?
+              child: CircleAvatar(backgroundImage: _userModel!=null?
               _profilePhoto:AssetImage('images/profile_placeholder.png'),
                 backgroundColor: MyColor.colorGrey, radius: 25.0,),
             )
           ],
         ),
       ],
+    );
+  }
+
+  Widget _headerNewsFeedRefresh(){
+    return Container(
+      margin: EdgeInsets.only(top: 48.0, bottom: 20.0, left: 15.0, right: 15.0),
+      child: Column(
+        children: <Widget>[
+          Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                    Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
+                  ],
+                ),
+              ),
+              GestureDetector(
+                onTap: (){
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+                },
+                child: CircleAvatar(backgroundImage: _userModel!=null?
+                _profilePhoto:AssetImage('images/profile_placeholder.png'),
+                  backgroundColor: MyColor.colorGrey, radius: 25.0,),
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 
@@ -388,7 +428,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
      _newsFeedReactModel.clear();
      page = 0;
      page++;
-     await _getNewsFeed(page);
+     await _getUser();
+     //await _getNewsFeed(page);
    }else{
      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
    }
@@ -401,7 +442,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     super.build(context);
     var _asyncLoader = new AsyncLoader(
       key: asyncLoaderState,
-      initState: () async => await _getNewsFeed(page),
+      initState: () async => await _getUser(),
       renderLoad: () => _renderLoad(),
       renderError: ([error]) => getNoConnectionWidget(),
       renderSuccess: ({data}) => Container(
@@ -412,7 +453,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             onLoadMore: _loadMore,
             delegate: DefaultLoadMoreDelegate(),
             textBuilder: DefaultLoadMoreTextBuilder.english,
-            child: _listView()
+            child: _newsFeedReactModel.isNotEmpty?_listView():_headerNewsFeedRefresh()
           ),
         ),
       )

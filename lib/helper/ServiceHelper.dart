@@ -1,4 +1,5 @@
 import 'dart:core';
+import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/model/UserModel.dart';
@@ -92,6 +93,33 @@ class ServiceHelper{
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"AboutDAO/GetAboutDAOByDeptType",
       queryParameters: {"page": page, "pageSize": pageSize, "RegionCode": regionCode, "DeptType": deptType});
+  return response;
+ }
+
+ uploadProfilePhoto<Response>(String file, String uniqueKey) async{
+  FormData formData = new FormData.from({
+   'Uniquekey' : uniqueKey,
+   'file' : UploadFileInfo(File(file), 'profilePhoto')
+  });
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/UserPhotoUpload",
+      data: formData);
+  return response;
+ }
+
+ uploadTaxRecord<Response>(String file, String subject, String uniqueKey, String userName, String regionCode) async{
+  FormData formData = new FormData.from({
+   'file' : UploadFileInfo(File(file), 'taxRecordPhoto'),
+   'Subject' : subject,
+   'Uniquekey' : uniqueKey,
+   'UserName' : userName,
+   'RegionCode' : regionCode,
+  });
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"TaxRecord/UpSertTaxRecordWithPhoto",
+      data: formData);
   return response;
  }
 

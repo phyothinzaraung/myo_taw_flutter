@@ -70,6 +70,13 @@ class MyString{
   static const String txt_dept_manager = 'စီမံခန့်ခွဲမှုဌာနခွဲ';
   static const String txt_dept_engineer = 'အင်ဂျင်နီယာဌာနခွဲ';
   static const String txt_biz_license = 'လိုင်စင်နှင့်လျှောက်လွှာများသို့';
+  static const String txt_gallery = 'Gallery မှပုံတင်မည်';
+  static const String txt_camera = 'ဓာတ်ပုံရိုက်မည်';
+  static const String txt_upload_photo = 'ပုံတင်မည်';
+  static const String txt_choose_photo = 'ပုံပြန်ရွေးမည်';
+  static const String txt_tax_record_name = 'မှတ်တမ်းအမည်';
+  static const String txt_upload_photo_camera = 'ဓာတ်ပုံတင်ရန်';
+  static const String txt_upload_photo_gallery = 'Gallery မှဓာတ်ပုံယူရန်';
 }
 
 class OrganizationId{

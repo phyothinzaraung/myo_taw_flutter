@@ -111,10 +111,15 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
     if(_response.data != null){
       var daoViewModelList = _response.data['Results'];
       for(var i in daoViewModelList){
-        _daoViewModelList.add(DaoViewModel.fromJson(i));
+        setState(() {
+          _daoViewModelList.add(DaoViewModel.fromJson(i));
+        });
         print('daoviewmodel :${_daoViewModelList}');
       }
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   Widget _header(){
@@ -129,6 +134,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
               RaisedButton(
                   onPressed: (){
                     setState(() {
+                      _isLoading = true;
                       _isManager = true;
                       _isEngineer = false;
                       deptType = 'Manager';
@@ -144,6 +150,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
               RaisedButton(
                 onPressed: (){
                   setState(() {
+                    _isLoading = true;
                     _isManager = false;
                     _isEngineer = true;
                     deptType = 'Engineer';
@@ -232,7 +239,9 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
   Future<Null> _handleRefresh() async {
     await _checkCon();
     if(_isCon){
-      _daoViewModelList.clear();
+      setState(() {
+        _daoViewModelList.clear();
+      });
       await _getDaoByDeptType(page);
     }else{
       Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
@@ -337,12 +346,16 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
       appBar: AppBar(
         title: Text(_daoViewModel.daoModel.title, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
-      body: Container(
-        child: Column(
-          children: <Widget>[
-            _header(),
-            Expanded(child: _asyncLoader),
-          ],
+      body: ModalProgressHUD(
+        inAsyncCall: _isLoading,
+        progressIndicator: modalProgressIndicator(),
+        child: Container(
+          child: Column(
+            children: <Widget>[
+              _header(),
+              Expanded(child: _asyncLoader),
+            ],
+          ),
         ),
       ),
     );

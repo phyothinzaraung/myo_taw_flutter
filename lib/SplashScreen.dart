@@ -72,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
   navigateMainScreen() {
     if(_sharepreferenceshelper.isLogin()){
       Future.delayed(Duration(seconds: 2), (){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen()));
       });
     }else{
       Future.delayed(Duration(seconds: 2), (){

@@ -119,7 +119,7 @@ class _LoginScreenState extends State<LoginScreen> {
         await _userDb.insert(_userModel);
         await _userDb.closeUserDb();
         Fluttertoast.showToast(msg: 'Login Success', backgroundColor: Colors.black.withOpacity(0.7));
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
         print('userModel: ${_userModel.uniqueKey}');
       }else{
         Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));

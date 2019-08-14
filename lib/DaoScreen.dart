@@ -51,8 +51,9 @@ class _DaoScreenState extends State<DaoScreen> {
     if(_response.data != null){
       var daoViewModelList = _response.data['Results'];
       for(var i in daoViewModelList){
-        _daoViewModelList.add(DaoViewModel.fromJson(i));
-        print('daoviewmodel :${_daoViewModelList}');
+        setState(() {
+          _daoViewModelList.add(DaoViewModel.fromJson(i));
+        });
       }
     }
   }
@@ -127,7 +128,9 @@ class _DaoScreenState extends State<DaoScreen> {
   Future<Null> _handleRefresh() async {
     await _checkCon();
     if(_isCon){
-      _daoViewModelList.clear();
+      setState(() {
+        _daoViewModelList.clear();
+      });
       await _getAllDao();
     }else{
       Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);

@@ -1,23 +1,35 @@
 import 'package:flutter/material.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
+import 'helper/SharePreferencesHelper.dart';
+import 'Database/UserDb.dart';
 
 class NotificationScreen extends StatefulWidget {
-  UserModel model;
-  NotificationScreen(this.model);
   @override
-  _NotificationScreenState createState() => _NotificationScreenState(this.model);
+  _NotificationScreenState createState() => _NotificationScreenState();
 }
 
 class _NotificationScreenState extends State<NotificationScreen> {
   UserModel _userModel;
   String _city;
-  _NotificationScreenState(this._userModel);
+  Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
+  UserDb _userDb = UserDb();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _getUser();
+  }
+
+  _getUser()async{
+    await _sharepreferenceshelper.initSharePref();
+    await _userDb.openUserDb();
+    var model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    await _userDb.closeUserDb();
+    setState(() {
+      _userModel = model;
+    });
     _initHeaderTitle();
   }
 
@@ -44,7 +56,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
-                        Text(_city, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                        Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
                         Text('အသိပေးနှိုးဆော်ချက်', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                       ],
                     ),

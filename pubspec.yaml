@@ -36,6 +36,8 @@ dependencies:
   flutter_account_kit: ^0.7.0
   modal_progress_hud: ^0.1.3
   flutter_slidable: ^0.5.3
+  permission_handler: ^3.2.2
+  image_picker: ^0.6.1+2
 
 dev_dependencies:
   flutter_test:
@@ -99,6 +101,9 @@ flutter:
     - images/down_arrow.png
     - images/question_mark.png
     - images/tick.png
+    - images/placeholder.jpg
+    - images/camera.png
+    - images/gallery.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

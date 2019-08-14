@@ -6,12 +6,12 @@ import 'SaveNewsFeedScreen.dart';
 import 'FaqScreen.dart';
 import 'model/DashBoardModel.dart';
 import 'DaoScreen.dart';
+import 'helper/SharePreferencesHelper.dart';
+import 'Database/UserDb.dart';
 
 class DashBoardScreen extends StatefulWidget {
-  UserModel model;
-  DashBoardScreen(this.model);
   @override
-  _DashBoardScreenState createState() => _DashBoardScreenState(this.model);
+  _DashBoardScreenState createState() => _DashBoardScreenState();
 }
 
 class _DashBoardScreenState extends State<DashBoardScreen> {
@@ -19,12 +19,24 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   String _city;
   List _widget = new List();
   List<DashBoardModel> _dashBoardModelList = new List<DashBoardModel>();
-  _DashBoardScreenState(this._userModel);
+  Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
+  UserDb _userDb = UserDb();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _getUser();
+  }
+
+  _getUser()async{
+    await _sharepreferenceshelper.initSharePref();
+    await _userDb.openUserDb();
+    var model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    await _userDb.closeUserDb();
+    setState(() {
+      _userModel = model;
+    });
     _initHeaderTitle();
     _initDashBoardWidget();
     if(_userModel.resource != 'Android'){
@@ -121,7 +133,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedScreen()));
               break;
             case MyString.txt_profile:
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
               break;
             case MyString.txt_referral:
               //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
@@ -155,7 +167,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(_city, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                              Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
                               Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                             ],
                           ),

@@ -11,10 +11,8 @@ import 'package:connectivity/connectivity.dart';
 import 'Database/UserDb.dart';
 
 class ProfileFormScreen extends StatefulWidget {
-  UserModel model;
-  ProfileFormScreen(this.model);
   @override
-  _ProfileFormScreenState createState() => _ProfileFormScreenState(this.model);
+  _ProfileFormScreenState createState() => _ProfileFormScreenState();
 }
 
 class _ProfileFormScreenState extends State<ProfileFormScreen> {
@@ -32,7 +30,6 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
   UserDb _userDb = UserDb();
-  _ProfileFormScreenState(this._userModel);
 
   @override
   void initState() {
@@ -41,6 +38,16 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     _init();
     _stateList = [_dropDownState];
     _townshipList = [_dropDownTownship];
+  }
+
+  _getUser()async{
+    await _sharepreferenceshelper.initSharePref();
+    await _userDb.openUserDb();
+    var model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    await _userDb.closeUserDb();
+    setState(() {
+      _userModel = model;
+    });
   }
 
   _checkCon()async{
@@ -57,7 +64,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     setState(() {
       _isLoading = true;
     });
-    await _sharepreferenceshelper.initSharePref();
+    await _getUser();
     _nameController.text = _userModel.name;
     _addressController.text = _userModel.address;
     await _locationDb.openLocationDb();

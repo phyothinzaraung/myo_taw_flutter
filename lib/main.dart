@@ -5,7 +5,7 @@ import 'NewsFeedScreen.dart';
 import 'DashBoardScreen.dart';
 import 'NotificationScreen.dart';
 import 'customIcons/my_flutter_app_icons.dart';
-import 'model/UserModel.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 void main() => runApp(MaterialApp(
       home: SplashScreen(),
@@ -18,22 +18,24 @@ void main() => runApp(MaterialApp(
 ));
 
 class MainScreen extends StatefulWidget {
-  UserModel model;
-  MainScreen(this.model);
 
   @override
-  _mainState createState() => _mainState(this.model);
+  _mainState createState() => _mainState();
 }
 
 class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   TabController _tabController;
-  UserModel userModel;
-  _mainState(this.userModel);
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _tabController = new TabController(length: 3, vsync: this);
+    _requestPermission();
+  }
+
+  _requestPermission()async{
+    await PermissionHandler().requestPermissions([PermissionGroup.camera, PermissionGroup.storage,PermissionGroup.photos,
+      PermissionGroup.mediaLibrary,PermissionGroup.locationAlways]);
   }
   @override
   Widget build(BuildContext context) {
@@ -45,9 +47,9 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
       child: Scaffold(
         body: TabBarView(
           children: [
-            NewsFeedScreen(userModel),
-            DashBoardScreen(userModel),
-            NotificationScreen(userModel),
+            NewsFeedScreen(),
+            DashBoardScreen(),
+            NotificationScreen(),
           ],
           controller: _tabController,
         ),
