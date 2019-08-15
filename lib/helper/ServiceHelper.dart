@@ -123,6 +123,28 @@ class ServiceHelper{
   return response;
  }
 
+ sendSuggestion<Response>(String file, String phoneNo, String subject, String message, String uniqueKey, String userName, String lat, String lng,
+     String regionCode) async{
+  FormData formData = new FormData.from({
+   'file' : UploadFileInfo(File(file), 'suggestionPhoto'),
+   'UserPhoneNo' : phoneNo,
+   'Subject' : subject,
+   'Message' : message,
+   'UniqueKey' : uniqueKey,
+   'UserName' : userName,
+   'Latitude' : lat,
+   'Longitude' : lng,
+   'RegionCode' : regionCode,
+   'IsRead' : false,
+   'Fixed' : false,
+  });
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Contribute/UpSertContributeWithPhoto",
+      data: formData);
+  return response;
+ }
+
 }
 
 

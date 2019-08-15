@@ -1,4 +1,6 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -20,7 +22,7 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
   Response _response;
   UserDb _userDb = UserDb();
   UserModel _userModel;
-  bool _isLoading = false;
+  bool _isCon,_isLoading = false;
 
   @override
   void initState() {
@@ -41,6 +43,16 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
     setState(() {
       _image = image;
     });
+  }
+
+  _checkCon()async{
+    var conResult = await(Connectivity().checkConnectivity());
+    if (conResult == ConnectivityResult.none) {
+      _isCon = false;
+    }else{
+      _isCon = true;
+    }
+    //print('isCon : ${_isCon}');
   }
 
   _uploadPhoto()async{
@@ -113,11 +125,16 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
                   Expanded(
                     child: Container(
                       height: 50.0,
-                      child: FlatButton(onPressed: (){
-                        setState(() {
-                          _isLoading = true;
-                        });
-                        _uploadPhoto();
+                      child: FlatButton(onPressed: ()async{
+                        await _checkCon();
+                        if(_isCon){
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          _uploadPhoto();
+                        }else{
+                          Fluttertoast.showToast(msg: 'No internet connection', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                        }
                       }, child: Text(MyString.txt_upload_photo, style: TextStyle(color: Colors.white),),
                         color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),
                     ),

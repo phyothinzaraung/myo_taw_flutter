@@ -89,7 +89,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _userModel = model;
     });
     await _getAllTaxRecord(page);
-    print('userphoto; ${_userModel.photoUrl}');
+    //print('userphoto; ${_userModel.photoUrl}');
   }
 
   _checkCon()async{
@@ -256,7 +256,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _navigateToProfileScreen()async{
     Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen()));
     if(result != null && result.containsKey('isNeedRefresh') == true){
-      await _getUser();
+      //await _getUser();
       await _handleRefresh();
     }
   }
@@ -264,7 +264,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   _navigateToProfilePhotoScreen()async{
     Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePhotoUploadScreen()));
     if(result != null && result.containsKey('isNeedRefresh') == true){
-      await _getUser();
+      //await _getUser();
+      await _handleRefresh();
+    }
+  }
+
+  _navigateToNewTaxRecordScreen()async{
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewTaxRecordScreen()));
+    if(result != null && result.containsKey('isNeedRefresh') == true){
+      //await _getUser();
       await _handleRefresh();
     }
   }
@@ -378,7 +386,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 width: 300.0,
                 //new tax record
                 child: RaisedButton(onPressed: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewTaxRecordScreen()));
+                  _navigateToNewTaxRecordScreen();
                   },child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[

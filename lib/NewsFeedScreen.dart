@@ -199,7 +199,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                             imageBuilder: (context, image){
                               return Container(
                                 width: double.maxFinite,
-                                height: 180.0,
+                                height: 160.0,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                       image: image,
@@ -417,7 +417,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     if(_isCon){
       page++;
       await _getNewsFeed(page);
-      //Fluttertoast.showToast(msg: 'call loadmore');
     }
     return _isCon;
   }

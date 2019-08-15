@@ -77,6 +77,12 @@ class MyString{
   static const String txt_tax_record_name = 'မှတ်တမ်းအမည်';
   static const String txt_upload_photo_camera = 'ဓာတ်ပုံတင်ရန်';
   static const String txt_upload_photo_gallery = 'Gallery မှဓာတ်ပုံယူရန်';
+  static const String title_suggestion = 'ပေးပို့လိုသော စာ';
+  static const String title_suggestion_subject = 'အကြောင်းအရာ';
+  static const String txt_choose_subject = 'အကြောင်းအရာရွေးချယ်ပါ';
+  static const String title_suggestion_mess = 'အကြံပြုစာရေးနိုင်ပါသည်';
+  static const String txt_send_suggestion = 'စာပို့မည်';
+
 }
 
 class OrganizationId{

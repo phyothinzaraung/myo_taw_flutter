@@ -8,6 +8,7 @@ import 'model/DashBoardModel.dart';
 import 'DaoScreen.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
+import 'SuggestionScreen.dart';
 
 class DashBoardScreen extends StatefulWidget {
   @override
@@ -112,19 +113,19 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoScreen('Tax')));
               break;
             case MyString.txt_suggestion:
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => SuggestionScreen()));
               break;
             case MyString.txt_business_tax:
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
               break;
             case MyString.txt_online_tax:
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
               break;
             case MyString.txt_tax_use:
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
               break;
             case MyString.txt_calculate_tax:
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
               break;
             case MyString.txt_faq:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => FaqScreen()));
