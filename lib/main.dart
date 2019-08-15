@@ -34,8 +34,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   }
 
   _requestPermission()async{
-    await PermissionHandler().requestPermissions([PermissionGroup.camera, PermissionGroup.storage,PermissionGroup.photos,
-      PermissionGroup.mediaLibrary,PermissionGroup.locationAlways]);
+    await PermissionHandler().requestPermissions([PermissionGroup.camera, PermissionGroup.storage,PermissionGroup.photos, PermissionGroup.location]);
   }
   @override
   Widget build(BuildContext context) {

@@ -10,6 +10,7 @@ import 'Database/LocationDb.dart';
 import 'model/LocationModel.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -93,8 +94,12 @@ class _SplashScreenState extends State<SplashScreen> {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
       statusBarColor: MyColor.colorPrimaryDark,
       systemNavigationBarIconBrightness: Brightness.dark,
-      statusBarBrightness: Brightness.light
     ));
+    try {
+      FlutterStatusbarcolor.setStatusBarColor(MyColor.colorPrimaryDark);
+    }  catch (e) {
+      print(e);
+    }
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(
