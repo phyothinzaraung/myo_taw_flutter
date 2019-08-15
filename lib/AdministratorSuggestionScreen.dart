@@ -238,12 +238,19 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
                           _cameraPosition!=null?Container(
                               width: double.maxFinite,
                               height: 150.0,
-                              child: GoogleMap(
-                                initialCameraPosition: _cameraPosition,
-                                mapType: MapType.normal,
-                                onMapCreated: (controller){
-                                  _controller.complete(controller);
-                                },
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: <Widget>[
+                                  GoogleMap(
+                                    initialCameraPosition: _cameraPosition,
+                                    mapType: MapType.normal,
+                                    myLocationButtonEnabled: false,
+                                    onMapCreated: (controller){
+                                      _controller.complete(controller);
+                                    },
+                                  ),
+                                  Image.asset('images/pin_holder.png', width: 15.0, height: 15.0,)
+                                ],
                               )
                           ) :
                           Container(

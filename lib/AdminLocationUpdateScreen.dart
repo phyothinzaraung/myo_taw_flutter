@@ -82,6 +82,7 @@ class _AdminLocationUpdateScreenState extends State<AdminLocationUpdateScreen> {
         alignment: Alignment.center,
         children: <Widget>[
           GoogleMap(
+            myLocationButtonEnabled: false,
             initialCameraPosition: _cameraPosition,
             mapType: MapType.normal,
             onMapCreated: (controller){
