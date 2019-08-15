@@ -9,6 +9,7 @@ import 'DaoScreen.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
 import 'SuggestionScreen.dart';
+import 'AdministratorSuggestionScreen.dart';
 
 class DashBoardScreen extends StatefulWidget {
   @override

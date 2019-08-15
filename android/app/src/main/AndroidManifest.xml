@@ -12,7 +12,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.CAMERA"/>
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
 
     <application
         android:name="io.flutter.app.FlutterApplication"
@@ -46,6 +46,8 @@
             android:value="@string/ACCOUNT_KIT_CLIENT_TOKEN" />
         <meta-data android:name="com.facebook.accountkit.FacebookAppEventsEnabled"
             android:value="false"/>
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBtZGkpXeERQp9aF_1BZ2cp-Xs40HZ2NCo"/>
         <activity
             android:name="com.facebook.accountkit.ui.AccountKitActivity"
             android:theme="@style/accountKitTheme"

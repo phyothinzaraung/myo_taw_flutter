@@ -84,10 +84,14 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
     _userModel = model;
     _response = await ServiceHelper().uploadTaxRecord(_image.path, _recordSubject, _userModel.uniqueKey, _userModel.name, _userModel.currentRegionCode);
     //print('uploaddata: ${_recordName} ${_userModel.uniqueKey} ${_userModel.name} ${_userModel.currentRegionCode}');
-    setState(() {
-      _isLoading = false;
-    });
-    Navigator.of(context).pop({'isNeedRefresh' : true});
+    if(_response.statusCode == 200){
+      setState(() {
+        _isLoading = false;
+      });
+      Navigator.of(context).pop({'isNeedRefresh' : true});
+    }else{
+      Fluttertoast.showToast(msg: 'Please try again', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+    }
   }
 
   @override

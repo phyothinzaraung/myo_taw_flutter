@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:location/location.dart';
 import 'package:connectivity/connectivity.dart';
@@ -11,13 +12,15 @@ import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
 import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'AdminLocationUpdateScreen.dart';
 
-class SuggestionScreen extends StatefulWidget {
+class AdministratorSuggestionScreen extends StatefulWidget {
   @override
-  _SuggestionScreenState createState() => _SuggestionScreenState();
+  _AdministratorSuggestionScreenState createState() => _AdministratorSuggestionScreenState();
 }
 
-class _SuggestionScreenState extends State<SuggestionScreen> {
+class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionScreen> {
   List<String> _subjectList = new List<String>();
   String _dropDownSubject = MyString.txt_choose_subject;
   TextEditingController _messController = TextEditingController();
@@ -29,6 +32,8 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
   UserDb _userDb = UserDb();
   UserModel _userModel;
   Response _response;
+  Completer<GoogleMapController> _controller = Completer();
+  CameraPosition _cameraPosition;
 
   @override
   void initState() {
@@ -42,7 +47,14 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
             _location.onLocationChanged().listen((currentLocation){
               _lat = currentLocation.latitude.toString();
               _lng = currentLocation.longitude.toString();
+               setState(() {
+                 _cameraPosition = CameraPosition(
+                   target: LatLng(currentLocation.latitude, currentLocation.longitude),
+                   zoom: 14.4746,
+                 );
+               });
             });
+            //Navigator.of(context).pop();
           }else{
             Navigator.of(context).pop();
           }
@@ -51,6 +63,12 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
         _location.onLocationChanged().listen((currentLocation){
           _lat = currentLocation.latitude.toString();
           _lng = currentLocation.longitude.toString();
+          setState(() {
+            _cameraPosition = CameraPosition(
+              target: LatLng(currentLocation.latitude, currentLocation.longitude),
+              zoom: 15.0
+            );
+          });
         });
       }
     });
@@ -70,6 +88,14 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
 
   Future camera() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1024, maxHeight: 768);
+    setState(() {
+      _image = image;
+    });
+  }
+
+  Future gallery() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1024, maxHeight: 768);
+
     setState(() {
       _image = image;
     });
@@ -119,7 +145,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                         Navigator.of(context).pop();
                         Navigator.of(context).pop();
 
-                      }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                        }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
                         color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
                     )
                   ],
@@ -149,11 +175,32 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
     );
   }
 
-  /*_getLatLng()async{
+  _getLatLng()async{
     var location = await _location.getLocation();
     _lat = location.latitude.toString();
     _lng = location.longitude.toString();
-  }*/
+  }
+
+  _navigateToAdminLocationUpdateScreen()async{
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => AdminLocationUpdateScreen()));
+    if(result != null && result.containsKey('latLng') != null){
+      LatLng latLng = result['latLng'];
+      setState(() {
+        _lat = latLng.latitude.toString();
+        _lng = latLng.longitude.toString();
+        _cameraPosition = CameraPosition(
+            target: LatLng(latLng.latitude, latLng.longitude),
+            zoom: 15.0
+        );
+        _updateCameraPosition(_cameraPosition);
+      });
+    }
+  }
+
+  _updateCameraPosition(CameraPosition cameraPosition)async{
+    GoogleMapController controller = await _controller.future;
+    controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,6 +223,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                 ],
               ),
             ),
+            //map
             Card(
               margin: EdgeInsets.all(0.0),
               child: Container(
@@ -183,12 +231,59 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                   children: <Widget>[
                     _image!=null?Image.file(_image, width: double.maxFinite, height: 200.0, fit: BoxFit.cover,):
                     Image.asset('images/placeholder.jpg', width: double.maxFinite, height: 200.0, fit: BoxFit.cover,),
+                    Card(
+                      margin: EdgeInsets.only(left: 10.0, right: 10.0, top: 20.0, bottom: 10.0),
+                      child: Column(
+                        children: <Widget>[
+                          _cameraPosition!=null?Container(
+                              width: double.maxFinite,
+                              height: 150.0,
+                              child: GoogleMap(
+                                initialCameraPosition: _cameraPosition,
+                                mapType: MapType.normal,
+                                onMapCreated: (controller){
+                                  _controller.complete(controller);
+                                },
+                              )
+                          ) :
+                          Container(
+                            width: double.maxFinite,
+                            height: 150.0,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                CircularProgressIndicator()
+                              ],
+                            ),
+                          ),
+                          GestureDetector(
+                            onTap: (){
+                              _navigateToAdminLocationUpdateScreen();
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(10.0),
+                              child: Row(
+                                children: <Widget>[
+                                  Container(
+                                      margin: EdgeInsets.only(right: 20.0),
+                                      child: Image.asset('images/location_update.png', width: 25.0, height: 25.0,)),
+                                  Text(MyString.txt_location_update, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
+
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
                     Container(
                       margin: EdgeInsets.only(top: 20.0),
                       padding: EdgeInsets.only(left: 30.0, right: 30.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
+                          //camera
                           Container(
                             height: 45.0,
                             margin: EdgeInsets.only(bottom: 10.0),
@@ -205,6 +300,23 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                             ),color: Colors.white,elevation: 1.0,
                               shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
                           ),
+                        //gallery
+                        Container(
+                          height: 45.0,
+                          margin: EdgeInsets.only(bottom: 10.0),
+                          child: RaisedButton(onPressed: (){
+                            gallery();
+                            },child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                              Container(
+                                  margin: EdgeInsets.only(right: 30.0),
+                                  child: Image.asset('images/gallery.png', width: 25.0, height: 25.0,)),
+                              Text(MyString.txt_upload_photo_gallery, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
+                            ],
+                          ),color: Colors.white,elevation: 1.0,
+                            shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
+                        ),
                           Container(
                             margin: EdgeInsets.only(bottom: 10.0),
                               child: Text(MyString.title_suggestion_subject, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
@@ -264,7 +376,6 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                             width: double.maxFinite,
                             margin: EdgeInsets.only(bottom: 20.0),
                             child: RaisedButton(onPressed: ()async{
-
                               await _checkCon();
                               //await _getLatLng();
                               if(_isCon){
@@ -273,7 +384,6 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                                     _isLoading = true;
                                   });
                                   _sendSuggestion();
-                                  print('latlng: ${_lat} ${_lng}');
                                 }
                               }else{
                                 Fluttertoast.showToast(msg: 'No internet connection', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));

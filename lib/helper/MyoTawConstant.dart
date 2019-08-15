@@ -82,6 +82,10 @@ class MyString{
   static const String txt_choose_subject = 'အကြောင်းအရာရွေးချယ်ပါ';
   static const String title_suggestion_mess = 'အကြံပြုစာရေးနိုင်ပါသည်';
   static const String txt_send_suggestion = 'စာပို့မည်';
+  static const String txt_suggestion_finish = 'ပူးပေါင်းပါဝင်မှုအတွက် \n ကျေးဇူးတင်ပါသည်';
+  static const String txt_close = 'ပိတ်မည်';
+  static const String txt_location_update = 'တည်နေရာရယူရန်';
+  static const String txt_get_location_update = 'တည်နေရာယူမည်';
 
 }
 
