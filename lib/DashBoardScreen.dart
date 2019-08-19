@@ -10,6 +10,7 @@ import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
 import 'SuggestionScreen.dart';
 import 'AdministratorSuggestionScreen.dart';
+import 'BizLicenseScreen.dart';
 
 class DashBoardScreen extends StatefulWidget {
   @override
@@ -117,7 +118,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => SuggestionScreen()));
               break;
             case MyString.txt_business_tax:
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseScreen()));
               break;
             case MyString.txt_online_tax:
               //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
@@ -146,7 +147,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         child: Container(
           child: Column(children: <Widget>[
             Flexible(flex: 3,child: Image.asset(i.image,width: 120, height: 120,)),
-            Flexible(flex: 1,child: Text(i.title,style: TextStyle(fontSize: FontSize.textSizeSmall),))],),),
+            Flexible(flex: 1,child: Text(i.title,style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))],),),
       ));
     }
   }

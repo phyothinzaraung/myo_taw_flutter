@@ -6,7 +6,6 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/DaoViewModel.dart';
 import 'helper/MyoTawConstant.dart';
-import 'package:flutter_html_textview_render/html_text_view.dart';
 import 'model/DaoPhotoModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'DaoPhotoDetailScreen.dart';

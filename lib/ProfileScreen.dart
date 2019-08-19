@@ -123,7 +123,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               children: <Widget>[
                 Container(margin: EdgeInsets.only(bottom: 10.0),child: Image.asset('images/logout_icon.png', width: 50.0, height: 50.0,)),
                 Container(margin: EdgeInsets.only(bottom: 10.0),child: Text(MyString.txt_are_u_sure,
-                  style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                  style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: <Widget>[
@@ -140,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       width: 90.0,
                       child: RaisedButton(onPressed: (){
                           Navigator.of(context).pop();
-                        },child: Text(MyString.txt_log_out_cancel,style: TextStyle(fontSize: FontSize.textSizeSmall),),
+                        },child: Text(MyString.txt_log_out_cancel,style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                         color: MyColor.colorGrey,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
                     )
 
@@ -164,7 +164,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.black))),
+                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack))),
               CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
             ],
           ),
@@ -193,7 +193,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(margin: EdgeInsets.only(bottom: 10.0),child: Image.asset('images/confirm_icon.png', width: 60.0, height: 60.0,)),
-                  Text(MyString.txt_are_u_sure, style: TextStyle(fontSize: FontSize.textSizeSmall),),
+                  Text(MyString.txt_are_u_sure, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                   Container(
                     margin: EdgeInsets.only(top: 10.0),
                     child: Row(
@@ -237,8 +237,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(margin: EdgeInsets.only(bottom: 5.0),
-                        child: Text(taxRecordModel.subject,style: TextStyle(fontSize: FontSize.textSizeNormal),overflow: TextOverflow.ellipsis,maxLines: 1,)),
-                    Text(showDateTime(taxRecordModel.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall),)
+                        child: Text(taxRecordModel.subject,style: TextStyle(fontSize: FontSize.textSizeNormal,color: MyColor.colorTextBlack),overflow: TextOverflow.ellipsis,maxLines: 1,)),
+                    Text(showDateTime(taxRecordModel.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)
                   ],
                 ),
               ),
@@ -285,7 +285,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: Row(
             children: <Widget>[
               Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
-              Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall),)
+              Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)
             ],
           ),
         ),
@@ -317,8 +317,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(margin: EdgeInsets.only(bottom: 10.0),
-                                child: Text(_userModel!=null?_userModel.name:'', style: TextStyle(fontSize: FontSize.textSizeSmall,),)),
-                            Text(MyanNumConvertHelper().getMyanNumString(_userModel!=null?_userModel.phoneNo:''), style: TextStyle(fontSize: FontSize.textSizeSmall),),
+                                child: Text(_userModel!=null?_userModel.name:'', style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)),
+                            Text(MyanNumConvertHelper().getMyanNumString(_userModel!=null?_userModel.phoneNo:''), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                           ],
                         ),
                       )
@@ -345,12 +345,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     Divider(color: MyColor.colorPrimary,),
-                    Container(
-                      child: Row(
-                        children: <Widget>[
-                          Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/apply_biz_list.png',width: 30.0, height: 38.0,)),
-                          Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                        ],
+                    GestureDetector(
+                      onTap: (){
+
+                      },
+                      child: Container(
+                        child: Row(
+                          children: <Widget>[
+                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/apply_biz_list.png',width: 30.0, height: 38.0,)),
+                            Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                          ],
+                        ),
                       ),
                     ),
                     Divider(color: MyColor.colorPrimary,),

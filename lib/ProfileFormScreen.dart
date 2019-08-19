@@ -107,7 +107,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.black))),
+                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack))),
               CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
             ],
           ),
@@ -173,12 +173,12 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                     child: Row(
                       children: <Widget>[
                         Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
-                        Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeNormal),)
+                        Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),)
                       ],
                     ),
                   ),
                   Container(margin: EdgeInsets.only(bottom: 10.0),
-                      child: Text(MyString.txt_user_name, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      child: Text(MyString.txt_user_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
 
                   //textfield name
                   Container(
@@ -192,14 +192,14 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                           border: InputBorder.none
                       ),
                       controller: _nameController,
-                      style: TextStyle(fontSize: FontSize.textSizeSmall),
+                      style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
                       onChanged: (value){
                         _userName = value;
                       },
                     ),
                   ),
                   Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
-                      child: Text(MyString.txt_user_address, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      child: Text(MyString.txt_user_address, style: TextStyle(fontSize: FontSize.textSizeSmall ,color: MyColor.colorTextBlack),)),
 
                   //textfield address
                   Container(
@@ -213,7 +213,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                           border: InputBorder.none
                       ),
                       controller: _addressController,
-                      style: TextStyle(fontSize: FontSize.textSizeSmall),
+                      style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
                       onChanged: (value){
                         _userAddress = value;
                       },
@@ -221,7 +221,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                   ),
 
                   Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
-                      child: Text(MyString.txt_user_state, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      child: Text(MyString.txt_user_state, style: TextStyle(fontSize: FontSize.textSizeSmall ,color: MyColor.colorTextBlack),)),
 
                   //dropdown state
                   Container(
@@ -234,7 +234,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
-                        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.black87),
+                        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
                         isExpanded: true,
                         iconEnabledColor: MyColor.colorPrimary,
                         value: _dropDownState,
@@ -261,7 +261,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
 
                   //dropdown township
                   Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
-                      child: Text(MyString.txt_user_township, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      child: Text(MyString.txt_user_township, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
                   Container(
                     padding: EdgeInsets.symmetric(horizontal: 10.0),
                     decoration: BoxDecoration(
@@ -272,7 +272,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                     ),
                     child: DropdownButtonHideUnderline(
                       child: DropdownButton<String>(
-                        style: new TextStyle(fontSize: 13.0, color: Colors.black87),
+                        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
                         isExpanded: true,
                         iconEnabledColor: MyColor.colorPrimary,
                         value: _dropDownTownship,

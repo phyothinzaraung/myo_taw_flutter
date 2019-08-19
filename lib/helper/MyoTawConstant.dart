@@ -14,6 +14,7 @@ class FontSize{
   static const double textSizeLarge = 20;
   static const double textSizeExtraNormal = 17;
   static const double textSizeNormal = 15;
+  static const double textSizeExtraSmall = 13;
   static const double textSizeSmall = 12;
 }
 
@@ -86,6 +87,32 @@ class MyString{
   static const String txt_close = 'ပိတ်မည်';
   static const String txt_location_update = 'တည်နေရာရယူရန်';
   static const String txt_get_location_update = 'တည်နေရာယူမည်';
+  static const String title_biz_license = 'လုပ်ငန်းလိုင်စင်နှင့်ခွင့်ပြုမိန့်လျှောက်ထားရန်';
+  static const String txt_biz_license_information = 'လုပ်ငန်းဆိုင်ရာအချက်အလက်များ';
+  static const String txt_biz_name = 'လုပ်ငန်းအမည်';
+  static const String txt_biz_type = 'လုပ်ငန်းအမျိုးအစား';
+  static const String txt_area = 'အကျယ်အဝန်း (အလျား × အနံ)';
+  static const String txt_unit_feet = 'ပေ';
+  static const String txt_biz_location = 'တည်နေရာ';
+  static const String txt_biz_region_no = 'အမှတ်';
+  static const String txt_biz_street_name = 'လမ်း';
+  static const String txt_biz_block_no = 'ရပ်ကွက်';
+  static const String txt_township = 'မြို့နယ်';
+  static const String txt_state = 'တိုင်း/ဒေသကြီး';
+  static const String txt_state_warning = 'တိုင်း/ဒေသကြီး ဖြည့်ပေးပါ';
+  static const String txt_owner_information = 'ပိုင်ရှင်ဆိုင်ရာအချက်အလက်များ';
+  static const String txt_owner_name = 'အမည်';
+  static const String txt_owner_nrc_no = 'မှတ်ပုံတင်အမှတ်';
+  static const String txt_owner_ph_no = 'ဆက်သွယ်ရန်ဖုန်းနံပါတ်';
+  static const String txt_owner_region_no = 'အမှတ်';
+  static const String txt_owner_street_name = 'လမ်း';
+  static const String txt_owner_block_no = 'ရပ်ကွက်';
+  static const String txt_owner_township = 'မြို့နယ်';
+  static const String txt_owner_state = 'တိုင်း/ဒေသကြီး';
+  static const String txt_owner_location = 'တည်နေရာ';
+  static const String txt_remark = 'မှတ်ချက်';
+  static const String txt_apply_license = 'လျှောက်ထားမည်';
+  static const String txt_apply_license_need_to_fill = 'ပြထားသည့်များဖြည့်ပေးရန်လိုအပ်သည်';
 
 }
 

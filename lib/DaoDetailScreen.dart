@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'model/DaoViewModel.dart';
 import 'helper/MyoTawConstant.dart';
-import 'package:flutter_html_textview_render/html_text_view.dart';
 import 'model/DaoPhotoModel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'helper/MyanNumConvertHelper.dart';
 import 'DaoPhotoDetailScreen.dart';
+import 'SuggestionScreen.dart';
+import 'BizLicenseScreen.dart';
+import 'package:flutter_html/flutter_html.dart';
 
 class DaoDetailScreen extends StatefulWidget {
   DaoViewModel model;
@@ -156,7 +158,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
                       Container(
                         color: Colors.white,
                         padding: EdgeInsets.all(30.0),
-                        child: HtmlTextView(data: _daoViewModel.daoModel.description,),
+                        child: Html(data: _daoViewModel.daoModel.description,),
                       )
                     ],
                   )
@@ -168,7 +170,8 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
               height: 50.0,
               child: FlatButton(
                   onPressed: (){
-
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => _daoViewModel.daoModel.title.contains('လိုင်စင်')?
+                    BizLicenseScreen() : SuggestionScreen()));
                   },
                   child: Text(_daoViewModel.daoModel.title.contains('လိုင်စင်')?MyString.txt_biz_license:MyString.txt_suggestion,
                     style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),color: MyColor.colorPrimary,),

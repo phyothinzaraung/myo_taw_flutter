@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'model/SaveNewsFeedModel.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/ShowDateTimeHelper.dart';
-import 'package:flutter_html_textview_render/html_text_view.dart';
 import 'NewsFeedPhotoDetail.dart';
 import 'NewsFeedVideoScreen.dart';
 
@@ -72,13 +72,13 @@ class _SaveNewsFeedDetailScreenState extends State<SaveNewsFeedDetailScreen> {
                         child: Row(mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
                             Flexible(child: Text(_saveNewsFeedModel.title!=null?_saveNewsFeedModel.title:'---',
-                                style: TextStyle(fontSize: FontSize.textSizeNormal)))
+                                style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack)))
                           ],),
                       ),
                       Container(
                         child: Row(mainAxisAlignment: MainAxisAlignment.start,
                           children: <Widget>[
-                            Flexible(child: HtmlTextView(data: _saveNewsFeedModel.body!=null?_saveNewsFeedModel.body:'---',))
+                            Flexible(child: Html(data: _saveNewsFeedModel.body!=null?_saveNewsFeedModel.body:'---',))
                           ],),
                       )
                     ],

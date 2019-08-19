@@ -187,7 +187,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       margin: EdgeInsets.only(bottom: 5.0),
                       child: Row(mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Expanded(child: Text(title!=null?title:'---',style: TextStyle(fontSize: FontSize.textSizeNormal), maxLines: 1, overflow: TextOverflow.ellipsis,))
+                          Expanded(child: Text(title!=null?title:'---',
+                            style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack), maxLines: 1, overflow: TextOverflow.ellipsis,))
                         ],),
                     ),
                     Container(

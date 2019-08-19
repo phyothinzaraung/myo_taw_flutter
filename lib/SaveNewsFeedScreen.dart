@@ -53,7 +53,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Container(margin: EdgeInsets.only(bottom: 10.0),child: Image.asset('images/confirm_icon.png', width: 60.0, height: 60.0,)),
-                  Text(MyString.txt_are_u_sure, style: TextStyle(fontSize: FontSize.textSizeSmall),),
+                  Text(MyString.txt_are_u_sure, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                   Container(
                     margin: EdgeInsets.only(top: 10.0),
                     child: Row(
@@ -93,7 +93,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                   child: Row(
                     children: <Widget>[
                       Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/file_save.png', width: 30.0, height: 30.0,)),
-                      Text(MyString.title_save_nf, style: TextStyle(fontSize: FontSize.textSizeSmall),)
+                      Text(MyString.title_save_nf, style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)
                     ],
                   ),
                 ):Container(width: 0.0, height: 0.0,),
@@ -137,7 +137,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Container(margin: EdgeInsets.only(bottom: 5.0),child: Text(model.title,style: TextStyle(fontSize: FontSize.textSizeSmall),overflow: TextOverflow.ellipsis,maxLines: 1,)),
-                                  Text(showDateTime(model.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall),)
+                                  Text(showDateTime(model.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)
                                 ],
                               ),
                             ),
@@ -172,7 +172,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
               Row(
                 children: <Widget>[
                   Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/file_save.png', width: 30.0, height: 30.0,)),
-                  Text(MyString.title_save_nf, style: TextStyle(fontSize: FontSize.textSizeSmall),)
+                  Text(MyString.title_save_nf, style: TextStyle(fontSize: FontSize.textSizeSmall ,color: MyColor.colorTextBlack),)
                 ],
               ),
               Expanded(
