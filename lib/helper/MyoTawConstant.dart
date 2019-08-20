@@ -24,6 +24,7 @@ class BaseUrl{
   static const String NEWS_FEED_CONTENT_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/NewsFeed/";
   static const String USER_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/Member/";
   static const String DAO_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/AboutDAO/";
+  static const String APPLY_BIZ_LICENSE_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/ApplyBiz/";
 }
 
 class MyString{
@@ -113,6 +114,8 @@ class MyString{
   static const String txt_remark = 'မှတ်ချက်';
   static const String txt_apply_license = 'လျှောက်ထားမည်';
   static const String txt_apply_license_need_to_fill = 'ပြထားသည့်များဖြည့်ပေးရန်လိုအပ်သည်';
+  static const String txt_need_paper_work = 'လိုအပ်သောစာရွက်စာတမ်းများတွဲရန်/ကြည့်ရန်';
+  static const String txt_apply_biz_license_photo = 'လုပ်ငန်းလိုင်စင်ဓာတ်ပုံများ';
 
 }
 

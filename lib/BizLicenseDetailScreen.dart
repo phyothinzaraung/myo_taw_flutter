@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/BizLicenseModel.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'ApplyBizLicenseScreen.dart';
+import 'ApplyBizLicenseFormScreen.dart';
 
 class BizLicenseDetailScreen extends StatefulWidget {
   BizLicenseModel model;
@@ -27,7 +27,7 @@ class _BizLicenseDetailScreenState extends State<BizLicenseDetailScreen> {
             child: Column(
               children: <Widget>[
                 Container(
-                  margin: EdgeInsets.only(top: 15.0,left: 30.0, right: 30.0),
+                  margin: EdgeInsets.only(top: 15.0,left: 30.0, right: 30.0, bottom: 15.0),
                   child: Row(
                     children: <Widget>[
                       Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/business_license_nocircle.png', width: 30.0, height: 30.0,)),
@@ -48,7 +48,7 @@ class _BizLicenseDetailScreenState extends State<BizLicenseDetailScreen> {
                   width: double.maxFinite,
                   margin: EdgeInsets.all(20.0),
                   child: RaisedButton(onPressed: ()async{
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseScreen(_bizLicenseModel)));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseFormScreen(_bizLicenseModel)));
                     }, child: Text(MyString.txt_apply_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
                     color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
                 ) : Container()

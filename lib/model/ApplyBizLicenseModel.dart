@@ -30,6 +30,8 @@ class ApplyBizLicenseModel{
   bool _isDeleted;
   bool _isValid;
 
+  ApplyBizLicenseModel();
+
   int get id => _id;
 
   set id(int value) {
@@ -209,6 +211,38 @@ class ApplyBizLicenseModel{
   set licenseType(String value) {
     _licenseType = value;
   }
+
+  ApplyBizLicenseModel.fromJson(Map<String, dynamic> json) :
+      _id = json['ID'],
+      _licenseType = json['LicenseType'],
+      _licensetypeId = json['LicenseTypeID'],
+      _bizName = json['BizName'],
+      _bizType = json['BizType'],
+      _length = json['Length'],
+      _width = json['Width'],
+      _area = json['Area'],
+      _bizRegionNo = json['BizRegionNo'],
+      _bizStreetName = json['BizStreetName'],
+      _bizBlockNo = json['BizBlockNo'],
+      _bizTownship = json['BizTownship'],
+      _bizState = json['BizState'],
+      _ownerName = json['OwnerName'],
+      _nrcNo = json['NRCNo'],
+      _phoneNo = json['PhoneNo'],
+      _regionNo = json['RegionNo'],
+      _streetName = json['StreetName'],
+      _blockNo = json['BlockNo'],
+      _township = json['Township'],
+      _state = json['State'],
+      _remark = json['Remark'],
+      _requiredData = json['RequiredData'],
+      _applyDate = json['ApplyDate'],
+      _uniqueKey = json['UniqueKey'],
+      _userName = json['UserName'],
+      _regionCode = json['RegionCode'],
+      _accessTime = json['Accesstime'],
+      _isDeleted = json['IsDeleted'],
+      _isValid = json['IsValid'];
 
 
 }

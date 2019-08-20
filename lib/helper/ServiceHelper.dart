@@ -186,6 +186,35 @@ class ServiceHelper{
   return response;
  }
 
+ getAllApplyBizLicenseByUser<Response>(String regionCode, String uniqueKey) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/GetApplyBizLicensesByUser",
+      queryParameters: {"RegionCode": regionCode, "UniqueKey" : uniqueKey});
+  return response;
+ }
+
+ getApplyBizPhotoList<Response>(int id) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/ApplyBizPhotosList",
+      queryParameters: {"ID": id});
+  return response;
+ }
+
+ uploadApplyBizPhoto<Response>(String file, String appBizId, String title) async{
+  FormData formData = new FormData.from({
+   'file' : UploadFileInfo(File(file), 'applyBizPhoto'),
+   'ApBizID' : appBizId,
+   'Title' : title,
+  });
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/ApplyBizPhotosUpload",
+      data: formData);
+  return response;
+ }
+
 }
 
 

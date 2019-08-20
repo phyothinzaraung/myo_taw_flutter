@@ -41,6 +41,7 @@ dependencies:
   location: ^2.3.5
   google_maps_flutter: ^0.5.20+3
   flutter_html: ^0.10.4
+  pie_chart: ^1.2.0
 
 dev_dependencies:
   flutter_test:
@@ -115,6 +116,8 @@ flutter:
     - images/business_license_nocircle.png
     - images/history.png
     - images/star.png
+    - images/arrow.png
+    - images/add_image_placeholder.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
