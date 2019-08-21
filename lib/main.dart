@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'SplashScreen.dart';
 import 'NewsFeedScreen.dart';
@@ -7,15 +9,27 @@ import 'NotificationScreen.dart';
 import 'customIcons/my_flutter_app_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
 
-void main() => runApp(MaterialApp(
-      home: SplashScreen(),
-      theme: ThemeData(
-        appBarTheme: AppBarTheme(
-          color: MyColor.colorPrimary
-        ),
-        scaffoldBackgroundColor: MyColor.colorGrey,
+void main() {
+  /*SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
+    statusBarColor: MyColor.colorPrimaryDark,
+    systemNavigationBarIconBrightness: Brightness.dark,
+  ));*/
+  try {
+    FlutterStatusbarcolor.setStatusBarColor(MyColor.colorPrimaryDark);
+  }  catch (e) {
+    print(e);
+  }
+  runApp(MaterialApp(
+    home: SplashScreen(),
+    theme: ThemeData(
+      appBarTheme: AppBarTheme(
+          color: MyColor.colorPrimary,
       ),
-));
+      accentColor: MyColor.colorAccent,
+      scaffoldBackgroundColor: MyColor.colorGrey,
+    ),
+  ));
+}
 
 class MainScreen extends StatefulWidget {
 

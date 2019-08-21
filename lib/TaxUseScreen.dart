@@ -1,6 +1,16 @@
+import 'package:async_loader/async_loader.dart';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:pie_chart/pie_chart.dart';
+import 'helper/PieChartColorHelper.dart';
+import 'helper/SharePreferencesHelper.dart';
+import 'helper/ServiceHelper.dart';
+import 'package:dio/dio.dart';
+import 'model/TaxUseModel.dart';
+import 'helper/TaxUseBudgetYearHelper.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class TaxUserScreen extends StatefulWidget {
   @override
@@ -9,40 +19,241 @@ class TaxUserScreen extends StatefulWidget {
 
 class _TaxUserScreenState extends State<TaxUserScreen> {
   Map<String, double> dataMap;
+  bool _isCon, _isLoading = false;
+  Response _response;
+  List<TaxUserModel> _taxUserModelList = new List<TaxUserModel>();
+  List<Widget> _legnedList = new List<Widget>();
+  Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
+  int _year;
+  String _image;
+  final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     dataMap = new Map();
-    dataMap.putIfAbsent("Flutter", () => 5);
-    dataMap.putIfAbsent("React", () => 3);
-    dataMap.putIfAbsent("Xamarin", () => 2);
-    dataMap.putIfAbsent("Ionic", () => 2);
+    _year = DateTime.now().year;
+    _image = 'images/arrow_green.png';
   }
+
+  _checkCon()async{
+    var conResult = await(Connectivity().checkConnectivity());
+    if (conResult == ConnectivityResult.none) {
+      _isCon = false;
+    }else{
+      _isCon = true;
+    }
+    print('isCon : ${_isCon}');
+  }
+
+  _getTaxUse(int year)async{
+    await _sharepreferenceshelper.initSharePref();
+    _response = await ServiceHelper().getTaxUser(_sharepreferenceshelper.getRegionCode(), TaxUseBudgetYearHelper().getBudgetYear(year));
+    if(_response.data != null){
+      List list = _response.data;
+      for(var i in list){
+        setState(() {
+          _taxUserModelList.add(TaxUserModel.fromJson(i));
+        });
+        dataMap.putIfAbsent(TaxUserModel.fromJson(i).taxTitle, () => TaxUserModel.fromJson(i).amount);
+      }
+      for(int i=0; i<_taxUserModelList.length; i++){
+        _legnedList.add(Container(
+          margin: EdgeInsets.only(bottom: 10.0),
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: 20.0,
+                height: 20.0,
+                color: PieChartColorHelper().defaultColorList[i],
+              ),
+              Container(margin: EdgeInsets.only(left: 10.0),
+                child: Text(_taxUserModelList[i].taxTitle, style: TextStyle(fontSize: FontSize.textSizeSmall),),),
+            ],
+          ),
+        ),);
+      }
+    }
+  }
+
+  _listView(){
+    return Container(
+      child: ListView(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 50.0),
+            child: PieChart(
+              dataMap: dataMap, //Required parameter
+              animationDuration: Duration(milliseconds: 800),
+              chartRadius: MediaQuery
+                  .of(context)
+                  .size
+                  .width / 1.5,
+              showChartValuesInPercentage: true,
+              showChartValues: true,
+              showChartValuesOutside: true,
+              chartValuesColor: Colors.blueGrey[900].withOpacity(0.9),
+              showLegends: false,
+              colorList: PieChartColorHelper().defaultColorList,
+            ),
+          ),
+          Container(
+              padding: EdgeInsets.all(20.0),
+              child: Column(
+                  children: _legnedList
+              )
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget getNoConnectionWidget(){
+    return Container(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Expanded(
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Text('No Internet Connection'),
+                  FlatButton(onPressed: (){
+                    asyncLoaderState.currentState.reloadState();
+                    _checkCon();
+                  }
+                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  Widget _renderLoad(){
+    return Container(
+      margin: EdgeInsets.only(top: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
+        ],
+      ),
+    );
+  }
+
+  Future<Null> _handleRefresh() async {
+    await _checkCon();
+    if(_isCon){
+      setState(() {
+        _taxUserModelList.clear();
+        _legnedList.clear();
+      });
+      await _getTaxUse(_year);
+    }else{
+      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
+    }
+    return null;
+  }
+
+  Widget modalProgressIndicator(){
+    return Center(
+      child: Card(
+        child: Container(
+          width: 220.0,
+          height: 80.0,
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Container(margin: EdgeInsets.only(right: 30.0),
+                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack))),
+              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+  
   @override
   Widget build(BuildContext context) {
+    var _asyncLoader = new AsyncLoader(
+        key: asyncLoaderState,
+        initState: () async => await _getTaxUse(_year),
+        renderLoad: () => _renderLoad(),
+        renderError: ([error]) => getNoConnectionWidget(),
+        renderSuccess: ({data}) => Container(
+          child: RefreshIndicator(
+              onRefresh: _handleRefresh,
+              child: _taxUserModelList.isNotEmpty?_listView() : Center(child: Text(MyString.txt_tax_use_no_data, style: TextStyle(fontSize: FontSize.textSizeNormal),),)
+          ),
+        )
+    );
     return Scaffold(
       appBar: AppBar(
         title: Text(MyString.txt_tax_use, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
-      body: Center(
-        child: PieChart(
-          dataMap: dataMap, //Required parameter
-          legendFontColor: Colors.blueGrey[900],
-          legendFontSize: FontSize.textSizeSmall,
-          legendFontWeight: FontWeight.w500,
-          animationDuration: Duration(milliseconds: 800),
-          chartLegendSpacing: 10.0,
-          chartRadius: MediaQuery
-              .of(context)
-              .size
-              .width / 1.5,
-          showChartValuesInPercentage: true,
-          showChartValues: true,
-          showChartValuesOutside: false,
-          chartValuesColor: Colors.blueGrey[900].withOpacity(0.9),
-          showLegends: true,
+      body: ModalProgressHUD(
+        inAsyncCall: _isLoading,
+        progressIndicator: modalProgressIndicator(),
+        child: Column(
+          children: <Widget>[
+            Container(
+              padding: EdgeInsets.only(left: 30.0, right: 30.0, top: 5.0, bottom: 5.0),
+              color: Colors.white,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  RotatedBox(
+                      quarterTurns: 2,
+                      child: GestureDetector(
+                          onTap: ()async{
+                            setState(() {
+                              _isLoading = true;
+                              _year--;
+                              _taxUserModelList.clear();
+                              _legnedList.clear();
+                              _image = 'images/arrow_green.png';
+                            });
+                            await _getTaxUse(_year);
+                            setState(() {
+                              _isLoading = false;
+                            });
+                          },
+                          child: Image.asset('images/arrow_green.png', width: 15.0, height: 15.0,))),
+                  Expanded(
+                      child: Text(TaxUseBudgetYearHelper().getBudgetYear(_year),
+                        textAlign: TextAlign.center, style: TextStyle(fontSize: FontSize.textSizeNormal),)),
+                  GestureDetector(
+                      onTap: ()async {
+                        if(_year <= DateTime.now().year){
+                          setState(() {
+                            _isLoading = true;
+                            _year++;
+                            _taxUserModelList.clear();
+                            _legnedList.clear();
+                          });
+                          await _getTaxUse(_year);
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        }
+                        if(_year > DateTime.now().year){
+                          setState(() {
+                            _image = 'images/arrow.png';
+                          });
+                        }
+                      },
+                      child: Image.asset(_image, width: 15.0, height: 15.0,))
+                ],
+              ),
+            ),
+            Expanded(child: _asyncLoader)
+          ],
         ),
       ),
     );

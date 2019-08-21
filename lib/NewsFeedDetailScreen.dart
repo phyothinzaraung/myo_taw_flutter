@@ -7,7 +7,7 @@ import 'helper/ShowDateTimeHelper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'Model/NewsFeedPhotoModel.dart';
 import 'NewsFeedPhotoDetail.dart';
-import 'helper/MyanNumConvertHelper.dart';
+import 'helper/NumConvertHelper.dart';
 import 'NewsFeedVideoScreen.dart';
 import 'helper/ShowDateTimeHelper.dart';
 
@@ -71,7 +71,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                       decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.6)
                       ),
-                      child: Text('${MyanNumConvertHelper().getMyanNumInt(index)}${'.'} ${_title}  ',
+                      child: Text('${NumConvertHelper().getMyanNumInt(index)}${'.'} ${_title}  ',
                         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),)),
                 ],
               ),));

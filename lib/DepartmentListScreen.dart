@@ -9,7 +9,7 @@ import 'helper/MyoTawConstant.dart';
 import 'model/DaoPhotoModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'DaoPhotoDetailScreen.dart';
-import 'helper/MyanNumConvertHelper.dart';
+import 'helper/NumConvertHelper.dart';
 import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -87,7 +87,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                     decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.6)
                     ),
-                    child: Text('${MyanNumConvertHelper().getMyanNumInt(index)}${'.'} ${_daoViewModel.daoModel.title}  ',
+                    child: Text('${NumConvertHelper().getMyanNumInt(index)}${'.'} ${_daoViewModel.daoModel.title}  ',
                       style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),)),
               ],
             ),));

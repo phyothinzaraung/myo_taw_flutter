@@ -137,7 +137,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
       setState(() {
         _applyBizLicensePhotoModelList.clear();
       });
-      await _getAllBizLicense();
+      _getAllBizLicense();
     }else{
       Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
     }
@@ -185,7 +185,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
               onRefresh: _handleRefresh,
-              child: Column(
+              child: _applyBizLicensePhotoModelList.isNotEmpty?Column(
                 children: <Widget>[
                   Expanded(child: _listView()),
                   _applyBizLicenseModel.isValid==true?Container():Row(
@@ -253,6 +253,11 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                     ],
                   )
                 ],
+              ) :
+              Container(
+                margin: EdgeInsets.only(top: 10.0),
+                child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[CircularProgressIndicator()],),
               )
           ),
         )

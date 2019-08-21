@@ -140,7 +140,7 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
       setState(() {
         _bizLicenseModelList.clear();
       });
-      await _getAllBizLicense();
+      _getAllBizLicense();
     }else{
       Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
     }
@@ -158,7 +158,21 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
               onRefresh: _handleRefresh,
-              child: _listView()
+              child: _bizLicenseModelList.isNotEmpty?_listView() :
+              Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
+                    child: Row(
+                      children: <Widget>[
+                        Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/business_license_nocircle.png', width: 30.0, height: 30.0,)),
+                        Text(MyString.title_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall),)
+                      ],
+                    ),
+                  ),
+                  CircularProgressIndicator()
+                ],
+              )
           ),
         )
     );

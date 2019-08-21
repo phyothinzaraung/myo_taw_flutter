@@ -8,6 +8,7 @@ class MyColor{
   static const Color colorGreyDark = Color(0xffd9dadb);
   static const Color colorGrey = Color(0xfff2f3f4);
   static const Color colorBlackSemiTransparent = Color(0xffB2000000);
+  static const Color colorAccent = Color(0xffc22d08);
 }
 
 class FontSize{
@@ -116,6 +117,21 @@ class MyString{
   static const String txt_apply_license_need_to_fill = 'ပြထားသည့်များဖြည့်ပေးရန်လိုအပ်သည်';
   static const String txt_need_paper_work = 'လိုအပ်သောစာရွက်စာတမ်းများတွဲရန်/ကြည့်ရန်';
   static const String txt_apply_biz_license_photo = 'လုပ်ငန်းလိုင်စင်ဓာတ်ပုံများ';
+  static const String txt_tax_use_no_data = 'ဒေတာမရှိပါ';
+  static const String txt_tax_type = 'အခွန်အမျိုးအစား';
+  static const String txt_tax_bill_amount = 'အခွန်ငွေ';
+  static const String txt_kyat = 'ကျပ်';
+  static const String txt_user_money = 'မိမိ၏ငွေ';
+  static const String txt_top_up = 'ငွေဖြည့်မည်';
+  static const String txt_pay_tax = 'အခွန်ဆောင်မည်';
+  static const String title_top_up = 'ငွေဖြည့်ရန်';
+
+  static const String PROPERTY_TAX = "PropertyTax";
+  static const String BIZ_LICENSE = "BizLicense";
+  static const String WATER_METER = "WaterMeter";
+  static const String MARKET_TAX = "MarketTax";
+  static const String WHEEL_TAX = "WheelTax";
+  static const String SIGNBOARD_TAX = "SignboardTax";
 
 }
 

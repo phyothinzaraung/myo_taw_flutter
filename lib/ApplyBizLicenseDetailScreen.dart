@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/ApplyBizLicenseModel.dart';
-import 'helper/MyanNumConvertHelper.dart';
+import 'helper/NumConvertHelper.dart';
 import 'ApplyBizLicensePhotoListScreen.dart';
 
 class ApplyBizLicenseDetailScreen extends StatelessWidget {
@@ -72,9 +72,9 @@ class ApplyBizLicenseDetailScreen extends StatelessWidget {
                     margin: EdgeInsets.only(bottom: 20.0),
                     child: Row(
                       children: <Widget>[
-                        Expanded(child: Text(MyanNumConvertHelper().getMyanNumDou(_applyBizLicenseModel.length)+'  '+'${MyString.txt_unit_feet}',
+                        Expanded(child: Text(NumConvertHelper().getMyanNumDou(_applyBizLicenseModel.length)+'  '+'${MyString.txt_unit_feet}',
                         style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),),
-                        Expanded(child: Text(MyanNumConvertHelper().getMyanNumDou(_applyBizLicenseModel.width)+'  '+'${MyString.txt_unit_feet}',
+                        Expanded(child: Text(NumConvertHelper().getMyanNumDou(_applyBizLicenseModel.width)+'  '+'${MyString.txt_unit_feet}',
                           style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),))
                       ],
                     ),

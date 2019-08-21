@@ -118,6 +118,9 @@ flutter:
     - images/star.png
     - images/arrow.png
     - images/add_image_placeholder.png
+    - images/arrow_green.png
+    - images/payment_history.png
+    - images/online_tax_no_circle.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

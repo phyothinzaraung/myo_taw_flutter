@@ -12,6 +12,7 @@ import 'SuggestionScreen.dart';
 import 'AdministratorSuggestionScreen.dart';
 import 'BizLicenseScreen.dart';
 import 'TaxUseScreen.dart';
+import 'OnlineTaxScreen.dart';
 
 class DashBoardScreen extends StatefulWidget {
   @override
@@ -124,7 +125,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseScreen()));
               break;
             case MyString.txt_online_tax:
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineTaxScreen()));
               break;
             case MyString.txt_tax_use:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => TaxUserScreen()));

@@ -51,7 +51,8 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   String _dropDownOwnerState = 'နေရပ်ရွေးပါ';
   String _dropDownOwnerTownship = 'နေရပ်ရွေးပါ';
   LocationDb _locationDb = LocationDb();
-  bool _isClose, _isCon, _isLoading = false;
+  bool _isCon, _isLoading = false;
+  bool _isClose = false;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
   UserModel _userModel;

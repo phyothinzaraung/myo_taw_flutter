@@ -215,6 +215,22 @@ class ServiceHelper{
   return response;
  }
 
+ getTaxUser<Response>(String regionCode, String budgetYear) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Expenditure/GetExpenditureList",
+      queryParameters: {"RegionCode": regionCode, "BudgetYear" :  budgetYear});
+  return response;
+ }
+
+ getUserBillAmount<Response>(String uniqueKey) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Payment/GetPurchaseListByUserForMyoTaw",
+      queryParameters: {"UniqueKey": uniqueKey});
+  return response;
+ }
+
 }
 
 

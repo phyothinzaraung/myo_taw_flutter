@@ -4,7 +4,7 @@ import 'helper/MyoTawConstant.dart';
 import 'model/DaoPhotoModel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'helper/MyanNumConvertHelper.dart';
+import 'helper/NumConvertHelper.dart';
 import 'DaoPhotoDetailScreen.dart';
 import 'SuggestionScreen.dart';
 import 'BizLicenseScreen.dart';
@@ -70,7 +70,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
                     decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.6)
                     ),
-                    child: Text('${MyanNumConvertHelper().getMyanNumInt(index)}${'.'} ${_daoViewModel.daoModel.title}  ',
+                    child: Text('${NumConvertHelper().getMyanNumInt(index)}${'.'} ${_daoViewModel.daoModel.title}  ',
                       style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),)),
               ],
             ),));

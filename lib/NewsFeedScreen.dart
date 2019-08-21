@@ -92,35 +92,22 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     response = await ServiceHelper().getNewsFeed(_organizationId, p, pageCount, _userModel.uniqueKey);
     var result = response.data['Results'];
     print('loadmore: ${p}');
-    //Fluttertoast.showToast(msg: 'page: ${p}', backgroundColor: Colors.black.withOpacity(0.6));
-    if(response.statusCode == 200){
-      if(result != null){
-        if(result.length > 0){
-          for(var model in result){
-            _newsFeedReactModel.add(NewsFeedReactModel.fromJson(model));
-          }
-          //prevent set state is called after NewsFeedScreen is disposed
-          if(this.mounted){
-            setState(() {
-              _isEnd = false;
-            });
-          }
-        }else{
-          if(this.mounted){
-            setState(() {
-              _isEnd = true;
-            });
-          }
-        }
-      }else{
-        if(this.mounted){
-          setState(() {
-            _isEnd = true;
-          });
-        }
+    if(result != null){
+      for(var i in result){
+        _newsFeedReactModel.add(NewsFeedReactModel.fromJson(i));
+      }
+      //prevent set state is called after NewsFeedScreen is disposed
+      if(this.mounted){
+        setState(() {
+          _isEnd = false;
+        });
       }
     }else{
-      Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+      if(this.mounted){
+        setState(() {
+          _isEnd = true;
+        });
+      }
     }
     print('isEnd: ${_isEnd}');
   }
@@ -345,6 +332,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               )
             ],
           ),
+          CircularProgressIndicator()
         ],
       ),
     );
@@ -428,7 +416,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
      _newsFeedReactModel.clear();
      page = 0;
      page++;
-     await _getUser();
+     _getUser();
      //await _getNewsFeed(page);
    }else{
      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
