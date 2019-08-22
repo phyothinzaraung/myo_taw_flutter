@@ -6,7 +6,6 @@ import 'helper/SharePreferencesHelper.dart';
 import 'model/FaqModel.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:connectivity/connectivity.dart';
-import 'model/FaqCategoryModel.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 class FaqScreen extends StatefulWidget {
@@ -21,7 +20,6 @@ class _FaqScreenState extends State<FaqScreen> {
   int page = 1;
   int pageSize = 100;
   List<FaqModel> _faqList = new List<FaqModel>();
-  List<FaqCategoryModel> _categoryList = new List<FaqCategoryModel>();
   bool _isCon, _isLoading = false;
   var faqModelList;
   String _dropDownCategory = 'အားလုံး';
@@ -42,15 +40,8 @@ class _FaqScreenState extends State<FaqScreen> {
     if(_response.data != null){
       var categoryList = _response.data['CategoryList'];
       faqModelList = _response.data['FAQwithPaging']['Results'];
-      /*FaqCategoryModel model = FaqCategoryModel();
-      model.category = 'all';
-      setState(() {
-        _categoryList.add(model);
-      });*/
       for(var i in categoryList){
         if(i != null){
-         /* FaqCategoryModel model = FaqCategoryModel();
-          model.category = i;*/
           setState(() {
             //_categoryList.add(model);
             _categoList.add(i);
@@ -87,38 +78,6 @@ class _FaqScreenState extends State<FaqScreen> {
     _faqList.clear();
     _getAllFaqByCategory(category);
   }
-
-  /*_categoryListView(){
-    return ListView.builder(
-        scrollDirection: Axis.horizontal,
-        itemCount: _categoryList.length,
-        itemBuilder: (context, i){
-          return GestureDetector(
-            onTap: (){
-              *//*setState(() {
-                _categoryList[i].isSelect = true;
-              });*//*
-
-              if(_categoryList[i].category == 'all'){
-                _getFaqByCategory('');
-              }
-              _getFaqByCategory(_categoryList[i].category);
-
-            },
-            child: Container(
-              margin: EdgeInsets.only(left: 10.0),
-              child: Row(
-                children: <Widget>[
-                  Container(margin: EdgeInsets.only(right: 5.0),
-                      child: Text(_categoryList[i].category, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
-                  _categoryList[i].isSelect?Image.asset('images/tick.png', width: 15.0, height: 15.0,):
-                      Container(width: 0.0, height: 0.0,)
-                ],
-              ),
-            ),
-          );
-        });
-  }*/
 
   _listView(){
     return ListView.builder(

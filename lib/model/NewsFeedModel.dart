@@ -145,6 +145,6 @@ class NewsFeedModel{
       _isActive = json['IsActive'],
       _likeCount = json['LikeCount'],
       _thumbNail = json['Thumbnail'],
-      _subscription = json['Subscription'];
-      //_photoList = List<dynamic>.from(json['PhotoLink']);
+      _subscription = json['Subscription'],
+      _photoList = List<dynamic>.from(json['PhotoLink']!=null?json['PhotoLink'] : []);
 }

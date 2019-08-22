@@ -13,6 +13,7 @@ import 'helper/SharePreferencesHelper.dart';
 import 'package:myotaw/Database/UserDb.dart';
 import 'helper/DbHelper.dart';
 import 'dart:io';
+import 'ProfileFormScreen.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -119,8 +120,11 @@ class _LoginScreenState extends State<LoginScreen> {
         await _userDb.insert(_userModel);
         await _userDb.closeUserDb();
         Fluttertoast.showToast(msg: 'Login Success', backgroundColor: Colors.black.withOpacity(0.7));
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
-        print('userModel: ${_userModel.uniqueKey}');
+        if(_userModel.name != null){
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
+        }else{
+
+        }
       }else{
         Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
       }

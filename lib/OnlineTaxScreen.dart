@@ -12,6 +12,8 @@ import 'helper/NumConvertHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
 import 'TopUpScreen.dart';
+import 'PinCodeSetUpScreen.dart';
+import 'PaymentScreen.dart';
 
 class OnlineTaxScreen extends StatefulWidget {
   @override
@@ -29,6 +31,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
   UserDb _userDb = UserDb();
   UserModel _userModel;
   List<PaymentLogModel> _paymentLogList = new List<PaymentLogModel>();
+  bool _isRefresh = false;
 
   @override
   void initState() {
@@ -95,6 +98,23 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
       _userModel = model;
     });
     await _getUserBillAmount();
+    setState(() {
+      _isRefresh = false;
+    });
+  }
+
+  _navigateToTopUpScreen()async{
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpScreen(_userModel)));
+    if(result != null && result.containsKey('isNeedRefresh') == true){
+      _handleRefresh();
+    }
+  }
+
+  _navigateToPinCodeSetUpScreen()async{
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
+    if(result != null && result.containsKey('isNeedRefresh') == true){
+      _handleRefresh();
+    }
   }
 
   Widget _header(){
@@ -105,7 +125,8 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
             margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
             child: Row(
               children: <Widget>[
-                Container(margin: EdgeInsets.only(right: 10.0),
+                Container(
+                    margin: EdgeInsets.only(right: 10.0),
                     child: Image.asset('images/online_tax_no_circle.png', width: 30.0, height: 30.0,)),
                 Text(MyString.txt_online_tax, style: TextStyle(fontSize: FontSize.textSizeSmall),)
               ],
@@ -149,7 +170,13 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                               margin: EdgeInsets.only(right: 10.0),
                               height: 45.0,
                               child: RaisedButton(onPressed: ()async{
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpScreen(_userModel)));
+                                if(_userModel.pinCode != 0){
+                                  //Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpScreen(_userModel)));
+                                  _navigateToTopUpScreen();
+                                }else{
+                                  //Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
+                                  _navigateToPinCodeSetUpScreen();
+                                }
                               }, child: Text(MyString.txt_top_up, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                                 color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
                             ),
@@ -159,8 +186,9 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                               margin: EdgeInsets.only(left: 10.0),
                               height: 45.0,
                               child: RaisedButton(onPressed: ()async{
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => PaymentScreen()));
 
-                              }, child: Text(MyString.txt_pay_tax, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                                }, child: Text(MyString.txt_pay_tax, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                                 color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
                             ),
                           ),
@@ -260,6 +288,9 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
 
   Future<Null> _handleRefresh() async {
     await _checkCon();
+    setState(() {
+      _isRefresh = true;
+    });
     if(_isCon){
       setState(() {
         _paymentLogList.clear();
@@ -281,7 +312,8 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
               onRefresh: _handleRefresh,
-              child: _paymentLogList.isNotEmpty?_listView() :
+              child: _isRefresh == false?_paymentLogList.isNotEmpty?_listView() :
+                  ListView(children: <Widget>[_header()],) :
               Container(
                 margin: EdgeInsets.only(top: 10.0),
                 child: Row(mainAxisAlignment: MainAxisAlignment.center,

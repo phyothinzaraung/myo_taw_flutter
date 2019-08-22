@@ -231,6 +231,14 @@ class ServiceHelper{
   return response;
  }
 
+ getTopUp<Response>(String code,String uniqueKey) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Payment/TopUpFromAndroid",
+      queryParameters: {"PaymentCode": code,"UniqueKey": uniqueKey});
+  return response;
+ }
+
 }
 
 

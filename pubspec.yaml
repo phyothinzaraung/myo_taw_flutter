@@ -42,6 +42,8 @@ dependencies:
   google_maps_flutter: ^0.5.20+3
   flutter_html: ^0.10.4
   pie_chart: ^1.2.0
+  pin_code_text_field: ^1.3.7
+
 
 dev_dependencies:
   flutter_test:
@@ -121,6 +123,7 @@ flutter:
     - images/arrow_green.png
     - images/payment_history.png
     - images/online_tax_no_circle.png
+    - images/top_up_card.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

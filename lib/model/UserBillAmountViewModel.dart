@@ -25,5 +25,5 @@ class UserBillAmountViewModel{
   UserBillAmountViewModel.formJson(Map<String, dynamic> json) :
       _name = json['Name'],
       _totalAmount = json['TotalAmount'],
-      _paymentModelList = List<dynamic>.from(json['Log']);
+      _paymentModelList = List<dynamic>.from(json['Log']!= null? json['Log'] : []);
 }

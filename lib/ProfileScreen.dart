@@ -36,6 +36,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int pageCount = 10;
   Response response;
   ImageProvider _profilePhoto;
+  bool _isRefresh = false;
   List<TaxRecordModel> _taxRecordModelList = new List<TaxRecordModel>();
 
   @override
@@ -89,6 +90,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _userModel = model;
     });
     await _getAllTaxRecord(page);
+    setState(() {
+      _isRefresh = false;
+    });
     //print('userphoto; ${_userModel.photoUrl}');
   }
 
@@ -599,6 +603,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Future<Null> _handleRefresh() async {
     await _checkCon();
+    setState(() {
+      _isRefresh = true;
+    });
     if(_isCon){
       _taxRecordModelList.clear();
       page = 0;
@@ -635,7 +642,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 onLoadMore: _loadMore,
                 delegate: DefaultLoadMoreDelegate(),
                 textBuilder: DefaultLoadMoreTextBuilder.english,
-                child: _taxRecordModelList.isNotEmpty?_listView(): _headerProfileRefresh()
+                child: _isRefresh==false?
+                _taxRecordModelList.isNotEmpty?_listView(): ListView(children: <Widget>[_headerProfile()],) :
+                    _headerProfileRefresh()
             ),
           ),
         )

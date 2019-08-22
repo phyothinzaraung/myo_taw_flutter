@@ -121,7 +121,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                       ),
                       child: TextField(
                         decoration: InputDecoration(
-                            border: InputBorder.none
+                            border: InputBorder.none,
                         ),
                         controller: _recordNameController,
                         style: TextStyle(fontSize: FontSize.textSizeNormal),

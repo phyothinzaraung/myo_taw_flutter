@@ -97,17 +97,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
         _newsFeedReactModel.add(NewsFeedReactModel.fromJson(i));
       }
       //prevent set state is called after NewsFeedScreen is disposed
-      if(this.mounted){
-        setState(() {
-          _isEnd = false;
-        });
-      }
+      setState(() {
+        _isEnd = false;
+      });
     }else{
-      if(this.mounted){
-        setState(() {
-          _isEnd = true;
-        });
-      }
+      setState(() {
+        _isEnd = true;
+      });
     }
     print('isEnd: ${_isEnd}');
   }
@@ -295,6 +291,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             GestureDetector(
               onTap: (){
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+
               },
               child: CircleAvatar(backgroundImage: _userModel!=null?
               _profilePhoto:AssetImage('images/profile_placeholder.png'),

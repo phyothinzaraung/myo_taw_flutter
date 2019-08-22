@@ -125,6 +125,16 @@ class MyString{
   static const String txt_top_up = 'ငွေဖြည့်မည်';
   static const String txt_pay_tax = 'အခွန်ဆောင်မည်';
   static const String title_top_up = 'ငွေဖြည့်ရန်';
+  static const String txt_prepaid_code = 'ငွေဖြည့်ကုဒ်';
+  static const String txt_pin_code = 'ပင်ကုဒ်';
+  static const String txt_top_up_cancel = 'ထွက်မည်';
+  static const String txt_create_pin = 'ပင်ကုဒ်ပြုလုပ်မည်';
+  static const String txt_profile_set_up = 'ဖြည့်သွင်းမည်';
+  static const String txt_profile_set_up_need = 'ကိုယ်ရေးအချက်အလတ် ဖြည့်သွင်းရန်လိုပါသည်။';
+  static const String txt_online_payment_tax = 'အခွန်ဆောင်ရန်';
+  static const String txt_invoice_no = 'ပြေစာနံပါတ်';
+  static const String txt_choose_tax_type = 'အခွန်အမျိုးအစားရွေးပါ';
+  static const String txt_tax_amount = 'အခွန်ဆောင်ရမည့်ငွေပမာဏ';
 
   static const String PROPERTY_TAX = "PropertyTax";
   static const String BIZ_LICENSE = "BizLicense";
