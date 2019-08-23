@@ -37,7 +37,6 @@ class _PinCodeSetUpScreenState extends State<PinCodeSetUpScreen> {
     }else{
       _isCon = true;
     }
-    print('isCon : ${_isCon}');
   }
 
   void _updateUser()async{

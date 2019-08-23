@@ -4,6 +4,7 @@ import 'package:dio/dio.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/model/UserModel.dart';
 import 'package:myotaw/model/ApplyBizLicenseModel.dart';
+import 'package:myotaw/model/PaymentLogModel.dart';
 
 class ServiceHelper{
  var response;
@@ -236,6 +237,35 @@ class ServiceHelper{
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Payment/TopUpFromAndroid",
       queryParameters: {"PaymentCode": code,"UniqueKey": uniqueKey});
+  return response;
+ }
+
+ _interceptor(){
+  dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (Options options) async{
+       options.headers["APIKey"] = MyString.API_KEY;
+      }
+  ));
+ }
+
+ getAmountFromInvoiceNo<Response>(String taxType,String invoiceNo) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  _interceptor();
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_DAO_INVOICE_NO+"CustomerData/GetAmountFromInvoice",
+      queryParameters: {"TaxType": taxType,"InvoiceNo": invoiceNo});
+  return response;
+ }
+
+ postPayment<Response>(PaymentLogModel model) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_TAX_PAYMENT+"Payment/PayBill", data: {
+   'UniqueKey' : model.uniqueKey,
+   'UseAmount': model.useAmount,
+   'TaxType': model.taxType,
+   'InvoiceNo': model.invoiceNo,
+  });
   return response;
  }
 

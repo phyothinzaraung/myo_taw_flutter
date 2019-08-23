@@ -124,6 +124,7 @@ flutter:
     - images/payment_history.png
     - images/online_tax_no_circle.png
     - images/top_up_card.png
+    - images/payment_success.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

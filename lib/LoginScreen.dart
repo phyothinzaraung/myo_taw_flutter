@@ -41,7 +41,7 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   _initTargetPlatform(){
-    if(Theme.of(context).platform == TargetPlatform.android){
+    if(Platform.isAndroid){
       _platForm = 'Android';
     }else{
       _platForm = 'ios';

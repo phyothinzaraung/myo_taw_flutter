@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
@@ -46,7 +48,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     }
     _initHeaderTitle();
     _initDashBoardWidget();
-    if(_userModel.resource != 'Android'){
+    if(Platform.isIOS){
       _widget.removeLast();
     }
   }

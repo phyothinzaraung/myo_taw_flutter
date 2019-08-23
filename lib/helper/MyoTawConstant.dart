@@ -26,9 +26,13 @@ class BaseUrl{
   static const String USER_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/Member/";
   static const String DAO_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/AboutDAO/";
   static const String APPLY_BIZ_LICENSE_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/ApplyBiz/";
+  static const String WEB_SERVICE_ROOT_ADDRESS_TAX_PAYMENT = "https://taxpaymentservice.azurewebsites.net/api/";
+  static const String WEB_SERVICE_ROOT_ADDRESS_DAO_INVOICE_NO = "https://daoapifinal.azurewebsites.net/api/";
 }
 
 class MyString{
+  static const String API_KEY = "B93979A51C8C46712DD2C8271587B262";
+
   static const String txt_like = "နှစ်သက်";
   static const String txt_save = "သိမ်းမည်";
   static const String txt_welcome_tgy ='တောင်ကြီးမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပရီကေးရှင်းမှ ကြိုဆိုပါသည်။';
@@ -135,6 +139,9 @@ class MyString{
   static const String txt_invoice_no = 'ပြေစာနံပါတ်';
   static const String txt_choose_tax_type = 'အခွန်အမျိုးအစားရွေးပါ';
   static const String txt_tax_amount = 'အခွန်ဆောင်ရမည့်ငွေပမာဏ';
+  static const String txt_get_tax_amount = 'အခွန်ဆောင်မည့်ပမာဏရယူမည့်';
+  static const String txt_pay_tax_confirm = 'ပေးမည်';
+  static const String txt_pay_tax_success = 'အခွန်ပေးဆောင်မှုအောင်မြင်သည်';
 
   static const String PROPERTY_TAX = "PropertyTax";
   static const String BIZ_LICENSE = "BizLicense";
@@ -142,6 +149,13 @@ class MyString{
   static const String MARKET_TAX = "MarketTax";
   static const String WHEEL_TAX = "WheelTax";
   static const String SIGNBOARD_TAX = "SignboardTax";
+
+  static const String MYAN_PROPERTY_TAX = "ပစ္စည်းခွန် (စံငှားခွန်)";
+  static const String MYAN_BIZ_LICENSE = "လုပ်ငန်းလိုင်စင်";
+  static const String MYAN_WATER_METER = "ရေမီတာခွန်";
+  static const String MYAN_MARKET_TAX = "ဈေးဆိုင်ခန်းခွန်";
+  static const String MYAN_WHEEL_TAX = "ဘီးခွန်";
+  static const String MYAN_SIGNBOARD_TAX = "ကြော်ငြာဆိုင်းဘုတ်ခွန်";
 
 }
 

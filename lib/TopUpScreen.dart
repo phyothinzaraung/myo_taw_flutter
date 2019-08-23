@@ -1,3 +1,4 @@
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
@@ -20,7 +21,9 @@ class _TopUpScreenState extends State<TopUpScreen> {
   TextEditingController _pinCodeController = TextEditingController();
   bool _isLoading = false;
   bool _hasError = false;
+  bool _isCon = false;
   Response _response;
+  GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   _TopUpScreenState(this._userModel);
 
   @override
@@ -64,6 +67,15 @@ class _TopUpScreenState extends State<TopUpScreen> {
         ),
       ),
     );
+  }
+
+  _checkCon()async{
+    var conResult = await(Connectivity().checkConnectivity());
+    if (conResult == ConnectivityResult.none) {
+      _isCon = false;
+    }else{
+      _isCon = true;
+    }
   }
 
   _dialogConfirm(){
@@ -113,6 +125,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldState,
       appBar: AppBar(
         title: Text(MyString.title_top_up, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
@@ -236,10 +249,22 @@ class _TopUpScreenState extends State<TopUpScreen> {
                               child: Container(
                                 margin: EdgeInsets.only(left: 10.0),
                                 height: 45.0,
-                                child: RaisedButton(onPressed: (){
+                                child: RaisedButton(onPressed: ()async{
                                   if(_prepaidCodeController.text.isNotEmpty && _pinCodeController.text.isNotEmpty){
                                     if(_hasError == false){
-                                      _dialogConfirm();
+                                      await _checkCon();
+                                      if(_isCon){
+                                        _dialogConfirm();
+                                      }else{
+                                        _scaffoldState.currentState.showSnackBar(SnackBar(
+                                          content: Row(
+                                            mainAxisAlignment: MainAxisAlignment.center,
+                                            children: <Widget>[
+                                              Container(margin: EdgeInsets.only(right: 20.0),child: Image.asset('images/no_connection.png', width: 30.0, height: 30.0,)),
+                                              Text('Check internet connection', style: TextStyle(fontSize: FontSize.textSizeNormal),),
+                                            ],
+                                          ),duration: Duration(seconds: 2),backgroundColor: Colors.red,));
+                                      }
                                     }else{
                                       Fluttertoast.showToast(msg: 'Wrong pin code', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                     }

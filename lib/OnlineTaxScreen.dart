@@ -68,22 +68,22 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
   String _taxType(String str){
     switch(str){
       case MyString.PROPERTY_TAX:
-        return 'ပစ္စည်းခွန် (စံငှားခွန်)';
+        return MyString.MYAN_PROPERTY_TAX;
         break;
       case MyString.BIZ_LICENSE:
-        return 'လုပ်ငန်းလိုင်စင်';
+        return MyString.MYAN_BIZ_LICENSE;
         break;
       case MyString.WATER_METER:
-        return 'ရေမီတာခွန်';
+        return MyString.MYAN_WATER_METER;
         break;
       case MyString.MARKET_TAX:
-        return 'ဈေးဆိုင်ခန်းခွန်';
+        return MyString.MYAN_MARKET_TAX;
         break;
       case MyString.WHEEL_TAX:
-        return 'ဘီးခွန်';
+        return MyString.MYAN_WHEEL_TAX;
         break;
       case MyString.SIGNBOARD_TAX:
-        return 'ကြော်ငြာဆိုင်းဘုတ်ခွန်';
+        return MyString.MYAN_SIGNBOARD_TAX;
         break;
       default:
     }
@@ -112,6 +112,13 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
 
   _navigateToPinCodeSetUpScreen()async{
     Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
+    if(result != null && result.containsKey('isNeedRefresh') == true){
+      _handleRefresh();
+    }
+  }
+
+  _navigateToPaymentScreen()async{
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => PaymentScreen()));
     if(result != null && result.containsKey('isNeedRefresh') == true){
       _handleRefresh();
     }
@@ -171,10 +178,8 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                               height: 45.0,
                               child: RaisedButton(onPressed: ()async{
                                 if(_userModel.pinCode != 0){
-                                  //Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpScreen(_userModel)));
                                   _navigateToTopUpScreen();
                                 }else{
-                                  //Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
                                   _navigateToPinCodeSetUpScreen();
                                 }
                               }, child: Text(MyString.txt_top_up, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
@@ -186,7 +191,11 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                               margin: EdgeInsets.only(left: 10.0),
                               height: 45.0,
                               child: RaisedButton(onPressed: ()async{
-                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => PaymentScreen()));
+                                if(_userModel.pinCode != 0){
+                                  _navigateToPaymentScreen();
+                                }else{
+                                  _navigateToPinCodeSetUpScreen();
+                                }
 
                                 }, child: Text(MyString.txt_pay_tax, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                                 color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),

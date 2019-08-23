@@ -13,6 +13,8 @@ class PaymentLogModel{
   String _taxType;
   String _invoiceNo;
 
+  PaymentLogModel();
+
   int get id => _id;
 
   set id(int value) {
