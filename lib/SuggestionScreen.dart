@@ -21,7 +21,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
   List<String> _subjectList = new List<String>();
   String _dropDownSubject = MyString.txt_choose_subject;
   TextEditingController _messController = TextEditingController();
-  String _mess, _lat, _lng;
+  String _lat, _lng;
   bool _isCon, _isLoading;
   File _image;
   var _location = new Location();
@@ -81,7 +81,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
     await _userDb.closeUserDb();
     _userModel = model;
-    _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _mess,
+    _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
         _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode);
     //print('sendsuggest: ${_mess} ${_dropDownSubject} ${_lat} ${_lng}');
     if(_response.statusCode == 200){
@@ -111,7 +111,8 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                         child: Image.asset('images/suggestion_no_circle.png', width: 50.0, height: 50.0,)),
                     Container(
                         margin: EdgeInsets.only(bottom: 10.0),
-                        child: Text(MyString.txt_suggestion_finish, style: TextStyle(fontSize: FontSize.textSizeSmall),textAlign: TextAlign.center,)),
+                        child: Text(MyString.txt_suggestion_finish,
+                          style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),textAlign: TextAlign.center,)),
                     Container(
                       width: 200.0,
                       height: 45.0,
@@ -172,7 +173,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                 children: <Widget>[
                   Container(margin: EdgeInsets.only(right: 10.0),
                       child: Image.asset('images/suggestion_no_circle.png', width: 30.0, height: 30.0,)),
-                  Text(MyString.title_suggestion, style: TextStyle(fontSize: FontSize.textSizeSmall),),
+                  Text(MyString.title_suggestion, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                 ],
               ),
             ),
@@ -207,7 +208,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                           ),
                           Container(
                             margin: EdgeInsets.only(bottom: 10.0),
-                              child: Text(MyString.title_suggestion_subject, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                              child: Text(MyString.title_suggestion_subject, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
                           Container(
                             margin: EdgeInsets.only(bottom: 10.0),
                             padding: EdgeInsets.symmetric(horizontal: 7.0),
@@ -219,7 +220,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                             ),
                             child: DropdownButtonHideUnderline(
                               child: DropdownButton<String>(
-                                style: new TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.black87),
+                                style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
                                 isExpanded: true,
                                 iconEnabledColor: MyColor.colorPrimary,
                                 value: _dropDownSubject,
@@ -239,7 +240,8 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                           ),
                           Container(
                               margin: EdgeInsets.only(bottom: 10.0),
-                              child: Text(MyString.title_suggestion_mess, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                              child: Text(MyString.title_suggestion_mess,
+                                style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
                           Container(
                             margin: EdgeInsets.only(top: 5.0, bottom: 20.0),
                             padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -253,10 +255,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                                   border: InputBorder.none
                               ),
                               controller: _messController,
-                              style: TextStyle(fontSize: FontSize.textSizeNormal),
-                              onChanged: (value){
-                                _mess = value;
-                              },
+                              style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                             ),
                           ),
                           Container(
@@ -268,7 +267,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                               await _checkCon();
                               //await _getLatLng();
                               if(_isCon){
-                                if(_mess != null && _image != null && _dropDownSubject != MyString.txt_choose_subject && _lat != null && _lng != null){
+                                if(_messController.text != null && _image != null && _dropDownSubject != MyString.txt_choose_subject && _lat != null && _lng != null){
                                   setState(() {
                                     _isLoading = true;
                                   });
@@ -278,7 +277,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                               }else{
                                 Fluttertoast.showToast(msg: 'No internet connection', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                               }
-                              if(_mess == null){
+                              if(_messController.text == null){
                                 Fluttertoast.showToast(msg: 'Need to fill message', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                               }
 

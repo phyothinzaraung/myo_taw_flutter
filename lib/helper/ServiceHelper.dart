@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/model/UserModel.dart';
+import 'package:myotaw/model/ApplyBizLicenseModel.dart';
+import 'package:myotaw/model/PaymentLogModel.dart';
 
 class ServiceHelper{
  var response;
@@ -67,7 +69,7 @@ class ServiceHelper{
    'AndroidToken': model.androidToken,
    'CurrentRegionCode': model.currentRegionCode,
    'PinCode': model.pinCode,
-   'Amount': model.amount
+   'Amount': model.amount,
   });
   return response;
  }
@@ -142,6 +144,128 @@ class ServiceHelper{
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Contribute/UpSertContributeWithPhoto",
       data: formData);
+  return response;
+ }
+
+ getBizLicense<Response>(String regionCode) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/GetBizLicenseList",
+      queryParameters: {"RegionCode": regionCode});
+  return response;
+ }
+
+ postApplyBizLicense<Response>(ApplyBizLicenseModel model) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/ApplyBizLicense", data: {
+   'BizName' : model.bizName,
+   'BizType': model.bizType,
+   'Length': model.length,
+   'Width': model.width,
+   'Area': model.area,
+   'BizRegionNo': model.bizRegionNo,
+   'BizStreetName': model.bizStreetName,
+   'BizBlockNo': model.bizBlockNo,
+   'BizTownship': model.bizTownship,
+   'BizState': model.bizState,
+   'OwnerName': model.ownerName,
+   'NRCNo': model.nrcNo,
+   'PhoneNo': model.phoneNo,
+   'RegionNo': model.regionNo,
+   'StreetName': model.streetName,
+   'BlockNo': model.blockNo,
+   'Township': model.township,
+   'State': model.state,
+   'Remark': model.remark,
+   'UniqueKey': model.uniqueKey,
+   'RegionCode': model.regionCode,
+   'UserName': model.userName,
+   'LicenseType': model.licenseType,
+   'LicenseTypeID': model.licensetypeId,
+  });
+  return response;
+ }
+
+ getAllApplyBizLicenseByUser<Response>(String regionCode, String uniqueKey) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/GetApplyBizLicensesByUser",
+      queryParameters: {"RegionCode": regionCode, "UniqueKey" : uniqueKey});
+  return response;
+ }
+
+ getApplyBizPhotoList<Response>(int id) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/ApplyBizPhotosList",
+      queryParameters: {"ID": id});
+  return response;
+ }
+
+ uploadApplyBizPhoto<Response>(String file, String appBizId, String title) async{
+  FormData formData = new FormData.from({
+   'file' : UploadFileInfo(File(file), 'applyBizPhoto'),
+   'ApBizID' : appBizId,
+   'Title' : title,
+  });
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/ApplyBizPhotosUpload",
+      data: formData);
+  return response;
+ }
+
+ getTaxUser<Response>(String regionCode, String budgetYear) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Expenditure/GetExpenditureList",
+      queryParameters: {"RegionCode": regionCode, "BudgetYear" :  budgetYear});
+  return response;
+ }
+
+ getUserBillAmount<Response>(String uniqueKey) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Payment/GetPurchaseListByUserForMyoTaw",
+      queryParameters: {"UniqueKey": uniqueKey});
+  return response;
+ }
+
+ getTopUp<Response>(String code,String uniqueKey) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Payment/TopUpFromAndroid",
+      queryParameters: {"PaymentCode": code,"UniqueKey": uniqueKey});
+  return response;
+ }
+
+ _interceptor(){
+  dio.interceptors.add(InterceptorsWrapper(
+      onRequest: (Options options) async{
+       options.headers["APIKey"] = MyString.API_KEY;
+      }
+  ));
+ }
+
+ getAmountFromInvoiceNo<Response>(String taxType,String invoiceNo) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  _interceptor();
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_DAO_INVOICE_NO+"CustomerData/GetAmountFromInvoice",
+      queryParameters: {"TaxType": taxType,"InvoiceNo": invoiceNo});
+  return response;
+ }
+
+ postPayment<Response>(PaymentLogModel model) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_TAX_PAYMENT+"Payment/PayBill", data: {
+   'UniqueKey' : model.uniqueKey,
+   'UseAmount': model.useAmount,
+   'TaxType': model.taxType,
+   'InvoiceNo': model.invoiceNo,
+  });
   return response;
  }
 

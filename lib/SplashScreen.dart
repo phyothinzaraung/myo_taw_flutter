@@ -10,7 +10,6 @@ import 'Database/LocationDb.dart';
 import 'model/LocationModel.dart';
 import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 
 class SplashScreen extends StatefulWidget {
   @override
@@ -73,7 +72,7 @@ class _SplashScreenState extends State<SplashScreen> {
   navigateMainScreen() {
     if(_sharepreferenceshelper.isLogin()){
       Future.delayed(Duration(seconds: 2), (){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen()));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
       });
     }else{
       Future.delayed(Duration(seconds: 2), (){
@@ -91,15 +90,6 @@ class _SplashScreenState extends State<SplashScreen> {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
-      statusBarColor: MyColor.colorPrimaryDark,
-      systemNavigationBarIconBrightness: Brightness.dark,
-    ));
-    try {
-      FlutterStatusbarcolor.setStatusBarColor(MyColor.colorPrimaryDark);
-    }  catch (e) {
-      print(e);
-    }
     return Scaffold(
       backgroundColor: Colors.white,
       body: Center(

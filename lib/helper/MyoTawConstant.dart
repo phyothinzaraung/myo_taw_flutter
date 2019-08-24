@@ -8,12 +8,14 @@ class MyColor{
   static const Color colorGreyDark = Color(0xffd9dadb);
   static const Color colorGrey = Color(0xfff2f3f4);
   static const Color colorBlackSemiTransparent = Color(0xffB2000000);
+  static const Color colorAccent = Color(0xffc22d08);
 }
 
 class FontSize{
   static const double textSizeLarge = 20;
   static const double textSizeExtraNormal = 17;
   static const double textSizeNormal = 15;
+  static const double textSizeExtraSmall = 13;
   static const double textSizeSmall = 12;
 }
 
@@ -23,9 +25,14 @@ class BaseUrl{
   static const String NEWS_FEED_CONTENT_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/NewsFeed/";
   static const String USER_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/Member/";
   static const String DAO_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/AboutDAO/";
+  static const String APPLY_BIZ_LICENSE_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/ApplyBiz/";
+  static const String WEB_SERVICE_ROOT_ADDRESS_TAX_PAYMENT = "https://taxpaymentservice.azurewebsites.net/api/";
+  static const String WEB_SERVICE_ROOT_ADDRESS_DAO_INVOICE_NO = "https://daoapifinal.azurewebsites.net/api/";
 }
 
 class MyString{
+  static const String API_KEY = "B93979A51C8C46712DD2C8271587B262";
+
   static const String txt_like = "နှစ်သက်";
   static const String txt_save = "သိမ်းမည်";
   static const String txt_welcome_tgy ='တောင်ကြီးမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပရီကေးရှင်းမှ ကြိုဆိုပါသည်။';
@@ -86,6 +93,69 @@ class MyString{
   static const String txt_close = 'ပိတ်မည်';
   static const String txt_location_update = 'တည်နေရာရယူရန်';
   static const String txt_get_location_update = 'တည်နေရာယူမည်';
+  static const String title_biz_license = 'လုပ်ငန်းလိုင်စင်နှင့်ခွင့်ပြုမိန့်လျှောက်ထားရန်';
+  static const String txt_biz_license_information = 'လုပ်ငန်းဆိုင်ရာအချက်အလက်များ';
+  static const String txt_biz_name = 'လုပ်ငန်းအမည်';
+  static const String txt_biz_type = 'လုပ်ငန်းအမျိုးအစား';
+  static const String txt_area = 'အကျယ်အဝန်း (အလျား × အနံ)';
+  static const String txt_unit_feet = 'ပေ';
+  static const String txt_biz_location = 'တည်နေရာ';
+  static const String txt_biz_region_no = 'အမှတ်';
+  static const String txt_biz_street_name = 'လမ်း';
+  static const String txt_biz_block_no = 'ရပ်ကွက်';
+  static const String txt_township = 'မြို့နယ်';
+  static const String txt_state = 'တိုင်း/ဒေသကြီး';
+  static const String txt_state_warning = 'တိုင်း/ဒေသကြီး ဖြည့်ပေးပါ';
+  static const String txt_owner_information = 'ပိုင်ရှင်ဆိုင်ရာအချက်အလက်များ';
+  static const String txt_owner_name = 'အမည်';
+  static const String txt_owner_nrc_no = 'မှတ်ပုံတင်အမှတ်';
+  static const String txt_owner_ph_no = 'ဆက်သွယ်ရန်ဖုန်းနံပါတ်';
+  static const String txt_owner_region_no = 'အမှတ်';
+  static const String txt_owner_street_name = 'လမ်း';
+  static const String txt_owner_block_no = 'ရပ်ကွက်';
+  static const String txt_owner_township = 'မြို့နယ်';
+  static const String txt_owner_state = 'တိုင်း/ဒေသကြီး';
+  static const String txt_owner_location = 'တည်နေရာ';
+  static const String txt_remark = 'မှတ်ချက်';
+  static const String txt_apply_license = 'လျှောက်ထားမည်';
+  static const String txt_apply_license_need_to_fill = 'ပြထားသည့်များဖြည့်ပေးရန်လိုအပ်သည်';
+  static const String txt_need_paper_work = 'လိုအပ်သောစာရွက်စာတမ်းများတွဲရန်/ကြည့်ရန်';
+  static const String txt_apply_biz_license_photo = 'လုပ်ငန်းလိုင်စင်ဓာတ်ပုံများ';
+  static const String txt_tax_use_no_data = 'ဒေတာမရှိပါ';
+  static const String txt_tax_type = 'အခွန်အမျိုးအစား';
+  static const String txt_tax_bill_amount = 'အခွန်ငွေ';
+  static const String txt_kyat = 'ကျပ်';
+  static const String txt_user_money = 'မိမိ၏ငွေ';
+  static const String txt_top_up = 'ငွေဖြည့်မည်';
+  static const String txt_pay_tax = 'အခွန်ဆောင်မည်';
+  static const String title_top_up = 'ငွေဖြည့်ရန်';
+  static const String txt_prepaid_code = 'ငွေဖြည့်ကုဒ်';
+  static const String txt_pin_code = 'ပင်ကုဒ်';
+  static const String txt_top_up_cancel = 'ထွက်မည်';
+  static const String txt_create_pin = 'ပင်ကုဒ်ပြုလုပ်မည်';
+  static const String txt_profile_set_up = 'ဖြည့်သွင်းမည်';
+  static const String txt_profile_set_up_need = 'ကိုယ်ရေးအချက်အလတ် ဖြည့်သွင်းရန်လိုပါသည်။';
+  static const String txt_online_payment_tax = 'အခွန်ဆောင်ရန်';
+  static const String txt_invoice_no = 'ပြေစာနံပါတ်';
+  static const String txt_choose_tax_type = 'အခွန်အမျိုးအစားရွေးပါ';
+  static const String txt_tax_amount = 'အခွန်ဆောင်ရမည့်ငွေပမာဏ';
+  static const String txt_get_tax_amount = 'အခွန်ဆောင်မည့်ပမာဏရယူမည့်';
+  static const String txt_pay_tax_confirm = 'ပေးမည်';
+  static const String txt_pay_tax_success = 'အခွန်ပေးဆောင်မှုအောင်မြင်သည်';
+
+  static const String PROPERTY_TAX = "PropertyTax";
+  static const String BIZ_LICENSE = "BizLicense";
+  static const String WATER_METER = "WaterMeter";
+  static const String MARKET_TAX = "MarketTax";
+  static const String WHEEL_TAX = "WheelTax";
+  static const String SIGNBOARD_TAX = "SignboardTax";
+
+  static const String MYAN_PROPERTY_TAX = "ပစ္စည်းခွန် (စံငှားခွန်)";
+  static const String MYAN_BIZ_LICENSE = "လုပ်ငန်းလိုင်စင်";
+  static const String MYAN_WATER_METER = "ရေမီတာခွန်";
+  static const String MYAN_MARKET_TAX = "ဈေးဆိုင်ခန်းခွန်";
+  static const String MYAN_WHEEL_TAX = "ဘီးခွန်";
+  static const String MYAN_SIGNBOARD_TAX = "ကြော်ငြာဆိုင်းဘုတ်ခွန်";
 
 }
 

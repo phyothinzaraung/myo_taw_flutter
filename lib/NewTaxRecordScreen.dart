@@ -18,7 +18,6 @@ class NewTaxRecordScreen extends StatefulWidget {
 
 class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
   TextEditingController _recordNameController = new TextEditingController();
-  String _recordSubject;
   File _image;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
@@ -82,7 +81,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
     await _userDb.closeUserDb();
     _userModel = model;
-    _response = await ServiceHelper().uploadTaxRecord(_image.path, _recordSubject, _userModel.uniqueKey, _userModel.name, _userModel.currentRegionCode);
+    _response = await ServiceHelper().uploadTaxRecord(_image.path, _recordNameController.text, _userModel.uniqueKey, _userModel.name, _userModel.currentRegionCode);
     //print('uploaddata: ${_recordName} ${_userModel.uniqueKey} ${_userModel.name} ${_userModel.currentRegionCode}');
     if(_response.statusCode == 200){
       setState(() {
@@ -122,13 +121,10 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                       ),
                       child: TextField(
                         decoration: InputDecoration(
-                            border: InputBorder.none
+                            border: InputBorder.none,
                         ),
                         controller: _recordNameController,
                         style: TextStyle(fontSize: FontSize.textSizeNormal),
-                        onChanged: (value){
-                          _recordSubject = value;
-                        },
                       ),
                     ),
                     //camera
@@ -178,12 +174,12 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
               child: RaisedButton(onPressed: ()async{
                 await _checkCon();
                 if(_isCon){
-                  if(_recordSubject != null && _image != null){
+                  if(_recordNameController.text != null && _image != null){
                     setState(() {
                       _isLoading = true;
                     });
                     _uploadTaxRecord();
-                  } else if(_recordSubject == null){
+                  } else if(_recordNameController.text == null){
                     Fluttertoast.showToast(msg: 'Please fill record name', backgroundColor: Colors.black.withOpacity(0.7),
                         fontSize: FontSize.textSizeNormal);
                   }else{

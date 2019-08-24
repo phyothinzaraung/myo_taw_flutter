@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
@@ -10,6 +12,9 @@ import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
 import 'SuggestionScreen.dart';
 import 'AdministratorSuggestionScreen.dart';
+import 'BizLicenseScreen.dart';
+import 'TaxUseScreen.dart';
+import 'OnlineTaxScreen.dart';
 
 class DashBoardScreen extends StatefulWidget {
   @override
@@ -36,12 +41,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
     await _userDb.closeUserDb();
-    setState(() {
-      _userModel = model;
-    });
+    if(mounted){
+      setState(() {
+        _userModel = model;
+      });
+    }
     _initHeaderTitle();
     _initDashBoardWidget();
-    if(_userModel.resource != 'Android'){
+    if(Platform.isIOS){
       _widget.removeLast();
     }
   }
@@ -117,13 +124,13 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => SuggestionScreen()));
               break;
             case MyString.txt_business_tax:
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseScreen()));
               break;
             case MyString.txt_online_tax:
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineTaxScreen()));
               break;
             case MyString.txt_tax_use:
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => TaxUserScreen()));
               break;
             case MyString.txt_calculate_tax:
               //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
@@ -146,7 +153,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         child: Container(
           child: Column(children: <Widget>[
             Flexible(flex: 3,child: Image.asset(i.image,width: 120, height: 120,)),
-            Flexible(flex: 1,child: Text(i.title,style: TextStyle(fontSize: FontSize.textSizeSmall),))],),),
+            Flexible(flex: 1,child: Text(i.title,style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))],),),
       ));
     }
   }

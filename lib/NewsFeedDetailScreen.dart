@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'Model/NewsFeedModel.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'helper/ShowDateTimeHelper.dart';
-import 'package:flutter_html_textview_render/html_text_view.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'Model/NewsFeedPhotoModel.dart';
 import 'NewsFeedPhotoDetail.dart';
-import 'helper/MyanNumConvertHelper.dart';
+import 'helper/NumConvertHelper.dart';
 import 'NewsFeedVideoScreen.dart';
 import 'helper/ShowDateTimeHelper.dart';
 
@@ -71,7 +71,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                       decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.6)
                       ),
-                      child: Text('${MyanNumConvertHelper().getMyanNumInt(index)}${'.'} ${_title}  ',
+                      child: Text('${NumConvertHelper().getMyanNumInt(index)}${'.'} ${_title}  ',
                         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),)),
                 ],
               ),));
@@ -231,7 +231,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                     Container(
                       child: Row(mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
-                          Flexible(child: HtmlTextView(data: _body!=null?_body:'---',))
+                          Flexible(child: Html(data: _body!=null?_body:'---',))
                         ],),
                     )
                   ],

@@ -77,7 +77,8 @@ class _DaoScreenState extends State<DaoScreen> {
                       child: Column(
                         children: <Widget>[
                           Flexible(flex: 4,child: Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[index].daoModel.icon, width: 120,)),
-                          Flexible(flex: 1,child: Text(_daoViewModelList[index].daoModel.title,textAlign: TextAlign.center,style: TextStyle(fontSize: FontSize.textSizeSmall),))],),),
+                          Flexible(flex: 1,child: Text(_daoViewModelList[index].daoModel.title,textAlign: TextAlign.center,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))],),),
                   );
                 },childCount: _daoViewModelList.length),
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
@@ -131,7 +132,7 @@ class _DaoScreenState extends State<DaoScreen> {
       setState(() {
         _daoViewModelList.clear();
       });
-      await _getAllDao();
+      _getAllDao();
     }else{
       Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
     }
@@ -148,7 +149,12 @@ class _DaoScreenState extends State<DaoScreen> {
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
             onRefresh: _handleRefresh,
-            child: _listView()
+            child: _daoViewModelList.isNotEmpty?_listView() :
+            Container(
+              margin: EdgeInsets.only(top: 10.0),
+              child: Row(mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[CircularProgressIndicator()],),
+            )
           ),
         )
     );

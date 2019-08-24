@@ -18,7 +18,7 @@ class DaoViewModel{
   }
 
   DaoViewModel.fromJson(Map<String, dynamic> json):
-    _photoList = List<dynamic>.from(json['Photo']),
+    _photoList = List<dynamic>.from(json['Photo']!=null?json['Photo'] : []),
     _daoModel = DaoModel.formJson(json['DAO']);
         
 }
