@@ -178,7 +178,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
                       //text field prepaid code
                       Container(
                         margin: EdgeInsets.only(top: 5.0, bottom: 10.0),
-                        height: 50.0,
+                        padding: EdgeInsets.all(10.0),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5.0),
                             border: Border.all(color: Colors.white, style: BorderStyle.solid, width: 0.80),
@@ -190,7 +190,6 @@ class _TopUpScreenState extends State<TopUpScreen> {
                               prefixIcon: Image.asset('images/top_up_card.png', scale: 2.5,),
                           ),
                           keyboardType: TextInputType.number,
-                          textAlignVertical: TextAlignVertical(y: 0),
                           controller: _prepaidCodeController,
                           style: TextStyle(fontSize: FontSize.textSizeNormal),
                         ),
