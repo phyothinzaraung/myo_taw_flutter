@@ -230,7 +230,8 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                             Container(
                                 margin: EdgeInsets.only(right: 20.0),
                                 child: Image.asset('images/star.png', width: 15.0, height: 15.0,)),
-                            Text(MyString.txt_apply_license_need_to_fill, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                                Expanded(
+                                    child: Text(MyString.txt_apply_license_need_to_fill, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),)),
                           ],
                         ),
                       ),
@@ -325,54 +326,65 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                         margin: EdgeInsets.only(bottom: 20.0),
                         child: Row(
                           children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.only(right: 20.0),
+                            Flexible(
+                              flex: 1,
                               child: Row(
                                 children: <Widget>[
-                                  Container(
-                                    width: 100,
-                                    margin: EdgeInsets.only(right: 10.0),
-                                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(7.0),
-                                        border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
-                                    ),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
+                                  Flexible(
+                                    flex: 2,
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 10.0),
+                                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(7.0),
+                                          border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
                                       ),
-                                      cursorColor: MyColor.colorPrimary,
-                                      controller: _bizLengthController,
-                                      keyboardType: TextInputType.number,
-                                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                                      child: TextField(
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                        ),
+                                        cursorColor: MyColor.colorPrimary,
+                                        controller: _bizLengthController,
+                                        keyboardType: TextInputType.number,
+                                        style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                                      ),
                                     ),
                                   ),
-                                  Text(MyString.txt_unit_feet, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)
+                                  Flexible(
+                                      flex: 1,
+                                      child: Text(MyString.txt_unit_feet, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
                                 ],
                               ),
                             ),
-                            Row(
-                              children: <Widget>[
-                                Container(
-                                  width: 100,
-                                  margin: EdgeInsets.only(right: 10.0),
-                                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7.0),
-                                      border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
-                                  ),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
+                            Flexible(
+                              flex: 1,
+                              child: Row(
+                                children: <Widget>[
+                                  Flexible(
+                                    flex: 2,
+                                    child: Container(
+                                      margin: EdgeInsets.only(right: 10.0),
+                                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                      decoration: BoxDecoration(
+                                          borderRadius: BorderRadius.circular(7.0),
+                                          border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
+                                      ),
+                                      child: TextField(
+                                        decoration: InputDecoration(
+                                          border: InputBorder.none,
+                                        ),
+                                        cursorColor: MyColor.colorPrimary,
+                                        controller: _bizWidthController,
+                                        keyboardType: TextInputType.number,
+                                        style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                                      ),
                                     ),
-                                    cursorColor: MyColor.colorPrimary,
-                                    controller: _bizWidthController,
-                                    keyboardType: TextInputType.number,
-                                    style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                                   ),
-                                ),
-                                Text(MyString.txt_unit_feet, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)
-                              ],
+                                  Flexible(
+                                      flex: 1,
+                                      child: Text(MyString.txt_unit_feet, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
+                                ],
+                              ),
                             )
                           ],
                         ),
@@ -386,8 +398,8 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                         margin: EdgeInsets.only(bottom: 10.0),
                         child: Row(
                           children: <Widget>[
-                            Container(
-                              margin: EdgeInsets.only(right: 20.0),
+                            Flexible(
+                              flex: 1,
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
@@ -397,7 +409,6 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                                       child: Text(MyString.txt_biz_region_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
                                   //text field biz region no
                                   Container(
-                                    width: 100,
                                     margin: EdgeInsets.only(right: 10.0),
                                     padding: EdgeInsets.only(left: 10.0, right: 10.0),
                                     decoration: BoxDecoration(
@@ -417,32 +428,34 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                                 ],
                               ),
                             ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                //text biz street
-                                Container(
-                                    margin: EdgeInsets.only(bottom: 5.0),
-                                    child: Text(MyString.txt_biz_street_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                //text field biz street
-                                Container(
-                                  width: 170,
-                                  margin: EdgeInsets.only(right: 10.0),
-                                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7.0),
-                                      border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
-                                  ),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
+                            Flexible(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  //text biz street
+                                  Container(
+                                      margin: EdgeInsets.only(bottom: 5.0),
+                                      child: Text(MyString.txt_biz_street_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                                  //text field biz street
+                                  Container(
+                                    margin: EdgeInsets.only(right: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(7.0),
+                                        border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
                                     ),
-                                    cursorColor: MyColor.colorPrimary,
-                                    controller: _bizStreetController,
-                                    style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                      cursorColor: MyColor.colorPrimary,
+                                      controller: _bizStreetController,
+                                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                                    ),
                                   ),
-                                ),
-                              ],
+                                ],
+                              ),
                             ),
                           ],
                         ),
@@ -671,8 +684,8 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                       margin: EdgeInsets.only(bottom: 10.0),
                       child: Row(
                         children: <Widget>[
-                          Container(
-                            margin: EdgeInsets.only(right: 20.0),
+                          Flexible(
+                            flex: 1,
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
@@ -682,7 +695,6 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                                     child: Text(MyString.txt_biz_region_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
                                 //text field owner regio no
                                 Container(
-                                  width: 100,
                                   margin: EdgeInsets.only(right: 10.0),
                                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
                                   decoration: BoxDecoration(
@@ -702,32 +714,34 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                               ],
                             ),
                           ),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              //text owner street name
-                              Container(
-                                  margin: EdgeInsets.only(bottom: 5.0),
-                                  child: Text(MyString.txt_biz_street_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                              //text field owner street name
-                              Container(
-                                width: 170,
-                                margin: EdgeInsets.only(right: 10.0),
-                                padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(7.0),
-                                    border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
-                                ),
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
+                          Flexible(
+                            flex: 1,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                //text owner street name
+                                Container(
+                                    margin: EdgeInsets.only(bottom: 5.0),
+                                    child: Text(MyString.txt_biz_street_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                                //text field owner street name
+                                Container(
+                                  margin: EdgeInsets.only(right: 10.0),
+                                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7.0),
+                                      border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
                                   ),
-                                  cursorColor: MyColor.colorPrimary,
-                                  controller: _ownerStreetController,
-                                  style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                    ),
+                                    cursorColor: MyColor.colorPrimary,
+                                    controller: _ownerStreetController,
+                                    style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                                  ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ],
                       ),

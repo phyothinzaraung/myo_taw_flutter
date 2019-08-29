@@ -152,7 +152,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         },
         child: Container(
           child: Column(children: <Widget>[
-            Flexible(flex: 3,child: Image.asset(i.image,width: 120, height: 120,)),
+            Flexible(flex: 3,child: Image.asset(i.image,)),
             Flexible(flex: 1,child: Text(i.title,style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))],),),
       ));
     }
@@ -193,7 +193,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                 },childCount: _widget.length),
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 200.0,
-                    crossAxisSpacing: 50.0))
+                    crossAxisSpacing: 50.0,
+                    mainAxisSpacing: 10))
           ],
         )
       )
