@@ -169,7 +169,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                 Image.asset('images/placeholder.jpg', fit: BoxFit.cover,), width: double.maxFinite, height: 270.0,),
             Container(
               padding: EdgeInsets.only(left: 30.0, right: 30.0),
-              margin: EdgeInsets.only(top: 50.0),
+              margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
               height: 45.0,
               child: RaisedButton(onPressed: ()async{
                 await _checkCon();

@@ -565,28 +565,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget getNoConnectionWidget(){
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          _headerProfile(),
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('No Internet Connection'),
-                  FlatButton(onPressed: (){
-                    asyncLoaderState.currentState.reloadState();
-                    _checkCon();
-                  }
-                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
+    return ListView(
+      children: <Widget>[
+        _headerProfile(),
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Text('No Internet Connection'),
+              FlatButton(onPressed: (){
+                asyncLoaderState.currentState.reloadState();
+                _checkCon();
+                }
+                , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
+            ],
+          ),
+        )
+      ],
     );
   }
 
@@ -644,7 +639,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 textBuilder: DefaultLoadMoreTextBuilder.english,
                 child: _isRefresh==false?
                 _taxRecordModelList.isNotEmpty?_listView(): ListView(children: <Widget>[_headerProfile()],) :
-                    _headerProfileRefresh()
+                    ListView(children: <Widget>[_headerProfileRefresh()],)
             ),
           ),
         )
