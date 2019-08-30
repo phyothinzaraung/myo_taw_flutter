@@ -128,7 +128,7 @@ class UserDb {
     for(var i in result){
       userModel = UserModel.fromMap(i);
     }
-    print('getuserid ${userModel.name}');
+    //print('getuserid ${userModel.name}');
     return userModel;
   }
 

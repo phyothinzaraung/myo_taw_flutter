@@ -27,7 +27,9 @@ class BaseUrl{
   static const String DAO_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/AboutDAO/";
   static const String APPLY_BIZ_LICENSE_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/ApplyBiz/";
   static const String WEB_SERVICE_ROOT_ADDRESS_TAX_PAYMENT = "https://taxpaymentservice.azurewebsites.net/api/";
+  static const String WEB_SERVICE_ROOT_ADDRESS_REFERRAL = "https://newmaymay.azurewebsites.net/api/";
   static const String WEB_SERVICE_ROOT_ADDRESS_DAO_INVOICE_NO = "https://daoapifinal.azurewebsites.net/api/";
+  static const String REFERRAL_URL = "https://maymayadmin.azurewebsites.net/Referral/CityAppReferralDetail?referralpno=";
 }
 
 class MyString{
@@ -142,6 +144,9 @@ class MyString{
   static const String txt_get_tax_amount = 'အခွန်ဆောင်မည့်ပမာဏရယူမည့်';
   static const String txt_pay_tax_confirm = 'ပေးမည်';
   static const String txt_pay_tax_success = 'အခွန်ပေးဆောင်မှုအောင်မြင်သည်';
+  static const String txt_scan_qr_code = 'ဤနေရာကို Scan ဖတ်ပါ';
+  static const String txt_send = 'ပို့မည်';
+  static const String txt_not_send = 'မပို့ပါ';
 
   static const String PROPERTY_TAX = "PropertyTax";
   static const String BIZ_LICENSE = "BizLicense";

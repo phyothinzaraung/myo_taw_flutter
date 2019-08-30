@@ -19,6 +19,7 @@ import 'ProfileFormScreen.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'ProfilePhotoUploadScreen.dart';
 import 'NewTaxRecordScreen.dart';
+import 'BizLicenseScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -351,7 +352,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Divider(color: MyColor.colorPrimary,),
                     GestureDetector(
                       onTap: (){
-
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseScreen()));
                       },
                       child: Container(
                         child: Row(

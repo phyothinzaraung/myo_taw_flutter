@@ -43,6 +43,10 @@ dependencies:
   flutter_html: ^0.10.4
   pie_chart: ^1.2.0
   pin_code_text_field: ^1.3.7
+  webview_flutter: ^0.3.13
+  qr_flutter: ^3.0.1
+  unique_identifier: ^0.0.3
+  flutter_barcode_scanner: ^0.1.5+1
 
 
 dev_dependencies:
@@ -125,6 +129,8 @@ flutter:
     - images/online_tax_no_circle.png
     - images/top_up_card.png
     - images/payment_success.png
+    - images/qr_code_scan.png
+    - images/ic_launcher.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

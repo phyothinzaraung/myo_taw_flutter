@@ -105,7 +105,7 @@ class SaveNewsFeedDb{
     for(var i in result){
       saveModel = SaveNewsFeedModel.fromMap(i);
     }
-    print('getuserid ${saveModel.photoUrl}');
+    //print('getuserid ${saveModel.photoUrl}');
     return saveModel;
   }
 

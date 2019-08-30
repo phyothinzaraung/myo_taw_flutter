@@ -5,6 +5,7 @@ import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/model/UserModel.dart';
 import 'package:myotaw/model/ApplyBizLicenseModel.dart';
 import 'package:myotaw/model/PaymentLogModel.dart';
+import 'package:myotaw/model/ReferralModel.dart';
 
 class ServiceHelper{
  var response;
@@ -268,6 +269,19 @@ class ServiceHelper{
   });
   return response;
  }
+
+ /*postReferral<Response>(ReferralModel model) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_REFERRAL+"ref/RefQRcodeCityApp", data: {
+   'ReferralPhoneNumber' : model.,
+   'UserPhoneNumber': model.useAmount,
+   'ReferDate': model.taxType,
+   'IMEI': model.invoiceNo,
+   'Application': model.invoiceNo,
+  });
+  return response;
+ }*/
 
 }
 

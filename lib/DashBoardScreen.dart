@@ -15,6 +15,7 @@ import 'AdministratorSuggestionScreen.dart';
 import 'BizLicenseScreen.dart';
 import 'TaxUseScreen.dart';
 import 'OnlineTaxScreen.dart';
+import 'ReferralScreen.dart';
 
 class DashBoardScreen extends StatefulWidget {
   @override
@@ -145,7 +146,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
               break;
             case MyString.txt_referral:
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel)));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ReferralScreen(_userModel)));
               break;
             default:
           }
