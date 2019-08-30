@@ -73,17 +73,17 @@ class _DaoScreenState extends State<DaoScreen> {
                       }
                     },
                     child: Container(
-                      margin: EdgeInsets.only(top: 20.0),
+                      margin: EdgeInsets.only(top: 7, bottom: 7),
                       child: Column(
                         children: <Widget>[
-                          Flexible(flex: 4,child: Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[index].daoModel.icon, width: 120,)),
+                          Flexible(flex: 2,child: Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[index].daoModel.icon,)),
                           Flexible(flex: 1,child: Text(_daoViewModelList[index].daoModel.title,textAlign: TextAlign.center,
                             style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))],),),
                   );
                 },childCount: _daoViewModelList.length),
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 200.0,
-                    crossAxisSpacing: 30.0))
+                    crossAxisSpacing: 10.0,))
           ],
         )
     );

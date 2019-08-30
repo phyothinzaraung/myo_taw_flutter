@@ -197,7 +197,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                               gallery();
                             },
                             child: _image==null?Image.asset('images/add_image_placeholder.png', width: 60.0, height: 60.0,):
-                      Image.file(_image, width: 60.0, height: 60.0, fit: BoxFit.cover,),
+                      Image.file(_image, width: 50.0, height: 50.0, fit: BoxFit.cover,),
                           )),
                       Flexible(
                         flex: 8,
@@ -208,7 +208,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                               padding: EdgeInsets.all(5.0),
                               width: double.maxFinite,
                               color: Colors.white,
-                              height: 60.0,
+                              height: 50.0,
                               child: TextField(
                                 decoration: InputDecoration(
                                   border: InputBorder.none,
@@ -225,7 +225,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                       Flexible(
                         flex: 3,
                         child: Container(
-                          height: 60.0,
+                          height: 50.0,
                           width: double.maxFinite,
                           child: FlatButton(onPressed: ()async{
                             await _checkCon();
