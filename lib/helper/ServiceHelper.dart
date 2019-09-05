@@ -270,18 +270,18 @@ class ServiceHelper{
   return response;
  }
 
- /*postReferral<Response>(ReferralModel model) async{
+ postReferral<Response>(ReferralModel model) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_REFERRAL+"ref/RefQRcodeCityApp", data: {
-   'ReferralPhoneNumber' : model.,
-   'UserPhoneNumber': model.useAmount,
-   'ReferDate': model.taxType,
-   'IMEI': model.invoiceNo,
-   'Application': model.invoiceNo,
+   'ReferralPhoneNumber' : model.referPhNo,
+   'UserPhoneNumber': model.userPhNo,
+   'ReferDate': model.referDate,
+   'IMEI': model.imei,
+   'Application': model.application,
   });
   return response;
- }*/
+ }
 
 }
 

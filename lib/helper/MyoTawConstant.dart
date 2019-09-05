@@ -162,6 +162,8 @@ class MyString{
   static const String MYAN_WHEEL_TAX = "ဘီးခွန်";
   static const String MYAN_SIGNBOARD_TAX = "ကြော်ငြာဆိုင်းဘုတ်ခွန်";
 
+  static const String txt_referral_wrong_app = "အပရီကေရှင်း မှားယွင်းနေပါသည်";
+
 }
 
 class OrganizationId{

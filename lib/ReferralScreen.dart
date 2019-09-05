@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter/material.dart';
@@ -9,6 +10,10 @@ import 'package:unique_identifier/unique_identifier.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'model/ReferralModel.dart';
+import 'helper/ServiceHelper.dart';
+import 'package:dio/dio.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'model/ReferralResponseModel.dart';
 
 class ReferralScreen extends StatefulWidget {
   UserModel model;
@@ -26,6 +31,10 @@ class _ReferralScreenState extends State<ReferralScreen> {
   WebViewController _webViewController;
   String _scanResult;
   List<String> _data = List<String>();
+  ReferralModel _referralModel = new ReferralModel();
+  Response _response;
+  bool _isCon;
+  GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
   _ReferralScreenState(this._userModel);
 
   @override
@@ -60,21 +69,41 @@ class _ReferralScreenState extends State<ReferralScreen> {
       setState(() {
         _isLoad = true;
       });
-      await Future.delayed(Duration(seconds: 5));
-      setState(() {
-        _isLoad = false;
-      });
       _data = _scanResult.split('-');
       if(_data.length == 2){
-        print('qrCodeData: ${_data[0]} ${_data[1]}');
-        _dialogFinish('Success');
+        _referralModel.referPhNo = _userModel.phoneNo;
+        _referralModel.userPhNo = _data[0];
+        _referralModel.referDate = DateTime.now().toString();
+        _referralModel.imei = _data[1];
+        _referralModel.application = 'CityApp';
+        print('qrCodeData: ${_referralModel.referPhNo} ${_referralModel.userPhNo} ${_referralModel.referDate} ${_referralModel.imei}}');
+        _callWebService();
       }else{
-        _dialogFinish('Fail');
+        setState(() {
+          _isLoad = false;
+        });
+        _dialogWrongApp();
       }
     }
   }
 
-  _dialogFinish(String str){
+  _callWebService() async{
+    _response = await ServiceHelper().postReferral(_referralModel);
+    if(_response.data != null){
+      ReferralResponseModel model = ReferralResponseModel.fromJson(_response.data);
+      setState(() {
+        _isLoad = false;
+      });
+      _dialogFinish(model.message);
+    }else{
+      setState(() {
+        _isLoad = false;
+      });
+      Fluttertoast.showToast(msg: 'Please try again', backgroundColor: Colors.black.withOpacity(0.7));
+    }
+  }
+
+  _dialogFinish(String mess){
     return showDialog(context: context, builder: (context){
       return WillPopScope(
           child: SimpleDialog(
@@ -85,10 +114,10 @@ class _ReferralScreenState extends State<ReferralScreen> {
                 children: <Widget>[
                   Container(
                       margin: EdgeInsets.only(bottom: 20.0),
-                      child: Image.asset('images/payment_success.png', width: 60.0, height: 60.0,)),
+                      child: Image.asset('images/ic_launcher.png', width: 60.0, height: 60.0,)),
                   Container(
                     margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(str,
+                    child: Text(mess,
                       style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
                   ),
                   RaisedButton(onPressed: (){
@@ -103,6 +132,46 @@ class _ReferralScreenState extends State<ReferralScreen> {
               )
             ],), onWillPop: (){});
     }, barrierDismissible: false);
+  }
+
+  _dialogWrongApp(){
+    return showDialog(context: context, builder: (context){
+      return WillPopScope(
+          child: SimpleDialog(
+            contentPadding: EdgeInsets.all(20.0),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Container(
+                      margin: EdgeInsets.only(bottom: 20.0),
+                      child: Image.asset('images/warning.png', width: 60.0, height: 60.0,)),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    child: Text(MyString.txt_referral_wrong_app,
+                      style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
+                  ),
+                  RaisedButton(onPressed: (){
+                    Navigator.of(context).pop();
+                    setState(() {
+                      _webViewController.loadUrl(BaseUrl.REFERRAL_URL+_userModel.phoneNo);
+                    });
+                  },child: Text(MyString.txt_close,
+                    style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),),
+                ],
+              )
+            ],), onWillPop: (){});
+    }, barrierDismissible: false);
+  }
+
+  _checkCon()async{
+    var conResult = await(Connectivity().checkConnectivity());
+    if (conResult == ConnectivityResult.none) {
+      _isCon = false;
+    }else{
+      _isCon = true;
+    }
   }
 
   Widget modalProgressIndicator(){
@@ -127,12 +196,26 @@ class _ReferralScreenState extends State<ReferralScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldState ,
       appBar: AppBar(
         title: Text(MyString.txt_referral, style: TextStyle(fontSize: FontSize.textSizeNormal),),
         actions: <Widget>[
           GestureDetector(
-            onTap: (){
-              _barcode();
+            onTap: () async{
+              await _checkCon();
+              if(_isCon){
+                _barcode();
+              }else{
+                _scaffoldState.currentState.showSnackBar(SnackBar(
+                  content: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(margin: EdgeInsets.only(right: 20.0),child: Image.asset('images/no_connection.png', width: 30.0, height: 30.0,)),
+                      Text('Check internet connection', style: TextStyle(fontSize: FontSize.textSizeNormal),),
+                    ],
+                  ),duration: Duration(seconds: 5),backgroundColor: Colors.red,));
+              }
+
             },
             child: Container(
                 margin: EdgeInsets.only(right: 15.0),
