@@ -196,7 +196,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                             onTap: (){
                               gallery();
                             },
-                            child: _image==null?Image.asset('images/add_image_placeholder.png', width: 60.0, height: 60.0,):
+                            child: _image==null?Image.asset('images/add_image_placeholder.png', width: double.maxFinite, height: 50.0,):
                       Image.file(_image, width: 50.0, height: 50.0, fit: BoxFit.cover,),
                           )),
                       Flexible(
