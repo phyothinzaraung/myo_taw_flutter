@@ -48,6 +48,7 @@ dependencies:
   unique_identifier: ^0.0.3
   flutter_barcode_scanner: ^0.1.5+1
   url_launcher: ^5.1.2
+  html: ^0.14.0+2
 
 
 dev_dependencies:
@@ -133,6 +134,9 @@ flutter:
     - images/qr_code_scan.png
     - images/ic_launcher.png
     - images/warning.png
+    - images/calculate_tax_no_circle.png
+    - images/tax.png
+    - images/tax_nocircle.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

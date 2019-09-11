@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:dio/dio.dart';
+import 'package:html/parser.dart';
 import 'helper/ServiceHelper.dart';
 import 'Model/NewsFeedReactModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -49,6 +51,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     // TODO: implement initState
     super.initState();
     _checkCon();
+    
   }
 
   _getUser()async{
@@ -108,13 +111,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     print('isEnd: ${_isEnd}');
   }
 
-  bool _isLike(String reactType){
+  /*bool _isLike(String reactType){
     if(reactType != null){
       return true;
     }else{
       return false;
     }
-  }
+  }*/
 
   String photoOrThumbNail(String photo, String thumbNail, bool isPhoto){
     String url = '';
@@ -142,14 +145,24 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     }
   }
 
+  String _parseHtmlString(String htmlString) {
+
+    var document = parse(htmlString);
+
+    String parsedString = parse(document.body.text).documentElement.text;
+
+    return parsedString;
+  }
+
 
   Widget _newsFeedList(int i){
     NewsFeedModel newsFeedModel = _newsFeedReactModel[i].newsFeedModel;
     String newsFeedPhoto = newsFeedModel.photoUrl;
     String newsFeedThumbNail = newsFeedModel.thumbNail;
     String title = newsFeedModel.title;
+    String body = newsFeedModel.body;
     String date = showDateTime(newsFeedModel.accesstime);
-    bool isLike = _isLike(_newsFeedReactModel[i].reactType);
+    //bool isLike = _isLike(_newsFeedReactModel[i].reactType);
     bool isPhoto = _isPhoto(newsFeedModel.uploadType);
 
     return Card(
@@ -166,12 +179,23 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 child: Column(
                   children: <Widget>[
                     Container(
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 20),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: Image.asset("images/calendar.png", width: 15, height: 15,)),
+                          Text(date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)
+                        ],
+                      ),
+                    ),
+                    Container(
                       padding: EdgeInsets.all(10.0),
                       margin: EdgeInsets.only(bottom: 5.0),
                       child: Row(mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Expanded(child: Text(title!=null?title:'---',
-                            style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack), maxLines: 1, overflow: TextOverflow.ellipsis,))
+                            style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack), maxLines: 1, overflow: TextOverflow.ellipsis,))
                         ],),
                     ),
                     Container(
@@ -183,7 +207,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                             imageBuilder: (context, image){
                               return Container(
                                 width: double.maxFinite,
-                                height: 160.0,
+                                height: 180.0,
                                 decoration: BoxDecoration(
                                   image: DecorationImage(
                                       image: image,
@@ -194,13 +218,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                               child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 150.0,)),
                             errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
                           ),
-                          Container(
+                          /*Container(
                               padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
                               decoration: BoxDecoration(
                                   borderRadius: BorderRadius.only(topRight: Radius.circular(10.0)),
                                   color: Colors.black.withOpacity(0.6)
                               ),
-                              child: Text(date, style: TextStyle(color: Colors.white),)),
+                              child: Text(date, style: TextStyle(color: Colors.white),)),*/
                         ],
                       ),
                     ),
@@ -209,12 +233,32 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               ),
             ),
             Container(
-              padding: EdgeInsets.all(10.0),
+              padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+              child: Text(_parseHtmlString(body), maxLines: 2, overflow: TextOverflow.ellipsis,
+                style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+            ),
+            Row(
+              children: <Widget>[
+                Container(
+                  margin: EdgeInsets.only(top: 10, left: 10),
+                  padding: EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+                  alignment: Alignment.center,
+                  decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: MyColor.colorPrimary
+                  ),
+                  child: Text('${newsFeedModel.likeCount} ${newsFeedModel.likeCount > 1? 'Likes':'Like'}',
+                    style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),),
+                ),
+              ],
+            ),
+            Container(
+              padding: EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 20),
               child: Row(
                 children: <Widget>[
                   GestureDetector(
                     onTap: (){
-                      print('like: ${isLike}');
+                      //print('like: ${isLike}');
                       setState(() {
                         if(_newsFeedReactModel[i].reactType == null){
                           newsFeedModel.likeCount++;
@@ -233,7 +277,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                         Container(margin: EdgeInsets.only(right: 5.0),
                             child: Image.asset(_newsFeedReactModel[i].reactType!=null?'images/like_fill.png':'images/like.png',
                               width: 20.0,height: 20.0,)),
-                        Text('${newsFeedModel.likeCount} ${MyString.txt_like}',
+                        Text('${MyString.txt_like}',
                           style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeSmall),)
                       ],
                     ),
@@ -243,7 +287,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
                   },
                     child: Row(mainAxisAlignment: MainAxisAlignment.end,
-                      children: <Widget>[Image.asset('images/save.png', width: 20.0,height: 20.0,),],),
+                      children: <Widget>[
+                        Container(
+                            margin: EdgeInsets.only(right: 5),
+                            child: Image.asset('images/save.png', width: 20.0,height: 20.0,)),
+                        Text('${MyString.txt_save}',
+                          style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeSmall),)
+                      ],),
                   ))
                 ],
               ),

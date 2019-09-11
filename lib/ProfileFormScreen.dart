@@ -17,7 +17,6 @@ class ProfileFormScreen extends StatefulWidget {
 
 class _ProfileFormScreenState extends State<ProfileFormScreen> {
   UserModel _userModel;
-  String _userName, _userAddress;
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _addressController = new TextEditingController();
   String _dropDownState = 'နေရပ်ရွေးပါ';
@@ -193,9 +192,6 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                       ),
                       controller: _nameController,
                       style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                      onChanged: (value){
-                        _userName = value;
-                      },
                     ),
                   ),
                   Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
@@ -214,9 +210,6 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                       ),
                       controller: _addressController,
                       style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                      onChanged: (value){
-                        _userAddress = value;
-                      },
                     ),
                   ),
 
@@ -304,7 +297,6 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                       ),
                       child: Text(MyString.txt_save_user_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
                   )
-
                 ],
               ),
             ),

@@ -16,7 +16,7 @@ import 'BizLicenseScreen.dart';
 import 'TaxUseScreen.dart';
 import 'OnlineTaxScreen.dart';
 import 'ReferralScreen.dart';
-
+import 'CalculateTaxScreen.dart';
 class DashBoardScreen extends StatefulWidget {
   @override
   _DashBoardScreenState createState() => _DashBoardScreenState();
@@ -112,7 +112,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     _dashBoardModelList = [model1,model2,model3,model4,model5,model6,model7,model8,model9,model10,model11];
 
     for(var i in _dashBoardModelList){
-      _widget.add(GestureDetector(
+        _widget.add(GestureDetector(
         onTap: (){
           switch(i.title){
             case MyString.txt_municipal:
@@ -134,7 +134,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => TaxUserScreen()));
               break;
             case MyString.txt_calculate_tax:
-              //Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => CalculateTaxScreen()));
               break;
             case MyString.txt_faq:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => FaqScreen()));

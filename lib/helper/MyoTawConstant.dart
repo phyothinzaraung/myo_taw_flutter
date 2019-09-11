@@ -163,6 +163,17 @@ class MyString{
   static const String MYAN_SIGNBOARD_TAX = "ကြော်ငြာဆိုင်းဘုတ်ခွန်";
 
   static const String txt_referral_wrong_app = "အပရီကေရှင်း မှားယွင်းနေပါသည်";
+  static const String title_calculate_tax = "အခွန်အမျိုးအစား ရွေးပါ";
+  static const String txt_property_tax = "ပစ္စည်းခွန်";
+  static const String title_property_tax_calculate = "ပစ္စည်းခွန် အခွန်ငွေတွက်ချက်ရန်အတွက်";
+  static const String txt_biz_tax = "လုပ်ငန်းလိုင်စင်ခွန်";
+  static const String txt_choose_building_type = "အဆောက်အဦးအမျိုးအစား";
+  static const String txt_choose_story = "အထပ်အရေအတွက်";
+  static const String txt_no_selected = "သတ်မှတ်ထားခြင်းမရှိ";
+  static const String txt_calculate = "တွက်မည်";
+  static const String txt_biz_tax_range = "အခွန်နှုန်းထားမှာ";
+  static const String txt_thanks = "အခွန်ပေးဆောင်မှုအတွက် \n ကျေးဇူးတင်ပါသည်";
+  static const String txt_choose_license_type = "လိုင်စင်အမျိုးအစားရွေးပါ";
 
 }
 
