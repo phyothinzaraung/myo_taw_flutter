@@ -13,13 +13,13 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
   List<String> _bizLicenseTypeList;
   String _dropDownBizType = MyString.txt_no_selected;
   List<String> _bizList;
-  int _taxRange ,_taxRange1;
+  String _taxRange ,__taxRange1;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _bizLicenseTypeList = [_dropDownBizLicenseType,'စားသောက်ဆိုင်လုပ်ငန်းလိုင်စင်','ဘေးအန္တရာယ်လုပ်ငန်းလိုင်စင်','ကိုယ်ပိုင်ဈေး၊ စတိုးဆိုင်လိုင်စင်','တည်းခိုခန်း/ဘော်ဒါဆောင်/မင်္ဂလာခန်းမလုပ်ငန်းလိုင်စင်'];
+    _bizLicenseTypeList = [_dropDownBizLicenseType,'စားသောက်ဆိုင်လုပ်ငန်းလိုင်စင်','ဘေးအန္တရာယ်လုပ်ငန်းလိုင်စင်','ပုဂ္ဂလိကအိမ်ဆိုင်လုပ်ငန်းလိုင်စင်'];
     _bizList = [_dropDownBizType];
   }
 
@@ -27,108 +27,217 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
     switch (_dropDownBizLicenseType){
       case 'စားသောက်ဆိုင်လုပ်ငန်းလိုင်စင်':
         setState(() {
-          _bizList = [_dropDownBizType,'၆ ထပ် နှင့်အထက်','၄ ထပ် မှ ၆ ထပ်','၃ ထပ်','၂ ထပ်','၁ ထပ်'];
+          _bizList = [_dropDownBizType,'လက်ဘက်ရည်','အချိုရည်','စားသောက်','ထမင်း','မုန့်ဟင်းခါး','ကြေးအိုး/ဆီချက်','ကွမ်းယာ','မုန့်ဆိုင်/သစ်သီး'];
         });
         break;
       case 'ဘေးအန္တရာယ်လုပ်ငန်းလိုင်စင်':
         setState(() {
-          _bizList = [_dropDownBizType,'၂ ထပ်','၁ ထပ်'];
+          _bizList = [_dropDownBizType,'ပရိဘောဂ','ကွန်ပျူတာ','ဆေးရွက်ကြီး','ဝါး','စက်ပြင်','ထင်း/မီးသွေး','ရာဘာ','ကွမ်းသီး','အိုး','ဆေးလိပ်ခုံ','စက်သုံးဆီ',
+            'ပဲဆီ','ဓာတ်မြေဩဇာ','ဘတ္ထရီ','ဆေးဆိုင်', 'ကားအရောင်းပြခန်း','သစ်စက်ဆိုင်','ရေခဲစက်','ရေသန့်','အကြော်ဖို/မုန့်တီဖို','သံပုံးပုလင်း','ဗီဒီယိုခွေဌား','ဆားစက်/ရောင်း',
+            'ပလပ်စတစ်','ဆေးခန်း၊ ဓာတ်ခွဲခန်း','အရက်ချက်စက်ရုံ','အခြား'];
         });
         break;
-      case 'ကိုယ်ပိုင်ဈေး':
+      case 'ပုဂ္ဂလိကအိမ်ဆိုင်လုပ်ငန်းလိုင်စင်':
         setState(() {
-          _bizList = [_dropDownBizType,'၂ ထပ်'];
-        });
-        break;
-      case 'စတိုးဆိုင်လိုင်စင်':
-        setState(() {
-          _bizList = [_dropDownBizType,'၂ ထပ်'];
-        });
-        break;
-      case 'တည်းခိုခန်း/ဘော်ဒါဆောင်/မင်္ဂလာခန်းမလုပ်ငန်းလိုင်စင်':
-        setState(() {
-          _bizList = [_dropDownBizType,'၂ ထပ်','၁ ထပ်'];
+          _bizList = [_dropDownBizType,'ကုန်မာ','သံမူလီ/သံဟောင်း','ရွှေပန်းထိမ်','ရွှေဆိုင်','အပ်ချုပ်','တီဗီရောင်း','ပလပ်စတစ်','တီဗီပြင်','မျက်မှန်/မှန်','နာရီ',
+            'စာအုပ်ဌား','စတိုး','ဖိနပ်','အလှကုန်','စာအုပ်နှင့် စာရေးကိရိယာ','အလှပြင်','ဆံသဆိုင်','ပွဲရုံ','ဆန်','ကုန်စုံ','လျှပ်စစ်','လယ်ယာသုံး','စက်ပစ္စည်း','အခြား'];
         });
         break;
     }
   }
 
-  String _getTaxRange(){
+  String _get_taxRange(){
     switch(_dropDownBizLicenseType){
-      case 'RC':
+      case 'စားသောက်ဆိုင်လုပ်ငန်းလိုင်စင်':
+        switch (_dropDownBizType){
+          case "လက်ဘက်ရည်":
+            _taxRange = "10000 - 80000";
+            break;
+          case "အချိုရည်":
+            _taxRange = "10000 - 60000";
+            break;
+          case "စားသောက်":
+            _taxRange = "20000 - 150000";
+            break;
+          case "ထမင်း":
+            _taxRange = "10000 - 30000";
+            break;
+          case "မုန့်ဟင်းခါး":
+            _taxRange = "10000 - 25000";
+            break;
+          case "ကြေးအိုး/ဆီချက်":
+            _taxRange = "10000 - 60000";
+            break;
+          case "ကွမ်းယာ":
+            _taxRange = "10000 - 15000";
+            break;
+          case "မုန့်ဆိုင်/သစ်သီး":
+            _taxRange = "10000 - 60000";
+            break;
+        }
+        break;
+      case 'ဘေးအန္တရာယ်လုပ်ငန်းလိုင်စင်':
         switch(_dropDownBizType){
-          case '၆ ထပ် နှင့်အထက်':
-            _taxRange = 2500000;
-            _taxRange1 = 5000000;
+          case "ပရိဘောဂ":
+            _taxRange = "25000 - 50000 ";
             break;
-          case "၄ ထပ် မှ ၆ ထပ်":
-            _taxRange = 800000;
-            _taxRange1 = 3000000;
+          case "ကွန်ပျူတာ":
+            _taxRange = "10000 - 40000";
             break;
-          case "၃ ထပ်":
-            _taxRange = 100000;
-            _taxRange1 = 1200000;
+          case "ဆေးရွက်ကြီး":
+            _taxRange = "20000 - 50000";
             break;
-          case "၂ ထပ်":
-            _taxRange = 30000;
-            _taxRange1 = 800000;
+          case "ဝါး":
+            _taxRange = "10000 - 30000";
             break;
-          case "၁ ထပ်":
-            _taxRange = 20000;
-            _taxRange1 = 100000;
+          case "စက်ပြင်":
+            _taxRange = "10000 - 60000";
+            break;
+          case "ထင်း/မီးသွေး":
+            _taxRange = "10000 - 250000";
+            break;
+          case "ရာဘာ":
+            _taxRange = "20000 - 400000";
+            break;
+          case "ကွမ်းသီး":
+            _taxRange = "15000 - 60000";
+            break;
+          case "အိုး":
+            _taxRange = "10000";
+            break;
+          case "ဆေးလိပ်ခုံ":
+            _taxRange = "15000 - 20000";
+            break;
+          case "စက်သုံးဆီ":
+            _taxRange = "10000 - 300000";
+            break;
+          case "ပဲဆီ":
+            _taxRange = "20000 - 30000";
+            break;
+          case "ဓာတ်မြေဩဇာ":
+            _taxRange = "10000 - 50000";
+            break;
+          case "ဘတ္ထရီ":
+            _taxRange = "40000";
+            break;
+          case "ဆေးဆိုင်":
+            _taxRange = "10000 - 60000";
+            break;
+          case "ကားအရောင်းပြခန်း":
+            _taxRange = "100000 - 300000";
+            break;
+          case "သစ်စက်ဆိုင်":
+            _taxRange = "15000 - 50000";
+            break;
+          case "ရေခဲစက်":
+            _taxRange = "30000 - 80000";
+            break;
+          case "ရေသန့်":
+            _taxRange = "35000 - 100000";
+            break;
+          case "အကြော်ဖို/မုန့်တီဖို":
+            _taxRange = "10000 - 40000";
+            break;
+          case "သံပုံးပုလင်း":
+            _taxRange = "15000 - 80000";
+            break;
+          case "ဗီဒီယိုခွေဌား":
+            _taxRange = "10000 - 15000";
+            break;
+          case "ဆားစက်/ရောင်း":
+            _taxRange = "10000 - 35000";
+            break;
+          case "ပလပ်စတစ်":
+            _taxRange = "30000";
+            break;
+          case "ဆေးခန်း၊ ဓာတ်ခွဲခန်း":
+            _taxRange = "15000 - 300000";
+            break;
+          case "အရက်ချက်စက်ရုံ":
+            _taxRange = "200000";
+            break;
+          case "အခြား":
+            _taxRange = "10000 - 100000";
             break;
         }
         break;
-      case 'အုတ်ညှပ်':
+      case 'ပုဂ္ဂလိကအိမ်ဆိုင်လုပ်ငန်းလိုင်စင်':
         switch (_dropDownBizType){
-          case "၂ ထပ်":
-            _taxRange = 25000;
-            _taxRange1 = 50000;
+          case "ကုန်မာ":
+            _taxRange = "15000 - 1500000";
             break;
-          case "၁ ထပ်":
-            _taxRange = 15000;
-            _taxRange1 = 40000;
+          case "သံမူလီ/သံဟောင်း":
+            _taxRange = "10000 - 25000";
+            break;
+          case "ရွှေပန်းထိမ်":
+            _taxRange = "60000 - 100000";
+            break;
+          case "ရွှေဆိုင်":
+            _taxRange = "15000 - 40000";
+            break;
+          case "အပ်ချုပ်":
+            _taxRange = "10000 - 40000";
+            break;
+          case "တီဗီရောင်း":
+            _taxRange = "30000 - 50000";
+            break;
+          case "ပလပ်စတစ်":
+            _taxRange = "10000 - 20000";
+            break;
+          case "တီဗီပြင်":
+            _taxRange = "10000 - 20000";
+            break;
+          case "မျက်မှန်/မှန်":
+            _taxRange = "10000 - 12000";
+            break;
+          case "နာရီ":
+            _taxRange = "10000 - 20000";
+            break;
+          case "စာအုပ်ဌား":
+            _taxRange = "10000 - 15000";
+            break;
+          case "စတိုး":
+            _taxRange = "15000 - 50000";
+            break;
+          case "ဖိနပ်":
+            _taxRange = "10000 - 40000";
+            break;
+          case "အလှကုန်":
+            _taxRange = "10000 - 50000";
+            break;
+          case "စာအုပ်နှင့် စာရေးကိရိယာ":
+            _taxRange = "150000 - 50000";
+            break;
+          case "အလှပြင်":
+            _taxRange = "20000 - 50000";
+            break;
+          case "ဆံသဆိုင်":
+            _taxRange = "10000 - 30000";
+            break;
+          case "ပွဲရုံ":
+            _taxRange = "30000 - 60000";
+            break;
+          case "ဆန်":
+            _taxRange = "10000 - 60000";
+            break;
+          case "ကုန်စုံ":
+            _taxRange = "10000 - 30000";
+            break;
+          case "လျှပ်စစ်":
+            _taxRange = "10000 - 50000";
+            break;
+          case "လယ်ယာသုံး":
+            _taxRange = "30000 - 50000";
+            break;
+          case "စက်ပစ္စည်း":
+            break;
+          case "အခြား":
+            _taxRange = "10000 - 100000";
             break;
         }
-        break;
-      case 'တိုက်ခံသွပ်မိုး':
-        _taxRange = 25000;
-        _taxRange1 = 50000;
-        break;
-      case 'ပျဉ်ထောင်':
-        _taxRange = 25000;
-        _taxRange1 = 50000;
-        break;
-      case 'ပျဉ်ထောင်သွပ်မိုး':
-        switch (_dropDownBizType){
-          case "၂ ထပ်":
-            _taxRange = 25000;
-            _taxRange1 = 50000;
-            break;
-          case "၁ ထပ်":
-            _taxRange = 15000;
-            _taxRange1 = 40000;
-            break;
-        }
-        break;
-      case 'တိုက်ခံပျဉ်ထောင်':
-        _taxRange = 25000;
-        _taxRange1 = 50000;
-        break;
-      case 'ပျဉ်ထောင်ဖက်မိုး':
-        _taxRange = 2500;
-        _taxRange1 = 10000;
-        break;
-      case "ထရံကာသွပ်မိုး":
-        _taxRange = 2500;
-        _taxRange1 = 10000;
-        break;
-      case "ထရံကာဖက်မိုး":
-        _taxRange = 2500;
-        _taxRange1 = 10000;
         break;
     }
-    return '${NumConvertHelper().getMyanNumInt(_taxRange)} - ${NumConvertHelper().getMyanNumInt(_taxRange1)}';
+    return '${NumConvertHelper().getMyanNumString(_taxRange)}';
   }
 
   _calculateTaxDialog(){
@@ -150,7 +259,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
                   ),
                   Container(
                     margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(_getTaxRange(),
+                    child: Text(_get_taxRange(),
                       style: TextStyle(fontSize: FontSize.textSizeLarge, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
                   ),
                   Container(
