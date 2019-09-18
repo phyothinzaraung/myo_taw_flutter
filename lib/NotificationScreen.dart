@@ -25,7 +25,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
   _getUser()async{
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
-    var model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.closeUserDb();
     setState(() {
       _userModel = model;

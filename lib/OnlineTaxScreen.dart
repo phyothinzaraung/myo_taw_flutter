@@ -51,7 +51,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
 
   _getUserBillAmount()async{
     await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().getUserBillAmount(_sharepreferenceshelper.getUniqueKey());
+    _response = await ServiceHelper().getUserBillAmount(_sharepreferenceshelper.getUserUniqueKey());
     _amountViewModel = UserBillAmountViewModel.formJson(_response.data);
     if(_amountViewModel != null){
     _name = _amountViewModel.name;
@@ -92,7 +92,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
   _getUser()async{
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
-    var model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.closeUserDb();
     setState(() {
       _userModel = model;

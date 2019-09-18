@@ -104,7 +104,7 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
   _sendSuggestion()async{
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
-    var model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.closeUserDb();
     _userModel = model;
     _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _mess,

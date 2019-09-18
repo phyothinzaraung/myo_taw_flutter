@@ -83,7 +83,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
    getUserData() async{
      await _userDb.openUserDb();
-    final model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    final model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     _userModel = model;
     await _userDb.closeUserDb();
   }

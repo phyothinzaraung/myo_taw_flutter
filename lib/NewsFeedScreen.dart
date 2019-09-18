@@ -34,7 +34,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   int page = 1;
   int pageCount = 10;
   UserModel _userModel;
-  String _city;
+  String _city, _userUniqueKey;
   SaveNewsFeedDb _saveNewsFeedDb = SaveNewsFeedDb();
   int _organizationId;
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
@@ -56,8 +56,9 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   _getUser()async{
     await _sharepreferenceshelper.initSharePref();
+    _userUniqueKey = _sharepreferenceshelper.getUserUniqueKey();
     await _userDb.openUserDb();
-    var model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.closeUserDb();
     setState(() {
       _userModel = model;
@@ -320,7 +321,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
   void _callLikeWebService(String newsFeedId)async{
-    response = await ServiceHelper().likeReact('0fc9d06a-a622-4288-975d-b5f414a9ad73', newsFeedId, 'like');
+    response = await ServiceHelper().likeReact(_userUniqueKey, newsFeedId, 'like');
     print('responseLike: ${response}');
   }
 

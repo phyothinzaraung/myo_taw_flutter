@@ -78,7 +78,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
   _uploadTaxRecord() async{
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
-    var model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.closeUserDb();
     _userModel = model;
     _response = await ServiceHelper().uploadTaxRecord(_image.path, _recordNameController.text, _userModel.uniqueKey, _userModel.name, _userModel.currentRegionCode);

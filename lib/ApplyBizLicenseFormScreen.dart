@@ -98,7 +98,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   _getUser()async{
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
-    var model = await _userDb.getUserById(_sharepreferenceshelper.getUniqueKey());
+    var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.closeUserDb();
     setState(() {
       _userModel = model;
@@ -913,7 +913,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                         _applyBizLicenseModel.township = _dropDownOwnerTownship;
                         _applyBizLicenseModel.state = _dropDownOwnerState;
                         _applyBizLicenseModel.remark = _remarkController.text;
-                        _applyBizLicenseModel.uniqueKey = _sharepreferenceshelper.getUniqueKey();
+                        _applyBizLicenseModel.uniqueKey = _sharepreferenceshelper.getUserUniqueKey();
                         _applyBizLicenseModel.regionCode = _sharepreferenceshelper.getRegionCode();
                         _applyBizLicenseModel.userName = _userModel.name;
                         _applyBizLicenseModel.licenseType = _bizLicenseModel.licenseType;

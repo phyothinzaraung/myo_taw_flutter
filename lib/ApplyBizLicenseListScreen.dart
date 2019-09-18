@@ -40,7 +40,7 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
 
   _getAllApplyBizLicense()async{
     await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().getAllApplyBizLicenseByUser(_sharepreferenceshelper.getRegionCode(), _sharepreferenceshelper.getUniqueKey());
+    _response = await ServiceHelper().getAllApplyBizLicenseByUser(_sharepreferenceshelper.getRegionCode(), _sharepreferenceshelper.getUserUniqueKey());
     if(_response.data != null){
       var applyBizLicenseList = _response.data;
       for(var i in applyBizLicenseList){

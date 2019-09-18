@@ -154,7 +154,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       //btn top up
                       RaisedButton(onPressed: () async{
                         await _sharepreferenceshelper.initSharePref();
-                        _paymentLogModel.uniqueKey = _sharepreferenceshelper.getUniqueKey();
+                        _paymentLogModel.uniqueKey = _sharepreferenceshelper.getUserUniqueKey();
                         _paymentLogModel.useAmount = _taxAmount;
                         _paymentLogModel.taxType = _taxType;
                         _paymentLogModel.invoiceNo = _invoiceNoController.text;

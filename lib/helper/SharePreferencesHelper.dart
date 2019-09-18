@@ -21,7 +21,7 @@ class Sharepreferenceshelper{
     return sharedPreferences.get(USER_REGION_CODE_KEY);
   }
 
-  String getUniqueKey(){
+  String getUserUniqueKey(){
     return sharedPreferences.get(USER_UNIQUE_KEY);
   }
 

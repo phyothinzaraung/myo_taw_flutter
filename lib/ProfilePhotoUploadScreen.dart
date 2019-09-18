@@ -57,7 +57,7 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
 
   _uploadPhoto()async{
     await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().uploadProfilePhoto(_image.path, _sharepreferenceshelper.getUniqueKey());
+    _response = await ServiceHelper().uploadProfilePhoto(_image.path, _sharepreferenceshelper.getUserUniqueKey());
     _userModel = UserModel.fromJson(_response.data);
     await _userDb.openUserDb();
     await _userDb.insert(_userModel);
