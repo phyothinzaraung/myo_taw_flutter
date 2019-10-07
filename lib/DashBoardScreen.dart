@@ -162,42 +162,44 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Container(
-        child: CustomScrollView(
-          slivers: <Widget>[
-            SliverList(
-            delegate: SliverChildListDelegate([
-              Container(
-                margin: EdgeInsets.only(top: 48.0, bottom: 20.0, left: 15.0, right: 15.0),
-                child: Column(
-                  children: <Widget>[
-                    Row(
-                      children: <Widget>[
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
-                              Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
-                            ],
+      body: SafeArea(
+        child: Container(
+          child: CustomScrollView(
+            slivers: <Widget>[
+              SliverList(
+              delegate: SliverChildListDelegate([
+                Container(
+                  margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: <Widget>[
+                          Expanded(
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                                Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
+                              ],
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              )
-            ])),
-            SliverGrid(
-                delegate: SliverChildBuilderDelegate((context, index){
-                  return _widget[index];
-                },childCount: _widget.length),
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200.0,
-                    crossAxisSpacing: 50.0,
-                    mainAxisSpacing: 10))
-          ],
-        )
+                        ],
+                      ),
+                    ],
+                  ),
+                )
+              ])),
+              SliverGrid(
+                  delegate: SliverChildBuilderDelegate((context, index){
+                    return _widget[index];
+                  },childCount: _widget.length),
+                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                      maxCrossAxisExtent: 200.0,
+                      crossAxisSpacing: 50.0,
+                      mainAxisSpacing: 10))
+            ],
+          )
+        ),
       )
     );
   }

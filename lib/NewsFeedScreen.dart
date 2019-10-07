@@ -356,7 +356,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   Widget _headerNewsFeedRefresh(){
     return Container(
-      margin: EdgeInsets.only(top: 48.0, bottom: 20.0, left: 15.0, right: 15.0),
+      margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
       child: Column(
         children: <Widget>[
           Row(
@@ -411,7 +411,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   Widget getNoConnectionWidget(){
     return Container(
-      margin: EdgeInsets.only(top: 48.0, bottom: 20.0, left: 15.0, right: 15.0),
+      margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
       child: Column(
         children: <Widget>[
           _headerNewsFeed(),
@@ -437,7 +437,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   Widget _renderLoad(){
     return Container(
-      margin: EdgeInsets.only(top: 48.0, bottom: 20.0, left: 15.0, right: 15.0),
+      margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
       child: Column(
         children: <Widget>[
           _headerNewsFeed(),
@@ -495,7 +495,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       )
     );
     return Scaffold(
-      body: _asyncLoader,
+      body: SafeArea(child: _asyncLoader),
     );
   }
 
