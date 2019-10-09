@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import 'MlmPropertyTaxCalculatorScreen.dart';
 import 'helper/MyoTawConstant.dart';
 import 'MlmBizTaxCalculatorScreen.dart';
+import 'TgyPropertyTaxCalculatorScreen.dart';
+import 'helper/SharePreferencesHelper.dart';
+import 'TgyBizTaxCalculatorScreen.dart';
 
 class CalculateTaxScreen extends StatefulWidget {
   @override
@@ -9,6 +12,19 @@ class CalculateTaxScreen extends StatefulWidget {
 }
 
 class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
+  Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    initSharePref();
+  }
+
+  initSharePref()async{
+    _sharepreferenceshelper.initSharePref();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -34,7 +50,16 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
                   flex: 1,
                   child: GestureDetector(
                     onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => MlmPropertyTaxCalculatorScreen()));
+
+                      switch (_sharepreferenceshelper.getRegionCode()){
+                        case MyString.TGY_REGIONCODE:
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => TgyPropertyTaxCalculatorScreen()));
+                          break;
+                        case MyString.MLM_REGIONCODE:
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => MlmPropertyTaxCalculatorScreen()));
+                          break;
+                      }
+
                     },
                     child: Container(
                       padding: EdgeInsets.all(15),
@@ -53,7 +78,14 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
                   flex: 1,
                   child: GestureDetector(
                     onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => MlmBizTaxCalculatorScreen()));
+                      switch (_sharepreferenceshelper.getRegionCode()){
+                        case MyString.TGY_REGIONCODE:
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => TgyBizTaxCalculatorScreen()));
+                          break;
+                        case MyString.MLM_REGIONCODE:
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => MlmBizTaxCalculatorScreen()));
+                          break;
+                      }
                     },
                     child: Container(
                       padding: EdgeInsets.all(15),
