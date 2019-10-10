@@ -58,6 +58,7 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
         itemBuilder: (context, i){
           return Column(
             children: <Widget>[
+              //header
               i==0?Container(
                 margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
                 child: Row(
@@ -79,10 +80,12 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+                        //text license type
                         Expanded(
                           child: Text(_bizLicenseModelList[i].licenseType,
                             style: TextStyle(fontSize: FontSize.textSizeExtraSmall),overflow: TextOverflow.ellipsis,maxLines: 2,),
                         ),
+                        //text valid image
                         Container(
                             margin: EdgeInsets.only(left: 15.0),
                             child: Image.asset(_bizLicenseModelList[i].isApplyAllow==true?'images/isvalid.png':'images/pending.png', width: 20.0, height: 20.0,))
@@ -93,11 +96,10 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
               )
             ],
           );
-
         });
   }
 
-  Widget getNoConnectionWidget(){
+  Widget _noConnectionWidget(){
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -154,7 +156,7 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
         key: asyncLoaderState,
         initState: () async => await _getAllBizLicense(),
         renderLoad: () => _renderLoad(),
-        renderError: ([error]) => getNoConnectionWidget(),
+        renderError: ([error]) => _noConnectionWidget(),
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
               onRefresh: _handleRefresh,

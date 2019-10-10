@@ -65,6 +65,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
             child: Stack(
               alignment: Alignment.bottomLeft,
               children: <Widget>[
+                //image
                 CachedNetworkImage(
                   imageUrl: i.photoUrl!=null?BaseUrl.DAO_PHOTO_URL+i.photoUrl:'',
                   imageBuilder: (context, image){
@@ -87,6 +88,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                     decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.6)
                     ),
+                    //text image title
                     child: Text('${NumConvertHelper().getMyanNumInt(index)}${'.'} ${_daoViewModel.daoModel.title}  ',
                       style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),)),
               ],
@@ -130,6 +132,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
+              //button manater
               RaisedButton(
                   onPressed: (){
                     setState(() {
@@ -146,6 +149,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                 color: _isManager?MyColor.colorPrimary:Colors.white,
                 elevation: 1.0,
                 padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 7.0, bottom: 7.0),),
+              //button engineer
               RaisedButton(
                 onPressed: (){
                   setState(() {
@@ -167,7 +171,6 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
         ],
       ),
     );
-
   }
 
   Widget _listView(){

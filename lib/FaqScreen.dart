@@ -23,14 +23,14 @@ class _FaqScreenState extends State<FaqScreen> {
   bool _isCon, _isLoading = false;
   var faqModelList;
   String _dropDownCategory = 'အားလုံး';
-  List<String> _categoList = new List<String>();
+  List<String> _categoryList = new List<String>();
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _categoList = [_dropDownCategory];
+    _categoryList = [_dropDownCategory];
   }
 
   _getAllFaq(String category)async{
@@ -44,7 +44,7 @@ class _FaqScreenState extends State<FaqScreen> {
         if(i != null){
           setState(() {
             //_categoryList.add(model);
-            _categoList.add(i);
+            _categoryList.add(i);
           });
         }
       }
@@ -103,17 +103,21 @@ class _FaqScreenState extends State<FaqScreen> {
                   child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
+                      //image question
                       Container(margin: EdgeInsets.only(right: 15.0),child: Image.asset('images/question_mark.png', width: 30.0, height: 30.0,)),
                       Expanded(
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                        Container(
-                            margin: EdgeInsets.only(bottom: 10.0),
-                            child: Text(_faqList[i].question, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                            Container(
+                              margin: EdgeInsets.only(bottom: 10.0),
+                                //text question
+                                child: Text(_faqList[i].question, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                            //text answer
                             _faqList[i].isVisible?Text(_faqList[i].answer, style: TextStyle(fontSize: FontSize.textSizeSmall),):
                                 Container(width: 0.0,height: 0.0,)
                       ],)),
+                      //image arrow
                       Container(
                         margin: EdgeInsets.only(left: 5.0),
                         child: RotatedBox(quarterTurns: _faqList[i].isVisible?6:0,
@@ -265,7 +269,7 @@ class _FaqScreenState extends State<FaqScreen> {
                             }
 
                           },
-                          items: _categoList.map<DropdownMenuItem<String>>((String str){
+                          items: _categoryList.map<DropdownMenuItem<String>>((String str){
                             return DropdownMenuItem<String>(
                               value: str,
                               child: Text(str),
@@ -274,7 +278,6 @@ class _FaqScreenState extends State<FaqScreen> {
                         ),
                       ),
                     ),)),
-              //Divider(color: MyColor.colorPrimary,height: 1.0,),
               Expanded(child: _listView())
             ],
           ),

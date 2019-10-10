@@ -39,7 +39,9 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
   void initState() {
     // TODO: implement initState
     super.initState();
-    _subjectList = [_dropDownSubject,'လမ်းပြင်၊ လမ်းပျက်','အမှိုက်','ရေမြောင်း','ရေကြီး၊ ရေလျှံ','မီးကြိုး','တိရိစ္ဆာန်အရေး','ရေပေးဝေရေး','အများပိုင်နေရာ','အခြား'];
+    _subjectList = [_dropDownSubject,];
+    _subjectList.addAll(MyArray.suggestion_subject);
+
     _location.serviceEnabled().then((isEnable){
       if(!isEnable){
         _location.requestService().then((value){
@@ -173,12 +175,6 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
         ),
       ),
     );
-  }
-
-  _getLatLng()async{
-    var location = await _location.getLocation();
-    _lat = location.latitude.toString();
-    _lng = location.longitude.toString();
   }
 
   _navigateToAdminLocationUpdateScreen()async{

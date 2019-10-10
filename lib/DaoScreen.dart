@@ -5,7 +5,6 @@ import 'package:dio/dio.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
-import 'model/DaoModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'model/DaoViewModel.dart';
 import 'DaoDetailScreen.dart';
@@ -76,7 +75,9 @@ class _DaoScreenState extends State<DaoScreen> {
                       margin: EdgeInsets.only(top: 7, bottom: 7),
                       child: Column(
                         children: <Widget>[
+                          //image dao
                           Flexible(flex: 2,child: Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[index].daoModel.icon,)),
+                          //text title
                           Flexible(flex: 1,child: Text(_daoViewModelList[index].daoModel.title,textAlign: TextAlign.center,
                             style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))],),),
                   );

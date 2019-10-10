@@ -22,7 +22,7 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
   }
 
   initSharePref()async{
-    _sharepreferenceshelper.initSharePref();
+    await _sharepreferenceshelper.initSharePref();
   }
 
   @override
@@ -37,6 +37,7 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
           children: <Widget>[
             Container(
               margin: EdgeInsets.only(bottom: 20),
+              //text header
               child: Row(
                 children: <Widget>[
                   Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/calculate_tax_no_circle.png', width: 30.0, height: 30.0,)),
@@ -65,9 +66,11 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
                       padding: EdgeInsets.all(15),
                       child: Column(
                         children: <Widget>[
+                          //image property tax
                           Container(
                               margin: EdgeInsets.only(bottom: 10),
                               child: Image.asset('images/tax.png')),
+                          //text property tax
                           Text(MyString.txt_property_tax, textAlign: TextAlign.center,style: TextStyle(fontSize: FontSize.textSizeNormal))
                         ],
                       ),
@@ -91,9 +94,11 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
                       padding: EdgeInsets.all(15),
                       child: Column(
                         children: <Widget>[
+                          //image biz license tax
                           Container(
                               margin: EdgeInsets.only(bottom: 10),
                               child: Image.asset('images/business_license.png')),
+                          //text biz license tax
                           Text(MyString.txt_biz_tax, textAlign: TextAlign.center,style: TextStyle(fontSize: FontSize.textSizeNormal),)
                         ],
                       ),

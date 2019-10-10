@@ -37,6 +37,19 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
     addPhoto();
   }
 
+  initNewsFeedData(){
+    setState(() {
+      _title = _newsFeedModel.title;
+      _photo = _newsFeedModel.photoUrl;
+      _date = showDateTime(_newsFeedModel.accesstime);
+      _body = _newsFeedModel.body;
+      _photoList = _newsFeedModel.photoList;
+      _type = _newsFeedModel.uploadType=='Photo'?'Photo':'Video';
+      _thumbNail = _newsFeedModel.thumbNail;
+      _videoUrl = _newsFeedModel.videoUrl;
+    });
+  }
+
   void addPhoto(){
     if(_photoList.isNotEmpty){
       var photoModelList = _photoList.map((i) => NewsFeedPhotoModel.fromJson(i));
@@ -78,19 +91,6 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
               ),));
       }
     }
-  }
-
-  initNewsFeedData(){
-    setState(() {
-      _title = _newsFeedModel.title;
-      _photo = _newsFeedModel.photoUrl;
-      _date = showDateTime(_newsFeedModel.accesstime);
-      _body = _newsFeedModel.body;
-      _photoList = _newsFeedModel.photoList;
-      _type = _newsFeedModel.uploadType=='Photo'?'Photo':'Video';
-      _thumbNail = _newsFeedModel.thumbNail;
-      _videoUrl = _newsFeedModel.videoUrl;
-    });
   }
 
   Widget _isPhotoOrvideo(){

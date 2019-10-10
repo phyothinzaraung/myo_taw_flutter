@@ -28,6 +28,7 @@ class _BizLicenseDetailScreenState extends State<BizLicenseDetailScreen> {
               children: <Widget>[
                 Container(
                   margin: EdgeInsets.only(top: 15.0,left: 30.0, right: 30.0, bottom: 15.0),
+                  //header
                   child: Row(
                     children: <Widget>[
                       Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/business_license_nocircle.png', width: 30.0, height: 30.0,)),
@@ -38,6 +39,7 @@ class _BizLicenseDetailScreenState extends State<BizLicenseDetailScreen> {
                 Card(
                   margin: EdgeInsets.all(0.0),
                   elevation: 0.0,
+                  //text requirements
                   child: Container(
                       padding: EdgeInsets.all(30.0),
                       child: Html(data: _bizLicenseModel.requirements,)),

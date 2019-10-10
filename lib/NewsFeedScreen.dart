@@ -51,36 +51,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     // TODO: implement initState
     super.initState();
     _checkCon();
-    
   }
 
-  _getUser()async{
-    await _sharepreferenceshelper.initSharePref();
-    _userUniqueKey = _sharepreferenceshelper.getUserUniqueKey();
-    await _userDb.openUserDb();
-    var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    await _userDb.closeUserDb();
-    setState(() {
-      _userModel = model;
-    });
-    _initHeaderTitle();
-    await _getNewsFeed(page);
-  }
-
-  _initHeaderTitle(){
-    _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
-    switch(_userModel.currentRegionCode){
-      case MyString.TGY_REGIONCODE:
-        _city = MyString.TGY_CITY;
-        _organizationId = OrganizationId.TGY_ORGANIZATION_ID;
-        break;
-      case MyString.MLM_REGIONCODE:
-        _city = MyString.MLM_CITY;
-        _organizationId = OrganizationId.MLM_ORGANIZATION_ID;
-        break;
-      default:
-    }
-  }
 
   _checkCon()async{
     var conResult = await(Connectivity().checkConnectivity());
@@ -89,36 +61,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     }else{
       _isCon = true;
     }
-    //print('isCon : ${_isCon}');
   }
-
-  _getNewsFeed(int p) async{
-    response = await ServiceHelper().getNewsFeed(_organizationId, p, pageCount, _userModel.uniqueKey);
-    var result = response.data['Results'];
-    print('loadmore: ${p}');
-    if(result != null){
-      for(var i in result){
-        _newsFeedReactModel.add(NewsFeedReactModel.fromJson(i));
-      }
-      //prevent set state is called after NewsFeedScreen is disposed
-      setState(() {
-        _isEnd = false;
-      });
-    }else{
-      setState(() {
-        _isEnd = true;
-      });
-    }
-    print('isEnd: ${_isEnd}');
-  }
-
-  /*bool _isLike(String reactType){
-    if(reactType != null){
-      return true;
-    }else{
-      return false;
-    }
-  }*/
 
   String photoOrThumbNail(String photo, String thumbNail, bool isPhoto){
     String url = '';
@@ -155,6 +98,99 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     return parsedString;
   }
 
+  void _saveNewsFeed(NewsFeedModel model)async{
+    await _saveNewsFeedDb.openSaveNfDb();
+    _saveNewsFeedModel.id = model.uniqueKey;
+    _saveNewsFeedModel.title = model.title;
+    _saveNewsFeedModel.body = model.body;
+    _saveNewsFeedModel.photoUrl = model.photoUrl;
+    _saveNewsFeedModel.videoUrl = model.videoUrl;
+    _saveNewsFeedModel.thumbNail = model.thumbNail;
+    _saveNewsFeedModel.contentType = model.uploadType;
+    _saveNewsFeedModel.accessTime = DateTime.now().toString();
+    await _saveNewsFeedDb.insert(_saveNewsFeedModel);
+    await _saveNewsFeedDb.closeSaveNfDb();
+    Fluttertoast.showToast(msg: 'Save Successful', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+  }
+
+  void _callLikeWebService(String newsFeedId)async{
+    response = await ServiceHelper().likeReact(_userUniqueKey, newsFeedId, 'like');
+    print('responseLike: ${response}');
+  }
+
+  //api request function----------------------------------------------------------------------------------------------
+  _getUser()async{
+    await _sharepreferenceshelper.initSharePref();
+    _userUniqueKey = _sharepreferenceshelper.getUserUniqueKey();
+    await _userDb.openUserDb();
+    var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
+    await _userDb.closeUserDb();
+    setState(() {
+      _userModel = model;
+    });
+    _initHeaderTitle();
+    await _getNewsFeed(page);
+  }
+
+  _getNewsFeed(int p) async{
+    response = await ServiceHelper().getNewsFeed(_organizationId, p, pageCount, _userModel.uniqueKey);
+    var result = response.data['Results'];
+    print('loadmore: ${p}');
+    if(result != null){
+      for(var i in result){
+        _newsFeedReactModel.add(NewsFeedReactModel.fromJson(i));
+      }
+      //prevent set state is called after NewsFeedScreen is disposed
+      setState(() {
+        _isEnd = false;
+      });
+    }else{
+      setState(() {
+        _isEnd = true;
+      });
+    }
+    print('isEnd: ${_isEnd}');
+  }
+
+  Future<bool> _loadMore() async {
+    await _checkCon();
+    if(_isCon){
+      page++;
+      await _getNewsFeed(page);
+    }
+    return _isCon;
+  }
+
+  Future<Null> _handleRefresh() async {
+    await _checkCon();
+    if(_isCon){
+      _newsFeedReactModel.clear();
+      page = 0;
+      page++;
+      _getUser();
+      //await _getNewsFeed(page);
+    }else{
+      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
+    }
+    return null;
+  }
+
+  //widget----------------------------------------------------------------------------------------------------------------------
+  _initHeaderTitle(){
+    _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
+    switch(_userModel.currentRegionCode){
+      case MyString.TGY_REGIONCODE:
+        _city = MyString.TGY_CITY;
+        _organizationId = OrganizationId.TGY_ORGANIZATION_ID;
+        break;
+      case MyString.MLM_REGIONCODE:
+        _city = MyString.MLM_CITY;
+        _organizationId = OrganizationId.MLM_ORGANIZATION_ID;
+        break;
+      default:
+    }
+  }
+
 
   Widget _newsFeedList(int i){
     NewsFeedModel newsFeedModel = _newsFeedReactModel[i].newsFeedModel;
@@ -163,7 +199,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     String title = newsFeedModel.title;
     String body = newsFeedModel.body;
     String date = showDateTime(newsFeedModel.accesstime);
-    //bool isLike = _isLike(_newsFeedReactModel[i].reactType);
     bool isPhoto = _isPhoto(newsFeedModel.uploadType);
 
     return Card(
@@ -183,9 +218,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       padding: EdgeInsets.only(left: 10, right: 10, top: 20),
                       child: Row(
                         children: <Widget>[
+                          //image calendar
                           Container(
                               margin: EdgeInsets.only(right: 10),
                               child: Image.asset("images/calendar.png", width: 15, height: 15,)),
+                          //calendar date
                           Text(date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)
                         ],
                       ),
@@ -195,6 +232,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       margin: EdgeInsets.only(bottom: 5.0),
                       child: Row(mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
+                          //title
                           Expanded(child: Text(title!=null?title:'---',
                             style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack), maxLines: 1, overflow: TextOverflow.ellipsis,))
                         ],),
@@ -203,6 +241,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       child: Stack(
                         alignment: Alignment.bottomLeft,
                         children: <Widget>[
+                          //newsfeed image
                           CachedNetworkImage(
                             imageUrl: photoOrThumbNail(newsFeedPhoto, newsFeedThumbNail, isPhoto),
                             imageBuilder: (context, image){
@@ -219,24 +258,18 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                               child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 150.0,)),
                             errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
                           ),
-                          /*Container(
-                              padding: EdgeInsets.only(left: 10.0, right: 10.0, top: 5.0, bottom: 5.0),
-                              decoration: BoxDecoration(
-                                  borderRadius: BorderRadius.only(topRight: Radius.circular(10.0)),
-                                  color: Colors.black.withOpacity(0.6)
-                              ),
-                              child: Text(date, style: TextStyle(color: Colors.white),)),*/
                         ],
                       ),
+                    ),
+                    Container(
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                      //newsfeed body
+                      child: Text(_parseHtmlString(body), maxLines: 2, overflow: TextOverflow.ellipsis,
+                        style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
                     ),
                   ],
                 ),
               ),
-            ),
-            Container(
-              padding: EdgeInsets.only(left: 10, right: 10, top: 10),
-              child: Text(_parseHtmlString(body), maxLines: 2, overflow: TextOverflow.ellipsis,
-                style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
             ),
             Row(
               children: <Widget>[
@@ -248,6 +281,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       borderRadius: BorderRadius.circular(20),
                       color: MyColor.colorPrimary
                   ),
+                  //like count
                   child: Text('${newsFeedModel.likeCount} ${newsFeedModel.likeCount > 1? 'Likes':'Like'}',
                     style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),),
                 ),
@@ -257,6 +291,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               padding: EdgeInsets.only(left: 40, right: 40, top: 20, bottom: 20),
               child: Row(
                 children: <Widget>[
+                  //like button
                   GestureDetector(
                     onTap: (){
                       //print('like: ${isLike}');
@@ -283,10 +318,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       ],
                     ),
                   ),
+                  //save newsfeed button
                   Expanded(child: GestureDetector(onTap: (){
                     _saveNewsFeed(newsFeedModel);
 
-                  },
+                    },
                     child: Row(mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         Container(
@@ -303,26 +339,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
         ),
       ),
     );
-  }
-
-  void _saveNewsFeed(NewsFeedModel model)async{
-    await _saveNewsFeedDb.openSaveNfDb();
-    _saveNewsFeedModel.id = model.uniqueKey;
-    _saveNewsFeedModel.title = model.title;
-    _saveNewsFeedModel.body = model.body;
-    _saveNewsFeedModel.photoUrl = model.photoUrl;
-    _saveNewsFeedModel.videoUrl = model.videoUrl;
-    _saveNewsFeedModel.thumbNail = model.thumbNail;
-    _saveNewsFeedModel.contentType = model.uploadType;
-    _saveNewsFeedModel.accessTime = DateTime.now().toString();
-    await _saveNewsFeedDb.insert(_saveNewsFeedModel);
-    await _saveNewsFeedDb.closeSaveNfDb();
-    Fluttertoast.showToast(msg: 'Save Successful', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
-  }
-
-  void _callLikeWebService(String newsFeedId)async{
-    response = await ServiceHelper().likeReact(_userUniqueKey, newsFeedId, 'like');
-    print('responseLike: ${response}');
   }
 
   Widget _headerNewsFeed(){
@@ -422,8 +438,10 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 children: <Widget>[
                   Text('No Internet Connection'),
                   FlatButton(onPressed: (){
+
                     asyncLoaderState.currentState.reloadState();
                     _checkCon();
+
                     }
                     , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
                 ],
@@ -447,29 +465,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
         ],
       ),
     );
-  }
-
-  Future<bool> _loadMore() async {
-    await _checkCon();
-    if(_isCon){
-      page++;
-      await _getNewsFeed(page);
-    }
-    return _isCon;
-  }
-
-  Future<Null> _handleRefresh() async {
-    await _checkCon();
-   if(_isCon){
-     _newsFeedReactModel.clear();
-     page = 0;
-     page++;
-     _getUser();
-     //await _getNewsFeed(page);
-   }else{
-     Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
-   }
-    return null;
   }
 
 

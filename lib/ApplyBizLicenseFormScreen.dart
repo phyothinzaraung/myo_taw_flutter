@@ -5,7 +5,6 @@ import 'model/BizLicenseModel.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/LocationDb.dart';
 import 'model/ApplyBizLicenseModel.dart';
-import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
 import 'package:fluttertoast/fluttertoast.dart';

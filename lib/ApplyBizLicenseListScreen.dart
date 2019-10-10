@@ -39,7 +39,7 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
   }
 
   _getAllApplyBizLicense()async{
-    await _sharepreferenceshelper.initSharePref();
+     await _sharepreferenceshelper.initSharePref();
     _response = await ServiceHelper().getAllApplyBizLicenseByUser(_sharepreferenceshelper.getRegionCode(), _sharepreferenceshelper.getUserUniqueKey());
     if(_response.data != null){
       var applyBizLicenseList = _response.data;
@@ -57,6 +57,7 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
         itemBuilder: (context, i){
           return Column(
             children: <Widget>[
+              //header
               i==0?Container(
                 margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
                 child: Row(
@@ -78,6 +79,7 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
                     child: Row(
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: <Widget>[
+                        //image valid
                         Container(
                             margin: EdgeInsets.only(right: 15.0),
                             child: Image.asset(_applyBizLicenseModelList[i].isValid==true?'images/isvalid.png':'images/pending.png', width: 20.0, height: 20.0,)),
@@ -85,13 +87,16 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
-                              Text(_applyBizLicenseModelList[i].bizName.isNotEmpty? _applyBizLicenseModelList[i].bizName:'-----',
+                              //biz name
+                              Text(_applyBizLicenseModelList[i].bizName.isNotEmpty? _applyBizLicenseModelList[i].bizName:'---',
                                 style: TextStyle(fontSize: FontSize.textSizeExtraSmall),overflow: TextOverflow.ellipsis,maxLines: 1,),
+                              //license type
                               Text(_applyBizLicenseModelList[i].licenseType,
                                 style: TextStyle(fontSize: FontSize.textSizeExtraSmall),overflow: TextOverflow.ellipsis,maxLines: 1,)
                             ],
                           ),
                         ),
+                        //image arrow
                         Image.asset('images/arrow.png',width: 15.0, height: 15.0,)
                       ],
                     ),
@@ -100,11 +105,10 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
               )
             ],
           );
-
         });
   }
 
-  Widget getNoConnectionWidget(){
+  Widget _noConnectionWidget(){
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -160,7 +164,7 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
         key: asyncLoaderState,
         initState: () async => await _getAllApplyBizLicense(),
         renderLoad: () => _renderLoad(),
-        renderError: ([error]) => getNoConnectionWidget(),
+        renderError: ([error]) => _noConnectionWidget(),
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
               onRefresh: _handleRefresh,

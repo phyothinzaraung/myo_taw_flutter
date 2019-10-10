@@ -48,6 +48,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
             child: Stack(
               alignment: Alignment.bottomLeft,
               children: <Widget>[
+                //image
                 CachedNetworkImage(
                   imageUrl: i.photoUrl!=null?BaseUrl.DAO_PHOTO_URL+i.photoUrl:'',
                   imageBuilder: (context, image){
@@ -70,6 +71,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
                     decoration: BoxDecoration(
                         color: Colors.black.withOpacity(0.6)
                     ),
+                    //text image title
                     child: Text('${NumConvertHelper().getMyanNumInt(index)}${'.'} ${_daoViewModel.daoModel.title}  ',
                       style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),)),
               ],
@@ -103,6 +105,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
               });
             },),
           Container(
+            //slide indicator
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -122,6 +125,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
         ],
       )
     ) :
+        //photo list is empty
     Center(
       child: Container(
         color: MyColor.colorGrey,
@@ -155,6 +159,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
                   Column(
                     children: <Widget>[
                       _imageView(),
+                      //text body
                       Container(
                         color: Colors.white,
                         padding: EdgeInsets.all(30.0),

@@ -94,7 +94,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
     );
   }
 
-  Widget getNoConnectionWidget(){
+  Widget _noConnectionWidget(){
     return Container(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -156,7 +156,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
     });
   }
 
-  Widget modalProgressIndicator(){
+  Widget _modalProgressIndicator(){
     return Center(
       child: Card(
         child: Container(
@@ -181,7 +181,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
         key: asyncLoaderState,
         initState: () async => await _getAllBizLicense(),
         renderLoad: () => _renderLoad(),
-        renderError: ([error]) => getNoConnectionWidget(),
+        renderError: ([error]) => _noConnectionWidget(),
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
               onRefresh: _handleRefresh,
@@ -266,7 +266,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
       appBar: AppBar(
         title: Text(MyString.txt_apply_biz_license_photo, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
-      body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: modalProgressIndicator(),child: _asyncLoader),
+      body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: _modalProgressIndicator(),child: _asyncLoader),
     );
   }
 }
