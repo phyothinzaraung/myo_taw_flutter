@@ -181,7 +181,6 @@ class _PinCodeSetUpScreenState extends State<PinCodeSetUpScreen> {
                       ),
                     ),
                   )
-
                 ],
               ),
             ),

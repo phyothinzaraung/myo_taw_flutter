@@ -1,7 +1,7 @@
 import 'package:intl/intl.dart';
 
 //created by YYW
-String showDateTime(String date){
+String showDateTimeDifference(String date){
   var list = date.split('.');
   var dateTime = DateTime.parse(list[0]);
   var timeDiff = DateTime.now().difference(dateTime);
@@ -29,4 +29,14 @@ String showDateTime(String date){
     //print(('datetime: ${timeDiff} ${dateFormat} days'));
   }
   return dateFormat.toString();
+}
+
+String showDateTimeFromServer(String date){
+  var list = date.split('.');
+  var dateTime = DateTime.parse(list[0]);
+  var timeDiff = DateTime.now().difference(dateTime);
+  var dateList = date.split('T');
+  var dateFormat;
+  dateFormat = DateFormat('dd MMMM yyyy').format(DateTime.parse(dateList[0])).toString();
+  return dateFormat;
 }

@@ -41,7 +41,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
     setState(() {
       _title = _newsFeedModel.title;
       _photo = _newsFeedModel.photoUrl;
-      _date = showDateTime(_newsFeedModel.accesstime);
+      _date = showDateTimeDifference(_newsFeedModel.accesstime);
       _body = _newsFeedModel.body;
       _photoList = _newsFeedModel.photoList;
       _type = _newsFeedModel.uploadType=='Photo'?'Photo':'Video';

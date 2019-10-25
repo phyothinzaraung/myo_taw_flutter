@@ -137,6 +137,11 @@ flutter:
     - images/calculate_tax_no_circle.png
     - images/tax.png
     - images/tax_nocircle.png
+    - images/smart_water_meter.png
+    - images/money.png
+    - images/refresh.png
+    - images/pin_lock.png
+    - images/close.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

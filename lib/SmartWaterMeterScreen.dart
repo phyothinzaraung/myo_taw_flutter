@@ -1,8 +1,9 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/model/SmartWaterMeterUnitModel.dart';
 import 'helper/MyoTawConstant.dart';
-import 'model/UserBillAmountViewModel.dart';
+import 'model/SmartWaterMeterUnitModel.dart';
 import 'package:dio/dio.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:async_loader/async_loader.dart';
@@ -14,23 +15,25 @@ import 'model/UserModel.dart';
 import 'TopUpScreen.dart';
 import 'PinCodeSetUpScreen.dart';
 import 'PaymentScreen.dart';
+import 'model/SmartWaterMeterLogModel.dart';
+import 'helper/ShowDateTimeHelper.dart';
 
-class OnlineTaxScreen extends StatefulWidget {
+class SmartWaterMeterScreen extends StatefulWidget {
   @override
-  _OnlineTaxScreenState createState() => _OnlineTaxScreenState();
+  _SmartWaterMeterScreenState createState() => _SmartWaterMeterScreenState();
 }
 
-class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
+class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   bool _isCon;
-  Response _response;
-  int _amount = 0;
-  String _name;
+  Response _responseWaterMeterUnit, _responseWaterMeterLog;
+  int _amount,_finalUnit = 0;
+  String _name, _meterNo;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
-  UserBillAmountViewModel _amountViewModel;
+  SmartWaterMeterUnitModel _smartWaterMeterUnitModel;
   UserDb _userDb = UserDb();
   UserModel _userModel;
-  List<PaymentLogModel> _paymentLogList = new List<PaymentLogModel>();
+  List<SmartWaterMeterLogModel> _smartWaterMeterLogList = new List<SmartWaterMeterLogModel>();
   bool _isRefresh = false;
 
   @override
@@ -49,43 +52,24 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
     print('isCon : ${_isCon}');
   }
 
-  _getUserBillAmount()async{
+  _getWaterMeterUnit()async{
     await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().getUserBillAmount(_sharepreferenceshelper.getUserUniqueKey());
-    _amountViewModel = UserBillAmountViewModel.fromJson(_response.data);
-    if(_amountViewModel != null){
-    _name = _amountViewModel.name;
-    _amount = _amountViewModel.totalAmount;
-    var list = _response.data['Log'];
-    for(var i in list){
-      setState(() {
-        _paymentLogList.add(PaymentLogModel.fromJson(i));
-      });
-    }
+    _responseWaterMeterUnit = await ServiceHelper().getSmartWaterMeterUnit(_sharepreferenceshelper.getUserPhoneNo());
+    if(_responseWaterMeterUnit.data != null){
+      _smartWaterMeterUnitModel = SmartWaterMeterUnitModel.fromJson(_responseWaterMeterUnit.data);
+      _meterNo = _smartWaterMeterUnitModel.meterNo;
+      _finalUnit = _smartWaterMeterUnitModel.finalUnit;
     }
   }
 
-  String _taxType(String str){
-    switch(str){
-      case MyString.PROPERTY_TAX:
-        return MyString.MYAN_PROPERTY_TAX;
-        break;
-      case MyString.BIZ_LICENSE:
-        return MyString.MYAN_BIZ_LICENSE;
-        break;
-      case MyString.WATER_METER:
-        return MyString.MYAN_WATER_METER;
-        break;
-      case MyString.MARKET_TAX:
-        return MyString.MYAN_MARKET_TAX;
-        break;
-      case MyString.WHEEL_TAX:
-        return MyString.MYAN_WHEEL_TAX;
-        break;
-      case MyString.SIGNBOARD_TAX:
-        return MyString.MYAN_SIGNBOARD_TAX;
-        break;
-      default:
+  _getSmartWaterMeterLog()async{
+    _responseWaterMeterLog = await ServiceHelper().getSmartWaterMeterLog(_sharepreferenceshelper.getUserPhoneNo());
+    _amount = _responseWaterMeterLog.data['Amount'];
+     var list = _responseWaterMeterLog.data['Log'];
+    for(var i in list){
+      setState(() {
+        _smartWaterMeterLogList.add(SmartWaterMeterLogModel.fromJson(i));
+      });
     }
   }
 
@@ -97,7 +81,11 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
     setState(() {
       _userModel = model;
     });
-    await _getUserBillAmount();
+    _name = _userModel.name;
+    await _getWaterMeterUnit();
+    if(_responseWaterMeterUnit.data != null){
+      await _getSmartWaterMeterLog();
+    }
     setState(() {
       _isRefresh = false;
     });
@@ -117,13 +105,6 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
     }
   }
 
-  _navigateToPaymentScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => PaymentScreen()));
-    if(result != null && result.containsKey('isNeedRefresh') == true){
-      _handleRefresh();
-    }
-  }
-
   Widget _header(){
     return Container(
       child: Column(
@@ -135,13 +116,13 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                 Container(
                     margin: EdgeInsets.only(right: 10.0),
                     child: Image.asset('images/online_tax_no_circle.png', width: 30.0, height: 30.0,)),
-                Text(MyString.txt_online_tax, style: TextStyle(fontSize: FontSize.textSizeSmall),)
+                Text(MyString.txt_smart_water_meter, style: TextStyle(fontSize: FontSize.textSizeSmall),)
               ],
             ),
           ),
           Container(
             width: double.maxFinite,
-            height: 370.0,
+            height: 520.0,
             child: Card(
               margin: EdgeInsets.only(left: 20.0, right: 20.0, bottom: 20.0),
               color: MyColor.colorPrimary,
@@ -183,42 +164,51 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                         ],
                       ),
                     ),
-                    Expanded(
+                    Container(
+                      margin: EdgeInsets.only(bottom: 10),
+                        child: Text(MyString.txt_water_meter_unit, style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.white),)),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 20),
+                      child: Text(_finalUnit.toString(),
+                        style: TextStyle(fontSize: FontSize.textSizeLarge, color: Colors.white),),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 10),
+                      child: Divider(
+                        height: 1,
+                        color: Colors.white,
+                        thickness: 1.5,
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(bottom: 30),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
                           Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(right: 2.5),
-                              height: 45.0,
-                              child: RaisedButton(onPressed: ()async{
-                                if(_userModel.pinCode != null){
-                                  _navigateToTopUpScreen();
-                                }else{
-                                  _navigateToPinCodeSetUpScreen();
-                                }
-                                }, child: Text(MyString.txt_top_up, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                                color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
-                            ),
+                            child: Text(MyString.txt_water_meter_no,
+                              style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.white),),
                           ),
                           Expanded(
-                            child: Container(
-                              margin: EdgeInsets.only(left: 2.5),
-                              height: 45.0,
-                              child: RaisedButton(onPressed: ()async{
-                                if(_userModel.pinCode != null){
-                                  _navigateToPaymentScreen();
-                                }else{
-                                  _navigateToPinCodeSetUpScreen();
-                                }
-
-                                }, child: Text(MyString.txt_pay_tax, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                                color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
-                            ),
+                            child: Text(_meterNo,
+                              style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.white),),
                           ),
                         ],
                       ),
-                    )
-
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(right: 2.5),
+                      height: 45.0,
+                      width: double.maxFinite,
+                      child: RaisedButton(onPressed: ()async{
+                        if(_userModel.pinCode != 0){
+                          _navigateToTopUpScreen();
+                        }else{
+                          _navigateToPinCodeSetUpScreen();
+                        }
+                        }, child: Text(MyString.txt_top_up, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                        color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+                    ),
                   ],
                 ),
               ),
@@ -232,7 +222,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
 
   _listView(){
     return ListView.builder(
-        itemCount: _paymentLogList.length,
+        itemCount: _smartWaterMeterLogList.length,
         itemBuilder: (context, index){
           return Column(children: <Widget>[
             index == 0? _header() : Container(),
@@ -251,14 +241,20 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                           children: <Widget>[
                             Row(
                               children: <Widget>[
-                                Expanded(child: Text(MyString.txt_tax_type, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                Expanded(child: Text(_taxType(_paymentLogList[index].taxType), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
+                                Expanded(child: Text(MyString.txt_smart_wm_date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                                Expanded(child: Text(showDateTimeFromServer(_smartWaterMeterLogList[index].date), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
                               ],
                             ),
                             Row(
                               children: <Widget>[
-                                Expanded(child: Text(MyString.txt_tax_bill_amount, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                Expanded(child: Text(NumConvertHelper().getMyanNumInt(_paymentLogList[index].useAmount)+'  '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
+                                Expanded(child: Text(MyString.txt_smart_wm_unit, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                                Expanded(child: Text(_smartWaterMeterLogList[index].unit.toString(), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
+                              ],
+                            ),
+                            Row(
+                              children: <Widget>[
+                                Expanded(child: Text(MyString.txt_smart_wm_amount, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                                Expanded(child: Text(_smartWaterMeterLogList[index].amount.toString()+'  '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
                               ],
                             )
                           ],
@@ -316,7 +312,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
     });
     if(_isCon){
       setState(() {
-        _paymentLogList.clear();
+        _smartWaterMeterLogList.clear();
       });
       _getUser();
     }else{
@@ -335,19 +331,29 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
               onRefresh: _handleRefresh,
-              child: _isRefresh == false?_paymentLogList.isNotEmpty?_listView() :
+              child: _responseWaterMeterUnit.data!=null?_isRefresh == false?_smartWaterMeterLogList.isNotEmpty?_listView() :
                   ListView(children: <Widget>[_header()],) :
               Container(
                 margin: EdgeInsets.only(top: 10.0),
                 child: Row(mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[CircularProgressIndicator()],),
-              )
+              ) : Container(
+                padding: EdgeInsets.all(10),
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(bottom: 20),
+                          child: Image.asset('images/warning.png', width: 70, height: 70,)),
+                      Text(MyString.txt_smart_wm_not_register, style: TextStyle(fontSize: FontSize.textSizeNormal,),textAlign: TextAlign.center,)
+                ],
+              ))
           ),
         )
     );
     return Scaffold(
       appBar: AppBar(
-        title: Text(MyString.txt_online_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
+        title: Text(MyString.txt_smart_water_meter, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
       body: _asyncLoader,
     );

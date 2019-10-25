@@ -16,6 +16,8 @@ import 'TaxUseScreen.dart';
 import 'OnlineTaxScreen.dart';
 import 'ReferralScreen.dart';
 import 'CalculateTaxScreen.dart';
+import 'OnlineTaxChooseScreen.dart';
+
 class DashBoardScreen extends StatefulWidget {
   @override
   _DashBoardScreenState createState() => _DashBoardScreenState();
@@ -127,7 +129,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseScreen()));
               break;
             case MyString.txt_online_tax:
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineTaxScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineTaxChooseScreen(_userModel)));
               break;
             case MyString.txt_tax_use:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => TaxUserScreen()));

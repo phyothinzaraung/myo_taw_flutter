@@ -179,6 +179,16 @@ class MyString{
   static const String txt_choose_license_type = "လိုင်စင်အမျိုးအစားရွေးပါ";
   static const String txt_site_area = "အဆောက်အဦး (အလျား × အနံ)";
   static const String txt_choose_grade = "အတန်းအစား";
+  static const String title_smart_water_meter = "Smart ရေမီတာမှ \n အခွန်ဆောင်ခြင်း";
+  static const String txt_smart_water_meter = "Smart ရေမီတာမှ အခွန်ဆောင်ခြင်း";
+  static const String title_online_tax_payment = "အွန်လိုင်းမှ \n အခွန်ဆောင်ခြင်း";
+  static const String txt_water_meter_unit = "သုံးစွဲယူနစ်";
+  static const String txt_water_meter_no = "ရေမီတာနံပါတ်";
+  static const String txt_smart_wm_date = "ရက်စွဲ";
+  static const String txt_smart_wm_unit = "ယူနစ်";
+  static const String txt_smart_wm_amount = "ကျသင့်ငွေ";
+  static const String txt_smart_wm_not_register = "သင့်သည် Smart ရေမီတာအတွက် စာရင်းသွင်းထားခြင်းမရှိပါ";
+  static const String txt_fill_pin_code = "ပင်ကုဒ်ရိုက်ထည့်ပေးပါ";
 
   static const String BUILDING_GRADE_A = "building grade A";
   static const String BUILDING_GRADE_B = "building grade B";
