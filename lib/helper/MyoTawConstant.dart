@@ -187,7 +187,7 @@ class MyString{
   static const String txt_smart_wm_date = "ရက်စွဲ";
   static const String txt_smart_wm_unit = "ယူနစ်";
   static const String txt_smart_wm_amount = "ကျသင့်ငွေ";
-  static const String txt_smart_wm_not_register = "သင့်သည် Smart ရေမီတာအတွက် စာရင်းသွင်းထားခြင်းမရှိပါ";
+  static const String txt_smart_wm_not_register = "သင်သည် Smart ရေမီတာအတွက် စာရင်းသွင်းထားခြင်းမရှိပါ";
   static const String txt_fill_pin_code = "ပင်ကုဒ်ရိုက်ထည့်ပေးပါ";
 
   static const String BUILDING_GRADE_A = "building grade A";
