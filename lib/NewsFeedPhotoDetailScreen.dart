@@ -3,12 +3,12 @@ import 'helper/MyoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'Model/NewsFeedPhotoModel.dart';
 
-class NewsFeedPhotoDetail extends StatelessWidget {
+class NewsFeedPhotoDetailScreen extends StatelessWidget {
   List _photoList = new List();
   String _photoUrl;
   PageController _pageController = new PageController(initialPage: 0);
   List<Widget> _photoWidget = new List();
-  NewsFeedPhotoDetail(this._photoList,this._photoUrl);
+  NewsFeedPhotoDetailScreen(this._photoList,this._photoUrl);
 
   void addPhoto(){
     var photoModelList = _photoList.map((i) => NewsFeedPhotoModel.fromJson(i));

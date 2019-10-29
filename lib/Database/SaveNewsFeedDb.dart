@@ -81,7 +81,7 @@ class SaveNewsFeedDb{
   }
 
 
-  Future<int> deleteSavedNewsFeedById(String uniqueKey) async {
+  Future<void> deleteSavedNewsFeedById(String uniqueKey) async {
     await _database.delete(DbHelper.TABLE_NAME_SAVE_NEWS_FEED, where: '${DbHelper.COLUMN_SAVE_NF_ID} = ?', whereArgs: [uniqueKey]);
   }
 

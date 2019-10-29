@@ -6,7 +6,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'helper/ShowDateTimeHelper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'Model/NewsFeedPhotoModel.dart';
-import 'NewsFeedPhotoDetail.dart';
+import 'NewsFeedPhotoDetailScreen.dart';
 import 'helper/NumConvertHelper.dart';
 import 'NewsFeedVideoScreen.dart';
 import 'helper/ShowDateTimeHelper.dart';
@@ -58,7 +58,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         _photoWidget.add(
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetail(_photoList, null)));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen(_photoList, null)));
               },
               child: Stack(
                 alignment: Alignment.bottomLeft,
@@ -135,7 +135,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
           :
       GestureDetector(
         onTap: (){
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetail([], _photo)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen([], _photo)));
         },
         child: CachedNetworkImage(
           width: double.maxFinite,

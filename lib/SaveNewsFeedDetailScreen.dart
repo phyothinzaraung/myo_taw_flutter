@@ -3,7 +3,7 @@ import 'package:flutter_html/flutter_html.dart';
 import 'model/SaveNewsFeedModel.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/ShowDateTimeHelper.dart';
-import 'NewsFeedPhotoDetail.dart';
+import 'NewsFeedPhotoDetailScreen.dart';
 import 'NewsFeedVideoScreen.dart';
 
 class SaveNewsFeedDetailScreen extends StatefulWidget {
@@ -31,7 +31,7 @@ class _SaveNewsFeedDetailScreenState extends State<SaveNewsFeedDetailScreen> {
                 _saveNewsFeedModel.contentType==MyString.NEWS_FEED_CONTENT_TYPE_PHOTO?
                 _saveNewsFeedModel.photoUrl!=null?GestureDetector(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetail([], _saveNewsFeedModel.photoUrl)));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen([], _saveNewsFeedModel.photoUrl)));
                   },
                   child: Image.network(BaseUrl.NEWS_FEED_CONTENT_URL+_saveNewsFeedModel.photoUrl,
                     width: double.maxFinite, height: 180.0, fit: BoxFit.cover,),
