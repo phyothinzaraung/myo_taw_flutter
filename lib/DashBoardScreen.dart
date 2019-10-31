@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
 import 'package:myotaw/ProfileScreen.dart';
@@ -17,6 +18,7 @@ import 'OnlineTaxScreen.dart';
 import 'ReferralScreen.dart';
 import 'CalculateTaxScreen.dart';
 import 'OnlineTaxChooseScreen.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class DashBoardScreen extends StatefulWidget {
   @override
@@ -25,7 +27,7 @@ class DashBoardScreen extends StatefulWidget {
 
 class _DashBoardScreenState extends State<DashBoardScreen> {
   UserModel _userModel;
-  String _city;
+  String _city, _regionCode;
   List _widget = new List();
   List<DashBoardModel> _dashBoardModelList = new List<DashBoardModel>();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
@@ -41,6 +43,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   _getUser()async{
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
+    setState(() {
+      _regionCode = _sharepreferenceshelper.getRegionCode();
+    });
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.closeUserDb();
     if(mounted){
@@ -129,7 +134,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseScreen()));
               break;
             case MyString.txt_online_tax:
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineTaxChooseScreen(_userModel)));
+              _regionCode == MyString.TGY_REGIONCODE?
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineTaxChooseScreen(_userModel))) :
+                  Fluttertoast.showToast(msg: 'Comming soon', backgroundColor: Colors.black54, fontSize: FontSize.textSizeNormal);
               break;
             case MyString.txt_tax_use:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => TaxUserScreen()));

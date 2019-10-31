@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'model/NewsFeedPhotoModel.dart';
 import 'Model/NewsFeedModel.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'helper/ShowDateTimeHelper.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'Model/NewsFeedPhotoModel.dart';
 import 'NewsFeedPhotoDetailScreen.dart';
 import 'helper/NumConvertHelper.dart';
 import 'NewsFeedVideoScreen.dart';
@@ -14,9 +14,10 @@ import 'package:url_launcher/url_launcher.dart';
 
 class NewsFeedDetailScreen extends StatefulWidget {
   NewsFeedModel _model;
-  NewsFeedDetailScreen(this._model);
+  List _list = new List();
+  NewsFeedDetailScreen(this._model, this._list);
   @override
-  _NewsFeedDetailScreenState createState() => _NewsFeedDetailScreenState(this._model);
+  _NewsFeedDetailScreenState createState() => _NewsFeedDetailScreenState(this._model, this._list);
 }
 
 class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
@@ -27,7 +28,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   List<Widget> _photoWidget = List();
   int index = 0;
 
-  _NewsFeedDetailScreenState(this._newsFeedModel);
+  _NewsFeedDetailScreenState(this._newsFeedModel, this._photoList);
 
   @override
   void initState() {
@@ -43,7 +44,6 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
       _photo = _newsFeedModel.photoUrl;
       _date = showDateTimeDifference(_newsFeedModel.accesstime);
       _body = _newsFeedModel.body;
-      _photoList = _newsFeedModel.photoList;
       _type = _newsFeedModel.uploadType=='Photo'?'Photo':'Video';
       _thumbNail = _newsFeedModel.thumbNail;
       _videoUrl = _newsFeedModel.videoUrl;

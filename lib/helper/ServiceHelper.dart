@@ -15,7 +15,7 @@ class ServiceHelper{
  getNewsFeed<Response>(int organizationId, int page, int pageSize, String userUniqueKey) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
-  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_NEWSFEED+"newsfeedposted/getcitynewsfeed",
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_NEWSFEED+"newsfeedposted/getcitynewsfeedver3",
       queryParameters: {"OrganizationID": organizationId, "page": page, "pageSize": pageSize, "UserUniqueKey": userUniqueKey});
   return response;
  }

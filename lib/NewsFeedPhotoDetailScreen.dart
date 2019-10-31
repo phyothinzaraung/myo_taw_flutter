@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'Model/NewsFeedPhotoModel.dart';
+import 'model/NewsFeedPhotoModel.dart';
 
 class NewsFeedPhotoDetailScreen extends StatelessWidget {
   List _photoList = new List();

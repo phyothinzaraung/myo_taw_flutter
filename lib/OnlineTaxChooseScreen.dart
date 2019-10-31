@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/OnlineTaxScreen.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'PinCodeSetUpScreen.dart';
@@ -130,7 +131,8 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
                         setState(() {
                           _hasError = false;
                         });
-                        _dialogPinRequest('OnlineTax');
+                        //_dialogPinRequest('OnlineTax');
+                        Fluttertoast.showToast(msg: 'Comming soon', backgroundColor: Colors.black54, fontSize: FontSize.textSizeNormal);
                       }else{
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
                       }

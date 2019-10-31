@@ -17,7 +17,6 @@ class NewsFeedModel{
   int _likeCount;
   String _thumbNail;
   String _subscription;
-  List<dynamic> _photoList;
 
   String get uniqueKey => _uniqueKey;
 
@@ -29,13 +28,6 @@ class NewsFeedModel{
 
   set id(int value) {
     _id = value;
-  }
-
-
-  List<dynamic> get photoList => _photoList;
-
-  set photoList(List<dynamic> value) {
-    _photoList = value;
   }
 
   String get subscription => _subscription;
@@ -145,6 +137,5 @@ class NewsFeedModel{
       _isActive = json['IsActive'],
       _likeCount = json['LikeCount'],
       _thumbNail = json['Thumbnail'],
-      _subscription = json['Subscription'],
-      _photoList = List<dynamic>.from(json['PhotoLink']!=null?json['PhotoLink'] : []);
+      _subscription = json['Subscription'];
 }
