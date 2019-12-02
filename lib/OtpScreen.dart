@@ -10,14 +10,13 @@ import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:myotaw/Database/UserDb.dart';
 import 'dart:io';
-import 'OtpScreen.dart';
 
-class LoginScreen extends StatefulWidget {
+class OtpScreen extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  _OtpScreenState createState() => _OtpScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _OtpScreenState extends State<OtpScreen> {
   List<String> _cityList;
   String _dropDownCity = 'နေရပ်ရွေးပါ', _regionCode, _platForm;
   bool _isInitialized, _showLoading = false;
@@ -44,60 +43,6 @@ class _LoginScreenState extends State<LoginScreen> {
       _platForm = 'ios';
     }
   }
-
-  /*Future<void> initAccountkit()async{
-    print('Init account kit called');
-    bool initialized = false;
-    try{
-      await _flutterAccountKit.configure(
-        Config(
-          theme: AccountKitTheme(
-              headerBackgroundColor: MyColor.colorPrimary,
-              backgroundColor: MyColor.colorPrimaryDark,
-              statusBarStyle: StatusBarStyle.lightStyle,
-              headerButtonTextColor: Colors.white,
-              titleColor: Colors.white,
-              headerTextColor: Colors.white,
-              textColor: Colors.white,
-              iconColor: Colors.white,
-
-              buttonBackgroundColor: MyColor.colorPrimaryDark,
-              buttonBorderColor: Colors.white,
-              buttonTextColor: Colors.white,
-              buttonDisabledBackgroundColor: MyColor.colorGreyDark,
-              buttonDisabledBorderColor: MyColor.colorGrey,
-              buttonDisabledTextColor: MyColor.colorGrey,
-
-              inputBackgroundColor: MyColor.colorPrimaryDark,
-              inputBorderColor: Colors.white,
-              inputTextColor: Colors.white,
-          ),
-          facebookNotificationsEnabled: true,
-          receiveSMS: true,
-          readPhoneStateEnabled: false,
-        )
-      );
-    }on PlatformException{
-      print('Failed to Init Account kit');
-    }
-
-    if(!mounted) return;
-    setState(() {
-      _isInitialized = initialized;
-      print('Initialized ${_isInitialized}');
-    });
-  }*/
-
-  /*Future<void> _loginAccountKit() async{
-    final result = await _flutterAccountKit.logInWithPhone();
-    final Account account = await _flutterAccountKit.currentAccount;
-    if(result.accessToken != null){
-      webService(account.phoneNumber.toString());
-      print('userPhone: ${result.status}${account.phoneNumber}');
-    }else{
-      print('userPhone: ${result.status}');
-    }
-  }*/
 
   void _webService(String phoneNo)async{
     setState(() {
@@ -179,12 +124,12 @@ class _LoginScreenState extends State<LoginScreen> {
                 Align(
                     alignment: Alignment.topCenter,
                     child: Container(
-                        margin: EdgeInsets.only(top: 100),
+                        margin: EdgeInsets.only(top: 130),
                         child: Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,))),
                 //login card
                 Container(
                   width: double.maxFinite,
-                  margin: EdgeInsets.only(top: 60),
+                  margin: EdgeInsets.only(top: 30),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
@@ -197,35 +142,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               children: <Widget>[
                                 Container(
                                     margin: EdgeInsets.only(bottom: 30),
-                                    child: Text(MyString.txt_welcome, style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary), textAlign: TextAlign.center,)),
-                                Container(
-                                  decoration: BoxDecoration(
-                                      border: Border.all(color: MyColor.colorPrimary, width: 1.0),
-                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
-                                  ),
-                                  margin: EdgeInsets.only(bottom: 20),
-                                  padding: EdgeInsets.only(left: 15, right: 15),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      style: new TextStyle(fontSize: 13.0, color: Colors.black87),
-                                      isExpanded: true,
-                                      icon: Icon(Icons.location_city),
-                                      iconEnabledColor: MyColor.colorPrimary,
-                                      value: _dropDownCity,
-                                      onChanged: (String value){
-                                        setState(() {
-                                          _dropDownCity = value;
-                                        });
-                                      },
-                                      items: _cityList.map<DropdownMenuItem<String>>((String str){
-                                        return DropdownMenuItem<String>(
-                                          value: str,
-                                          child: Text(str),
-                                        );
-                                      }).toList(),
-                                    ),
-                                  ),
-                                ),
+                                    child: Text(MyString.txt_enter_otp, style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary), textAlign: TextAlign.center,)),
                                 Container(
                                   margin: EdgeInsets.only(bottom: 30.0),
                                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -236,8 +153,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   child: TextField(
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
-                                      suffixIcon: Icon(Icons.phone, color: MyColor.colorPrimary,),
-                                      hintText: '09xxxxxx',
+                                      suffixIcon: Icon(Icons.phone_android, color: MyColor.colorPrimary,),
+                                      hintText: MyString.txt_fill_otp,
+                                      hintStyle: TextStyle(fontSize: FontSize.textSizeSmall)
                                     ),
                                     cursorColor: MyColor.colorPrimary,
                                     controller: _phoneNoController,
@@ -264,8 +182,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                             break;
                                           default:
                                         }
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen()));
-                                        //_webService("+959254900916");
+                                        _webService("+959254900916");
                                         //_loginAccountKit();
                                         //webService('+959254900916');
                                         //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
@@ -280,7 +197,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                         Container(
                                             margin: EdgeInsets.only(right: 20),
                                             child: Text(MyString.txt_get_otp,style: TextStyle(color: Colors.white),)),
-                                        Image.asset('images/get_otp.png', width: 25, height: 25,)
+                                        Image.asset('images/send_otp.png', width: 25, height: 25,)
                                       ],
                                     ),
                                       color: MyColor.colorPrimary,

@@ -43,6 +43,7 @@ class MyString{
   static const String MLM_CITY = 'မော်လမြိုင်မြို့';
   static const String TGY_REGIONCODE = "TGY";
   static const String MLM_REGIONCODE = "MLM";
+  static const String txt_welcome = "မြို့တော်မှ ကြိုဆိုပါ၏";
 
 
   static const String txt_municipal = 'စည်ပင်အကြောင်း';
@@ -189,6 +190,10 @@ class MyString{
   static const String txt_smart_wm_amount = "ကျသင့်ငွေ";
   static const String txt_smart_wm_not_register = "သင်သည် Smart ရေမီတာအတွက် စာရင်းသွင်းထားခြင်းမရှိပါ";
   static const String txt_fill_pin_code = "ပင်ကုဒ်ရိုက်ထည့်ပေးပါ";
+  static const String txt_get_otp = "OTP ကုဒ်ရယူရန်";
+  static const String txt_enter_otp = "OTP ကုဒ်ရိုက်ထည့်ပေးပါ";
+  static const String txt_fill_otp = "OTP ကုဒ်ကိုဖြည့်ပါ";
+
 
   static const String BUILDING_GRADE_A = "building grade A";
   static const String BUILDING_GRADE_B = "building grade B";

@@ -207,7 +207,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
             _taxRange = "10000 - 50000";
             break;
           case "စာအုပ်နှင့် စာရေးကိရိယာ":
-            _taxRange = "150000 - 50000";
+            _taxRange = "15000 - 50000";
             break;
           case "အလှပြင်":
             _taxRange = "20000 - 50000";
@@ -231,6 +231,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
             _taxRange = "30000 - 50000";
             break;
           case "စက်ပစ္စည်း":
+            _taxRange = "10000 - 40000";
             break;
           case "အခြား":
             _taxRange = "10000 - 100000";

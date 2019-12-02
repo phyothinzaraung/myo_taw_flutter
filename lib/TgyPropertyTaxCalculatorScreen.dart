@@ -132,7 +132,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
     }
     print('rentalRate : ${rentalRate}');
 
-    return NumConvertHelper().getMyanNumInt(finalArv);
+    return NumConvertHelper().getMyanNumInt((finalArv * 0.02 + finalArv * 0.02).round());
   }
 
   String _buildingGrade(){

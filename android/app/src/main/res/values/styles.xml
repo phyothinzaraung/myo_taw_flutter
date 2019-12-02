@@ -6,7 +6,7 @@
         <item name="android:windowBackground">@drawable/launch_background</item>
     </style>
 
-    <style name="accountKitTheme" parent="Theme.AccountKit">
+    <!--<style name="accountKitTheme" parent="Theme.AccountKit">
 
         <item name="com_accountkit_background_color">@color/colorPrimaryDark</item>
         <item name="com_accountkit_status_bar_color">@color/colorPrimary</item>
@@ -28,7 +28,7 @@
         <item name="com_accountkit_input_border_color">@color/color_white</item>
         <item name="com_accountkit_input_text_color">@color/color_white</item>
         <item name="com_accountkit_input_accent_color">@color/color_white</item>
-    </style>
+    </style>-->
 
 
 </resources>
