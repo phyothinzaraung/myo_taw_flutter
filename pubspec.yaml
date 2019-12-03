@@ -48,6 +48,8 @@ dependencies:
   flutter_barcode_scanner: ^0.1.5+1
   url_launcher: ^5.1.2
   html: ^0.14.0+2
+  libphonenumber: ^1.0.0
+  sms_retriever: ^0.0.2
 
 
 dev_dependencies:

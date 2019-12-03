@@ -301,6 +301,22 @@ class ServiceHelper{
   return response;
  }
 
+ getOtpCode<Response>(String phoneNo, String key) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_OTP+"smsverification/requestCodeMyoTaw",
+      queryParameters: {"phone": phoneNo, "hashkey" : key});
+  return response;
+ }
+
+ verifyOtp<Response>(String phoneNo, String code) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_OTP+"smsverification/verifyCodemyotaw",
+      queryParameters: {"phone": phoneNo, "code" : code});
+  return response;
+ }
+
 }
 
 

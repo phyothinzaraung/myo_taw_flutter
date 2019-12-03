@@ -98,7 +98,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     return parsedString;
   }
 
-  void _saveNewsFeed(NewsFeedModel model)async{
+  _saveNewsFeed(NewsFeedModel model)async{
     await _saveNewsFeedDb.openSaveNfDb();
     _saveNewsFeedModel.id = model.uniqueKey;
     _saveNewsFeedModel.title = model.title;
@@ -113,21 +113,22 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     Fluttertoast.showToast(msg: 'Save Successful', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
   }
 
-  void _callLikeWebService(String newsFeedId)async{
+  _callLikeWebService(String newsFeedId)async{
     response = await ServiceHelper().likeReact(_userUniqueKey, newsFeedId, 'like');
     print('responseLike: ${response}');
   }
 
-  //api request function----------------------------------------------------------------------------------------------
   _getUser()async{
     await _sharepreferenceshelper.initSharePref();
     _userUniqueKey = _sharepreferenceshelper.getUserUniqueKey();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.closeUserDb();
-    setState(() {
-      _userModel = model;
-    });
+    if(mounted){
+      setState(() {
+        _userModel = model;
+      });
+    }
     _initHeaderTitle();
     await _getNewsFeed(page);
   }
@@ -175,7 +176,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     return null;
   }
 
-  //widget----------------------------------------------------------------------------------------------------------------------
+
   _initHeaderTitle(){
     _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
     switch(_userModel.currentRegionCode){

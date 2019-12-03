@@ -1,4 +1,7 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
+import 'package:sms_retriever/sms_retriever.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'main.dart';
@@ -9,47 +12,59 @@ import 'model/UserModel.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:myotaw/Database/UserDb.dart';
-import 'dart:io';
 
 class OtpScreen extends StatefulWidget {
+  String _phNo, _regionCode;
+  OtpScreen(this._phNo, this._regionCode);
   @override
-  _OtpScreenState createState() => _OtpScreenState();
+  _OtpScreenState createState() => _OtpScreenState(this._phNo, this._regionCode);
 }
 
 class _OtpScreenState extends State<OtpScreen> {
-  List<String> _cityList;
-  String _dropDownCity = 'နေရပ်ရွေးပါ', _regionCode, _platForm;
-  bool _isInitialized, _showLoading = false;
+  String  _regionCode, _platForm, _phNo, _otpCode;
+  bool _isExpire, _showLoading = false;
   bool _isCon = false;
   Response response;
   UserModel _userModel;
   Sharepreferenceshelper _sharePrefHelper = new Sharepreferenceshelper();
   UserDb _userDb = UserDb();
-  TextEditingController _phoneNoController = new TextEditingController();
+  TextEditingController _otpCodeController = new TextEditingController();
+  Timer _timer;
+  int _minute = 9;
+  int _sec = 59;
 
+  _OtpScreenState(this._phNo, this._regionCode);
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _cityList = [_dropDownCity,MyString.TGY_CITY,MyString.MLM_CITY];
-    //initAccountkit();
     _sharePrefHelper.initSharePref();
+    _isExpire = false;
+    _startTimer();
+    _smsStartListening();
   }
 
-  _initTargetPlatform(){
-    if(Platform.isAndroid){
-      _platForm = 'Android';
-    }else{
-      _platForm = 'ios';
+  _smsStartListening() async{
+    String _sms = await SmsRetriever.startListening();
+    List _smsList = _sms.split(':');
+    if(_smsList.length == 2){
+      String _string = _smsList[1];
+      List _list1 = _string.split(' ');
+      _otpCode = _list1[1];
+      print('otpCode : ${_list1[1]}');
     }
+    setState(() {
+      _otpCodeController.text = _otpCode;
+    });
+    _verifyOtp(_otpCode);
   }
 
-  void _webService(String phoneNo)async{
+  void _logIn()async{
     setState(() {
       _showLoading = true;
     });
     String fcmtoken = 'doRMZhpJvpY:APA91bG4XW1tHVIxf_jbUAT8WekmgAlDd4JZAKQm9o3DUDYqVCoWmmmaznHTgbyMxXXNZZ9FwFewZz5DcSE7ooxdLZAPdUDXeD7iD16IUP1P0DwGzzWlsRxovB1zq16FHKUcdgDGud4t';
-    response = await ServiceHelper().userLogin(phoneNo, _regionCode, fcmtoken, _platForm);
+    response = await ServiceHelper().userLogin(_phNo, _regionCode, fcmtoken, _platForm);
     var result = response.data;
     setState(() {
       _showLoading = false;
@@ -62,10 +77,59 @@ class _OtpScreenState extends State<OtpScreen> {
         await _userDb.insert(_userModel);
         await _userDb.closeUserDb();
         Fluttertoast.showToast(msg: 'Login Success', backgroundColor: Colors.black.withOpacity(0.7));
-        if(_userModel.name != null){
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
-        }else{
+        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
+      }else{
+        Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+      }
+    }else{
+      Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+    }
+  }
 
+  _verifyOtp(String code) async{
+    setState(() {
+      _showLoading = true;
+    });
+    response = await ServiceHelper().verifyOtp(_phNo, code);
+    var result = response.data;
+    if(response.statusCode == 200){
+      if(result != null){
+        if(result['code'] == '002'){
+          _logIn();
+        }
+      }else{
+        setState(() {
+          _showLoading = false;
+        });
+        Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+      }
+    }else{
+      setState(() {
+        _showLoading = false;
+      });
+      Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+    }
+  }
+
+  void _getOtp()async{
+    setState(() {
+      _showLoading = true;
+    });
+    String _hasyKey = await SmsRetriever.getAppSignature();
+    response = await ServiceHelper().getOtpCode(_phNo, _hasyKey);
+    var result = response.data;
+    setState(() {
+      _showLoading = false;
+    });
+    if(response.statusCode == 200){
+      if(result != null){
+        if(result['code'] == '002'){
+          setState(() {
+            _minute = 9;
+            _sec = 59;
+            _isExpire = false;
+            _startTimer();
+          });
         }
       }else{
         Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
@@ -104,6 +168,25 @@ class _OtpScreenState extends State<OtpScreen> {
     );
   }
 
+  _startTimer() {
+    _timer = Timer.periodic(Duration(seconds: 1), (time){
+      setState(() {
+        if(_minute == 0 && _sec == 0){
+          _timer.cancel();
+          _isExpire = true;
+          return;
+        }
+        _sec = _sec - 1;
+        if(_sec == 0 && _minute != 0){
+          setState(() {
+            _sec = 59;
+            _minute = _minute - 1;
+          });
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -120,22 +203,18 @@ class _OtpScreenState extends State<OtpScreen> {
                   width: double.maxFinite,
                   height: 300,
                 ),
-                //myotaw icon
-                Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                        margin: EdgeInsets.only(top: 130),
-                        child: Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,))),
                 //login card
                 Container(
                   width: double.maxFinite,
-                  margin: EdgeInsets.only(top: 30),
+                  margin: EdgeInsets.only(bottom: 50),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,),
                       Container(
                         margin: EdgeInsets.all(30),
                         child: Card(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           child: Container(
                             margin: EdgeInsets.all(30),
                             child: Column(
@@ -154,11 +233,10 @@ class _OtpScreenState extends State<OtpScreen> {
                                     decoration: InputDecoration(
                                       border: InputBorder.none,
                                       suffixIcon: Icon(Icons.phone_android, color: MyColor.colorPrimary,),
-                                      hintText: MyString.txt_fill_otp,
-                                      hintStyle: TextStyle(fontSize: FontSize.textSizeSmall)
+                                      hintText: 'xxxxxx',
                                     ),
                                     cursorColor: MyColor.colorPrimary,
-                                    controller: _phoneNoController,
+                                    controller: _otpCodeController,
                                     style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),
                                     keyboardType: TextInputType.phone,
                                   ),
@@ -166,29 +244,30 @@ class _OtpScreenState extends State<OtpScreen> {
                                 Container(
                                   width: double.maxFinite,
                                   height: 45.0,
+                                  margin: EdgeInsets.only(bottom: 20),
                                   child: RaisedButton(onPressed: () async{
-                                    if(_dropDownCity == 'နေရပ်ရွေးပါ'){
-                                      Fluttertoast.showToast(msg: 'Please Choose City', backgroundColor: Colors.black.withOpacity(0.7));
-                                    }else{
-                                      await _checkCon();
-                                      if(_isCon){
-                                        _initTargetPlatform();
-                                        switch(_dropDownCity){
-                                          case MyString.TGY_CITY:
-                                            _regionCode = MyString.TGY_REGIONCODE;
-                                            break;
-                                          case MyString.MLM_CITY:
-                                            _regionCode = MyString.MLM_REGIONCODE;
-                                            break;
-                                          default:
-                                        }
-                                        _webService("+959254900916");
-                                        //_loginAccountKit();
-                                        //webService('+959254900916');
-                                        //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
+                                    //_logIn();
+                                    await _checkCon();
+                                    if(_isCon){
+                                      if(_isExpire){
+                                        _getOtp();
+
                                       }else{
-                                        Fluttertoast.showToast(msg: 'No Internet Connection', backgroundColor: Colors.black.withOpacity(0.7));
+                                        if(_otpCodeController.text.isNotEmpty && _otpCodeController.text != null){
+                                          if(_otpCodeController.text.length == 4){
+                                            FocusScope.of(context).requestFocus(FocusNode());
+                                            _verifyOtp(_otpCodeController.text);
+                                          }else{
+                                            Fluttertoast.showToast(msg: MyString.txt_otp_not_exceed_4, backgroundColor: Colors.black.withOpacity(0.7));
+                                          }
+
+                                        }else{
+                                          Fluttertoast.showToast(msg: MyString.txt_enter_otp, backgroundColor: Colors.black.withOpacity(0.7));
+                                        }
                                       }
+
+                                    }else{
+                                      Fluttertoast.showToast(msg: 'No Internet Connection', backgroundColor: Colors.black.withOpacity(0.7));
                                     }
                                     },
                                     child: Row(
@@ -196,13 +275,15 @@ class _OtpScreenState extends State<OtpScreen> {
                                       children: <Widget>[
                                         Container(
                                             margin: EdgeInsets.only(right: 20),
-                                            child: Text(MyString.txt_get_otp,style: TextStyle(color: Colors.white),)),
-                                        Image.asset('images/send_otp.png', width: 25, height: 25,)
+                                            child: Text(_isExpire?MyString.txt_get_otp:MyString.txt_fill_otp,style: TextStyle(color: Colors.white),)),
+                                        Image.asset(_isExpire?'images/get_otp.png':'images/send_otp.png', width: 25, height: 25,)
                                       ],
                                     ),
                                       color: MyColor.colorPrimary,
                                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
                                 ),
+                                _isExpire? Container() :
+                                Text('OTP expire in - $_minute : $_sec min', style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)
                               ],
                             ),
                           ),
@@ -223,5 +304,13 @@ class _OtpScreenState extends State<OtpScreen> {
           ),
         )
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    SmsRetriever.stopListening();
+    _timer.cancel();
   }
 }

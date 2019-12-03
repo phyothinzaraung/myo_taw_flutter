@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
+import 'Database/UserDb.dart';
 import 'SplashScreen.dart';
 import 'NewsFeedScreen.dart';
 import 'DashBoardScreen.dart';
 import 'NotificationScreen.dart';
 import 'customIcons/my_flutter_app_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'helper/SharePreferencesHelper.dart';
 import 'model/UserModel.dart';
 import 'ProfileFormScreen.dart';
 
@@ -33,17 +35,16 @@ void main() {
 }
 
 class MainScreen extends StatefulWidget {
-  UserModel model;
-  MainScreen(this.model);
 
   @override
-  _mainState createState() => _mainState(this.model);
+  _mainState createState() => _mainState();
 }
 
 class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   TabController _tabController;
   UserModel _userModel;
-  _mainState(this._userModel);
+  Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
+  UserDb _userDb = UserDb();
 
   @override
   void initState() {
@@ -51,11 +52,20 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
     super.initState();
     _tabController = new TabController(length: 3, vsync: this);
     _requestPermission();
-    Future.delayed(Duration(seconds: 1)).whenComplete((){
-      if(_userModel.name == null){
-        _dialogProfileSetup();
-      }
-    });
+    _sharepreferenceshelper.initSharePref();
+    getUserData();
+  }
+
+  getUserData() async{
+    await _userDb.openUserDb();
+    final model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
+    _userModel = model;
+    await _userDb.closeUserDb();
+     Future.delayed(Duration(seconds: 1)).whenComplete((){
+       if(_userModel.name == null){
+         _dialogProfileSetup();
+       }
+     });
   }
 
   _navigateToProfileFormScreen()async{

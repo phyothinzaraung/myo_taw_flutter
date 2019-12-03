@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:libphonenumber/libphonenumber.dart';
+import 'package:sms_retriever/sms_retriever.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'main.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
@@ -9,7 +10,6 @@ import 'model/UserModel.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:myotaw/Database/UserDb.dart';
-import 'dart:io';
 import 'OtpScreen.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -19,13 +19,11 @@ class LoginScreen extends StatefulWidget {
 
 class _LoginScreenState extends State<LoginScreen> {
   List<String> _cityList;
-  String _dropDownCity = 'နေရပ်ရွေးပါ', _regionCode, _platForm;
-  bool _isInitialized, _showLoading = false;
+  String _dropDownCity = 'နေရပ်ရွေးပါ', _regionCode , _normalizedPhNo;
+  bool _showLoading = false;
   bool _isCon = false;
   Response response;
-  UserModel _userModel;
   Sharepreferenceshelper _sharePrefHelper = new Sharepreferenceshelper();
-  UserDb _userDb = UserDb();
   TextEditingController _phoneNoController = new TextEditingController();
 
   @override
@@ -33,94 +31,23 @@ class _LoginScreenState extends State<LoginScreen> {
     // TODO: implement initState
     super.initState();
     _cityList = [_dropDownCity,MyString.TGY_CITY,MyString.MLM_CITY];
-    //initAccountkit();
     _sharePrefHelper.initSharePref();
   }
 
-  _initTargetPlatform(){
-    if(Platform.isAndroid){
-      _platForm = 'Android';
-    }else{
-      _platForm = 'ios';
-    }
-  }
-
-  /*Future<void> initAccountkit()async{
-    print('Init account kit called');
-    bool initialized = false;
-    try{
-      await _flutterAccountKit.configure(
-        Config(
-          theme: AccountKitTheme(
-              headerBackgroundColor: MyColor.colorPrimary,
-              backgroundColor: MyColor.colorPrimaryDark,
-              statusBarStyle: StatusBarStyle.lightStyle,
-              headerButtonTextColor: Colors.white,
-              titleColor: Colors.white,
-              headerTextColor: Colors.white,
-              textColor: Colors.white,
-              iconColor: Colors.white,
-
-              buttonBackgroundColor: MyColor.colorPrimaryDark,
-              buttonBorderColor: Colors.white,
-              buttonTextColor: Colors.white,
-              buttonDisabledBackgroundColor: MyColor.colorGreyDark,
-              buttonDisabledBorderColor: MyColor.colorGrey,
-              buttonDisabledTextColor: MyColor.colorGrey,
-
-              inputBackgroundColor: MyColor.colorPrimaryDark,
-              inputBorderColor: Colors.white,
-              inputTextColor: Colors.white,
-          ),
-          facebookNotificationsEnabled: true,
-          receiveSMS: true,
-          readPhoneStateEnabled: false,
-        )
-      );
-    }on PlatformException{
-      print('Failed to Init Account kit');
-    }
-
-    if(!mounted) return;
-    setState(() {
-      _isInitialized = initialized;
-      print('Initialized ${_isInitialized}');
-    });
-  }*/
-
-  /*Future<void> _loginAccountKit() async{
-    final result = await _flutterAccountKit.logInWithPhone();
-    final Account account = await _flutterAccountKit.currentAccount;
-    if(result.accessToken != null){
-      webService(account.phoneNumber.toString());
-      print('userPhone: ${result.status}${account.phoneNumber}');
-    }else{
-      print('userPhone: ${result.status}');
-    }
-  }*/
-
-  void _webService(String phoneNo)async{
+  void _getOtp()async{
     setState(() {
       _showLoading = true;
     });
-    String fcmtoken = 'doRMZhpJvpY:APA91bG4XW1tHVIxf_jbUAT8WekmgAlDd4JZAKQm9o3DUDYqVCoWmmmaznHTgbyMxXXNZZ9FwFewZz5DcSE7ooxdLZAPdUDXeD7iD16IUP1P0DwGzzWlsRxovB1zq16FHKUcdgDGud4t';
-    response = await ServiceHelper().userLogin(phoneNo, _regionCode, fcmtoken, _platForm);
+    String _hasyKey = await SmsRetriever.getAppSignature();
+    response = await ServiceHelper().getOtpCode(_normalizedPhNo, _hasyKey);
     var result = response.data;
     setState(() {
       _showLoading = false;
     });
     if(response.statusCode == 200){
       if(result != null){
-        _userModel = UserModel.fromJson(result);
-        _sharePrefHelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, _regionCode);
-        await _userDb.openUserDb();
-        await _userDb.insert(_userModel);
-        await _userDb.closeUserDb();
-        Fluttertoast.showToast(msg: 'Login Success', backgroundColor: Colors.black.withOpacity(0.7));
-        if(_userModel.name != null){
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
-        }else{
-
+        if(result['code'] == '002'){
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
         }
       }else{
         Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
@@ -159,6 +86,14 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  Future<bool> _checkPhNoValid() async{
+    bool _isValid = false;
+    _normalizedPhNo = await PhoneNumberUtil.normalizePhoneNumber(phoneNumber: _phoneNoController.text, isoCode: 'MM');
+    _isValid = await PhoneNumberUtil.isValidPhoneNumber(phoneNumber: _phoneNoController.text, isoCode: 'MM');
+
+    return _isValid && !_normalizedPhNo.contains('+951');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -175,22 +110,18 @@ class _LoginScreenState extends State<LoginScreen> {
                   width: double.maxFinite,
                   height: 300,
                 ),
-                //myotaw icon
-                Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                        margin: EdgeInsets.only(top: 100),
-                        child: Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,))),
                 //login card
                 Container(
                   width: double.maxFinite,
-                  margin: EdgeInsets.only(top: 60),
+                  margin: EdgeInsets.only(bottom: 50),
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
+                      Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,),
                       Container(
                         margin: EdgeInsets.all(30),
                         child: Card(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           child: Container(
                             margin: EdgeInsets.all(30),
                             child: Column(
@@ -249,12 +180,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                   width: double.maxFinite,
                                   height: 45.0,
                                   child: RaisedButton(onPressed: () async{
-                                    if(_dropDownCity == 'နေရပ်ရွေးပါ'){
-                                      Fluttertoast.showToast(msg: 'Please Choose City', backgroundColor: Colors.black.withOpacity(0.7));
-                                    }else{
+                                    if(_dropDownCity != 'နေရပ်ရွေးပါ' && _phoneNoController.text.isNotEmpty){
                                       await _checkCon();
                                       if(_isCon){
-                                        _initTargetPlatform();
                                         switch(_dropDownCity){
                                           case MyString.TGY_CITY:
                                             _regionCode = MyString.TGY_REGIONCODE;
@@ -264,14 +192,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                             break;
                                           default:
                                         }
-                                        Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen()));
-                                        //_webService("+959254900916");
-                                        //_loginAccountKit();
-                                        //webService('+959254900916');
-                                        //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
+                                        bool _isValid = await _checkPhNoValid();
+                                        if(_isValid){
+                                          FocusScope.of(context).requestFocus(FocusNode());
+                                          _getOtp();
+                                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
+                                        }else{
+                                          Fluttertoast.showToast(msg: 'Invalide phone number', backgroundColor: Colors.black.withOpacity(0.7));
+                                        }
                                       }else{
                                         Fluttertoast.showToast(msg: 'No Internet Connection', backgroundColor: Colors.black.withOpacity(0.7));
                                       }
+                                    }else{
+                                      Fluttertoast.showToast(msg: 'Please Choose City', backgroundColor: Colors.black.withOpacity(0.7));
                                     }
                                     },
                                     child: Row(

@@ -234,6 +234,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                   ),
                   RaisedButton(onPressed: (){
                     Navigator.of(context).pop();
+                    clearDropDown();
                     },child: Text(MyString.txt_close,
                     style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),)
@@ -241,6 +242,14 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
               )
             ],), onWillPop: (){});
     }, barrierDismissible: false);
+  }
+
+  clearDropDown(){
+    setState(() {
+      _dropDownGrade = MyString.txt_no_selected;
+      _dropDownBizType = MyString.txt_no_selected;
+      _dropDownBizLicenseType = MyString.txt_no_selected;
+    });
   }
 
   @override

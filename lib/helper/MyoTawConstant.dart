@@ -30,6 +30,7 @@ class BaseUrl{
   static const String WEB_SERVICE_ROOT_ADDRESS_REFERRAL = "https://newmaymay.azurewebsites.net/api/";
   static const String WEB_SERVICE_ROOT_ADDRESS_DAO_INVOICE_NO = "https://daoapifinal.azurewebsites.net/api/";
   static const String REFERRAL_URL = "https://maymayadmin.azurewebsites.net/Referral/CityAppReferralDetail?referralpno=";
+  static const String WEB_SERVICE_ROOT_ADDRESS_OTP = "https://kktsmsverification.azurewebsites.net/api/";
 }
 
 class MyString{
@@ -193,6 +194,7 @@ class MyString{
   static const String txt_get_otp = "OTP ကုဒ်ရယူရန်";
   static const String txt_enter_otp = "OTP ကုဒ်ရိုက်ထည့်ပေးပါ";
   static const String txt_fill_otp = "OTP ကုဒ်ကိုဖြည့်ပါ";
+  static const String txt_otp_not_exceed_4 = "OTP ကုဒ် ၄ လုံးထက်ကျော်၍မရပါ";
 
 
   static const String BUILDING_GRADE_A = "building grade A";

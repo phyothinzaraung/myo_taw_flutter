@@ -18,9 +18,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
-  UserDb _userDb = UserDb();
   LocationDb _locationDb = LocationDb();
-  UserModel _userModel;
   String _logo, _title;
 
   @override
@@ -32,7 +30,7 @@ class _SplashScreenState extends State<SplashScreen> {
   _init()async{
     await _sharepreferenceshelper.initSharePref();
     if(_sharepreferenceshelper.getRegionCode()!=null){
-      await getUserData();
+      //await getUserData();
       switch(_sharepreferenceshelper.getRegionCode()){
         case MyString.TGY_REGIONCODE:
           setState(() {
@@ -72,20 +70,13 @@ class _SplashScreenState extends State<SplashScreen> {
   navigateMainScreen() {
     if(_sharepreferenceshelper.isLogin()){
       Future.delayed(Duration(seconds: 2), (){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen(_userModel)));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen()));
       });
     }else{
       Future.delayed(Duration(seconds: 2), (){
         Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
       });
     }
-  }
-
-   getUserData() async{
-     await _userDb.openUserDb();
-    final model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    _userModel = model;
-    await _userDb.closeUserDb();
   }
 
   @override

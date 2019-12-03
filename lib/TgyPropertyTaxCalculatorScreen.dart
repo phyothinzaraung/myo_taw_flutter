@@ -71,6 +71,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                   ),
                   RaisedButton(onPressed: (){
                     Navigator.of(context).pop();
+                    clearText();
                     },child: Text(MyString.txt_close,
                     style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),)
@@ -78,6 +79,16 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
               )
             ],), onWillPop: (){});
     }, barrierDismissible: false);
+  }
+
+  clearText(){
+    setState(() {
+      _dropDownBuildingType = MyString.txt_no_selected;
+      _dropDownBlockNo = MyString.txt_no_selected;
+      _dropDownRoad = MyString.txt_no_selected;
+      _widthContorller.clear();
+      _lengthContorller.clear();
+    });
   }
 
   String _getArv(){
