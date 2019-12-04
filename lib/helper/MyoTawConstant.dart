@@ -176,7 +176,8 @@ class MyString{
   static const String txt_choose_blockNo = "ရပ်ကွက်";
   static const String txt_no_selected = "သတ်မှတ်ထားခြင်းမရှိ";
   static const String txt_calculate = "တွက်မည်";
-  static const String txt_biz_tax_range = "အခွန်နှုန်းထားမှာ";
+  static const String txt_biz_tax_range = "ပေးဆောင်ရမည့် အခွန်နှုန်းထားမှာ";
+  static const String txt_biz_tax_property = "ပေးဆောင်ရမည့် အခွန်မှာ";
   static const String txt_thanks = "အခွန်ပေးဆောင်မှုအတွက် \n ကျေးဇူးတင်ပါသည်";
   static const String txt_choose_license_type = "လိုင်စင်အမျိုးအစားရွေးပါ";
   static const String txt_site_area = "အဆောက်အဦး (အလျား × အနံ)";
@@ -201,9 +202,19 @@ class MyString{
   static const String BUILDING_GRADE_B = "building grade B";
   static const String BUILDING_GRADE_C = "building grade C";
   static const String GOV_BUILDING = "gov";
+
+  //admin ph no
+  static final String ADMIN_PH_1 = "+959425317337";
+  static final String ADMIN_PH_2 = "+959794797489";
+  static final String ADMIN_PH_3 = "+959975526335";
+  static final String ADMIN_PH_4 = "+959254900916";
 }
 
 class MyArray{
+
+  //admin ward ph no
+  static const List<String> adminPhno = ["+959425317337", "+959794797489", "+959975526335", "+959254900916"];
+
   //Tgy
   static const List<String> biz_tgy_food = [
     'မုန့်ဖုတ်ခြင်း/ရောင်းချခြင်း',

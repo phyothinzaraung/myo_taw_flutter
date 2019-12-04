@@ -34,6 +34,7 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
   Response _response;
   Completer<GoogleMapController> _controller = Completer();
   CameraPosition _cameraPosition;
+  StreamSubscription<LocationData> _streamSubscription;
 
   @override
   void initState() {
@@ -41,20 +42,22 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
     super.initState();
     _subjectList = [_dropDownSubject,];
     _subjectList.addAll(MyArray.suggestion_subject);
-
+    _location.changeSettings(accuracy: LocationAccuracy.HIGH, interval: 3000, distanceFilter: 0);
     _location.serviceEnabled().then((isEnable){
       if(!isEnable){
         _location.requestService().then((value){
           if(value){
-            _location.onLocationChanged().listen((currentLocation){
+            _streamSubscription = _location.onLocationChanged().listen((currentLocation){
               _lat = currentLocation.latitude.toString();
               _lng = currentLocation.longitude.toString();
-               setState(() {
-                 _cameraPosition = CameraPosition(
-                   target: LatLng(currentLocation.latitude, currentLocation.longitude),
-                   zoom: 14.4746,
-                 );
-               });
+               if(mounted){
+                 setState(() {
+                   _cameraPosition = CameraPosition(
+                     target: LatLng(currentLocation.latitude, currentLocation.longitude),
+                     zoom: 14.4746,
+                   );
+                 });
+               }
             });
             //Navigator.of(context).pop();
           }else{
@@ -62,15 +65,17 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
           }
         });
       }else{
-        _location.onLocationChanged().listen((currentLocation){
+        _streamSubscription = _location.onLocationChanged().listen((currentLocation){
           _lat = currentLocation.latitude.toString();
           _lng = currentLocation.longitude.toString();
-          setState(() {
-            _cameraPosition = CameraPosition(
-              target: LatLng(currentLocation.latitude, currentLocation.longitude),
-              zoom: 15.0
-            );
-          });
+          if(mounted){
+            setState(() {
+              _cameraPosition = CameraPosition(
+                  target: LatLng(currentLocation.latitude, currentLocation.longitude),
+                  zoom: 15.0
+              );
+            });
+          }
         });
       }
     });
@@ -421,5 +426,13 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    //stop listen location
+    _streamSubscription.cancel();
   }
 }

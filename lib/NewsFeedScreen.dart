@@ -176,16 +176,26 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     return null;
   }
 
+  bool _isAdminWard(){
+    bool _result = false;
+    for(var ph in MyArray.adminPhno){
+      if(ph == _sharepreferenceshelper.getUserPhoneNo()){
+        _result = true;
+      }
+    }
+    return _result;
+  }
+
 
   _initHeaderTitle(){
     _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
     switch(_userModel.currentRegionCode){
       case MyString.TGY_REGIONCODE:
-        _city = MyString.TGY_CITY;
+        _city = _isAdminWard()? MyString.TGY_CITY +' '+'(Ward admin)':MyString.TGY_CITY;
         _organizationId = OrganizationId.TGY_ORGANIZATION_ID;
         break;
       case MyString.MLM_REGIONCODE:
-        _city = MyString.MLM_CITY;
+        _city = _isAdminWard()? MyString.MLM_CITY +' '+'(Ward admin)': MyString.MLM_CITY;
         _organizationId = OrganizationId.MLM_ORGANIZATION_ID;
         break;
       default:

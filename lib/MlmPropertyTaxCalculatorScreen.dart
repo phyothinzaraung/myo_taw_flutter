@@ -191,6 +191,7 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
                   ),
                   RaisedButton(onPressed: (){
                     Navigator.of(context).pop();
+                    clear();
                     },child: Text(MyString.txt_close,
                     style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),)
@@ -198,6 +199,13 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
               )
             ],), onWillPop: (){});
     }, barrierDismissible: false);
+  }
+
+  clear(){
+    setState(() {
+      _dropDownBuildingType = MyString.txt_no_selected;
+      _dropDownStory = MyString.txt_no_selected;
+    });
   }
 
   @override

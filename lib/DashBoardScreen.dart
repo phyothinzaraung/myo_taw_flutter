@@ -19,6 +19,7 @@ import 'ReferralScreen.dart';
 import 'CalculateTaxScreen.dart';
 import 'OnlineTaxChooseScreen.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'helper/MyoTawConstant.dart';
 
 class DashBoardScreen extends StatefulWidget {
   @override
@@ -43,9 +44,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   _getUser()async{
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
-    setState(() {
-      _regionCode = _sharepreferenceshelper.getRegionCode();
-    });
+    if(mounted){
+      setState(() {
+        _regionCode = _sharepreferenceshelper.getRegionCode();
+      });
+    }
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.closeUserDb();
     if(mounted){
@@ -55,9 +58,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     }
     _initHeaderTitle();
     _initDashBoardWidget();
-    if(Platform.isIOS){
+    /*if(Platform.isIOS){
       _widget.removeLast();
-    }
+    }*/
   }
 
   _initHeaderTitle(){
@@ -68,6 +71,16 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       case MyString.MLM_REGIONCODE:
         _city = MyString.MLM_CITY;
     }
+  }
+
+  bool _isAdminWard(){
+    bool _result = false;
+    for(var ph in MyArray.adminPhno){
+      if(ph == _sharepreferenceshelper.getUserPhoneNo()){
+        _result = true;
+      }
+    }
+    return _result;
   }
 
   _initDashBoardWidget(){
@@ -115,7 +128,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     model11.image = 'images/referral.png';
     model11.title = MyString.txt_referral;
 
-    _dashBoardModelList = [model1,model2,model3,model4,model5,model6,model7,model8,model9,model10,model11];
+    _dashBoardModelList = [model1,model2,model3,model4,model5,model6,model7,model8,model9,model10];
 
     for(var i in _dashBoardModelList){
         _widget.add(GestureDetector(
@@ -128,7 +141,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoScreen('Tax')));
               break;
             case MyString.txt_suggestion:
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => SuggestionScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => _isAdminWard()?AdministratorSuggestionScreen():
+              SuggestionScreen()));
               break;
             case MyString.txt_business_tax:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseScreen()));

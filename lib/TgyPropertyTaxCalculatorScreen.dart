@@ -46,7 +46,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                       child: Image.asset('images/calculate_tax_no_circle.png', width: 60.0, height: 60.0,)),
                   Container(
                     margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(MyString.txt_biz_tax_range,
+                    child: Text(MyString.txt_biz_tax_property,
                       style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
                   ),
                   Container(

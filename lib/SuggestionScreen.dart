@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:location/location.dart';
 import 'package:connectivity/connectivity.dart';
@@ -29,17 +30,20 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
   UserDb _userDb = UserDb();
   UserModel _userModel;
   Response _response;
+  StreamSubscription<LocationData> _streamSubscription;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    _subjectList = [_dropDownSubject,'လမ်းပြင်၊ လမ်းပျက်','အမှိုက်','ရေမြောင်း','ရေကြီး၊ ရေလျှံ','မီးကြိုး','တိရိစ္ဆာန်အရေး','ရေပေးဝေရေး','အများပိုင်နေရာ','အခြား'];
+    _subjectList = [_dropDownSubject,];
+    _subjectList.addAll(MyArray.suggestion_subject);
+    _location.changeSettings(accuracy: LocationAccuracy.HIGH, interval: 3000, distanceFilter: 0);
     _location.serviceEnabled().then((isEnable){
       if(!isEnable){
         _location.requestService().then((value){
           if(value){
-            _location.onLocationChanged().listen((currentLocation){
+            _streamSubscription = _location.onLocationChanged().listen((currentLocation){
               _lat = currentLocation.latitude.toString();
               _lng = currentLocation.longitude.toString();
             });
@@ -48,7 +52,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
           }
         });
       }else{
-        _location.onLocationChanged().listen((currentLocation){
+        _streamSubscription = _location.onLocationChanged().listen((currentLocation){
           _lat = currentLocation.latitude.toString();
           _lng = currentLocation.longitude.toString();
         });
@@ -307,5 +311,13 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
         ),
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    //stop listen location
+    _streamSubscription.cancel();
   }
 }

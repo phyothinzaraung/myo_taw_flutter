@@ -20,7 +20,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
     // TODO: implement initState
     super.initState();
     _bizLicenseTypeList = [_dropDownBizLicenseType];
-    _bizList.addAll(MyArray.biz_mlm_license);
+    _bizLicenseTypeList.addAll(MyArray.biz_mlm_license);
     _bizList = [_dropDownBizType];
   }
 
@@ -281,6 +281,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
                   ),
                   RaisedButton(onPressed: (){
                     Navigator.of(context).pop();
+                    clear();
                     },child: Text(MyString.txt_close,
                     style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),)
@@ -288,6 +289,13 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
               )
             ],), onWillPop: (){});
     }, barrierDismissible: false);
+  }
+
+  clear(){
+    setState(() {
+      _dropDownBizLicenseType = MyString.txt_no_selected;
+      _dropDownBizType = MyString.txt_no_selected;
+    });
   }
 
   @override
