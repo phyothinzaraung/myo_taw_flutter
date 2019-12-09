@@ -10,28 +10,30 @@ class AdminLocationUpdateScreen extends StatefulWidget {
   _AdminLocationUpdateScreenState createState() => _AdminLocationUpdateScreenState();
 }
 
-class _AdminLocationUpdateScreenState extends State<AdminLocationUpdateScreen> {
+class _AdminLocationUpdateScreenState extends State<AdminLocationUpdateScreen> with TickerProviderStateMixin {
   Completer<GoogleMapController> _controller = Completer();
   var _location = new Location();
   CameraPosition _cameraPosition;
-  String _lat, _lng;
   LatLng _latLng;
+  AnimationController _animatinController;
+  Tween<double> _tween = Tween(begin: 1, end: 2);
+  StreamSubscription<LocationData> _streamSubscription;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _animatinController = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
+    _animatinController.repeat(reverse: true);
     _location.serviceEnabled().then((isEnable){
       if(!isEnable){
         _location.requestService().then((value){
           if(value){
-            _location.onLocationChanged().listen((currentLocation){
-              _lat = currentLocation.latitude.toString();
-              _lng = currentLocation.longitude.toString();
+            _streamSubscription = _location.onLocationChanged().listen((currentLocation){
               setState(() {
                 _cameraPosition = CameraPosition(
                   target: LatLng(currentLocation.latitude, currentLocation.longitude),
-                  zoom: 14.4746,
+                  zoom: 17,
                 );
               });
             });
@@ -41,14 +43,12 @@ class _AdminLocationUpdateScreenState extends State<AdminLocationUpdateScreen> {
           }
         });
       }else{
-        _location.onLocationChanged().listen((currentLocation){
-          _lat = currentLocation.latitude.toString();
-          _lng = currentLocation.longitude.toString();
+        _streamSubscription = _location.onLocationChanged().listen((currentLocation){
           if(mounted){
             setState(() {
               _cameraPosition = CameraPosition(
                   target: LatLng(currentLocation.latitude, currentLocation.longitude),
-                  zoom: 15.0
+                  zoom: 17.0
               );
             });
           }
@@ -92,13 +92,28 @@ class _AdminLocationUpdateScreenState extends State<AdminLocationUpdateScreen> {
               _updatePosition(position);
             },
           ),
-          Image.asset('images/pin_holder.png', width: 30.0, height: 30.0,)
-
+          Align(
+            child: ScaleTransition(
+              scale: _tween.animate(CurvedAnimation(parent: _animatinController, curve: Curves.bounceIn)),
+              child: SizedBox(
+                height: 25,
+                width: 25,
+                child: Image.asset('images/pin_holder.png'),
+              ),
+            ),
+          ),
         ],
       ) :
       Center(
         child: CircularProgressIndicator(),
       )
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _streamSubscription.cancel();
   }
 }

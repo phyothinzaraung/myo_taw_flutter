@@ -35,6 +35,7 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
   Completer<GoogleMapController> _controller = Completer();
   CameraPosition _cameraPosition;
   StreamSubscription<LocationData> _streamSubscription;
+  Set<Marker> _markers = Set();
 
   @override
   void initState() {
@@ -54,8 +55,13 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
                  setState(() {
                    _cameraPosition = CameraPosition(
                      target: LatLng(currentLocation.latitude, currentLocation.longitude),
-                     zoom: 14.4746,
+                     zoom: 17,
                    );
+                   Marker _resultMarker = Marker(
+                       markerId: MarkerId(currentLocation.toString()),
+                       position: LatLng(currentLocation.latitude, currentLocation.longitude),
+                   );
+                   _markers.add(_resultMarker);
                  });
                }
             });
@@ -72,8 +78,13 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
             setState(() {
               _cameraPosition = CameraPosition(
                   target: LatLng(currentLocation.latitude, currentLocation.longitude),
-                  zoom: 15.0
+                  zoom: 17.0
               );
+              Marker _resultMarker = Marker(
+                markerId: MarkerId(currentLocation.toString()),
+                position: LatLng(currentLocation.latitude, currentLocation.longitude),
+              );
+              _markers.add(_resultMarker);
             });
           }
         });
@@ -191,9 +202,15 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
         _lng = latLng.longitude.toString();
         _cameraPosition = CameraPosition(
             target: LatLng(latLng.latitude, latLng.longitude),
-            zoom: 15.0
+            zoom: 17.0,
         );
         _updateCameraPosition(_cameraPosition);
+        Marker _resultMarker = Marker(
+            markerId: MarkerId(result.keys.toString()),
+            position: latLng
+        );
+        _markers.clear();
+        _markers.add(_resultMarker);
       });
     }
   }
@@ -249,8 +266,9 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
                                     onMapCreated: (controller){
                                       _controller.complete(controller);
                                     },
+                                    markers: _markers,
                                   ),
-                                  Image.asset('images/pin_holder.png', width: 15.0, height: 15.0,)
+                                  //Image.asset('images/pin_holder.png', width: 15.0, height: 15.0,)
                                 ],
                               )
                           ) :
