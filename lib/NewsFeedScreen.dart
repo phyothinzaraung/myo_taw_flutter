@@ -141,7 +141,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       for(var i in result){
         _newsFeedReactModel.add(NewsFeedReactModel.fromJson(i));
       }
-      //prevent set state is called after NewsFeedScreen is disposed
       setState(() {
         _isEnd = false;
       });

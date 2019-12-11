@@ -328,7 +328,8 @@ class DefaultLoadMoreDelegate extends LoadMoreDelegate {
       return Center(
           child: Column(
             children: <Widget>[
-              CircularProgressIndicator()
+              CircularProgressIndicator(),
+              Text("empty")
             ],
           )
       );
@@ -377,7 +378,7 @@ String _buildEnglishText(LoadMoreStatus status) {
       text = "ခေတ္တစောင့်ပါ";
       break;
     case LoadMoreStatus.nomore:
-      text = "ဒေတာမရှိတော့ပါ။";
+      text = "ဒေတာမရှိပါ။";
       break;
     default:
       text = "";
