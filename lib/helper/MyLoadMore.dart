@@ -329,7 +329,6 @@ class DefaultLoadMoreDelegate extends LoadMoreDelegate {
           child: Column(
             children: <Widget>[
               CircularProgressIndicator(),
-              Text("empty")
             ],
           )
       );

@@ -12,7 +12,7 @@ class ServiceHelper{
  final Dio dio = new Dio();
  int conTimeOut = 60000;
 
- getNewsFeed<Response>(int organizationId, int page, int pageSize, String userUniqueKey) async{
+ getNewsFeed<Response>({int organizationId, int page, int pageSize, String userUniqueKey}) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_NEWSFEED+"newsfeedposted/getcitynewsfeedver3",

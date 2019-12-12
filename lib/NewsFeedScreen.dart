@@ -30,7 +30,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   Response response;
   List<NewsFeedReactModel> _newsFeedReactModel = new List<NewsFeedReactModel>();
   ScrollController _scrollController = new ScrollController();
-  bool _isEnd , _isCon= false;
+  bool _isEnd = false, _isCon= false;
   int page = 1;
   int pageCount = 10;
   UserModel _userModel;
@@ -134,15 +134,15 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
-    response = await ServiceHelper().getNewsFeed(_organizationId, p, pageCount, _userModel.uniqueKey);
-    var result = response.data['Results'];
+    response = await ServiceHelper().getNewsFeed(organizationId: 9,page: p,pageSize: pageCount,userUniqueKey: _userUniqueKey);
+    List result = [];
     print('loadmore: ${p}');
     if(result != null){
       for(var i in result){
         _newsFeedReactModel.add(NewsFeedReactModel.fromJson(i));
       }
       setState(() {
-        _isEnd = false;
+        result.isNotEmpty?_isEnd = false : _isEnd = true;
       });
     }else{
       setState(() {
@@ -380,7 +380,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     );
   }
 
-  Widget _headerNewsFeedRefresh(){
+  Widget _emptyNewsFeed(){
     return Container(
       margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
       child: Column(
@@ -406,7 +406,9 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               )
             ],
           ),
-          CircularProgressIndicator()
+          Expanded(
+            child: Center(child: Image.asset('images/empty_box.png', width: 80, height: 80,)),
+          )
         ],
       ),
     );
@@ -494,7 +496,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             onLoadMore: _loadMore,
             delegate: DefaultLoadMoreDelegate(),
             textBuilder: DefaultLoadMoreTextBuilder.english,
-            child: _newsFeedReactModel.isNotEmpty?_listView():_headerNewsFeedRefresh()
+            child: _newsFeedReactModel.isNotEmpty?_listView():_emptyNewsFeed()
           ),
         ),
       )
