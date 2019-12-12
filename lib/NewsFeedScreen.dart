@@ -30,7 +30,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   Response response;
   List<NewsFeedReactModel> _newsFeedReactModel = new List<NewsFeedReactModel>();
   ScrollController _scrollController = new ScrollController();
-  bool _isEnd = false, _isCon= false;
+  bool _isEnd = false, _isCon= false, _isRefresh = false;
   int page = 1;
   int pageCount = 10;
   UserModel _userModel;
@@ -131,10 +131,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     }
     _initHeaderTitle();
     await _getNewsFeed(page);
+    setState(() {
+      _isRefresh = false;
+    });
   }
 
   _getNewsFeed(int p) async{
-    response = await ServiceHelper().getNewsFeed(organizationId: _organizationId,page: p,pageSize: pageCount,userUniqueKey: _userUniqueKey);
+    response = await ServiceHelper().getNewsFeed(organizationId: 7,page: p,pageSize: pageCount,userUniqueKey: _userUniqueKey);
     List result = response.data['Results'];
     print('loadmore: ${p}');
     if(result != null){
@@ -163,6 +166,9 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   Future<Null> _handleRefresh() async {
     await _checkCon();
+    setState(() {
+      _isRefresh = true;
+    });
     if(_isCon){
       _newsFeedReactModel.clear();
       page = 0;
@@ -496,7 +502,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             onLoadMore: _loadMore,
             delegate: DefaultLoadMoreDelegate(),
             textBuilder: DefaultLoadMoreTextBuilder.english,
-            child: _newsFeedReactModel.isNotEmpty?_listView():_emptyNewsFeed()
+            child: _isRefresh?_renderLoad():_newsFeedReactModel.isNotEmpty?_listView():_emptyNewsFeed()
           ),
         ),
       )
