@@ -246,7 +246,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
       });
       await _getDaoByDeptType(page);
     }else{
-      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
+      Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
     }
     return null;
   }

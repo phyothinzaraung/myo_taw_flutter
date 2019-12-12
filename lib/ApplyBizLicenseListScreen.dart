@@ -2,6 +2,9 @@ import 'package:async_loader/async_loader.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/myWidget/EmptyViewWidget.dart';
+import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
+import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:dio/dio.dart';
@@ -41,8 +44,9 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
   _getAllApplyBizLicense()async{
      await _sharepreferenceshelper.initSharePref();
     _response = await ServiceHelper().getAllApplyBizLicenseByUser(_sharepreferenceshelper.getRegionCode(), _sharepreferenceshelper.getUserUniqueKey());
-    if(_response.data != null){
-      var applyBizLicenseList = _response.data;
+     List applyBizLicenseList = _response.data;
+     //List applyBizLicenseList = [];
+    if(applyBizLicenseList != null && applyBizLicenseList.length > 0){
       for(var i in applyBizLicenseList){
         setState(() {
           _applyBizLicenseModelList.add(ApplyBizLicenseModel.fromJson(i));
@@ -58,15 +62,7 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
           return Column(
             children: <Widget>[
               //header
-              i==0?Container(
-                margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-                child: Row(
-                  children: <Widget>[
-                    Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/business_license_nocircle.png', width: 30.0, height: 30.0,)),
-                    Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall),)
-                  ],
-                ),
-              ):Container(),
+              i==0? headerTitleWidget(MyString.txt_apply_biz_license) : Container(),
               GestureDetector(
                 onTap: (){
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseDetailScreen(_applyBizLicenseModelList[i])));
@@ -108,31 +104,6 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
         });
   }
 
-  Widget _noConnectionWidget(){
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('No Internet Connection'),
-                  FlatButton(onPressed: (){
-                    asyncLoaderState.currentState.reloadState();
-                    _checkCon();
-                  }
-                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _renderLoad(){
     return Container(
       margin: EdgeInsets.only(top: 10.0),
@@ -146,15 +117,8 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
   }
 
   Future<Null> _handleRefresh() async {
-    await _checkCon();
-    if(_isCon){
-      setState(() {
-        _applyBizLicenseModelList.clear();
-      });
-      _getAllApplyBizLicense();
-    }else{
-      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
-    }
+    _applyBizLicenseModelList.clear();
+    asyncLoaderState.currentState.reloadState();
     return null;
   }
 
@@ -164,25 +128,12 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
         key: asyncLoaderState,
         initState: () async => await _getAllApplyBizLicense(),
         renderLoad: () => _renderLoad(),
-        renderError: ([error]) => _noConnectionWidget(),
+        renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
               onRefresh: _handleRefresh,
-              child: _applyBizLicenseModelList.isNotEmpty?_listView() :
-              Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-                    child: Row(
-                      children: <Widget>[
-                        Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/business_license_nocircle.png', width: 30.0, height: 30.0,)),
-                        Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall),)
-                      ],
-                    ),
-                  ),
-                  CircularProgressIndicator()
-                ],
-              )
+              child: _applyBizLicenseModelList.isNotEmpty? _listView() :
+              emptyView(asyncLoaderState,  MyString.txt_no_data)
           ),
         )
     );

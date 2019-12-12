@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/ServiceHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:dio/dio.dart';
@@ -9,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'model/DaoViewModel.dart';
 import 'DaoDetailScreen.dart';
 import 'DepartmentListScreen.dart';
+import 'myWidget/EmptyViewWidget.dart';
 
 class DaoScreen extends StatefulWidget {
   String str;
@@ -47,8 +49,8 @@ class _DaoScreenState extends State<DaoScreen> {
   _getAllDao()async{
     await _sharepreferenceshelper.initSharePref();
     _response = await ServiceHelper().getDao(page, pageSize, _sharepreferenceshelper.getRegionCode(), display);
-    if(_response.data != null){
-      var daoViewModelList = _response.data['Results'];
+    var daoViewModelList = _response.data['Results'];
+    if(daoViewModelList != null && daoViewModelList.length > 0){
       for(var i in daoViewModelList){
         setState(() {
           _daoViewModelList.add(DaoViewModel.fromJson(i));
@@ -90,31 +92,6 @@ class _DaoScreenState extends State<DaoScreen> {
     );
   }
 
-  Widget getNoConnectionWidget(){
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('No Internet Connection'),
-                  FlatButton(onPressed: (){
-                    asyncLoaderState.currentState.reloadState();
-                    _checkCon();
-                  }
-                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _renderLoad(){
     return Container(
       margin: EdgeInsets.only(top: 10.0),
@@ -128,15 +105,8 @@ class _DaoScreenState extends State<DaoScreen> {
   }
 
   Future<Null> _handleRefresh() async {
-    await _checkCon();
-    if(_isCon){
-      setState(() {
-        _daoViewModelList.clear();
-      });
-      _getAllDao();
-    }else{
-      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
-    }
+    _daoViewModelList.clear();
+    asyncLoaderState.currentState.reloadState();
     return null;
   }
 
@@ -146,16 +116,11 @@ class _DaoScreenState extends State<DaoScreen> {
         key: asyncLoaderState,
         initState: () async => await _getAllDao(),
         renderLoad: () => _renderLoad(),
-        renderError: ([error]) => getNoConnectionWidget(),
+        renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
             onRefresh: _handleRefresh,
-            child: _daoViewModelList.isNotEmpty?_listView() :
-            Container(
-              margin: EdgeInsets.only(top: 10.0),
-              child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[CircularProgressIndicator()],),
-            )
+            child: _daoViewModelList.isNotEmpty?_listView() : emptyView(asyncLoaderState,MyString.txt_no_data),
           ),
         )
     );

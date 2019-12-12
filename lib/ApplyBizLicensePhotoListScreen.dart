@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/ApplyBizLicenseModel.dart';
 import 'model/ApplyBizLicensePhotoModel.dart';
@@ -12,6 +13,7 @@ import 'helper/SharePreferencesHelper.dart';
 import 'helper/ServiceHelper.dart';
 import 'PhotoDetailScreen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'myWidget/NoConnectionWidget.dart';
 
 class ApplyBizLicensePhotoListScreen extends StatefulWidget {
   ApplyBizLicenseModel model;
@@ -59,8 +61,9 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
   _getAllBizLicense()async{
     await _sharepreferenceshelper.initSharePref();
     _response = await ServiceHelper().getApplyBizPhotoList(_applyBizLicenseModel.id);
-    if(_response.data != null){
-      var applyBizLicensePhotoList = _response.data;
+    List applyBizLicensePhotoList = _response.data;
+    //List applyBizLicensePhotoList = [];
+    if(applyBizLicensePhotoList != null && applyBizLicensePhotoList.length > 0){
       for(var i in applyBizLicensePhotoList){
         setState(() {
           _applyBizLicensePhotoModelList.add(ApplyBizLicensePhotoModel.fromJson(i));
@@ -70,7 +73,8 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
   }
 
   _listView(){
-    return Container(
+    return _applyBizLicensePhotoModelList.isNotEmpty?
+    Container(
         child: CustomScrollView(
           slivers: <Widget>[
             SliverGrid(
@@ -91,32 +95,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                     crossAxisSpacing: 0.0))
           ],
         )
-    );
-  }
-
-  Widget _noConnectionWidget(){
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('No Internet Connection'),
-                  FlatButton(onPressed: (){
-                    asyncLoaderState.currentState.reloadState();
-                    _checkCon();
-                  }
-                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
+    ) : emptyView(asyncLoaderState,MyString.txt_no_data);
   }
 
   Widget _renderLoad(){
@@ -132,15 +111,8 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
   }
 
   Future<Null> _handleRefresh() async {
-    await _checkCon();
-    if(_isCon){
-      setState(() {
-        _applyBizLicensePhotoModelList.clear();
-      });
-      _getAllBizLicense();
-    }else{
-      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
-    }
+    _applyBizLicensePhotoModelList.clear();
+    asyncLoaderState.currentState.reloadState();
     return null;
   }
 
@@ -181,14 +153,14 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
         key: asyncLoaderState,
         initState: () async => await _getAllBizLicense(),
         renderLoad: () => _renderLoad(),
-        renderError: ([error]) => _noConnectionWidget(),
+        renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
               onRefresh: _handleRefresh,
-              child: _applyBizLicensePhotoModelList.isNotEmpty?Column(
+              child: Column(
                 children: <Widget>[
                   Expanded(child: _listView()),
-                  _applyBizLicenseModel.isValid==true?Container():Row(
+                  _applyBizLicenseModel.isValid?Container():Row(
                     children: <Widget>[
                       Flexible(
                           flex: 2,
@@ -197,30 +169,30 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                               gallery();
                             },
                             child: _image==null?Image.asset('images/add_image_placeholder.png', width: double.maxFinite, height: 50.0,):
-                      Image.file(_image, width: 50.0, height: 50.0, fit: BoxFit.cover,),
+                            Image.file(_image, width: 50.0, height: 50.0, fit: BoxFit.cover,),
                           )),
                       Flexible(
-                        flex: 8,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: <Widget>[
-                            Container(
-                              padding: EdgeInsets.all(5.0),
-                              width: double.maxFinite,
-                              color: Colors.white,
-                              height: 50.0,
-                              child: TextField(
-                                decoration: InputDecoration(
-                                  border: InputBorder.none,
-                                  hintText:'Type attach photo file name',
+                          flex: 8,
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: <Widget>[
+                              Container(
+                                padding: EdgeInsets.all(5.0),
+                                width: double.maxFinite,
+                                color: Colors.white,
+                                height: 50.0,
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    hintText:'Type attach photo file name',
+                                  ),
+                                  cursorColor: MyColor.colorPrimary,
+                                  controller: _fileTitleController,
+                                  style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack),
                                 ),
-                                cursorColor: MyColor.colorPrimary,
-                                controller: _fileTitleController,
-                                style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack),
                               ),
-                            ),
-                          ],
-                        )
+                            ],
+                          )
                       ),
                       Flexible(
                         flex: 3,
@@ -253,11 +225,6 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                     ],
                   )
                 ],
-              ) :
-              Container(
-                margin: EdgeInsets.only(top: 10.0),
-                child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[CircularProgressIndicator()],),
               )
           ),
         )

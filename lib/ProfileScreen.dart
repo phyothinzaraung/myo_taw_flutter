@@ -121,41 +121,41 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _dialogLogOut(){
     showDialog(context: (context),
-      builder: (context){
-        return SimpleDialog(
-          children: <Widget>[
-            Column(
-              children: <Widget>[
-                Container(margin: EdgeInsets.only(bottom: 10.0),child: Image.asset('images/logout_icon.png', width: 50.0, height: 50.0,)),
-                Container(margin: EdgeInsets.only(bottom: 10.0),child: Text(MyString.txt_are_u_sure,
-                  style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: <Widget>[
-                    Container(
-                      height: 40.0,
-                      width: 90.0,
-                      child: RaisedButton(onPressed: (){
-                        _logOutClear();
+        builder: (context){
+          return SimpleDialog(
+            children: <Widget>[
+              Column(
+                children: <Widget>[
+                  Container(margin: EdgeInsets.only(bottom: 10.0),child: Image.asset('images/logout_icon.png', width: 50.0, height: 50.0,)),
+                  Container(margin: EdgeInsets.only(bottom: 10.0),child: Text(MyString.txt_are_u_sure,
+                    style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      Container(
+                        height: 40.0,
+                        width: 90.0,
+                        child: RaisedButton(onPressed: (){
+                          _logOutClear();
                         },child: Text(MyString.txt_log_out,style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                        color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
-                    ),
-                    Container(
-                      height: 40.0,
-                      width: 90.0,
-                      child: RaisedButton(onPressed: (){
+                          color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
+                      ),
+                      Container(
+                        height: 40.0,
+                        width: 90.0,
+                        child: RaisedButton(onPressed: (){
                           Navigator.of(context).pop();
                         },child: Text(MyString.txt_log_out_cancel,style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
-                        color: MyColor.colorGrey,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
-                    )
+                          color: MyColor.colorGrey,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
+                      )
 
-                  ],
-                )
-              ],
-            )
-          ],
-        );
-      }
+                    ],
+                  )
+                ],
+              )
+            ],
+          );
+        }
     );
   }
 
@@ -210,11 +210,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                             _isLoading = true;
                           });
                           _deleteTaxRecord(id);
-                          },child: Text(MyString.txt_delete,
+                        },child: Text(MyString.txt_delete,
                           style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,),
                         RaisedButton(onPressed: (){
                           Navigator.of(context).pop();
-                          },child: Text(MyString.txt_delete_cancel, style: TextStyle(fontSize: FontSize.textSizeSmall),),color: MyColor.colorGrey,)
+                        },child: Text(MyString.txt_delete_cancel, style: TextStyle(fontSize: FontSize.textSizeSmall),),color: MyColor.colorGrey,)
                       ],
                     ),
                   )
@@ -234,7 +234,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
         child: Row(
           children: <Widget>[
-           Image.asset('images/tax_record.png', width: 50.0, height: 50.0,),
+            Image.asset('images/tax_record.png', width: 50.0, height: 50.0,),
             Expanded(
               child: Container(
                 margin: EdgeInsets.all(15.0),
@@ -250,7 +250,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ),
             GestureDetector(onTap: (){
               _dialogDelete(taxRecordModel.id);
-              },child: Icon(Icons.delete, color: MyColor.colorPrimary,))
+            },child: Icon(Icons.delete, color: MyColor.colorPrimary,))
           ],
         ),
       ),
@@ -397,9 +397,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 //new tax record
                 child: RaisedButton(onPressed: (){
                   _navigateToNewTaxRecordScreen();
-                  },child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
+                },child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
                     Container(margin: EdgeInsets.only(right: 10.0),child: Text(MyString.txt_tax_new_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
                     Icon(Icons.add, color: Colors.white,)
                   ],
@@ -550,14 +550,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         itemBuilder: (context, i){
           return Column(
             children: <Widget>[
-          i==0?Container(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              _headerProfile(),
-            ],
-          ),
-          ): Container(width: 0.0, height: 0.0,),
+              i==0?Container(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    _headerProfile(),
+                  ],
+                ),
+              ): Container(width: 0.0, height: 0.0,),
               _taxRecordList(i)
             ],
           );
@@ -577,7 +577,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               FlatButton(onPressed: (){
                 asyncLoaderState.currentState.reloadState();
                 _checkCon();
-                }
+              }
                 , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
             ],
           ),
@@ -588,12 +588,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _renderLoad(){
     return Container(
-      child: ListView(
-        children: <Widget>[
-          _headerProfile(),
-          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
-        ],
-      )
+        child: ListView(
+          children: <Widget>[
+            _headerProfile(),
+            Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
+          ],
+        )
     );
   }
 
@@ -640,7 +640,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 textBuilder: DefaultLoadMoreTextBuilder.english,
                 child: _isRefresh==false?
                 _taxRecordModelList.isNotEmpty?_listView(): ListView(children: <Widget>[_headerProfile()],) :
-                    ListView(children: <Widget>[_headerProfileRefresh()],)
+                ListView(children: <Widget>[_headerProfileRefresh()],)
             ),
           ),
         )

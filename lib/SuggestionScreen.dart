@@ -5,6 +5,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'helper/SharePreferencesHelper.dart';
@@ -171,16 +172,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
         progressIndicator: modalProgressIndicator(),
         child: ListView(
           children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 30.0, right: 30.0, top: 15.0, bottom: 15.0),
-              child: Row(
-                children: <Widget>[
-                  Container(margin: EdgeInsets.only(right: 10.0),
-                      child: Image.asset('images/suggestion_no_circle.png', width: 30.0, height: 30.0,)),
-                  Text(MyString.title_suggestion, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
-                ],
-              ),
-            ),
+            headerTitleWidget(MyString.title_suggestion),
             Card(
               margin: EdgeInsets.all(0.0),
               child: Container(

@@ -19,6 +19,8 @@ import 'Database/SaveNewsFeedDb.dart';
 import 'model/SaveNewsFeedModel.dart';
 import 'ProfileScreen.dart';
 import 'Database/UserDb.dart';
+import 'myWidget/EmptyViewWidget.dart';
+import 'myWidget/NoConnectionWidget.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   @override
@@ -138,14 +140,15 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   _getNewsFeed(int p) async{
     response = await ServiceHelper().getNewsFeed(organizationId: _organizationId,page: p,pageSize: pageCount,userUniqueKey: _userUniqueKey);
-    List result = response.data['Results'];
+    var result = response.data['Results'];
+    //var result = [];
     print('loadmore: ${p}');
-    if(result != null){
+    if(result != null && result.length > 0){
       for(var i in result){
         _newsFeedReactModel.add(NewsFeedReactModel.fromJson(i));
       }
       setState(() {
-        result.isNotEmpty?_isEnd = false : _isEnd = true;
+        _isEnd = false;
       });
     }else{
       setState(() {
@@ -386,7 +389,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     );
   }
 
-  Widget _emptyNewsFeed(){
+  Widget _emptyView(){
     return Container(
       margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
       child: Column(
@@ -412,9 +415,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               )
             ],
           ),
-          Expanded(
-            child: Center(child: Image.asset('images/empty_box.png', width: 80, height: 80,)),
-          )
+          Expanded(child: emptyView(asyncLoaderState,MyString.txt_no_newsFeed_data))
         ],
       ),
     );
@@ -443,29 +444,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     );
   }
 
-  Widget getNoConnectionWidget(){
+  Widget _noConWidget(){
     return Container(
       margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
       child: Column(
         children: <Widget>[
           _headerNewsFeed(),
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('No Internet Connection'),
-                  FlatButton(onPressed: (){
-
-                    asyncLoaderState.currentState.reloadState();
-                    _checkCon();
-
-                    }
-                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
-                ],
-              ),
-            ),
-          )
+          Expanded(child: noConnectionWidget(asyncLoaderState))
         ],
       ),
     );
@@ -493,17 +478,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       key: asyncLoaderState,
       initState: () async => await _getUser(),
       renderLoad: () => _renderLoad(),
-      renderError: ([error]) => getNoConnectionWidget(),
+      renderError: ([error]) => _noConWidget(),
       renderSuccess: ({data}) => Container(
         child: RefreshIndicator(
           onRefresh: _handleRefresh,
-          child: LoadMore(
-            isFinish: _isEnd,
-            onLoadMore: _loadMore,
-            delegate: DefaultLoadMoreDelegate(),
-            textBuilder: DefaultLoadMoreTextBuilder.english,
-            child: _isRefresh?_renderLoad():_newsFeedReactModel.isNotEmpty?_listView():_emptyNewsFeed()
-          ),
+          child: _isRefresh?_renderLoad():_newsFeedReactModel.isNotEmpty?_listView():_emptyView()
         ),
       )
     );

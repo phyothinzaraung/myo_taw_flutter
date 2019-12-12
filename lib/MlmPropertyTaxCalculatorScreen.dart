@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
 
@@ -218,15 +219,7 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
         Container(
           child: Column(
             children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-                child: Row(
-                  children: <Widget>[
-                    Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/tax_nocircle.png', width: 30.0, height: 30.0,)),
-                    Text(MyString.title_property_tax_calculate, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),)
-                  ],
-                ),
-              ),
+              headerTitleWidget(MyString.title_property_tax_calculate),
               Card(
                 margin: EdgeInsets.only(left: 0, right: 0),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),

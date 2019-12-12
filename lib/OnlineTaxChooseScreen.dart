@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/OnlineTaxScreen.dart';
+import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'PinCodeSetUpScreen.dart';
 import 'helper/MyoTawConstant.dart';
@@ -108,76 +109,69 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
           title: Text(MyString.txt_online_payment_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),)
       ),
       body: Container(
-        margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
         child: Column(
           children: <Widget>[
+            headerTitleWidget(MyString.txt_online_tax),
             Container(
-              margin: EdgeInsets.only(bottom: 20),
-              //text header
+              margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
               child: Row(
                 children: <Widget>[
-                  Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/calculate_tax_no_circle.png', width: 30.0, height: 30.0,)),
-                  Text(MyString.txt_online_tax, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),)
+                  Flexible(
+                    flex: 1,
+                    child: GestureDetector(
+                      onTap: (){
+                        if(_userModel.pinCode != null){
+                          setState(() {
+                            _hasError = false;
+                          });
+                          //_dialogPinRequest('OnlineTax');
+                          Fluttertoast.showToast(msg: 'Comming soon', backgroundColor: Colors.black54, fontSize: FontSize.textSizeNormal);
+                        }else{
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(15),
+                        child: Column(
+                          children: <Widget>[
+                            //image biz license tax
+                            Container(
+                                margin: EdgeInsets.only(bottom: 10),
+                                child: Image.asset('images/online_tax.png')),
+                            //text biz license tax
+                            Text(MyString.title_online_tax_payment, textAlign: TextAlign.center,style: TextStyle(fontSize: FontSize.textSizeNormal),)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Flexible(
+                    flex: 1,
+                    child: GestureDetector(
+                      onTap: (){
+                        if(_userModel.pinCode != null){
+                          _dialogPinRequest('SmartWm');
+                        }else{
+                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
+                        }
+                      },
+                      child: Container(
+                        padding: EdgeInsets.all(15),
+                        child: Column(
+                          children: <Widget>[
+                            //image property tax
+                            Container(
+                                margin: EdgeInsets.only(bottom: 10),
+                                child: Image.asset('images/smart_water_meter.png')),
+                            //text property tax
+                            Text(MyString.title_smart_water_meter, textAlign: TextAlign.center,style: TextStyle(fontSize: FontSize.textSizeNormal))
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
-            ),
-            Row(
-              children: <Widget>[
-                Flexible(
-                  flex: 1,
-                  child: GestureDetector(
-                    onTap: (){
-                      if(_userModel.pinCode != null){
-                        setState(() {
-                          _hasError = false;
-                        });
-                        //_dialogPinRequest('OnlineTax');
-                        Fluttertoast.showToast(msg: 'Comming soon', backgroundColor: Colors.black54, fontSize: FontSize.textSizeNormal);
-                      }else{
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
-                      }
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(15),
-                      child: Column(
-                        children: <Widget>[
-                          //image biz license tax
-                          Container(
-                              margin: EdgeInsets.only(bottom: 10),
-                              child: Image.asset('images/online_tax.png')),
-                          //text biz license tax
-                          Text(MyString.title_online_tax_payment, textAlign: TextAlign.center,style: TextStyle(fontSize: FontSize.textSizeNormal),)
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                Flexible(
-                  flex: 1,
-                  child: GestureDetector(
-                    onTap: (){
-                      if(_userModel.pinCode != null){
-                        _dialogPinRequest('SmartWm');
-                      }else{
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
-                      }
-                    },
-                    child: Container(
-                      padding: EdgeInsets.all(15),
-                      child: Column(
-                        children: <Widget>[
-                          //image property tax
-                          Container(
-                              margin: EdgeInsets.only(bottom: 10),
-                              child: Image.asset('images/smart_water_meter.png')),
-                          //text property tax
-                          Text(MyString.title_smart_water_meter, textAlign: TextAlign.center,style: TextStyle(fontSize: FontSize.textSizeNormal))
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
             )
           ],
         ),

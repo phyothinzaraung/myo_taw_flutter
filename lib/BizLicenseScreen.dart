@@ -1,6 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
+import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:dio/dio.dart';
@@ -9,6 +10,7 @@ import 'package:async_loader/async_loader.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'BizLicenseDetailScreen.dart';
 import 'ApplyBizLicenseListScreen.dart';
+import 'myWidget/EmptyViewWidget.dart';
 
 class BizLicenseScreen extends StatefulWidget {
   @override
@@ -42,8 +44,9 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
   _getAllBizLicense()async{
     await _sharepreferenceshelper.initSharePref();
     _response = await ServiceHelper().getBizLicense(_sharepreferenceshelper.getRegionCode());
-    if(_response.data != null){
-      var bizLicenseList = _response.data;
+    List bizLicenseList = _response.data;
+    //var bizLicenseList = [];
+    if(bizLicenseList != null && bizLicenseList.length > 0){
       for(var i in bizLicenseList){
         setState(() {
           _bizLicenseModelList.add(BizLicenseModel.fromJson(i));
@@ -59,15 +62,7 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
           return Column(
             children: <Widget>[
               //header
-              i==0?Container(
-                margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-                child: Row(
-                  children: <Widget>[
-                    Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/business_license_nocircle.png', width: 30.0, height: 30.0,)),
-                    Text(MyString.title_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall),)
-                  ],
-                ),
-              ):Container(),
+              i==0? headerTitleWidget(MyString.title_biz_license) : Container(),
               GestureDetector(
                 onTap: (){
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseDetailScreen(_bizLicenseModelList[i])));
@@ -99,31 +94,6 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
         });
   }
 
-  Widget _noConnectionWidget(){
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('No Internet Connection'),
-                  FlatButton(onPressed: (){
-                    asyncLoaderState.currentState.reloadState();
-                    _checkCon();
-                    }
-                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _renderLoad(){
     return Container(
       margin: EdgeInsets.only(top: 10.0),
@@ -137,15 +107,8 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
   }
 
   Future<Null> _handleRefresh() async {
-    await _checkCon();
-    if(_isCon){
-      setState(() {
-        _bizLicenseModelList.clear();
-      });
-      _getAllBizLicense();
-    }else{
-      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
-    }
+    _bizLicenseModelList.clear();
+    asyncLoaderState.currentState.reloadState();
     return null;
   }
 
@@ -156,25 +119,17 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
         key: asyncLoaderState,
         initState: () async => await _getAllBizLicense(),
         renderLoad: () => _renderLoad(),
-        renderError: ([error]) => _noConnectionWidget(),
+        renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
               onRefresh: _handleRefresh,
-              child: _bizLicenseModelList.isNotEmpty?_listView() :
-              Column(
-                children: <Widget>[
-                  Container(
-                    margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-                    child: Row(
-                      children: <Widget>[
-                        Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/business_license_nocircle.png', width: 30.0, height: 30.0,)),
-                        Text(MyString.title_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall),)
-                      ],
-                    ),
-                  ),
-                  CircularProgressIndicator()
-                ],
-              )
+              child: _bizLicenseModelList.isNotEmpty? _listView() :
+                  Column(
+                    children: <Widget>[
+                      headerTitleWidget(MyString.title_biz_license),
+                      Expanded(child: emptyView(asyncLoaderState,MyString.txt_no_data)),
+                    ],
+                  )
           ),
         )
     );

@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/EmptyViewWidget.dart';
+import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
+import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
@@ -21,7 +24,7 @@ class _FaqScreenState extends State<FaqScreen> {
   int pageSize = 100;
   List<FaqModel> _faqList = new List<FaqModel>();
   bool _isCon, _isLoading = false;
-  var faqModelList;
+  List faqModelList = new List();
   String _dropDownCategory = 'အားလုံး';
   List<String> _categoryList = new List<String>();
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
@@ -37,9 +40,10 @@ class _FaqScreenState extends State<FaqScreen> {
     await _sharepreferenceshelper.initSharePref();
     _regionCode = await _sharepreferenceshelper.getRegionCode();
     _response = await ServiceHelper().getAllFaq(_regionCode, page, pageSize, category);
-    if(_response.data != null){
+    faqModelList = _response.data['FAQwithPaging']['Results'];
+    //faqModelList = [];
+    if(faqModelList != null && faqModelList.length > 0){
       var categoryList = _response.data['CategoryList'];
-      faqModelList = _response.data['FAQwithPaging']['Results'];
       for(var i in categoryList){
         if(i != null){
           setState(() {
@@ -63,8 +67,9 @@ class _FaqScreenState extends State<FaqScreen> {
     await _sharepreferenceshelper.initSharePref();
     _regionCode = await _sharepreferenceshelper.getRegionCode();
     _response = await ServiceHelper().getAllFaq(_regionCode, page, pageSize, category);
+    faqModelList = _response.data['FAQwithPaging']['Results'];
     if(_response.data != null){
-      faqModelList = _response.data['FAQwithPaging']['Results'];
+
       for(var i in faqModelList){
         setState(() {
           _faqList.add(FaqModel.fromJson(i));
@@ -132,18 +137,6 @@ class _FaqScreenState extends State<FaqScreen> {
         });
   }
 
-  _headerFaq(){
-    return Container(
-      margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-      child: Row(
-        children: <Widget>[
-          Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/questions_mark_no_circle.png', width: 30.0, height: 30.0,)),
-          Text(MyString.title_faq, style: TextStyle(fontSize: FontSize.textSizeSmall),)
-        ],
-      ),
-    );
-  }
-
   _checkCon()async{
     var conResult = await(Connectivity().checkConnectivity());
     if (conResult == ConnectivityResult.none) {
@@ -154,52 +147,12 @@ class _FaqScreenState extends State<FaqScreen> {
     print('isCon : ${_isCon}');
   }
 
-  Widget getNoConnectionWidget(){
-    return Container(
-      child: Column(
-        children: <Widget>[
-          _headerFaq(),
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('No Internet Connection'),
-                  FlatButton(onPressed: (){
-                    asyncLoaderState.currentState.reloadState();
-                    _checkCon();
-                  }
-                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  /*Future<Null> _handleRefresh() async {
-    await _checkCon();
-    if(_isCon){
-      setState(() {
-        _faqList.clear();
-        _categoryList.clear();
-      });
-      _category = '';
-      await _getAllFaq(_category);
-    }else{
-      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
-    }
-    return null;
-  }*/
-
   Widget _renderLoad(){
     return Container(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          _headerFaq(),
+          headerTitleWidget(MyString.title_faq),
           Container(margin: EdgeInsets.only(top: 10.0),child: CircularProgressIndicator())
         ],
       )
@@ -232,11 +185,11 @@ class _FaqScreenState extends State<FaqScreen> {
         key: asyncLoaderState,
         initState: () async => await _getAllFaq(_category),
         renderLoad: () => _renderLoad(),
-        renderError: ([error]) => getNoConnectionWidget(),
+        renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => Container(
           child: Column(
             children: <Widget>[
-              _headerFaq(),
+              headerTitleWidget(MyString.title_faq),
               Card(
                 margin: EdgeInsets.all(0.0),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
@@ -278,7 +231,8 @@ class _FaqScreenState extends State<FaqScreen> {
                         ),
                       ),
                     ),)),
-              Expanded(child: _listView())
+              Expanded(child: !_isLoading?
+              _faqList.isNotEmpty? _listView() : emptyView(asyncLoaderState, MyString.txt_no_data) : Container())
             ],
           ),
         )

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/SaveNewsFeedModel.dart';
 import 'Database/SaveNewsFeedDb.dart';
@@ -88,15 +89,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
           return Container(
             child: Column(
               children: <Widget>[
-                i==0?Container(
-                  margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-                  child: Row(
-                    children: <Widget>[
-                      Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/file_save.png', width: 30.0, height: 30.0,)),
-                      Text(MyString.title_save_nf, style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)
-                    ],
-                  ),
-                ):Container(width: 0.0, height: 0.0,),
+                i==0?headerTitleWidget(MyString.title_save_nf) : Container(width: 0.0, height: 0.0,),
                 GestureDetector(
                   onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedDetailScreen(model)));
@@ -166,15 +159,9 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
       body: Container(
         child: _saveNewsFeedList.isNotEmpty?_listView():
         Container(
-          margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
           child: Column(
             children: <Widget>[
-              Row(
-                children: <Widget>[
-                  Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/file_save.png', width: 30.0, height: 30.0,)),
-                  Text(MyString.title_save_nf, style: TextStyle(fontSize: FontSize.textSizeSmall ,color: MyColor.colorTextBlack),)
-                ],
-              ),
+              headerTitleWidget(MyString.title_save_nf),
               Expanded(
                 child: Center(
                   child: Image.asset('images/empty_box.png', width: 70.0, height: 70.0,),

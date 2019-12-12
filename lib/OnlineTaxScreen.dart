@@ -320,7 +320,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
       });
       _getUser();
     }else{
-      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
+      Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
     }
     return null;
   }

@@ -314,9 +314,8 @@ class DefaultLoadMoreDelegate extends LoadMoreDelegate {
         width: double.infinity,
         height: 50.0,
         child: Container(
-          color: Colors.black87,
           child: FlatButton(
-            child: new Text(text, style: new TextStyle(color: Colors.white),),
+            child: Image.asset('images/refresh.png', width: 40, height: 40,),
           ),
         ),
       );

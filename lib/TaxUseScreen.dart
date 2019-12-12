@@ -1,7 +1,8 @@
 import 'package:async_loader/async_loader.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/myWidget/EmptyViewWidget.dart';
+import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:pie_chart/pie_chart.dart';
 import 'helper/PieChartColorHelper.dart';
@@ -50,8 +51,9 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
   _getTaxUse(int year)async{
     await _sharepreferenceshelper.initSharePref();
     _response = await ServiceHelper().getTaxUser(_sharepreferenceshelper.getRegionCode(), TaxUseBudgetYearHelper().getBudgetYear(year));
-    if(_response.data != null){
-      List list = _response.data;
+    List list = _response.data;
+    //List list = [];
+    if(list != null && list.length > 0){
       for(var i in list){
         setState(() {
           _taxUserModelList.add(TaxUserModel.fromJson(i));
@@ -109,31 +111,6 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
     );
   }
 
-  Widget getNoConnectionWidget(){
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('No Internet Connection'),
-                  FlatButton(onPressed: (){
-                    asyncLoaderState.currentState.reloadState();
-                    _checkCon();
-                  }
-                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _renderLoad(){
     return Container(
       margin: EdgeInsets.only(top: 10.0),
@@ -147,16 +124,9 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
   }
 
   Future<Null> _handleRefresh() async {
-    await _checkCon();
-    if(_isCon){
-      setState(() {
-        _taxUserModelList.clear();
-        _legnedList.clear();
-      });
-      await _getTaxUse(_year);
-    }else{
-      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
-    }
+    _taxUserModelList.clear();
+    _legnedList.clear();
+    asyncLoaderState.currentState.reloadState();
     return null;
   }
 
@@ -185,11 +155,12 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
         key: asyncLoaderState,
         initState: () async => await _getTaxUse(_year),
         renderLoad: () => _renderLoad(),
-        renderError: ([error]) => getNoConnectionWidget(),
+        renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
               onRefresh: _handleRefresh,
-              child: _taxUserModelList.isNotEmpty?_listView() : Center(child: Text(MyString.txt_tax_use_no_data, style: TextStyle(fontSize: FontSize.textSizeNormal),),)
+              child: _taxUserModelList.isNotEmpty? _listView() :
+              !_isLoading?emptyView(asyncLoaderState, MyString.txt_no_data) : Container()
           ),
         )
     );

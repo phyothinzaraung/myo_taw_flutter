@@ -196,6 +196,9 @@ class MyString{
   static const String txt_enter_otp = "OTP ကုဒ်ရိုက်ထည့်ပေးပါ";
   static const String txt_fill_otp = "OTP ကုဒ်ကိုဖြည့်ပါ";
   static const String txt_otp_not_exceed_4 = "OTP ကုဒ် ၄ လုံးထက်ကျော်၍မရပါ";
+  static const String txt_no_internet = "ကွန်နက်ရှင်ကိုစစ်ဆေးပါ။";
+  static const String txt_no_newsFeed_data = "သတင်းများမရှိသေးပါ။";
+  static const String txt_no_data = "ဒေတာမရှိပါ။";
 
 
   static const String BUILDING_GRADE_A = "building grade A";
