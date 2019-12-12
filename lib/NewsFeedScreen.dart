@@ -135,7 +135,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   _getNewsFeed(int p) async{
     response = await ServiceHelper().getNewsFeed(organizationId: 9,page: p,pageSize: pageCount,userUniqueKey: _userUniqueKey);
-    List result = [];
+    List result = response.data['Results'];
     print('loadmore: ${p}');
     if(result != null){
       for(var i in result){
