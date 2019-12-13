@@ -17,6 +17,7 @@ void main() {
     statusBarColor: MyColor.colorPrimaryDark,
     systemNavigationBarIconBrightness: Brightness.dark,
   ));*/
+  WidgetsFlutterBinding.ensureInitialized();
   try {
     FlutterStatusbarcolor.setStatusBarColor(MyColor.colorPrimaryDark);
   }  catch (e) {
