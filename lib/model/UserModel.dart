@@ -139,7 +139,28 @@ class UserModel{
         _pinCode = json['PinCode'],
         _amount = json['Amount'];
 
-  UserModel.fromMap(Map<String, dynamic> map):
+  Map<String, dynamic> toJson(){
+    Map<String, dynamic> json =new Map<String, dynamic>();
+     json['UniqueKey'] = _uniqueKey;
+     json['Name'] = _name;
+     json['PhoneNo'] = _phoneNo;
+     json['PhotoUrl'] = _photoUrl;
+     json['State'] = _state;
+     json['Township'] = _township;
+     json['Address'] = _address;
+     json['RegisteredDate'] = _registeredDate;
+     json['Accesstime'] = _accesstime;
+     json['IsDeleted'] = _isDeleted;
+     json['Resource'] = _resource;
+     json['AndroidToken'] = _androidToken;
+     json['CurrentRegionCode'] = _currentRegionCode;
+     json['PinCode'] = _pinCode;
+     json['Amount'] = _amount;
+
+     return json;
+  }
+
+  UserModel.fromDataBase(Map<String, dynamic> map):
         _uniqueKey = map[DbHelper.COLUMN_USER_UNIQUE],
         _name = map[DbHelper.COLUMN_USER_NAME],
         _phoneNo = map[DbHelper.COLUMN_USER_PHONE_NO],

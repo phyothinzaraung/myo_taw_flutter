@@ -244,5 +244,41 @@ class ApplyBizLicenseModel{
       _isDeleted = json['IsDeleted'],
       _isValid = json['IsValid'];
 
+  Map<String, dynamic> toJson(){
+    Map<String, dynamic> json =new Map<String, dynamic>();
+     json['ID'] = _id;
+     json['LicenseType'] = _licenseType;
+     json['LicenseTypeID'] = _licensetypeId;
+     json['BizName'] = _bizName;
+     json['BizType'] = _bizType;
+     json['Length'] = _length;
+     json['Width'] = _width;
+     json['Area'] = _area;
+     json['BizRegionNo'] = _bizRegionNo;
+     json['BizStreetName'] = _bizStreetName;
+     json['BizBlockNo'] = _bizBlockNo;
+     json['BizTownship'] = _bizTownship;
+     json['BizState'] = _bizState;
+     json['OwnerName'] = _ownerName;
+     json['NRCNo'] = _nrcNo;
+     json['PhoneNo'] = _phoneNo;
+     json['RegionNo'] = _regionNo;
+     json['StreetName'] = _streetName;
+     json['BlockNo'] = _blockNo;
+     json['Township'] = _township;
+     json['State'] = _state;
+     json['Remark'] = _remark;
+     json['RequiredData'] = _requiredData;
+     json['ApplyDate'] = _applyDate;
+     json['UniqueKey'] = _uniqueKey;
+     json['UserName'] = _userName;
+     json['RegionCode'] = _regionCode;
+     json['Accesstime'] = _accessTime;
+     json['IsDeleted'] = _isDeleted;
+     json['IsValid'] = _isValid;
+
+    return json;
+  }
+
 
 }

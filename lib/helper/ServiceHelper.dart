@@ -55,23 +55,7 @@ class ServiceHelper{
  updateUserInfo<Response>(UserModel model) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
-  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/UpdateUser", data: {
-   'UniqueKey' : model.uniqueKey,
-   'Name': model.name,
-   'PhoneNo': model.phoneNo,
-   'PhotoUrl': model.photoUrl,
-   'State': model.state,
-   'Township': model.township,
-   'Address': model.address,
-   'RegisteredDate': model.registeredDate,
-   'Accesstime': model.accesstime,
-   'IsDeleted': model.isDeleted,
-   'Resource': model.resource,
-   'AndroidToken': model.androidToken,
-   'CurrentRegionCode': model.currentRegionCode,
-   'PinCode': model.pinCode,
-   'Amount': model.amount,
-  });
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/UpdateUser", data: model.toJson());
   return response;
  }
 
@@ -159,32 +143,7 @@ class ServiceHelper{
  postApplyBizLicense<Response>(ApplyBizLicenseModel model) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
-  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/ApplyBizLicense", data: {
-   'BizName' : model.bizName,
-   'BizType': model.bizType,
-   'Length': model.length,
-   'Width': model.width,
-   'Area': model.area,
-   'BizRegionNo': model.bizRegionNo,
-   'BizStreetName': model.bizStreetName,
-   'BizBlockNo': model.bizBlockNo,
-   'BizTownship': model.bizTownship,
-   'BizState': model.bizState,
-   'OwnerName': model.ownerName,
-   'NRCNo': model.nrcNo,
-   'PhoneNo': model.phoneNo,
-   'RegionNo': model.regionNo,
-   'StreetName': model.streetName,
-   'BlockNo': model.blockNo,
-   'Township': model.township,
-   'State': model.state,
-   'Remark': model.remark,
-   'UniqueKey': model.uniqueKey,
-   'RegionCode': model.regionCode,
-   'UserName': model.userName,
-   'LicenseType': model.licenseType,
-   'LicenseTypeID': model.licensetypeId,
-  });
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/ApplyBizLicense", data: model.toJson());
   return response;
  }
 
