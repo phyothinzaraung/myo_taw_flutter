@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/EmptyViewWidget.dart';
+import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
 import 'helper/NumConvertHelper.dart';
@@ -37,7 +39,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   int pageCount = 10;
   Response response;
   ImageProvider _profilePhoto;
-  bool _isRefresh = false;
   List<TaxRecordModel> _taxRecordModelList = new List<TaxRecordModel>();
 
   @override
@@ -51,6 +52,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
     response = await ServiceHelper().getAllTaxRecord(p, pageCount, _userModel.currentRegionCode, _userModel.uniqueKey);
     var result = response.data['Results'];
+    //var result = [];
     if(response.statusCode == 200){
       if(result != null){
         if(result.length > 0){
@@ -91,9 +93,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _userModel = model;
     });
     await _getAllTaxRecord(page);
-    setState(() {
-      _isRefresh = false;
-    });
     //print('userphoto; ${_userModel.photoUrl}');
   }
 
@@ -569,39 +568,19 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return ListView(
       children: <Widget>[
         _headerProfile(),
-        Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Text('No Internet Connection'),
-              FlatButton(onPressed: (){
-                asyncLoaderState.currentState.reloadState();
-                _checkCon();
-              }
-                , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
-            ],
-          ),
-        )
+        noConnectionWidget(asyncLoaderState)
       ],
     );
   }
 
   Widget _renderLoad(){
     return Container(
-        child: ListView(
-          children: <Widget>[
-            _headerProfile(),
-            Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
-          ],
-        )
+        child: _headerProfileRefresh()
     );
   }
 
   Future<Null> _handleRefresh() async {
-    await _checkCon();
-    setState(() {
-      _isRefresh = true;
-    });
+   /* await _checkCon();
     if(_isCon){
       _taxRecordModelList.clear();
       page = 0;
@@ -609,7 +588,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _getUser();
     }else{
       Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
-    }
+    }*/
+   setState(() {
+     page = 0;
+     page ++;
+     _taxRecordModelList.clear();
+   });
+   asyncLoaderState.currentState.reloadState();
     return null;
   }
 
@@ -633,15 +618,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
             onRefresh: _handleRefresh,
-            child: LoadMore(
+            child: _taxRecordModelList.isNotEmpty?
+            LoadMore(
                 isFinish: _isEnd,
                 onLoadMore: _loadMore,
                 delegate: DefaultLoadMoreDelegate(),
                 textBuilder: DefaultLoadMoreTextBuilder.english,
-                child: _isRefresh==false?
-                _taxRecordModelList.isNotEmpty?_listView(): ListView(children: <Widget>[_headerProfile()],) :
-                ListView(children: <Widget>[_headerProfileRefresh()],)
-            ),
+                child: _listView()
+            ) : Column(children: <Widget>[_headerProfile(), emptyView(asyncLoaderState, MyString.txt_no_data)],),
           ),
         )
     );

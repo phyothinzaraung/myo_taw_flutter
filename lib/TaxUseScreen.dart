@@ -190,7 +190,9 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
                               _legnedList.clear();
                               _image = 'images/arrow_green.png';
                             });
-                            await _getTaxUse(_year);
+                            //await _getTaxUse(_year);
+                            asyncLoaderState.currentState.reloadState();
+                            print('year : $_year');
                             setState(() {
                               _isLoading = false;
                             });
@@ -208,7 +210,9 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
                             _taxUserModelList.clear();
                             _legnedList.clear();
                           });
-                          await _getTaxUse(_year);
+                          //await _getTaxUse(_year);
+                          asyncLoaderState.currentState.reloadState();
+                          print('year : $_year');
                           setState(() {
                             _isLoading = false;
                           });

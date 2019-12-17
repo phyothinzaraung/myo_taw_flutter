@@ -32,7 +32,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   Response response;
   List<NewsFeedReactModel> _newsFeedReactModel = new List<NewsFeedReactModel>();
   ScrollController _scrollController = new ScrollController();
-  bool _isEnd = false, _isCon= false, _isRefresh = false;
+  bool _isEnd = false, _isCon= false;
   int page = 1;
   int pageCount = 10;
   UserModel _userModel;
@@ -133,9 +133,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     }
     _initHeaderTitle();
     await _getNewsFeed(page);
-    setState(() {
-      _isRefresh = false;
-    });
   }
 
   _getNewsFeed(int p) async{
@@ -169,10 +166,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   Future<Null> _handleRefresh() async {
     await _checkCon();
-    setState(() {
-      _isRefresh = true;
-    });
-    if(_isCon){
+    /*if(_isCon){
       _newsFeedReactModel.clear();
       page = 0;
       page++;
@@ -180,7 +174,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       //await _getNewsFeed(page);
     }else{
       Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
-    }
+    }*/
+    setState(() {
+      page = 0;
+      page ++;
+      _newsFeedReactModel.clear();
+    });
+    asyncLoaderState.currentState.reloadState();
     return null;
   }
 
@@ -482,7 +482,14 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       renderSuccess: ({data}) => Container(
         child: RefreshIndicator(
           onRefresh: _handleRefresh,
-          child: _isRefresh?_renderLoad():_newsFeedReactModel.isNotEmpty?_listView():_emptyView()
+          child: _newsFeedReactModel.isNotEmpty?
+          LoadMore(
+              isFinish: _isEnd,
+              onLoadMore: _loadMore,
+              delegate: DefaultLoadMoreDelegate(),
+              textBuilder: DefaultLoadMoreTextBuilder.english,
+              child: _listView()
+          ) : _emptyView(),
         ),
       )
     );
