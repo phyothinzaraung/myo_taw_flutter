@@ -232,13 +232,7 @@ class ServiceHelper{
  postReferral<Response>(ReferralModel model) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
-  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_REFERRAL+"ref/RefQRcodeCityApp", data: {
-   'ReferralPhoneNumber' : model.referPhNo,
-   'UserPhoneNumber': model.userPhNo,
-   'ReferDate': model.referDate,
-   'IMEI': model.imei,
-   'Application': model.application,
-  });
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_REFERRAL+"ref/RefQRcodeCityApp", data: model.toJson());
   return response;
  }
 

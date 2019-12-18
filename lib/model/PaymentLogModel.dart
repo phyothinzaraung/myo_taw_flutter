@@ -101,5 +101,21 @@ class PaymentLogModel{
       _taxType = json['TaxType'],
       _invoiceNo = json['InvoiceNo'];
 
+  Map<String, dynamic> toJson(){
+    Map<String, dynamic> json = new Map();
+     json['ID'] = _id;
+     json['UniqueKey'] = _uniqueKey;
+     json['MsgID'] = _msgId;
+     json['PrepaidCode'] = _prepaidCode;
+     json['UseTime'] = _useTime;
+     json['TotalAmount'] = _totalAmount;
+     json['UseAmount'] = _useAmount;
+     json['RemainAmount'] = _remainAmount;
+     json['Accesstime'] = _accessTime;
+     json['IsDeleted'] = _isDeleted;
+     json['TaxType'] = _taxType;
+     json['InvoiceNo'] = _invoiceNo;
+
+  }
 
 }

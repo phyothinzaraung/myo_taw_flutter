@@ -101,4 +101,22 @@ class ReferralModel{
         _createDate = json['CreateDate'],
         _referDate = json['ReferDate'],
         _imei = json['IMEI'];
+
+  Map<String, dynamic> toJson(){
+    Map<String, dynamic> json = new Map();
+     json['ReferId'] = _referId;
+     json['ReferralPhoneNumber'] = _referPhNo;
+     json['UserPhoneNumber'] = _userPhNo;
+     json['Balance'] = _balance;
+     json['Paid'] = _paid;
+     json['Application'] = _application;
+     json['Validity'] = _validity;
+     json['Accesstime'] = _accessTime;
+     json['IsDeleted'] = _isDeleted;
+     json['CreateDate'] = _createDate;
+     json['ReferDate'] = _referDate;
+     json['IMEI'] = _imei;
+
+    return json;
+  }
 }
