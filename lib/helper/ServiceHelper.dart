@@ -220,12 +220,7 @@ class ServiceHelper{
  postPayment<Response>(PaymentLogModel model) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
-  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_TAX_PAYMENT+"Payment/PayBill", data: {
-   'UniqueKey' : model.uniqueKey,
-   'UseAmount': model.useAmount,
-   'TaxType': model.taxType,
-   'InvoiceNo': model.invoiceNo,
-  });
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_TAX_PAYMENT+"Payment/PayBill", data: model.toJson());
   return response;
  }
 
