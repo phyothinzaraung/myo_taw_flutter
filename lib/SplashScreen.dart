@@ -102,7 +102,7 @@ class _SplashScreenState extends State<SplashScreen> {
                     style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeNormal,),softWrap: true,maxLines: 3, textAlign: TextAlign.center,),
                 ):Container(width: 0.0,height: 0.0,),
               ),
-              Flexible(flex: 3,child: Image.asset('images/myo_taw_splash_screen.jpg', width: 250.0, height: 250.0,)),
+              Flexible(flex: 2,child: Image.asset('images/myo_taw_splash_screen.jpg', width: 250.0, height: 250.0,)),
               Flexible(
                 flex: 1,
                 child: Padding(padding: EdgeInsets.only(bottom: 5.0),

@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'package:sms_retriever/sms_retriever.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -24,7 +25,7 @@ class _OtpScreenState extends State<OtpScreen> {
   String  _regionCode, _platForm, _phNo, _otpCode;
   bool _isExpire, _showLoading = false;
   bool _isCon = false;
-  Response response;
+  var response;
   UserModel _userModel;
   Sharepreferenceshelper _sharePrefHelper = new Sharepreferenceshelper();
   UserDb _userDb = UserDb();
@@ -32,6 +33,7 @@ class _OtpScreenState extends State<OtpScreen> {
   Timer _timer;
   int _minute = 9;
   int _sec = 59;
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   _OtpScreenState(this._phNo, this._regionCode);
   @override
@@ -76,13 +78,15 @@ class _OtpScreenState extends State<OtpScreen> {
         await _userDb.openUserDb();
         await _userDb.insert(_userModel);
         await _userDb.closeUserDb();
-        Fluttertoast.showToast(msg: 'Login Success', backgroundColor: Colors.black.withOpacity(0.7));
+        //Fluttertoast.showToast(msg: 'Login Success', backgroundColor: Colors.black.withOpacity(0.7));
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
       }else{
-        Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+        //WarningSnackBar(_globalKey, MyString.txt_try_again);
+        WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
     }else{
-      Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+      //WarningSnackBar(_globalKey, MyString.txt_try_again);
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
   }
 
@@ -101,13 +105,13 @@ class _OtpScreenState extends State<OtpScreen> {
         setState(() {
           _showLoading = false;
         });
-        Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+        WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
     }else{
       setState(() {
         _showLoading = false;
       });
-      Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
   }
 
@@ -132,10 +136,10 @@ class _OtpScreenState extends State<OtpScreen> {
           });
         }
       }else{
-        Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+        WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
     }else{
-      Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
   }
 
@@ -190,6 +194,7 @@ class _OtpScreenState extends State<OtpScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
         backgroundColor: Colors.white,
         body: ModalProgressHUD(
           inAsyncCall: _showLoading,
@@ -258,16 +263,19 @@ class _OtpScreenState extends State<OtpScreen> {
                                             FocusScope.of(context).requestFocus(FocusNode());
                                             _verifyOtp(_otpCodeController.text);
                                           }else{
-                                            Fluttertoast.showToast(msg: MyString.txt_otp_not_exceed_4, backgroundColor: Colors.black.withOpacity(0.7));
+                                            //Fluttertoast.showToast(msg: MyString.txt_otp_not_exceed_4, backgroundColor: Colors.black.withOpacity(0.7));
+                                            WarningSnackBar(_globalKey, MyString.txt_otp_not_exceed_4);
                                           }
 
                                         }else{
-                                          Fluttertoast.showToast(msg: MyString.txt_enter_otp, backgroundColor: Colors.black.withOpacity(0.7));
+                                          //Fluttertoast.showToast(msg: MyString.txt_enter_otp, backgroundColor: Colors.black.withOpacity(0.7));
+                                          WarningSnackBar(_globalKey, MyString.txt_enter_otp);
                                         }
                                       }
 
                                     }else{
-                                      Fluttertoast.showToast(msg: 'No Internet Connection', backgroundColor: Colors.black.withOpacity(0.7));
+                                      //Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7));
+                                      WarningSnackBar(_globalKey, MyString.txt_no_internet);
                                     }
                                     },
                                     child: Row(

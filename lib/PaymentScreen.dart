@@ -1,6 +1,8 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/model/InvoiceModel.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -29,6 +31,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Response _response;
   PaymentLogModel _paymentLogModel = PaymentLogModel();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
+  InvoiceModel _invoiceModel;
 
   @override
   void initState() {
@@ -53,23 +56,35 @@ class _PaymentScreenState extends State<PaymentScreen> {
     });
     print(_taxType);
     _response = await ServiceHelper().getAmountFromInvoiceNo(_taxType, _invoiceNoController.text);
-    if(_response != null){
-      if(_response.data != 0){
-        setState(() {
-          _isLoading = false;
-        });
-        _taxAmount = _response.data;
-        _isInvoiceNoEnable = false;
-        _isDropDownEnable = false;
+    if(_response.statusCode == 200){
+      _invoiceModel = InvoiceModel.fromJson(_response.data);
+      if(_invoiceModel != null){
+        if(_invoiceModel.totalAmt != 0){
+          setState(() {
+            _isLoading = false;
+          });
 
+          _taxAmount = _invoiceModel.totalAmt;
+          _isInvoiceNoEnable = false;
+          _isDropDownEnable = false;
+
+        }else{
+          setState(() {
+            _isLoading = false;
+          });
+          //Fluttertoast.showToast(msg: 'Wrong invoice or tax type', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeNormal);
+          WarningSnackBar(_scaffoldState, MyString.txt_wrong_invoice_or_tax_type);
+        }
       }else{
         setState(() {
           _isLoading = false;
         });
-        Fluttertoast.showToast(msg: 'Wrong invoice or tax type', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeNormal);
+        //Fluttertoast.showToast(msg: 'Wrong invoice or tax type', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeNormal);
+        WarningSnackBar(_scaffoldState, MyString.txt_wrong_invoice_or_tax_type);
       }
     }else{
-      Fluttertoast.showToast(msg: 'Try again', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeNormal);
+      //Fluttertoast.showToast(msg: 'Try again', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeNormal);
+      WarningSnackBar(_scaffoldState, MyString.txt_try_again);
       setState(() {
         _isLoading = false;
       });
@@ -91,7 +106,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
       setState(() {
         _isLoading = false;
       });
-      Fluttertoast.showToast(msg: 'Try again', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeNormal);
+      //Fluttertoast.showToast(msg: 'Try again', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeNormal);
+      WarningSnackBar(_scaffoldState, MyString.txt_try_again);
     }
 
   }
@@ -295,7 +311,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                       ),
                       Container(
                           margin: EdgeInsets.only(bottom: 5.0),
-                          child: Text(MyString.txt_choose_tax_type, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),)),
+                          child: Text(MyString.txt_tax_type, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),)),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10.0),
                         margin: EdgeInsets.only(bottom: 20.0),
@@ -346,10 +362,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
                                 _getAmount();
 
                               }else if (_invoiceNoController.text.isEmpty){
-                                Fluttertoast.showToast(msg: 'Please fill invoice no', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                //Fluttertoast.showToast(msg: 'Please fill invoice no', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                WarningSnackBar(_scaffoldState, MyString.txt_need_invoice_no);
 
                               }else if (_dropDownTaxType == 'သတ်မှတ်ထားခြင်းမရှိ'){
-                                Fluttertoast.showToast(msg: 'Choose tax type', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                //Fluttertoast.showToast(msg: 'Choose tax type', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                WarningSnackBar(_scaffoldState, MyString.txt_choose_tax_type);
 
                               }
                             }else{

@@ -1,6 +1,6 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
 import 'package:myotaw/ProfileScreen.dart';
@@ -33,6 +33,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   List<DashBoardModel> _dashBoardModelList = new List<DashBoardModel>();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -150,7 +151,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
             case MyString.txt_online_tax:
               _regionCode == MyString.TGY_REGIONCODE?
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineTaxChooseScreen(_userModel))) :
-                  Fluttertoast.showToast(msg: 'Comming soon', backgroundColor: Colors.black54, fontSize: FontSize.textSizeNormal);
+                  //Fluttertoast.showToast(msg: MyString.txt_coming_soon, backgroundColor: Colors.black54, fontSize: FontSize.textSizeNormal);
+              PrimaryColorSnackBarWidget(_globalKey, MyString.txt_coming_soon);
               break;
             case MyString.txt_tax_use:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => TaxUserScreen()));
@@ -184,6 +186,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       body: SafeArea(
         child: Container(
           child: CustomScrollView(

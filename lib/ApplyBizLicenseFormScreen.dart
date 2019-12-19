@@ -1,5 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/ApplyBizLicenseFormSnackBarWidget.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/BizLicenseModel.dart';
 import 'helper/SharePreferencesHelper.dart';
@@ -56,6 +58,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   UserDb _userDb = UserDb();
   UserModel _userModel;
   Response _response;
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   _ApplyBizLicenseFormScreenState(this._bizLicenseModel);
 
   @override
@@ -196,6 +199,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(MyString.txt_business_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
@@ -918,9 +922,12 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                         _applyBizLicenseModel.licenseType = _bizLicenseModel.licenseType;
                         _applyBizLicenseModel.licensetypeId = _bizLicenseModel.id;
                         _callWebService(_applyBizLicenseModel);
+                      }else{
+                        ApplyBizLicenseFormSnackBarWidget(_globalKey, MyString.txt_apply_license_need_to_fill);
                       }
                     }else{
-                      Fluttertoast.showToast(msg: 'Check internet connection', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                      //Fluttertoast.showToast(msg: 'Check internet connection', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                      WarningSnackBar(_globalKey, MyString.txt_check_internet);
                     }
 
                 }, child: Text(MyString.txt_apply_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),

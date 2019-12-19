@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
+import 'myWidget/WarningSnackBarWidget.dart';
 
 class MlmPropertyTaxCalculatorScreen extends StatefulWidget {
   @override
@@ -15,6 +16,7 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
   String _dropDownStory = MyString.txt_no_selected;
   List<String> _storyList;
   int _taxRange ,_taxRange1;
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -212,6 +214,7 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
           title: Text(MyString.txt_calculate_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),)
       ),
@@ -232,7 +235,7 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.only(bottom: 10),
-                        child: Text(MyString.txt_choose_building_type,
+                        child: Text(MyString.txt_building_type,
                           style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                       ),
                       Container(
@@ -272,7 +275,7 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
                       ),
                       Container(
                         margin: EdgeInsets.only(bottom: 10),
-                        child: Text(MyString.txt_choose_story,
+                        child: Text(MyString.txt_story,
                           style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                       ),
                       Container(
@@ -312,9 +315,11 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
                             if(_dropDownStory != MyString.txt_no_selected && _dropDownBuildingType != MyString.txt_no_selected){
                               _calculateTaxDialog();
                             }else if(_dropDownBuildingType == MyString.txt_no_selected){
-                              Fluttertoast.showToast(msg: 'Choose Building Type', backgroundColor: Colors.black.withOpacity(0.7));
+                              //Fluttertoast.showToast(msg: MyString.txt_choose_building_type, backgroundColor: Colors.black.withOpacity(0.7));
+                              WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
                             }else if(_dropDownStory == MyString.txt_no_selected){
-                              Fluttertoast.showToast(msg: 'Choose Story', backgroundColor: Colors.black.withOpacity(0.7));
+                              //Fluttertoast.showToast(msg: MyString.txt_choose_story, backgroundColor: Colors.black.withOpacity(0.7));
+                              WarningSnackBar(_globalKey, MyString.txt_choose_story);
                             }
                           },color: MyColor.colorPrimary,
                           shape: RoundedRectangleBorder(

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
 
@@ -20,6 +21,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
   TextEditingController _widthContorller = new TextEditingController();
   static const int base_value = 70;
   double buildingValue, roadValue, zoneValue, rentalRate, arv;
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -184,6 +186,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
           title: Text(MyString.txt_calculate_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),)
       ),
@@ -205,7 +208,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                       children: <Widget>[
                         Container(
                           margin: EdgeInsets.only(bottom: 10),
-                          child: Text(MyString.txt_choose_building_type,
+                          child: Text(MyString.txt_building_type,
                             style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                         ),
                         Container(
@@ -239,7 +242,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                         ),
                         Container(
                           margin: EdgeInsets.only(bottom: 10),
-                          child: Text(MyString.txt_choose_road,
+                          child: Text(MyString.txt_road,
                             style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                         ),
                         Container(
@@ -273,7 +276,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                         ),
                         Container(
                           margin: EdgeInsets.only(bottom: 10),
-                          child: Text(MyString.txt_choose_blockNo,
+                          child: Text(MyString.txt_blockNo,
                             style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                         ),
                         Container(
@@ -388,15 +391,20 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                                 _dropDownBlockNo != MyString.txt_no_selected && _lengthContorller.text.isNotEmpty && _widthContorller.text.isNotEmpty){
                                 _calculateTaxDialog();
                               }else if(_dropDownBuildingType == MyString.txt_no_selected){
-                                Fluttertoast.showToast(msg: 'Choose Building Type', backgroundColor: Colors.black.withOpacity(0.7));
+                                //Fluttertoast.showToast(msg: MyString.txt_choose_building_type, backgroundColor: Colors.black.withOpacity(0.7));
+                                WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
                               }else if(_dropDownRoad == MyString.txt_no_selected){
-                                Fluttertoast.showToast(msg: 'Choose Story', backgroundColor: Colors.black.withOpacity(0.7));
+                                //Fluttertoast.showToast(msg: MyString.txt_choose_story, backgroundColor: Colors.black.withOpacity(0.7));
+                                WarningSnackBar(_globalKey, MyString.txt_choose_story);
                               }else if(_dropDownBlockNo == MyString.txt_no_selected){
-                                Fluttertoast.showToast(msg: 'Choose Block No', backgroundColor: Colors.black.withOpacity(0.7));
+                                //Fluttertoast.showToast(msg: MyString.txt_choose_blockNo, backgroundColor: Colors.black.withOpacity(0.7));
+                                WarningSnackBar(_globalKey, MyString.txt_choose_blockNo);
                               }else if(_lengthContorller.text.isEmpty){
-                                Fluttertoast.showToast(msg: 'Enter Length', backgroundColor: Colors.black.withOpacity(0.7));
+                                //Fluttertoast.showToast(msg: MyString.txt_type_length, backgroundColor: Colors.black.withOpacity(0.7));
+                                WarningSnackBar(_globalKey, MyString.txt_type_length);
                               }else if(_widthContorller.text.isEmpty){
-                                Fluttertoast.showToast(msg: 'Enter Width', backgroundColor: Colors.black.withOpacity(0.7));
+                                //Fluttertoast.showToast(msg: MyString.txt_type_width, backgroundColor: Colors.black.withOpacity(0.7));
+                                WarningSnackBar(_globalKey, MyString.txt_type_width);
                               }
 
                             },color: MyColor.colorPrimary,

@@ -13,6 +13,7 @@ import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
 import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
+import 'myWidget/WarningSnackBarWidget.dart';
 
 class SuggestionScreen extends StatefulWidget {
   @override
@@ -22,16 +23,16 @@ class SuggestionScreen extends StatefulWidget {
 class _SuggestionScreenState extends State<SuggestionScreen> {
   List<String> _subjectList = new List<String>();
   String _dropDownSubject = MyString.txt_choose_subject;
-  TextEditingController _messController = TextEditingController();
-  String _lat, _lng;
+  String _mess,_lat, _lng;
   bool _isCon, _isLoading;
   File _image;
   var _location = new Location();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
   UserModel _userModel;
-  Response _response;
+  var _response;
   StreamSubscription<LocationData> _streamSubscription;
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -86,17 +87,22 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.closeUserDb();
     _userModel = model;
-    _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
+    _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _mess,
         _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode);
     //print('sendsuggest: ${_mess} ${_dropDownSubject} ${_lat} ${_lng}');
-    if(_response.statusCode == 200){
-      setState(() {
-        _isLoading = false;
-      });
-      _finishDialogBox();
+    setState(() {
+      _isLoading = false;
+    });
+    if(_response != DioErrorType.DEFAULT){
+      if(_response.statusCode == 200){
+        _finishDialogBox();
+      }else{
+        WarningSnackBar(_globalKey, MyString.txt_try_again);
+      }
     }else{
-      Fluttertoast.showToast(msg: 'Please try again', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
+
   }
 
   _finishDialogBox(){
@@ -164,6 +170,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(MyString.txt_suggestion, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
@@ -247,10 +254,12 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                                 border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
                             ),
                             child: TextField(
+                              onChanged: (value){
+                                _mess = value;
+                              },
                               decoration: InputDecoration(
                                   border: InputBorder.none
                               ),
-                              controller: _messController,
                               style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                             ),
                           ),
@@ -263,30 +272,28 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                               await _checkCon();
                               //await _getLatLng();
                               if(_isCon){
-                                if(_messController.text != null && _image != null && _dropDownSubject != MyString.txt_choose_subject && _lat != null && _lng != null){
+                                if(_mess != null && _image != null && _dropDownSubject != MyString.txt_choose_subject && _lat != null && _lng != null){
                                   setState(() {
                                     _isLoading = true;
                                   });
                                   _sendSuggestion();
                                   print('latlng: ${_lat} ${_lng}');
+                                }else if(_image == null){
+                                  //Fluttertoast.showToast(msg: MyString.txt_need_suggestion_photo, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                  WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
+                                }else if(_dropDownSubject == MyString.txt_choose_subject){
+                                  //Fluttertoast.showToast(msg: MyString.txt_need_subject, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                  WarningSnackBar(_globalKey, MyString.txt_need_subject);
+                                }else if(_mess == null){
+                                  //Fluttertoast.showToast(msg: MyString.txt_need_suggestion, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                  WarningSnackBar(_globalKey, MyString.txt_need_suggestion);
+                                }else if(_lat == null && _lng == null){
+                                  //Fluttertoast.showToast(msg: MyString.txt_need_suggestion_location, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                  WarningSnackBar(_globalKey, MyString.txt_need_suggestion_location);
                                 }
                               }else{
-                                Fluttertoast.showToast(msg: 'No internet connection', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
-                              }
-                              if(_messController.text == null){
-                                Fluttertoast.showToast(msg: 'Need to fill message', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
-                              }
-
-                              if(_image == null){
-                                Fluttertoast.showToast(msg: 'Need photo', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
-                              }
-
-                              if(_dropDownSubject == MyString.txt_choose_subject){
-                                Fluttertoast.showToast(msg: 'choose subject', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
-                              }
-
-                              if(_lat == null && _lng == null){
-                                Fluttertoast.showToast(msg: 'can\'t get location', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                //Fluttertoast.showToast(msg: MyString.txt_no_internet, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                WarningSnackBar(_globalKey, MyString.txt_no_internet);
                               }
 
                               }, child: Text(MyString.txt_save_user_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),

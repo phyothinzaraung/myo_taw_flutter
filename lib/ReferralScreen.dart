@@ -14,6 +14,7 @@ import 'helper/ServiceHelper.dart';
 import 'package:dio/dio.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'model/ReferralResponseModel.dart';
+import 'myWidget/WarningSnackBarWidget.dart';
 
 class ReferralScreen extends StatefulWidget {
   UserModel model;
@@ -99,7 +100,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
       setState(() {
         _isLoad = false;
       });
-      Fluttertoast.showToast(msg: 'Please try again', backgroundColor: Colors.black.withOpacity(0.7));
+      WarningSnackBar(_scaffoldState, MyString.txt_try_again);
     }
   }
 

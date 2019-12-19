@@ -11,6 +11,7 @@ import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:myotaw/Database/UserDb.dart';
 import 'OtpScreen.dart';
+import 'myWidget/WarningSnackBarWidget.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -25,6 +26,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Response response;
   Sharepreferenceshelper _sharePrefHelper = new Sharepreferenceshelper();
   TextEditingController _phoneNoController = new TextEditingController();
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -50,10 +52,10 @@ class _LoginScreenState extends State<LoginScreen> {
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
         }
       }else{
-        Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+        WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
     }else{
-      Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
   }
 
@@ -97,6 +99,7 @@ class _LoginScreenState extends State<LoginScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
         backgroundColor: Colors.white,
         body: ModalProgressHUD(
           inAsyncCall: _showLoading,
@@ -198,13 +201,19 @@ class _LoginScreenState extends State<LoginScreen> {
                                           _getOtp();
                                           //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
                                         }else{
-                                          Fluttertoast.showToast(msg: 'Invalide phone number', backgroundColor: Colors.black.withOpacity(0.7));
+                                          //Fluttertoast.showToast(msg: MyString.txt_wrong_phNo , backgroundColor: Colors.black.withOpacity(0.7));
+                                          WarningSnackBar(_globalKey, MyString.txt_wrong_phNo);
                                         }
                                       }else{
-                                        Fluttertoast.showToast(msg: 'No Internet Connection', backgroundColor: Colors.black.withOpacity(0.7));
+                                        //Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7));
+                                        WarningSnackBar(_globalKey, MyString.txt_no_internet);
                                       }
+                                    }else if (_dropDownCity == 'နေရပ်ရွေးပါ'){
+                                      //Fluttertoast.showToast(msg: MyString.txt_choose_city, backgroundColor: Colors.black.withOpacity(0.7));
+                                      WarningSnackBar(_globalKey, MyString.txt_choose_city);
                                     }else{
-                                      Fluttertoast.showToast(msg: 'Please Choose City', backgroundColor: Colors.black.withOpacity(0.7));
+                                      //Fluttertoast.showToast(msg: MyString.txt_fill_phno, backgroundColor: Colors.black.withOpacity(0.7));
+                                      WarningSnackBar(_globalKey, MyString.txt_fill_phno);
                                     }
                                     },
                                     child: Row(

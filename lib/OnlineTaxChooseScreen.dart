@@ -7,6 +7,7 @@ import 'PinCodeSetUpScreen.dart';
 import 'helper/MyoTawConstant.dart';
 import 'SmartWaterMeterScreen.dart';
 import 'model/UserModel.dart';
+import 'myWidget/PrimaryColorSnackBarWidget.dart';
 
 class OnlineTaxChooseScreen extends StatefulWidget {
   UserModel _model;
@@ -17,6 +18,8 @@ class OnlineTaxChooseScreen extends StatefulWidget {
 
 class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
   UserModel _userModel;
+
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   _OnlineTaxChooseScreenState(this._userModel);
   TextEditingController _pinCodeController = new TextEditingController();
   bool _hasError = false;
@@ -105,6 +108,7 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
           title: Text(MyString.txt_online_payment_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),)
       ),
@@ -125,7 +129,8 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
                             _hasError = false;
                           });
                           //_dialogPinRequest('OnlineTax');
-                          Fluttertoast.showToast(msg: 'Comming soon', backgroundColor: Colors.black54, fontSize: FontSize.textSizeNormal);
+                          //Fluttertoast.showToast(msg: MyString.txt_coming_soon, backgroundColor: Colors.black54, fontSize: FontSize.textSizeNormal);
+                          PrimaryColorSnackBarWidget(_globalKey, MyString.txt_coming_soon);
                         }else{
                           Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
                         }

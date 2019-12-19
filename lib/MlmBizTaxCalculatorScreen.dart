@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
 
@@ -15,6 +16,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
   String _dropDownBizType = MyString.txt_no_selected;
   List<String> _bizList;
   String _taxRange;
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -302,6 +304,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
           title: Text(MyString.txt_calculate_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),)
       ),
@@ -403,9 +406,12 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
                               if(_dropDownBizType != MyString.txt_no_selected && _dropDownBizLicenseType != MyString.txt_no_selected){
                                 _calculateTaxDialog();
                               }else if(_dropDownBizLicenseType == MyString.txt_no_selected){
-                                Fluttertoast.showToast(msg: 'Choose Building Type', backgroundColor: Colors.black.withOpacity(0.7));
+                                //Fluttertoast.showToast(msg: MyString.txt_choose_building_type, backgroundColor: Colors.black.withOpacity(0.7));
+                                WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
+
                               }else if(_dropDownBizType == MyString.txt_no_selected){
-                                Fluttertoast.showToast(msg: 'Choose Story', backgroundColor: Colors.black.withOpacity(0.7));
+                                //Fluttertoast.showToast(msg: MyString.txt_choose_story, backgroundColor: Colors.black.withOpacity(0.7));
+                                WarningSnackBar(_globalKey, MyString.txt_choose_story);
                               }
                             },color: MyColor.colorPrimary,
                             shape: RoundedRectangleBorder(

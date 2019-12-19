@@ -1,6 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
@@ -23,6 +24,7 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
   UserDb _userDb = UserDb();
   UserModel _userModel;
   bool _isCon,_isLoading = false;
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -91,6 +93,7 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(),
       body: ModalProgressHUD(
         inAsyncCall: _isLoading,
@@ -133,7 +136,8 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
                           });
                           _uploadPhoto();
                         }else{
-                          Fluttertoast.showToast(msg: 'No internet connection', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                          //Fluttertoast.showToast(msg: 'No internet connection', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                          WarningSnackBar(_globalKey, MyString.txt_no_internet);
                         }
                       }, child: Text(MyString.txt_upload_photo, style: TextStyle(color: Colors.white),),
                         color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
 import 'helper/NumConvertHelper.dart';
@@ -37,9 +38,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   bool _isEnd , _isCon, _isLoading = false;
   int page = 1;
   int pageCount = 10;
-  Response response;
+  var response;
   ImageProvider _profilePhoto;
   List<TaxRecordModel> _taxRecordModelList = new List<TaxRecordModel>();
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -80,7 +82,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
         }
       }
     }else{
-      Fluttertoast.showToast(msg: 'နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။', backgroundColor: Colors.black.withOpacity(0.7));
+      //WarningSnackBar(_globalKey, MyString.txt_try_again);
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
   }
 
@@ -630,6 +633,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         )
     );
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(MyString.txt_profile, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),

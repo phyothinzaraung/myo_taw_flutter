@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/ApplyBizLicenseModel.dart';
 import 'model/ApplyBizLicensePhotoModel.dart';
@@ -31,6 +32,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
   List<ApplyBizLicensePhotoModel> _applyBizLicensePhotoModelList = new List<ApplyBizLicensePhotoModel>();
   TextEditingController _fileTitleController = TextEditingController();
   File _image;
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   _ApplyBizLicensePhotoListScreenState(this._applyBizLicenseModel);
 
   @override
@@ -209,14 +211,17 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                                 _uploadPhoto();
                               }
                             }else{
-                              Fluttertoast.showToast(msg: 'Check internet connection', backgroundColor: Colors.black.withOpacity(0.7));
+                              //Fluttertoast.showToast(msg: MyString.txt_check_internet, backgroundColor: Colors.black.withOpacity(0.7));
+                              WarningSnackBar(_globalKey, MyString.txt_check_internet);
                             }
                             if(_image == null){
-                              Fluttertoast.showToast(msg: 'Need to choose photo', backgroundColor: Colors.black.withOpacity(0.7));
+                              //Fluttertoast.showToast(msg: MyString.txt_need_suggestion_photo, backgroundColor: Colors.black.withOpacity(0.7));
+                              WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
                             }
 
                             if(_fileTitleController.text.isEmpty){
-                              Fluttertoast.showToast(msg: 'Need to fill photo name', backgroundColor: Colors.black.withOpacity(0.7));
+                              //Fluttertoast.showToast(msg: MyString.txt_need_apply_biz_photo_name, backgroundColor: Colors.black.withOpacity(0.7));
+                              WarningSnackBar(_globalKey, MyString.txt_need_apply_biz_photo_name);
                             }
                           },
                             child: Text('Upload', style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,),
@@ -230,6 +235,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
         )
     );
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(MyString.txt_apply_biz_license_photo, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),

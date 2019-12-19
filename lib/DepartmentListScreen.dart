@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/DaoViewModel.dart';
 import 'helper/MyoTawConstant.dart';
@@ -37,6 +38,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
   bool _isManager, _isEngineer, _isLoading;
   List<DaoViewModel> _daoViewModelList = new List<DaoViewModel>();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   _DepartmentListScreenState(this._daoViewModel);
 
   @override
@@ -246,7 +248,8 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
       });
       await _getDaoByDeptType(page);
     }else{
-      Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
+      //Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
+      WarningSnackBar(_globalKey, MyString.txt_no_internet);
     }
     return null;
   }
@@ -345,6 +348,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
         )
     );
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(_daoViewModel.daoModel.title, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),

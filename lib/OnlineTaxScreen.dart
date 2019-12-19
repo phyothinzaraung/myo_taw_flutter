@@ -1,6 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserBillAmountViewModel.dart';
 import 'package:dio/dio.dart';
@@ -32,6 +33,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
   UserModel _userModel;
   List<PaymentLogModel> _paymentLogList = new List<PaymentLogModel>();
   bool _isRefresh = false;
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -320,7 +322,8 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
       });
       _getUser();
     }else{
-      Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
+      //Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
+      WarningSnackBar(_globalKey, MyString.txt_no_internet);
     }
     return null;
   }
@@ -346,6 +349,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
         )
     );
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(MyString.txt_online_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),

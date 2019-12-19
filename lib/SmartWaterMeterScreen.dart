@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/model/SmartWaterMeterUnitModel.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/SmartWaterMeterUnitModel.dart';
 import 'package:dio/dio.dart';
@@ -36,6 +37,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
   UserModel _userModel;
   List<SmartWaterMeterLogModel> _smartWaterMeterLogList = new List<SmartWaterMeterLogModel>();
   bool _isRefresh = false;
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -292,7 +294,8 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
       });
       _getUser();
     }else{
-      Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
+      //Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
+      WarningSnackBar(_globalKey, MyString.txt_no_internet);
     }
     return null;
   }
@@ -328,6 +331,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
         )
     );
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(MyString.txt_smart_water_meter, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),

@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'helper/SharePreferencesHelper.dart';
@@ -24,6 +25,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
   UserModel _userModel;
   bool _isCon ,_isLoading = false;
   Response _response;
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -89,13 +91,15 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
       });
       Navigator.of(context).pop({'isNeedRefresh' : true});
     }else{
-      Fluttertoast.showToast(msg: 'Please try again', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+      //Fluttertoast.showToast(msg: MyString.txt_try_again, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
@@ -174,20 +178,23 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
               child: RaisedButton(onPressed: ()async{
                 await _checkCon();
                 if(_isCon){
-                  if(_recordNameController.text != null && _image != null){
+                  if(_recordNameController.text != '' && _image != null){
                     setState(() {
                       _isLoading = true;
                     });
-                    _uploadTaxRecord();
-                  } else if(_recordNameController.text == null){
-                    Fluttertoast.showToast(msg: 'Please fill record name', backgroundColor: Colors.black.withOpacity(0.7),
-                        fontSize: FontSize.textSizeNormal);
+                    //_uploadTaxRecord();
+                  } else if(_recordNameController.text == ''){
+                    /*Fluttertoast.showToast(msg: 'Please fill record name', backgroundColor: Colors.black.withOpacity(0.7),
+                        fontSize: FontSize.textSizeNormal);*/
+                    WarningSnackBar(_globalKey, MyString.txt_need_tax_record_name);
                   }else{
-                    Fluttertoast.showToast(msg: 'Choose Photo Form camera or gallery', backgroundColor: Colors.black.withOpacity(0.7),
-                        fontSize: FontSize.textSizeNormal);
+                    /*Fluttertoast.showToast(msg: 'Choose Photo Form camera or gallery', backgroundColor: Colors.black.withOpacity(0.7),
+                        fontSize: FontSize.textSizeNormal);*/
+                    WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
                   }
                 }else{
-                  Fluttertoast.showToast(msg: 'No internet connection', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                  //Fluttertoast.showToast(msg: 'No internet connection', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                  WarningSnackBar(_globalKey, MyString.txt_no_internet);
                 }
 
                 }, child: Text(MyString.txt_save_user_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),

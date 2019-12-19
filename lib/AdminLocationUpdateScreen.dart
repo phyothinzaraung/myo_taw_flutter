@@ -113,7 +113,10 @@ class _AdminLocationUpdateScreenState extends State<AdminLocationUpdateScreen> w
   @override
   void dispose() {
     // TODO: implement dispose
-    super.dispose();
+    //call before super.dispose for active tickerprovidermixing
     _streamSubscription.cancel();
+    _animatinController.stop();
+    _animatinController.dispose();
+    super.dispose();
   }
 }

@@ -91,7 +91,7 @@ class MyString{
   static const String title_suggestion = 'ပေးပို့လိုသော စာ';
   static const String title_suggestion_subject = 'အကြောင်းအရာ';
   static const String txt_choose_subject = 'အကြောင်းအရာရွေးချယ်ပါ';
-  static const String title_suggestion_mess = 'အကြံပြုစာရေးနိုင်ပါသည်';
+  static const String title_suggestion_mess = 'အကြံပြုစာ';
   static const String txt_send_suggestion = 'စာပို့မည်';
   static const String txt_suggestion_finish = 'ပူးပေါင်းပါဝင်မှုအတွက် \n ကျေးဇူးတင်ပါသည်';
   static const String txt_close = 'ပိတ်မည်';
@@ -170,10 +170,10 @@ class MyString{
   static const String title_property_tax_calculate = "ပစ္စည်းခွန် အခွန်ငွေတွက်ချက်ရန်အတွက်";
   static const String title_biz_tax_calculate = "လုပ်ငန်းလိုင်စင်ခွန် တွက်ချက်ရန်အတွက်";
   static const String txt_biz_tax = "လုပ်ငန်းလိုင်စင်ခွန်";
-  static const String txt_choose_building_type = "အဆောက်အဦးအမျိုးအစား";
-  static const String txt_choose_story = "အထပ်အရေအတွက်";
-  static const String txt_choose_road = "လမ်းဥပစာ";
-  static const String txt_choose_blockNo = "ရပ်ကွက်";
+  static const String txt_building_type = "အဆောက်အဦးအမျိုးအစား";
+  static const String txt_story = "အထပ်အရေအတွက်";
+  static const String txt_road = "လမ်းဥပစာ";
+  static const String txt_blockNo = "ရပ်ကွက်";
   static const String txt_no_selected = "သတ်မှတ်ထားခြင်းမရှိ";
   static const String txt_calculate = "တွက်မည်";
   static const String txt_biz_tax_range = "ပေးဆောင်ရမည့် အခွန်နှုန်းထားမှာ";
@@ -181,7 +181,7 @@ class MyString{
   static const String txt_thanks = "အခွန်ပေးဆောင်မှုအတွက် \n ကျေးဇူးတင်ပါသည်";
   static const String txt_choose_license_type = "လိုင်စင်အမျိုးအစားရွေးပါ";
   static const String txt_site_area = "အဆောက်အဦး (အလျား × အနံ)";
-  static const String txt_choose_grade = "အတန်းအစား";
+  static const String txt_grade = "အတန်းအစား";
   static const String title_smart_water_meter = "Smart ရေမီတာမှ \n အခွန်ဆောင်ခြင်း";
   static const String txt_smart_water_meter = "Smart ရေမီတာမှ အခွန်ဆောင်ခြင်း";
   static const String title_online_tax_payment = "အွန်လိုင်းမှ \n အခွန်ဆောင်ခြင်း";
@@ -199,6 +199,33 @@ class MyString{
   static const String txt_no_internet = "ကွန်နက်ရှင်ကိုစစ်ဆေးပါ။";
   static const String txt_no_newsFeed_data = "သတင်းများမရှိသေးပါ။";
   static const String txt_no_data = "ဒေတာမရှိပါ။";
+  static const String txt_coming_soon = "မကြာမီလာမည်။";
+  static const String txt_need_suggestion = "အကြံပြုစာရေးပေးပါ";
+  static const String txt_need_subject = "အကြောင်းအရာရွေးပေးပါ";
+  static const String txt_need_suggestion_photo = "ဓာတ်ပုံတင်ရန် လိုအပ်ပါသည်";
+  static const String txt_need_suggestion_location = "တည်နေရာ မရ ရှိပါ";
+  static const String txt_try_again = "နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ";
+  static const String txt_fill_phno = "ဖုန်းနံပါတ်ရိုက်ထည့်ပါ";
+  static const String txt_choose_city = "မြို့ရွေးချယ်ပေးပါ";
+  static const String txt_wrong_phNo= "ဖုန်းနံပါတ် မှားယွင်းနေပါသည်";
+  static const String txt_save_newsFeed_success= "သိမ်းဆည်းပြီး";
+  static const String txt_check_internet= "ကွန်နက်ရှင်ကိုစစ်ဆေးပါ";
+  static const String txt_need_apply_biz_photo_name= "ဓာတ်ပုံအမည် ရေးပေးပါ";
+  static const String txt_choose_building_type= "အဆောက်အဦး အမျိုးအစားရွေးပေးပါ";
+  static const String txt_choose_story= "အထပ် အမျိုးအစားရွေးပေးပါ";
+  static const String txt_choose_blockNo= "ရပ်ကွက် အမျိုးအစားရွေးပေးပါ";
+  static const String txt_type_length= "အလျား လိုအပ်သည်";
+  static const String txt_type_width= "အနံ လိုအပ်သည်";
+  static const String txt_wrong_pin_code = "ပင်ကုဒ် မှားပါသည်";
+  static const String txt_need_prepaid_code = "ငွေဖြည့်ကုဒ် ရိုက်ပေးပါ";
+  static const String txt_need_pin_code = "ပင်ကုဒ် ရိုက်ပေးပါ";
+  static const String txt_choose_grade = "အတန်းအစား ရွေး‌ပေးပါ";
+  static const String txt_choose_biz_license = "လုပ်ငန်းအမျိုးအစား ရွေး‌ပေးပါ";
+  static const String txt_need_tax_record_name = "မှတ်တမ်းအမည် ဖြည့်ရန်လိုအပ်သည်။";
+  static const String txt_wrong_invoice_or_tax_type = "ပြေစာနံပါတ် သို့မဟုတ် အခွန်အမျိုးအစား မှားနေပါသည်။";
+  static const String txt_need_invoice_no = "ပြေစာနံပါတ် ဖြည့်ရန်လိုအပ်သည်။";
+  static const String txt_top_up_expired = "ငွေဖြည့်ကုဒ်သက်တမ်းကုန်သွားသည်။";
+  static const String txt_top_up_already = "ငွေဖြည့်ကုဒ်မှာအသုံးပြုပြီပါပြီး။";
 
 
   static const String BUILDING_GRADE_A = "building grade A";

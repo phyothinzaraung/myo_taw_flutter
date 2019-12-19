@@ -14,6 +14,7 @@ import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'AdminLocationUpdateScreen.dart';
+import 'myWidget/WarningSnackBarWidget.dart';
 
 class AdministratorSuggestionScreen extends StatefulWidget {
   @override
@@ -23,7 +24,6 @@ class AdministratorSuggestionScreen extends StatefulWidget {
 class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionScreen> {
   List<String> _subjectList = new List<String>();
   String _dropDownSubject = MyString.txt_choose_subject;
-  TextEditingController _messController = TextEditingController();
   String _mess, _lat, _lng;
   bool _isCon, _isLoading;
   File _image;
@@ -36,6 +36,7 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
   CameraPosition _cameraPosition;
   StreamSubscription<LocationData> _streamSubscription;
   Set<Marker> _markers = Set();
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -128,13 +129,14 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
     _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _mess,
         _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode);
     //print('sendsuggest: ${_mess} ${_dropDownSubject} ${_lat} ${_lng}');
+    setState(() {
+      _isLoading = false;
+    });
     if(_response.statusCode == 200){
-      setState(() {
-        _isLoading = false;
-      });
       _finishDialogBox();
     }else{
-      Fluttertoast.showToast(msg: 'Please try again', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+      //Fluttertoast.showToast(msg: MyString.txt_try_again, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
   }
 
@@ -196,8 +198,8 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
   _navigateToAdminLocationUpdateScreen()async{
     Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => AdminLocationUpdateScreen()));
     if(result != null && result.containsKey('latLng') != null){
-      LatLng latLng = result['latLng'];
       setState(() {
+        LatLng latLng = result['latLng'];
         _lat = latLng.latitude.toString();
         _lng = latLng.longitude.toString();
         _cameraPosition = CameraPosition(
@@ -223,6 +225,7 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
         title: Text(MyString.txt_suggestion, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
@@ -390,7 +393,6 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
                               decoration: InputDecoration(
                                   border: InputBorder.none
                               ),
-                              controller: _messController,
                               style: TextStyle(fontSize: FontSize.textSizeNormal),
                               onChanged: (value){
                                 _mess = value;
@@ -410,25 +412,24 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
                                     _isLoading = true;
                                   });
                                   _sendSuggestion();
+                                }else if(_image == null){
+                                  //Fluttertoast.showToast(msg: MyString.txt_need_suggestion_photo, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                  WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
+                                }else if(_dropDownSubject == MyString.txt_choose_subject){
+                                  //Fluttertoast.showToast(msg: MyString.txt_need_subject, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                  WarningSnackBar(_globalKey, MyString.txt_need_subject);
+                                }else if(_mess == null){
+                                  //Fluttertoast.showToast(msg: MyString.txt_need_suggestion, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                  WarningSnackBar(_globalKey, MyString.txt_need_suggestion);
+                                }else if(_lat == null && _lng == null){
+                                  //Fluttertoast.showToast(msg: MyString.txt_need_suggestion_location, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                  WarningSnackBar(_globalKey, MyString.txt_need_suggestion_location);
                                 }
                               }else{
-                                Fluttertoast.showToast(msg: 'No internet connection', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
-                              }
-                              if(_mess == null){
-                                Fluttertoast.showToast(msg: 'Need to fill message', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                //Fluttertoast.showToast(msg: MyString.txt_no_internet, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                WarningSnackBar(_globalKey, MyString.txt_no_internet);
                               }
 
-                              if(_image == null){
-                                Fluttertoast.showToast(msg: 'Need photo', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
-                              }
-
-                              if(_dropDownSubject == MyString.txt_choose_subject){
-                                Fluttertoast.showToast(msg: 'choose subject', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
-                              }
-
-                              if(_lat == null && _lng == null){
-                                Fluttertoast.showToast(msg: 'can\'t get location', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
-                              }
 
                               }, child: Text(MyString.txt_save_user_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
                               color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),

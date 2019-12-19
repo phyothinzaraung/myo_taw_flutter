@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
 
@@ -18,6 +19,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
   List<String> _gradeList;
   String _taxRange;
   bool _isHotel = false;
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   void initState() {
@@ -256,6 +258,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _globalKey,
       appBar: AppBar(
           title: Text(MyString.txt_calculate_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),)
       ),
@@ -357,7 +360,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                             children: <Widget>[
                               Container(
                                 margin: EdgeInsets.only(bottom: 10),
-                                child: Text(MyString.txt_choose_grade,
+                                child: Text(MyString.txt_grade,
                                   style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                               ),
                               Container(
@@ -402,16 +405,19 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                                   if(_dropDownGrade != MyString.txt_no_selected){
                                     _calculateTaxDialog();
                                   }else{
-                                    Fluttertoast.showToast(msg: 'Choose Grade', backgroundColor: Colors.black.withOpacity(0.7));
+                                    //Fluttertoast.showToast(msg: MyString.txt_choose_grade, backgroundColor: Colors.black.withOpacity(0.7));
+                                    WarningSnackBar(_globalKey, MyString.txt_choose_grade);
                                   }
                                 }else{
                                   _calculateTaxDialog();
                                 }
 
                               }else if(_dropDownBizLicenseType == MyString.txt_no_selected){
-                                Fluttertoast.showToast(msg: 'Choose Building Type', backgroundColor: Colors.black.withOpacity(0.7));
+                                //Fluttertoast.showToast(msg: MyString.txt_choose_building_type, backgroundColor: Colors.black.withOpacity(0.7));
+                                WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
                               }else if(_dropDownBizType == MyString.txt_no_selected){
-                                Fluttertoast.showToast(msg: 'Choose BizLicense', backgroundColor: Colors.black.withOpacity(0.7));
+                                //Fluttertoast.showToast(msg: MyString.txt_choose_biz_license, backgroundColor: Colors.black.withOpacity(0.7));
+                                WarningSnackBar(_globalKey, MyString.txt_choose_biz_license);
                               }
 
                             },color: MyColor.colorPrimary,

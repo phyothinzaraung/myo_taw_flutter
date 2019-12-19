@@ -6,7 +6,6 @@ import 'Database/SaveNewsFeedDb.dart';
 import 'helper/ShowDateTimeHelper.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'SaveNewsFeedDetailScreen.dart';
-import 'package:flutter_slidable/flutter_slidable.dart';
 
 class SaveNewsFeedScreen extends StatefulWidget {
   @override
@@ -16,7 +15,6 @@ class SaveNewsFeedScreen extends StatefulWidget {
 class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
   SaveNewsFeedDb _saveNewsFeedDb = SaveNewsFeedDb();
   List _saveNewsFeedList = new List();
-  final GlobalKey<AnimatedListState> _listKey = GlobalKey();
 
 
   @override

@@ -21,42 +21,42 @@ class ServiceHelper{
  }
 
  likeReact<Response>(String userUniqueKey, String newsFeedId, String react) async{
-  dio.options.connectTimeout = conTimeOut;
-  dio.options.receiveTimeout = conTimeOut;
-  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_NEWSFEED+"newsfeedposted/iosreact",
-      queryParameters: {"userguid": userUniqueKey, "nfguid": newsFeedId, "react": react});
-  return response;
+   dio.options.connectTimeout = conTimeOut;
+   dio.options.receiveTimeout = conTimeOut;
+   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_NEWSFEED+"newsfeedposted/iosreact",
+       queryParameters: {"userguid": userUniqueKey, "nfguid": newsFeedId, "react": react});
+   return response;
  }
 
  userLogin<Response>(String PhoneNo, String RegionCode, String Token, String Resource) async{
-  dio.options.connectTimeout = conTimeOut;
-  dio.options.receiveTimeout = conTimeOut;
-  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/LoginForAndroid",
-      queryParameters: {"PhoneNO": PhoneNo, "RegionCode": RegionCode, "Token": Token, "Resource": Resource});
-  return response;
+   dio.options.connectTimeout = conTimeOut;
+   dio.options.receiveTimeout = conTimeOut;
+   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/LoginForAndroid",
+       queryParameters: {"PhoneNO": PhoneNo, "RegionCode": RegionCode, "Token": Token, "Resource": Resource});
+   return response;
  }
 
  getAllTaxRecord<Response>(int page, int pageSize, String regionCode, String unique) async{
-  dio.options.connectTimeout = conTimeOut;
-  dio.options.receiveTimeout = conTimeOut;
-  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"TaxRecord/GetTaxRecord",
-      queryParameters: {"page": page, "pageSize": pageSize, "RegionCode": regionCode, "UniqueKey": unique});
-  return response;
+   dio.options.connectTimeout = conTimeOut;
+   dio.options.receiveTimeout = conTimeOut;
+   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"TaxRecord/GetTaxRecord",
+       queryParameters: {"page": page, "pageSize": pageSize, "RegionCode": regionCode, "UniqueKey": unique});
+   return response;
  }
 
  deleteTaxRecord<Response>(int id) async{
-  dio.options.connectTimeout = conTimeOut;
-  dio.options.receiveTimeout = conTimeOut;
-  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"TaxRecord/DeleteTaxRecord",
-      queryParameters: {"ID": id});
-  return response;
+   dio.options.connectTimeout = conTimeOut;
+   dio.options.receiveTimeout = conTimeOut;
+   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"TaxRecord/DeleteTaxRecord",
+       queryParameters: {"ID": id});
+   return response;
  }
 
  updateUserInfo<Response>(UserModel model) async{
-  dio.options.connectTimeout = conTimeOut;
-  dio.options.receiveTimeout = conTimeOut;
-  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/UpdateUser", data: model.toJson());
-  return response;
+   dio.options.connectTimeout = conTimeOut;
+   dio.options.receiveTimeout = conTimeOut;
+   response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/UpdateUser", data: model.toJson());
+   return response;
  }
 
  getAllFaq<Response>(String regionCode, int page, int pageSize, String category) async{
@@ -84,9 +84,9 @@ class ServiceHelper{
  }
 
  uploadProfilePhoto<Response>(String file, String uniqueKey) async{
-  FormData formData = new FormData.from({
+  FormData formData = new FormData.fromMap({
    'Uniquekey' : uniqueKey,
-   'file' : UploadFileInfo(File(file), 'profilePhoto')
+   'file' : await MultipartFile.fromFile(file, filename: 'profilePhoto')
   });
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
@@ -96,8 +96,8 @@ class ServiceHelper{
  }
 
  uploadTaxRecord<Response>(String file, String subject, String uniqueKey, String userName, String regionCode) async{
-  FormData formData = new FormData.from({
-   'file' : UploadFileInfo(File(file), 'taxRecordPhoto'),
+  FormData formData = new FormData.fromMap({
+   'file' : await MultipartFile.fromFile(file,filename: 'taxRecordPhoto'),
    'Subject' : subject,
    'Uniquekey' : uniqueKey,
    'UserName' : userName,
@@ -112,24 +112,24 @@ class ServiceHelper{
 
  sendSuggestion<Response>(String file, String phoneNo, String subject, String message, String uniqueKey, String userName, String lat, String lng,
      String regionCode) async{
-  FormData formData = new FormData.from({
-   'file' : UploadFileInfo(File(file), 'suggestionPhoto'),
-   'UserPhoneNo' : phoneNo,
-   'Subject' : subject,
-   'Message' : message,
-   'UniqueKey' : uniqueKey,
-   'UserName' : userName,
-   'Latitude' : lat,
-   'Longitude' : lng,
-   'RegionCode' : regionCode,
-   'IsRead' : false,
-   'Fixed' : false,
-  });
-  dio.options.connectTimeout = conTimeOut;
-  dio.options.receiveTimeout = conTimeOut;
-  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Contribute/UpSertContributeWithPhoto",
-      data: formData);
-  return response;
+   FormData formData = new FormData.fromMap({
+     'file' : MultipartFile.fromFile(file,filename: subject),
+     'UserPhoneNo' : phoneNo,
+     'Subject' : subject,
+     'Message' : message,
+     'UniqueKey' : uniqueKey,
+     'UserName' : userName,
+     'Latitude' : lat,
+     'Longitude' : lng,
+     'RegionCode' : regionCode,
+     'IsRead' : false,
+     'Fixed' : false,
+   });
+   dio.options.connectTimeout = conTimeOut;
+   dio.options.receiveTimeout = conTimeOut;
+   response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Contribute/UpSertContributeWithPhoto",
+       data: formData);
+   return response;
  }
 
  getBizLicense<Response>(String regionCode) async{
@@ -164,8 +164,8 @@ class ServiceHelper{
  }
 
  uploadApplyBizPhoto<Response>(String file, String appBizId, String title) async{
-  FormData formData = new FormData.from({
-   'file' : UploadFileInfo(File(file), 'applyBizPhoto'),
+  FormData formData = new FormData.fromMap({
+   'file' : await MultipartFile.fromFile(file,filename: 'applyBizPhoto'),
    'ApBizID' : appBizId,
    'Title' : title,
   });
@@ -212,7 +212,7 @@ class ServiceHelper{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
   _interceptor();
-  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_DAO_INVOICE_NO+"CustomerData/GetAmountFromInvoice",
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_DAO_INVOICE_NO+"CustomData/GetAmountFromInvoice",
       queryParameters: {"TaxType": taxType,"InvoiceNo": invoiceNo});
   return response;
  }

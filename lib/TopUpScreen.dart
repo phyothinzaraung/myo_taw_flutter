@@ -1,5 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
@@ -42,11 +43,18 @@ class _TopUpScreenState extends State<TopUpScreen> {
         _isLoading = false;
       });
       Navigator.of(context).pop({'isNeedRefresh' : true});
+    }else if(_response.data == 'Expired Date'){
+      setState(() {
+        _isLoading = false;
+      });
+      //Fluttertoast.showToast(msg: MyString.txt_try_again, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+      WarningSnackBar(_scaffoldState, MyString.txt_top_up_expired);
     }else{
       setState(() {
         _isLoading = false;
       });
-      Fluttertoast.showToast(msg: 'Can\'t top up', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+      //Fluttertoast.showToast(msg: MyString.txt_try_again, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+      WarningSnackBar(_scaffoldState, MyString.txt_top_up_already);
     }
   }
 
@@ -178,7 +186,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
                       //text field prepaid code
                       Container(
                         margin: EdgeInsets.only(top: 5.0, bottom: 10.0),
-                        padding: EdgeInsets.all(10.0),
+                        padding: EdgeInsets.all(0),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(5.0),
                             border: Border.all(color: Colors.white, style: BorderStyle.solid, width: 0.80),
@@ -225,6 +233,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
                               setState(() {
                                 _hasError = true;
                               });
+                              _pinCodeController.clear();
                             }
                           },
                         ),
@@ -260,17 +269,20 @@ class _TopUpScreenState extends State<TopUpScreen> {
                                             mainAxisAlignment: MainAxisAlignment.center,
                                             children: <Widget>[
                                               Container(margin: EdgeInsets.only(right: 20.0),child: Image.asset('images/no_connection.png', width: 30.0, height: 30.0,)),
-                                              Text('Check internet connection', style: TextStyle(fontSize: FontSize.textSizeNormal),),
+                                              Text(MyString.txt_check_internet, style: TextStyle(fontSize: FontSize.textSizeNormal),),
                                             ],
                                           ),duration: Duration(seconds: 2),backgroundColor: Colors.red,));
                                       }
                                     }else{
-                                      Fluttertoast.showToast(msg: 'Wrong pin code', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                      //Fluttertoast.showToast(msg: MyString.txt_wrong_pin_code, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                      WarningSnackBar(_scaffoldState, MyString.txt_wrong_pin_code);
                                     }
                                   }else if(_prepaidCodeController.text.isEmpty){
-                                    Fluttertoast.showToast(msg: 'Please fill prepaid code', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                    //Fluttertoast.showToast(msg: MyString.txt_need_prepaid_code, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                    WarningSnackBar(_scaffoldState, MyString.txt_need_prepaid_code);
                                   }else if(_pinCodeController.text.isEmpty){
-                                    Fluttertoast.showToast(msg: 'Please fill pin code code', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                    //Fluttertoast.showToast(msg: MyString.txt_need_pin_code, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                    WarningSnackBar(_scaffoldState, MyString.txt_need_pin_code);
                                   }
 
                                   }, child: Text(MyString.txt_top_up, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),

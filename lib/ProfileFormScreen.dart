@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
 import 'model/LocationModel.dart';
@@ -26,7 +27,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   List<String> _townshipList;
   bool _isLoading, _isCon = false;
   LocationDb _locationDb = LocationDb();
-  Response _response;
+  var _response;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
   UserDb _userDb = UserDb();
@@ -132,22 +133,15 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
       await _userDb.closeUserDb();
       print('usermodel: ${_userModel.name} ${_userModel.address} ${_userModel.state} '
           '${_userModel.township} ${_userModel.currentRegionCode} ${_userModel.androidToken}');
+      Navigator.of(context).pop({'isNeedRefresh' : true});
       setState(() {
         _isLoading = false;
       });
-      Navigator.of(context).pop({'isNeedRefresh' : true});
     }else{
       setState(() {
         _isLoading = false;
       });
-      _scaffoldState.currentState.showSnackBar(SnackBar(
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 20.0),child: Image.asset('images/no_connection.png', width: 30.0, height: 30.0,)),
-              Text('Check internet connection', style: TextStyle(fontSize: FontSize.textSizeNormal),),
-            ],
-          ),duration: Duration(seconds: 5),backgroundColor: Colors.red,));
+      WarningSnackBar(_scaffoldState, MyString.txt_no_internet);
     }
   }
 

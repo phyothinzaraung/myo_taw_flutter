@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:dio/dio.dart';
 import 'package:html/parser.dart';
+import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
 import 'helper/ServiceHelper.dart';
 import 'Model/NewsFeedReactModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -29,7 +30,7 @@ class NewsFeedScreen extends StatefulWidget {
 
 class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAliveClientMixin<NewsFeedScreen> {
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
-  Response response;
+  var response;
   List<NewsFeedReactModel> _newsFeedReactModel = new List<NewsFeedReactModel>();
   ScrollController _scrollController = new ScrollController();
   bool _isEnd = false, _isCon= false;
@@ -43,6 +44,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   SaveNewsFeedModel _saveNewsFeedModel = SaveNewsFeedModel();
   ImageProvider _profilePhoto;
   UserDb _userDb = UserDb();
+  GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override
   // TODO: implement wantKeepAlive
@@ -112,7 +114,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     _saveNewsFeedModel.accessTime = DateTime.now().toString();
     await _saveNewsFeedDb.insert(_saveNewsFeedModel);
     await _saveNewsFeedDb.closeSaveNfDb();
-    Fluttertoast.showToast(msg: 'Save Successful', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+    //Fluttertoast.showToast(msg: MyString.txt_save_newsFeed_success, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+    PrimaryColorSnackBarWidget(_globalKey, MyString.txt_save_newsFeed_success);
   }
 
   _callLikeWebService(String newsFeedId)async{
@@ -120,7 +123,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     print('responseLike: ${response}');
   }
 
-  _getUser()async{
+  _getUser() async{
     await _sharepreferenceshelper.initSharePref();
     _userUniqueKey = _sharepreferenceshelper.getUserUniqueKey();
     await _userDb.openUserDb();
@@ -494,6 +497,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       )
     );
     return Scaffold(
+      key: _globalKey,
       body: SafeArea(child: _asyncLoader),
     );
   }
