@@ -30,7 +30,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
   UserModel _userModel;
-  var _response;
+  Response _response;
   StreamSubscription<LocationData> _streamSubscription;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
@@ -93,12 +93,8 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
     setState(() {
       _isLoading = false;
     });
-    if(_response != DioErrorType.DEFAULT){
-      if(_response.statusCode == 200){
-        _finishDialogBox();
-      }else{
-        WarningSnackBar(_globalKey, MyString.txt_try_again);
-      }
+    if(_response.data != null){
+      _finishDialogBox();
     }else{
       WarningSnackBar(_globalKey, MyString.txt_try_again);
     }

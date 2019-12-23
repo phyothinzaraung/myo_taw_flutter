@@ -159,11 +159,13 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
 
   _callWebService(ApplyBizLicenseModel model)async{
     _response = await ServiceHelper().postApplyBizLicense(model);
+    setState(() {
+      _isLoading = false;
+    });
     if(_response.data != null){
-      setState(() {
-        _isLoading = false;
-      });
       _dialogFinish(ApplyBizLicenseModel.fromJson(_response.data));
+    }else{
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
 
     /*print('apply biz license: '

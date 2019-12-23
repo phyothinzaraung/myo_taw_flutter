@@ -132,7 +132,7 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
     setState(() {
       _isLoading = false;
     });
-    if(_response.statusCode == 200){
+    if(_response.data != null){
       _finishDialogBox();
     }else{
       //Fluttertoast.showToast(msg: MyString.txt_try_again, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));

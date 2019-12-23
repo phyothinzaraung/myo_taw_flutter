@@ -90,16 +90,13 @@ class _ReferralScreenState extends State<ReferralScreen> {
 
   _callWebService() async{
     _response = await ServiceHelper().postReferral(_referralModel);
+    setState(() {
+      _isLoad = false;
+    });
     if(_response.data != null){
       ReferralResponseModel model = ReferralResponseModel.fromJson(_response.data);
-      setState(() {
-        _isLoad = false;
-      });
       _dialogFinish(model.message);
     }else{
-      setState(() {
-        _isLoad = false;
-      });
       WarningSnackBar(_scaffoldState, MyString.txt_try_again);
     }
   }

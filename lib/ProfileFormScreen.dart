@@ -27,7 +27,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   List<String> _townshipList;
   bool _isLoading, _isCon = false;
   LocationDb _locationDb = LocationDb();
-  var _response;
+  Response _response;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
   UserDb _userDb = UserDb();
@@ -128,21 +128,23 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
       _userModel.state = _dropDownState;
       _userModel.township = _dropDownTownship;
       _response = await ServiceHelper().updateUserInfo(_userModel);
-      await _userDb.openUserDb();
-      await _userDb.insert(UserModel.fromJson(_response.data));
-      await _userDb.closeUserDb();
-      print('usermodel: ${_userModel.name} ${_userModel.address} ${_userModel.state} '
-          '${_userModel.township} ${_userModel.currentRegionCode} ${_userModel.androidToken}');
-      Navigator.of(context).pop({'isNeedRefresh' : true});
-      setState(() {
-        _isLoading = false;
-      });
+      if(_response.data != null){
+        await _userDb.openUserDb();
+        await _userDb.insert(UserModel.fromJson(_response.data));
+        await _userDb.closeUserDb();
+        print('usermodel: ${_userModel.name} ${_userModel.address} ${_userModel.state} '
+            '${_userModel.township} ${_userModel.currentRegionCode} ${_userModel.androidToken}');
+        Navigator.of(context).pop({'isNeedRefresh' : true});
+      }else{
+        WarningSnackBar(_scaffoldState, MyString.txt_try_again);
+      }
+
     }else{
-      setState(() {
-        _isLoading = false;
-      });
       WarningSnackBar(_scaffoldState, MyString.txt_no_internet);
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   @override

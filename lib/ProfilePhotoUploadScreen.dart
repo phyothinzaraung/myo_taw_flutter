@@ -60,15 +60,25 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
   _uploadPhoto()async{
     await _sharepreferenceshelper.initSharePref();
     _response = await ServiceHelper().uploadProfilePhoto(_image.path, _sharepreferenceshelper.getUserUniqueKey());
-    _userModel = UserModel.fromJson(_response.data);
-    await _userDb.openUserDb();
-    await _userDb.insert(_userModel);
-    await _userDb.closeUserDb();
+    if(_response != null){
+      if(_response.data != null){
+        _userModel = UserModel.fromJson(_response.data);
+        await _userDb.openUserDb();
+        await _userDb.insert(_userModel);
+        await _userDb.closeUserDb();
+        Navigator.of(context).pop({'isNeedRefresh' : true});
+        print('uploadprofile: ${_response.data}');
+      }else{
+        WarningSnackBar(_globalKey, MyString.txt_try_again);
+      }
+    }else{
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
+    }
+
     setState(() {
       _isLoading = false;
     });
-    Navigator.of(context).pop({'isNeedRefresh' : true});
-    print('uploadprofile: ${_response.data}');
+
   }
 
   Widget modalProgressIndicator(){

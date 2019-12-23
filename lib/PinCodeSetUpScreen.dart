@@ -1,5 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:myotaw/model/UserModel.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
@@ -46,26 +47,21 @@ class _PinCodeSetUpScreenState extends State<PinCodeSetUpScreen> {
     });
     if(_isCon){
       _response = await ServiceHelper().updateUserInfo(_userModel);
-      await _userDb.openUserDb();
-      await _userDb.insert(UserModel.fromJson(_response.data));
-      await _userDb.closeUserDb();
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pop({'isNeedRefresh' : true});
+      if(_response.data != null){
+        await _userDb.openUserDb();
+        await _userDb.insert(UserModel.fromJson(_response.data));
+        await _userDb.closeUserDb();
+        Navigator.of(context).pop({'isNeedRefresh' : true});
+      }else{
+        WarningSnackBar(_scaffoldState, MyString.txt_try_again);
+      }
+
     }else{
-      setState(() {
-        _isLoading = false;
-      });
-      _scaffoldState.currentState.showSnackBar(SnackBar(
-        content: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Container(margin: EdgeInsets.only(right: 20.0),child: Image.asset('images/no_connection.png', width: 30.0, height: 30.0,)),
-            Text('Check internet connection', style: TextStyle(fontSize: FontSize.textSizeNormal),),
-          ],
-        ),duration: Duration(seconds: 2),backgroundColor: Colors.red,));
+      WarningSnackBar(_scaffoldState, MyString.txt_no_internet);
     }
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   Widget modalProgressIndicator(){

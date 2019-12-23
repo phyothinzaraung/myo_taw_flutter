@@ -85,10 +85,10 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
     _userModel = model;
     _response = await ServiceHelper().uploadTaxRecord(_image.path, _recordNameController.text, _userModel.uniqueKey, _userModel.name, _userModel.currentRegionCode);
     //print('uploaddata: ${_recordName} ${_userModel.uniqueKey} ${_userModel.name} ${_userModel.currentRegionCode}');
-    if(_response.statusCode == 200){
-      setState(() {
-        _isLoading = false;
-      });
+    setState(() {
+      _isLoading = false;
+    });
+    if(_response.data != null){
       Navigator.of(context).pop({'isNeedRefresh' : true});
     }else{
       //Fluttertoast.showToast(msg: MyString.txt_try_again, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
@@ -182,7 +182,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                     setState(() {
                       _isLoading = true;
                     });
-                    //_uploadTaxRecord();
+                    _uploadTaxRecord();
                   } else if(_recordNameController.text == ''){
                     /*Fluttertoast.showToast(msg: 'Please fill record name', backgroundColor: Colors.black.withOpacity(0.7),
                         fontSize: FontSize.textSizeNormal);*/

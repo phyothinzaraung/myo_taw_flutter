@@ -97,15 +97,12 @@ class _PaymentScreenState extends State<PaymentScreen> {
       _isLoading = true;
     });
     _response = await ServiceHelper().postPayment(_paymentLogModel);
+    setState(() {
+      _isLoading = false;
+    });
     if(_response.data != null){
       _dialogPaymentSuccess();
-      setState(() {
-        _isLoading = false;
-      });
     }else{
-      setState(() {
-        _isLoading = false;
-      });
       //Fluttertoast.showToast(msg: 'Try again', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeNormal);
       WarningSnackBar(_scaffoldState, MyString.txt_try_again);
     }

@@ -123,11 +123,16 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
     setState(() {
       _isLoading = false;
     });
-    _handleRefresh();
-    setState(() {
-      _image = null;
-      _fileTitleController.clear();
-    });
+    if(_response.data != null){
+      _handleRefresh();
+      setState(() {
+        _image = null;
+        _fileTitleController.clear();
+      });
+    }else{
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
+    }
+
   }
 
   Widget _modalProgressIndicator(){
