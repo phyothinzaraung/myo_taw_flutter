@@ -242,7 +242,7 @@ class ApplyBizLicenseModel{
       _regionCode = json['RegionCode'],
       _accessTime = json['Accesstime'],
       _isDeleted = json['IsDeleted'],
-      _isValid = json['IsValid'];
+      _isValid = json['IsValid']??false;
 
   Map<String, dynamic> toJson(){
     Map<String, dynamic> json =new Map<String, dynamic>();

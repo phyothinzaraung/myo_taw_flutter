@@ -46,13 +46,18 @@ class _PinCodeSetUpScreenState extends State<PinCodeSetUpScreen> {
       _isLoading = true;
     });
     if(_isCon){
-      _response = await ServiceHelper().updateUserInfo(_userModel);
-      if(_response.data != null){
-        await _userDb.openUserDb();
-        await _userDb.insert(UserModel.fromJson(_response.data));
-        await _userDb.closeUserDb();
-        Navigator.of(context).pop({'isNeedRefresh' : true});
-      }else{
+      try{
+        _response = await ServiceHelper().updateUserInfo(_userModel);
+        if(_response.data != null){
+          await _userDb.openUserDb();
+          await _userDb.insert(UserModel.fromJson(_response.data));
+          await _userDb.closeUserDb();
+          Navigator.of(context).pop({'isNeedRefresh' : true});
+        }else{
+          WarningSnackBar(_scaffoldState, MyString.txt_try_again);
+        }
+      }catch(e){
+        print(e);
         WarningSnackBar(_scaffoldState, MyString.txt_try_again);
       }
 

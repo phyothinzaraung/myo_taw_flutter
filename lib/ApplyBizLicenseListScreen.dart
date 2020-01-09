@@ -43,16 +43,20 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
 
   _getAllApplyBizLicense()async{
      await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().getAllApplyBizLicenseByUser(_sharepreferenceshelper.getRegionCode(), _sharepreferenceshelper.getUserUniqueKey());
-     List applyBizLicenseList = _response.data;
-     //List applyBizLicenseList = [];
-    if(applyBizLicenseList != null && applyBizLicenseList.length > 0){
-      for(var i in applyBizLicenseList){
-        setState(() {
-          _applyBizLicenseModelList.add(ApplyBizLicenseModel.fromJson(i));
-        });
-      }
-    }
+     try{
+       _response = await ServiceHelper().getAllApplyBizLicenseByUser(_sharepreferenceshelper.getRegionCode(), _sharepreferenceshelper.getUserUniqueKey());
+       List applyBizLicenseList = _response.data;
+       //List applyBizLicenseList = [];
+       if(applyBizLicenseList != null && applyBizLicenseList.length > 0){
+         for(var i in applyBizLicenseList){
+           setState(() {
+             _applyBizLicenseModelList.add(ApplyBizLicenseModel.fromJson(i));
+           });
+         }
+       }
+     }catch(e){
+       print(e);
+     }
   }
 
   _listView(){

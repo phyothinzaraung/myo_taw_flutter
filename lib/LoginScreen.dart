@@ -41,12 +41,9 @@ class _LoginScreenState extends State<LoginScreen> {
       _showLoading = true;
     });
     String _hasyKey = await SmsRetriever.getAppSignature();
-    response = await ServiceHelper().getOtpCode(_normalizedPhNo, _hasyKey);
-    var result = response.data;
-    setState(() {
-      _showLoading = false;
-    });
-    if(response.statusCode == 200){
+    try{
+      response = await ServiceHelper().getOtpCode(_normalizedPhNo, _hasyKey);
+      var result = response.data;
       if(result != null){
         if(result['code'] == '002'){
           Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
@@ -54,9 +51,14 @@ class _LoginScreenState extends State<LoginScreen> {
       }else{
         WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
-    }else{
+    }catch(e){
+      print(e);
       WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
+
+    setState(() {
+      _showLoading = false;
+    });
   }
 
   _checkCon()async{

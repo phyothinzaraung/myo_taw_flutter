@@ -39,43 +39,51 @@ class _FaqScreenState extends State<FaqScreen> {
   _getAllFaq(String category)async{
     await _sharepreferenceshelper.initSharePref();
     _regionCode = await _sharepreferenceshelper.getRegionCode();
-    _response = await ServiceHelper().getAllFaq(_regionCode, page, pageSize, category);
-    faqModelList = _response.data['FAQwithPaging']['Results'];
-    //faqModelList = [];
-    if(faqModelList != null && faqModelList.length > 0){
-      var categoryList = _response.data['CategoryList'];
-      for(var i in categoryList){
-        if(i != null){
-          setState(() {
-            //_categoryList.add(model);
-            _categoryList.add(i);
-          });
+    try{
+      _response = await ServiceHelper().getAllFaq(_regionCode, page, pageSize, category);
+      faqModelList = _response.data['FAQwithPaging']['Results'];
+      //faqModelList = [];
+      if(faqModelList != null && faqModelList.length > 0){
+        var categoryList = _response.data['CategoryList'];
+        for(var i in categoryList){
+          if(i != null){
+            setState(() {
+              //_categoryList.add(model);
+              _categoryList.add(i);
+            });
+          }
+        }
+        if(_response.data != null){
+          faqModelList = _response.data['FAQwithPaging']['Results'];
+          for(var i in faqModelList){
+            setState(() {
+              _faqList.add(FaqModel.fromJson(i));
+            });
+          }
         }
       }
-      if(_response.data != null){
-        faqModelList = _response.data['FAQwithPaging']['Results'];
-        for(var i in faqModelList){
-          setState(() {
-            _faqList.add(FaqModel.fromJson(i));
-          });
-        }
-      }
+    }catch(e){
+      print(e);
     }
   }
 
   _getAllFaqByCategory(String category)async{
     await _sharepreferenceshelper.initSharePref();
-    _regionCode = await _sharepreferenceshelper.getRegionCode();
-    _response = await ServiceHelper().getAllFaq(_regionCode, page, pageSize, category);
-    faqModelList = _response.data['FAQwithPaging']['Results'];
-    if(_response.data != null){
+    try{
+      _regionCode = await _sharepreferenceshelper.getRegionCode();
+      _response = await ServiceHelper().getAllFaq(_regionCode, page, pageSize, category);
+      faqModelList = _response.data['FAQwithPaging']['Results'];
+      if(_response.data != null){
 
-      for(var i in faqModelList){
-        setState(() {
-          _faqList.add(FaqModel.fromJson(i));
-          _isLoading = false;
-        });
+        for(var i in faqModelList){
+          setState(() {
+            _faqList.add(FaqModel.fromJson(i));
+            _isLoading = false;
+          });
+        }
       }
+    }catch(e){
+      print(e);
     }
   }
 

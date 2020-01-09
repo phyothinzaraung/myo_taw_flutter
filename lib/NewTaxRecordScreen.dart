@@ -83,17 +83,23 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.closeUserDb();
     _userModel = model;
-    _response = await ServiceHelper().uploadTaxRecord(_image.path, _recordNameController.text, _userModel.uniqueKey, _userModel.name, _userModel.currentRegionCode);
-    //print('uploaddata: ${_recordName} ${_userModel.uniqueKey} ${_userModel.name} ${_userModel.currentRegionCode}');
+    try{
+      _response = await ServiceHelper().uploadTaxRecord(_image.path, _recordNameController.text, _userModel.uniqueKey, _userModel.name, _userModel.currentRegionCode);
+      //print('uploaddata: ${_recordName} ${_userModel.uniqueKey} ${_userModel.name} ${_userModel.currentRegionCode}');
+      if(_response.data != null){
+        Navigator.of(context).pop({'isNeedRefresh' : true});
+      }else{
+        //Fluttertoast.showToast(msg: MyString.txt_try_again, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+        WarningSnackBar(_globalKey, MyString.txt_try_again);
+      }
+    }catch(e){
+      print(e);
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
+    }
+
     setState(() {
       _isLoading = false;
     });
-    if(_response.data != null){
-      Navigator.of(context).pop({'isNeedRefresh' : true});
-    }else{
-      //Fluttertoast.showToast(msg: MyString.txt_try_again, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
-      WarningSnackBar(_globalKey, MyString.txt_try_again);
-    }
   }
 
   @override

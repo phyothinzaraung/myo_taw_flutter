@@ -37,25 +37,23 @@ class _TopUpScreenState extends State<TopUpScreen> {
     setState(() {
       _isLoading = true;
     });
-    _response = await ServiceHelper().getTopUp(_prepaidCodeController.text, _userModel.uniqueKey);
-    if(_response.data == 'Success'){
-      setState(() {
-        _isLoading = false;
-      });
-      Navigator.of(context).pop({'isNeedRefresh' : true});
-    }else if(_response.data == 'Expired Date'){
-      setState(() {
-        _isLoading = false;
-      });
-      //Fluttertoast.showToast(msg: MyString.txt_try_again, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
-      WarningSnackBar(_scaffoldState, MyString.txt_top_up_expired);
-    }else{
-      setState(() {
-        _isLoading = false;
-      });
-      //Fluttertoast.showToast(msg: MyString.txt_try_again, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
-      WarningSnackBar(_scaffoldState, MyString.txt_top_up_already);
-    }
+   try{
+     _response = await ServiceHelper().getTopUp(_prepaidCodeController.text, _userModel.uniqueKey);
+     if(_response.data == 'Success'){
+       Navigator.of(context).pop({'isNeedRefresh' : true});
+     }else if(_response.data == 'Expired Date'){
+       WarningSnackBar(_scaffoldState, MyString.txt_top_up_expired);
+     }else{
+       WarningSnackBar(_scaffoldState, MyString.txt_top_up_already);
+     }
+   }catch(e){
+     print(e);
+     WarningSnackBar(_scaffoldState, MyString.txt_try_again);
+   }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   Widget modalProgressIndicator(){

@@ -50,32 +50,36 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
 
   _getTaxUse(int year)async{
     await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().getTaxUser(_sharepreferenceshelper.getRegionCode(), TaxUseBudgetYearHelper().getBudgetYear(year));
-    List list = _response.data;
-    //List list = [];
-    if(list != null && list.length > 0){
-      for(var i in list){
-        setState(() {
-          _taxUserModelList.add(TaxUserModel.fromJson(i));
-        });
-        dataMap.putIfAbsent(TaxUserModel.fromJson(i).taxTitle, () => TaxUserModel.fromJson(i).amount);
+    try{
+      _response = await ServiceHelper().getTaxUser(_sharepreferenceshelper.getRegionCode(), TaxUseBudgetYearHelper().getBudgetYear(year));
+      List list = _response.data;
+      //List list = [];
+      if(list != null && list.length > 0){
+        for(var i in list){
+          setState(() {
+            _taxUserModelList.add(TaxUserModel.fromJson(i));
+          });
+          dataMap.putIfAbsent(TaxUserModel.fromJson(i).taxTitle, () => TaxUserModel.fromJson(i).amount);
+        }
+        for(int i=0; i<_taxUserModelList.length; i++){
+          _legnedList.add(Container(
+            margin: EdgeInsets.only(bottom: 10.0),
+            child: Row(
+              children: <Widget>[
+                Container(
+                  width: 20.0,
+                  height: 20.0,
+                  color: PieChartColorHelper().defaultColorList[i],
+                ),
+                Container(margin: EdgeInsets.only(left: 10.0),
+                  child: Text(_taxUserModelList[i].taxTitle, style: TextStyle(fontSize: FontSize.textSizeSmall),),),
+              ],
+            ),
+          ),);
+        }
       }
-      for(int i=0; i<_taxUserModelList.length; i++){
-        _legnedList.add(Container(
-          margin: EdgeInsets.only(bottom: 10.0),
-          child: Row(
-            children: <Widget>[
-              Container(
-                width: 20.0,
-                height: 20.0,
-                color: PieChartColorHelper().defaultColorList[i],
-              ),
-              Container(margin: EdgeInsets.only(left: 10.0),
-                child: Text(_taxUserModelList[i].taxTitle, style: TextStyle(fontSize: FontSize.textSizeSmall),),),
-            ],
-          ),
-        ),);
-      }
+    }catch(e){
+      print(e);
     }
   }
 

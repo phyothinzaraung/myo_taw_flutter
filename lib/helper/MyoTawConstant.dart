@@ -226,6 +226,7 @@ class MyString{
   static const String txt_need_invoice_no = "ပြေစာနံပါတ် ဖြည့်ရန်လိုအပ်သည်။";
   static const String txt_top_up_expired = "ငွေဖြည့်ကုဒ်သက်တမ်းကုန်သွားသည်။";
   static const String txt_top_up_already = "ငွေဖြည့်ကုဒ်မှာအသုံးပြုပြီပါပြီး။";
+  static const String txt_no_photo = "ဓာတ်ပုံများမရှိပါ";
 
 
   static const String BUILDING_GRADE_A = "building grade A";

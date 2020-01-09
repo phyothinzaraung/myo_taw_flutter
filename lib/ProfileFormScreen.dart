@@ -127,15 +127,20 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
       _userModel.address = _addressController.text;
       _userModel.state = _dropDownState;
       _userModel.township = _dropDownTownship;
-      _response = await ServiceHelper().updateUserInfo(_userModel);
-      if(_response.data != null){
-        await _userDb.openUserDb();
-        await _userDb.insert(UserModel.fromJson(_response.data));
-        await _userDb.closeUserDb();
-        print('usermodel: ${_userModel.name} ${_userModel.address} ${_userModel.state} '
-            '${_userModel.township} ${_userModel.currentRegionCode} ${_userModel.androidToken}');
-        Navigator.of(context).pop({'isNeedRefresh' : true});
-      }else{
+      try{
+        _response = await ServiceHelper().updateUserInfo(_userModel);
+        if(_response.data != null){
+          await _userDb.openUserDb();
+          await _userDb.insert(UserModel.fromJson(_response.data));
+          await _userDb.closeUserDb();
+          print('usermodel: ${_userModel.name} ${_userModel.address} ${_userModel.state} '
+              '${_userModel.township} ${_userModel.currentRegionCode} ${_userModel.androidToken}');
+          Navigator.of(context).pop({'isNeedRefresh' : true});
+        }else{
+          WarningSnackBar(_scaffoldState, MyString.txt_try_again);
+        }
+      }catch(e){
+        print(e);
         WarningSnackBar(_scaffoldState, MyString.txt_try_again);
       }
 

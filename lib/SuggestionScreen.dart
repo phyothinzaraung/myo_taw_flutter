@@ -87,17 +87,23 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.closeUserDb();
     _userModel = model;
-    _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _mess,
-        _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode);
-    //print('sendsuggest: ${_mess} ${_dropDownSubject} ${_lat} ${_lng}');
+    try{
+      _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _mess,
+          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode);
+      //print('sendsuggest: ${_mess} ${_dropDownSubject} ${_lat} ${_lng}');
+      if(_response.data != null){
+        _finishDialogBox();
+      }else{
+        WarningSnackBar(_globalKey, MyString.txt_try_again);
+      }
+    }catch(e){
+      print(e);
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
+    }
+
     setState(() {
       _isLoading = false;
     });
-    if(_response.data != null){
-      _finishDialogBox();
-    }else{
-      WarningSnackBar(_globalKey, MyString.txt_try_again);
-    }
 
   }
 

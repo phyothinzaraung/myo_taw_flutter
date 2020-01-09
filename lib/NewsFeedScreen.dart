@@ -139,21 +139,25 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
-    response = await ServiceHelper().getNewsFeed(organizationId: _organizationId,page: p,pageSize: pageCount,userUniqueKey: _userUniqueKey);
-    var result = response.data['Results'];
-    //var result = [];
-    print('loadmore: ${p}');
-    if(result != null && result.length > 0){
-      for(var i in result){
-        _newsFeedReactModel.add(NewsFeedReactModel.fromJson(i));
+    try{
+      response = await ServiceHelper().getNewsFeed(organizationId: _organizationId,page: p,pageSize: pageCount,userUniqueKey: _userUniqueKey);
+      var result = response.data['Results'];
+      //var result = [];
+      print('loadmore: ${p}');
+      if(result != null && result.length > 0){
+        for(var i in result){
+          _newsFeedReactModel.add(NewsFeedReactModel.fromJson(i));
+        }
+        setState(() {
+          _isEnd = false;
+        });
+      }else{
+        setState(() {
+          _isEnd = true;
+        });
       }
-      setState(() {
-        _isEnd = false;
-      });
-    }else{
-      setState(() {
-        _isEnd = true;
-      });
+    }catch(e){
+      print(e);
     }
     print('isEnd: ${_isEnd}');
   }

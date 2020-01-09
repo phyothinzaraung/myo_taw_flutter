@@ -66,53 +66,51 @@ class _OtpScreenState extends State<OtpScreen> {
       _showLoading = true;
     });
     String fcmtoken = 'doRMZhpJvpY:APA91bG4XW1tHVIxf_jbUAT8WekmgAlDd4JZAKQm9o3DUDYqVCoWmmmaznHTgbyMxXXNZZ9FwFewZz5DcSE7ooxdLZAPdUDXeD7iD16IUP1P0DwGzzWlsRxovB1zq16FHKUcdgDGud4t';
-    response = await ServiceHelper().userLogin(_phNo, _regionCode, fcmtoken, _platForm);
-    var result = response.data;
-    setState(() {
-      _showLoading = false;
-    });
-    if(response.statusCode == 200){
+    try{
+      response = await ServiceHelper().userLogin(_phNo, _regionCode, fcmtoken, _platForm);
+      var result = response.data;
       if(result != null){
         _userModel = UserModel.fromJson(result);
         _sharePrefHelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, _regionCode);
         await _userDb.openUserDb();
         await _userDb.insert(_userModel);
         await _userDb.closeUserDb();
-        //Fluttertoast.showToast(msg: 'Login Success', backgroundColor: Colors.black.withOpacity(0.7));
         Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
       }else{
-        //WarningSnackBar(_globalKey, MyString.txt_try_again);
         WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
-    }else{
-      //WarningSnackBar(_globalKey, MyString.txt_try_again);
+    }catch(e){
+      print(e);
       WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
+
+    setState(() {
+      _showLoading = false;
+    });
   }
 
   _verifyOtp(String code) async{
     setState(() {
       _showLoading = true;
     });
-    response = await ServiceHelper().verifyOtp(_phNo, code);
-    var result = response.data;
-    if(response.statusCode == 200){
+    try{
+      response = await ServiceHelper().verifyOtp(_phNo, code);
+      var result = response.data;
       if(result != null){
         if(result['code'] == '002'){
           _logIn();
         }
       }else{
-        setState(() {
-          _showLoading = false;
-        });
         WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
-    }else{
-      setState(() {
-        _showLoading = false;
-      });
+    }catch(e){
+      print(e);
       WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
+
+    setState(() {
+      _showLoading = false;
+    });
   }
 
   void _getOtp()async{
@@ -120,12 +118,9 @@ class _OtpScreenState extends State<OtpScreen> {
       _showLoading = true;
     });
     String _hasyKey = await SmsRetriever.getAppSignature();
-    response = await ServiceHelper().getOtpCode(_phNo, _hasyKey);
-    var result = response.data;
-    setState(() {
-      _showLoading = false;
-    });
-    if(response.statusCode == 200){
+    try{
+      response = await ServiceHelper().getOtpCode(_phNo, _hasyKey);
+      var result = response.data;
       if(result != null){
         if(result['code'] == '002'){
           setState(() {
@@ -138,9 +133,13 @@ class _OtpScreenState extends State<OtpScreen> {
       }else{
         WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
-    }else{
-      WarningSnackBar(_globalKey, MyString.txt_try_again);
+    }catch(e){
+      print(e);
     }
+
+    setState(() {
+      _showLoading = false;
+    });
   }
 
   _checkCon()async{

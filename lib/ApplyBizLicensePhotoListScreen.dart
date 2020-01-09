@@ -62,15 +62,19 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
 
   _getAllBizLicense()async{
     await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().getApplyBizPhotoList(_applyBizLicenseModel.id);
-    List applyBizLicensePhotoList = _response.data;
-    //List applyBizLicensePhotoList = [];
-    if(applyBizLicensePhotoList != null && applyBizLicensePhotoList.length > 0){
-      for(var i in applyBizLicensePhotoList){
-        setState(() {
-          _applyBizLicensePhotoModelList.add(ApplyBizLicensePhotoModel.fromJson(i));
-        });
+    try{
+      _response = await ServiceHelper().getApplyBizPhotoList(_applyBizLicenseModel.id);
+      List applyBizLicensePhotoList = _response.data;
+      //List applyBizLicensePhotoList = [];
+      if(applyBizLicensePhotoList != null && applyBizLicensePhotoList.length > 0){
+        for(var i in applyBizLicensePhotoList){
+          setState(() {
+            _applyBizLicensePhotoModelList.add(ApplyBizLicensePhotoModel.fromJson(i));
+          });
+        }
       }
+    }catch(e){
+      print(e);
     }
   }
 
@@ -97,7 +101,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                     crossAxisSpacing: 0.0))
           ],
         )
-    ) : emptyView(asyncLoaderState,MyString.txt_no_data);
+    ) : emptyView(asyncLoaderState,MyString.txt_no_photo);
   }
 
   Widget _renderLoad(){
@@ -119,19 +123,25 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
   }
 
   _uploadPhoto()async{
-    _response = await ServiceHelper().uploadApplyBizPhoto(_image.path, _applyBizLicenseModel.id.toString(), _fileTitleController.text);
+    try{
+      _response = await ServiceHelper().uploadApplyBizPhoto(_image.path, _applyBizLicenseModel.id.toString(), _fileTitleController.text);
+      if(_response.data != null){
+        _handleRefresh();
+        setState(() {
+          _image = null;
+          _fileTitleController.clear();
+        });
+      }else{
+        WarningSnackBar(_globalKey, MyString.txt_try_again);
+      }
+    }catch(e){
+      print(e);
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
+    }
+
     setState(() {
       _isLoading = false;
     });
-    if(_response.data != null){
-      _handleRefresh();
-      setState(() {
-        _image = null;
-        _fileTitleController.clear();
-      });
-    }else{
-      WarningSnackBar(_globalKey, MyString.txt_try_again);
-    }
 
   }
 

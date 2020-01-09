@@ -15,6 +15,7 @@ import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'DaoDetailScreen.dart';
+import 'myWidget/EmptyViewWidget.dart';
 
 class DepartmentListScreen extends StatefulWidget {
   DaoViewModel model;
@@ -110,15 +111,19 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
 
   _getDaoByDeptType(int p) async{
     await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().getDaoByDeptType(page, pageSize, _sharepreferenceshelper.getRegionCode(), deptType);
-    if(_response.data != null){
-      var daoViewModelList = _response.data['Results'];
-      for(var i in daoViewModelList){
-        setState(() {
-          _daoViewModelList.add(DaoViewModel.fromJson(i));
-        });
-        print('daoviewmodel :${_daoViewModelList}');
+    try{
+      _response = await ServiceHelper().getDaoByDeptType(page, pageSize, _sharepreferenceshelper.getRegionCode(), deptType);
+      if(_response.data != null){
+        var daoViewModelList = _response.data['Results'];
+        for(var i in daoViewModelList){
+          setState(() {
+            _daoViewModelList.add(DaoViewModel.fromJson(i));
+          });
+          print('daoviewmodel :${_daoViewModelList}');
+        }
       }
+    }catch(e){
+      print(e);
     }
     setState(() {
       _isLoading = false;
@@ -343,7 +348,8 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
             onRefresh: _handleRefresh,
-            child: _listView(),
+            child: _daoViewModelList.isNotEmpty? _listView() :
+            !_isLoading?emptyView(asyncLoaderState, MyString.txt_no_data) : Container(),
           ),
         )
     );

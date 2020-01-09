@@ -48,14 +48,18 @@ class _DaoScreenState extends State<DaoScreen> {
 
   _getAllDao()async{
     await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().getDao(page, pageSize, _sharepreferenceshelper.getRegionCode(), display);
-    var daoViewModelList = _response.data['Results'];
-    if(daoViewModelList != null && daoViewModelList.length > 0){
-      for(var i in daoViewModelList){
-        setState(() {
-          _daoViewModelList.add(DaoViewModel.fromJson(i));
-        });
+    try{
+      _response = await ServiceHelper().getDao(page, pageSize, _sharepreferenceshelper.getRegionCode(), display);
+      var daoViewModelList = _response.data['Results'];
+      if(daoViewModelList != null && daoViewModelList.length > 0){
+        for(var i in daoViewModelList){
+          setState(() {
+            _daoViewModelList.add(DaoViewModel.fromJson(i));
+          });
+        }
       }
+    }catch(e){
+      print(e);
     }
   }
 

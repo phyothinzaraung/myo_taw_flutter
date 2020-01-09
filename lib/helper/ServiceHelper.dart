@@ -84,20 +84,15 @@ class ServiceHelper{
  }
 
  uploadProfilePhoto<Response>(String file, String uniqueKey) async{
-  try{
-   FormData formData = new FormData.fromMap({
-    'Uniquekey' : uniqueKey,
-    'file' : await MultipartFile.fromFile(file, filename: 'profilePhoto')
-   });
-   dio.options.connectTimeout = conTimeOut;
-   dio.options.receiveTimeout = conTimeOut;
-   response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/Us",
-       data: formData);
-   return response;
-  }on DioError catch(e){
-   print('dioerror ${e.response}');
-   return null;
-  }
+  FormData formData = new FormData.fromMap({
+   'Uniquekey' : uniqueKey,
+   'file' : await MultipartFile.fromFile(file, filename: 'profilePhoto')
+  });
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/UserPhotoUpload",
+      data: formData);
+  return response;
  }
 
  uploadTaxRecord<Response>(String file, String subject, String uniqueKey, String userName, String regionCode) async{

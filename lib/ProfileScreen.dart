@@ -52,10 +52,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _getAllTaxRecord(int p)async{
     _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
-    response = await ServiceHelper().getAllTaxRecord(p, pageCount, _userModel.currentRegionCode, _userModel.uniqueKey);
-    var result = response.data['Results'];
-    //var result = [];
-    if(response.statusCode == 200){
+    try{
+      response = await ServiceHelper().getAllTaxRecord(p, pageCount, _userModel.currentRegionCode, _userModel.uniqueKey);
+      var result = response.data['Results'];
+      //var result = [];
       if(result != null){
         if(result.length > 0){
           for(var model in result){
@@ -81,9 +81,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
           });
         }
       }
-    }else{
-      //WarningSnackBar(_globalKey, MyString.txt_try_again);
-      WarningSnackBar(_globalKey, MyString.txt_try_again);
+    }catch(e){
+      print(e);
     }
   }
 
@@ -181,8 +180,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   void _deleteTaxRecord(int id)async{
-    response = await ServiceHelper().deleteTaxRecord(id);
-    await _handleRefresh();
+    try{
+      response = await ServiceHelper().deleteTaxRecord(id);
+      await _handleRefresh();
+    }catch(e){
+      print(e);
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
+    }
     setState(() {
       _isLoading = false;
     });

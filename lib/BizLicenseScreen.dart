@@ -43,15 +43,19 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
 
   _getAllBizLicense()async{
     await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().getBizLicense(_sharepreferenceshelper.getRegionCode());
-    List bizLicenseList = _response.data;
-    //var bizLicenseList = [];
-    if(bizLicenseList != null && bizLicenseList.length > 0){
-      for(var i in bizLicenseList){
-        setState(() {
-          _bizLicenseModelList.add(BizLicenseModel.fromJson(i));
-        });
+    try{
+      _response = await ServiceHelper().getBizLicense(_sharepreferenceshelper.getRegionCode());
+      List bizLicenseList = _response.data;
+      //var bizLicenseList = [];
+      if(bizLicenseList != null && bizLicenseList.length > 0){
+        for(var i in bizLicenseList){
+          setState(() {
+            _bizLicenseModelList.add(BizLicenseModel.fromJson(i));
+          });
+        }
       }
+    }catch(e){
+      print(e);
     }
   }
 

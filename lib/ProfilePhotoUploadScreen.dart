@@ -59,8 +59,8 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
 
   _uploadPhoto()async{
     await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().uploadProfilePhoto(_image.path, _sharepreferenceshelper.getUserUniqueKey());
-    if(_response != null){
+    try{
+      _response = await ServiceHelper().uploadProfilePhoto(_image.path, _sharepreferenceshelper.getUserUniqueKey());
       if(_response.data != null){
         _userModel = UserModel.fromJson(_response.data);
         await _userDb.openUserDb();
@@ -71,7 +71,8 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
       }else{
         WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
-    }else{
+    }catch(e){
+      print(e);
       WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
 

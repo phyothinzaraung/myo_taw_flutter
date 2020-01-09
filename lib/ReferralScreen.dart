@@ -89,16 +89,22 @@ class _ReferralScreenState extends State<ReferralScreen> {
   }
 
   _callWebService() async{
-    _response = await ServiceHelper().postReferral(_referralModel);
+    try{
+      _response = await ServiceHelper().postReferral(_referralModel);
+      if(_response.data != null){
+        ReferralResponseModel model = ReferralResponseModel.fromJson(_response.data);
+        _dialogFinish(model.message);
+      }else{
+        WarningSnackBar(_scaffoldState, MyString.txt_try_again);
+      }
+    }catch(e){
+      print(e);
+      WarningSnackBar(_scaffoldState, MyString.txt_try_again);
+    }
+
     setState(() {
       _isLoad = false;
     });
-    if(_response.data != null){
-      ReferralResponseModel model = ReferralResponseModel.fromJson(_response.data);
-      _dialogFinish(model.message);
-    }else{
-      WarningSnackBar(_scaffoldState, MyString.txt_try_again);
-    }
   }
 
   _dialogFinish(String mess){

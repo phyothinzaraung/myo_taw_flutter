@@ -145,7 +145,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                     width: 90.0,
                     child: RaisedButton(onPressed: (){
                       Navigator.of(context).pop();
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicensePhotoListScreen(model)));
+                      Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ApplyBizLicensePhotoListScreen(model)));
                       },child: Text(MyString.txt_upload_photo,style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
                       color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
                   ),
@@ -158,15 +158,21 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   }
 
   _callWebService(ApplyBizLicenseModel model)async{
-    _response = await ServiceHelper().postApplyBizLicense(model);
+    try{
+      _response = await ServiceHelper().postApplyBizLicense(model);
+      if(_response.data != null){
+        _dialogFinish(ApplyBizLicenseModel.fromJson(_response.data));
+      }else{
+        WarningSnackBar(_globalKey, MyString.txt_try_again);
+      }
+    }catch(e){
+      print(e);
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
+    }
+
     setState(() {
       _isLoading = false;
     });
-    if(_response.data != null){
-      _dialogFinish(ApplyBizLicenseModel.fromJson(_response.data));
-    }else{
-      WarningSnackBar(_globalKey, MyString.txt_try_again);
-    }
 
     /*print('apply biz license: '
         '${_applyBizLicenseModel.bizName} ${_applyBizLicenseModel.bizType} ${_applyBizLicenseModel.length} '
