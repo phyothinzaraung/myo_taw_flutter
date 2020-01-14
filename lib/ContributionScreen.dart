@@ -89,7 +89,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
     _userModel = model;
     try{
       _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _mess,
-          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode);
+          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, _sharepreferenceshelper.isWardAdmin(), _sharepreferenceshelper.getWardName());
       //print('sendsuggest: ${_mess} ${_dropDownSubject} ${_lat} ${_lng}');
       if(_response.data != null){
         _finishDialogBox();

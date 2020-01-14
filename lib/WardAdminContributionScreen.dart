@@ -43,7 +43,7 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
     // TODO: implement initState
     super.initState();
     _subjectList = [_dropDownSubject,];
-    _subjectList.addAll(MyArray.suggestion_subject);
+    _subjectList.addAll(MyArray.suggestion_subject_admin_ward);
     _location.changeSettings(accuracy: LocationAccuracy.HIGH, interval: 3000, distanceFilter: 0);
     _location.serviceEnabled().then((isEnable){
       if(!isEnable){
@@ -125,11 +125,13 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.closeUserDb();
-    _userModel = model;
+    setState(() {
+      _userModel = model;
+    });
     try{
       _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _mess,
-          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode);
-      //print('sendsuggest: ${_mess} ${_dropDownSubject} ${_lat} ${_lng}');
+          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, _sharepreferenceshelper.isWardAdmin(), _userModel.wardName);
+      print('sendsuggest: ${_sharepreferenceshelper.isWardAdmin()} ${_userModel.wardName}');
       if(_response.data != null){
         _finishDialogBox();
       }else{
@@ -418,20 +420,15 @@ class _AdministratorSuggestionScreenState extends State<AdministratorSuggestionS
                                   });
                                   _sendSuggestion();
                                 }else if(_image == null){
-                                  //Fluttertoast.showToast(msg: MyString.txt_need_suggestion_photo, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
                                 }else if(_dropDownSubject == MyString.txt_choose_subject){
-                                  //Fluttertoast.showToast(msg: MyString.txt_need_subject, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                   WarningSnackBar(_globalKey, MyString.txt_need_subject);
                                 }else if(_mess == null){
-                                  //Fluttertoast.showToast(msg: MyString.txt_need_suggestion, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion);
                                 }else if(_lat == null && _lng == null){
-                                  //Fluttertoast.showToast(msg: MyString.txt_need_suggestion_location, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion_location);
                                 }
                               }else{
-                                //Fluttertoast.showToast(msg: MyString.txt_no_internet, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                 WarningSnackBar(_globalKey, MyString.txt_no_internet);
                               }
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/WardAdminContributionListScreen.dart';
 import 'main.dart';
 import 'package:flutter/services.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
@@ -70,7 +71,11 @@ class _SplashScreenState extends State<SplashScreen> {
   navigateMainScreen() {
     if(_sharepreferenceshelper.isLogin()){
       Future.delayed(Duration(seconds: 2), (){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen()));
+        if(_sharepreferenceshelper.isWardAdmin()){
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WardAdminContributionListScreen()));
+        }else{
+          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen()));
+        }
       });
     }else{
       Future.delayed(Duration(seconds: 2), (){

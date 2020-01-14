@@ -6,7 +6,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'helper/NumConvertHelper.dart';
 import 'DaoPhotoDetailScreen.dart';
-import 'SuggestionScreen.dart';
+import 'ContributionScreen.dart';
 import 'BizLicenseScreen.dart';
 import 'package:flutter_html/flutter_html.dart';
 

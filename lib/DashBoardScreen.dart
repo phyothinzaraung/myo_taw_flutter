@@ -10,8 +10,8 @@ import 'model/DashBoardModel.dart';
 import 'DaoScreen.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
-import 'SuggestionScreen.dart';
-import 'AdministratorSuggestionScreen.dart';
+import 'ContributionScreen.dart';
+import 'WardAdminContributionScreen.dart';
 import 'BizLicenseScreen.dart';
 import 'TaxUseScreen.dart';
 import 'OnlineTaxScreen.dart';
@@ -74,16 +74,6 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     }
   }
 
-  bool _isAdminWard(){
-    bool _result = false;
-    for(var ph in MyArray.adminPhno){
-      if(ph == _sharepreferenceshelper.getUserPhoneNo()){
-        _result = true;
-      }
-    }
-    return _result;
-  }
-
   _initDashBoardWidget(){
     DashBoardModel model1 = new DashBoardModel();
     model1.image = 'images/dao.png';
@@ -142,7 +132,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoScreen('Tax')));
               break;
             case MyString.txt_suggestion:
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => _isAdminWard()?AdministratorSuggestionScreen():
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => _sharepreferenceshelper.isWardAdmin()?AdministratorSuggestionScreen():
               SuggestionScreen()));
               break;
             case MyString.txt_business_tax:
@@ -167,7 +157,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedScreen()));
               break;
             case MyString.txt_profile:
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_sharepreferenceshelper.isWardAdmin())));
               break;
             case MyString.txt_referral:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => ReferralScreen(_userModel)));

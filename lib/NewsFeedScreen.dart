@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:async_loader/async_loader.dart';
-import 'package:dio/dio.dart';
 import 'package:html/parser.dart';
 import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
 import 'helper/ServiceHelper.dart';
@@ -11,7 +10,6 @@ import 'helper/ShowDateTimeHelper.dart';
 import 'Model/NewsFeedModel.dart';
 import 'NewsFeedDetailScreen.dart';
 import 'helper/MyLoadMore.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/UserModel.dart';
@@ -54,7 +52,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   void initState() {
     // TODO: implement initState
     super.initState();
-    _checkCon();
   }
 
 
@@ -114,7 +111,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     _saveNewsFeedModel.accessTime = DateTime.now().toString();
     await _saveNewsFeedDb.insert(_saveNewsFeedModel);
     await _saveNewsFeedDb.closeSaveNfDb();
-    //Fluttertoast.showToast(msg: MyString.txt_save_newsFeed_success, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
     PrimaryColorSnackBarWidget(_globalKey, MyString.txt_save_newsFeed_success);
   }
 
@@ -140,7 +136,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   _getNewsFeed(int p) async{
     try{
-      response = await ServiceHelper().getNewsFeed(organizationId: _organizationId,page: p,pageSize: pageCount,userUniqueKey: _userUniqueKey);
+      response = await ServiceHelper().getNewsFeed(_organizationId,p,pageCount,_userUniqueKey);
       var result = response.data['Results'];
       //var result = [];
       print('loadmore: ${p}');
@@ -191,26 +187,16 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     return null;
   }
 
-  bool _isAdminWard(){
-    bool _result = false;
-    for(var ph in MyArray.adminPhno){
-      if(ph == _sharepreferenceshelper.getUserPhoneNo()){
-        _result = true;
-      }
-    }
-    return _result;
-  }
-
 
   _initHeaderTitle(){
     _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
     switch(_userModel.currentRegionCode){
       case MyString.TGY_REGIONCODE:
-        _city = _isAdminWard()? MyString.TGY_CITY +' '+'(Ward admin)':MyString.TGY_CITY;
+        _city = _userModel.isWardAdmin==1? MyString.TGY_CITY +' '+'(Ward admin)':MyString.TGY_CITY;
         _organizationId = OrganizationId.TGY_ORGANIZATION_ID;
         break;
       case MyString.MLM_REGIONCODE:
-        _city = _isAdminWard()? MyString.MLM_CITY +' '+'(Ward admin)': MyString.MLM_CITY;
+        _city = _userModel.isWardAdmin==1? MyString.MLM_CITY +' '+'(Ward admin)': MyString.MLM_CITY;
         _organizationId = OrganizationId.MLM_ORGANIZATION_ID;
         break;
       default:
@@ -383,7 +369,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             ),
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_sharepreferenceshelper.isWardAdmin())));
 
               },
               child: CircleAvatar(backgroundImage: _userModel!=null?
@@ -408,13 +394,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
-                    Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
+                    Text(MyString.txt_newsfeed, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                   ],
                 ),
               ),
               GestureDetector(
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_sharepreferenceshelper.isWardAdmin())));
                 },
                 child: CircleAvatar(backgroundImage: _userModel!=null?
                 _profilePhoto:AssetImage('images/profile_placeholder.png'),

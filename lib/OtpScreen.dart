@@ -2,17 +2,16 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
-import 'package:sms_retriever/sms_retriever.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'helper/MyoTawConstant.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'main.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'model/UserModel.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:myotaw/Database/UserDb.dart';
+import 'WardAdminContributionListScreen.dart';
 
 class OtpScreen extends StatefulWidget {
   String _phNo, _regionCode;
@@ -47,7 +46,18 @@ class _OtpScreenState extends State<OtpScreen> {
   }
 
   _smsStartListening() async{
-    String _sms = await SmsRetriever.startListening();
+    await SmsAutoFill().listenForCode;
+    SmsAutoFill().code.listen((code){
+      if(code.isNotEmpty && code != null){
+        setState(() {
+          _otpCodeController.text = code;
+        });
+        _verifyOtp(code);
+      }
+      print('otp code : $code');
+    });
+
+   /* String _sms = await SmsRetriever.startListening();
     List _smsList = _sms.split(':');
     if(_smsList.length == 2){
       String _string = _smsList[1];
@@ -58,7 +68,7 @@ class _OtpScreenState extends State<OtpScreen> {
     setState(() {
       _otpCodeController.text = _otpCode;
     });
-    _verifyOtp(_otpCode);
+    _verifyOtp(_otpCode);*/
   }
 
   void _logIn()async{
@@ -69,13 +79,19 @@ class _OtpScreenState extends State<OtpScreen> {
     try{
       response = await ServiceHelper().userLogin(_phNo, _regionCode, fcmtoken, _platForm);
       var result = response.data;
+      print('user : $result');
       if(result != null){
         _userModel = UserModel.fromJson(result);
-        _sharePrefHelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, _regionCode);
+        _sharePrefHelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, _regionCode, _userModel.isWardAdmin==1?true:false, _userModel.wardName);
         await _userDb.openUserDb();
         await _userDb.insert(_userModel);
         await _userDb.closeUserDb();
-        Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
+        if(_userModel.isWardAdmin==1){
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WardAdminContributionListScreen()));
+        }else{
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
+        }
+
       }else{
         WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
@@ -117,7 +133,7 @@ class _OtpScreenState extends State<OtpScreen> {
     setState(() {
       _showLoading = true;
     });
-    String _hasyKey = await SmsRetriever.getAppSignature();
+    /*String _hasyKey = await SmsRetriever.getAppSignature();
     try{
       response = await ServiceHelper().getOtpCode(_phNo, _hasyKey);
       var result = response.data;
@@ -135,7 +151,7 @@ class _OtpScreenState extends State<OtpScreen> {
       }
     }catch(e){
       print(e);
-    }
+    }*/
 
     setState(() {
       _showLoading = false;
@@ -243,6 +259,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                     controller: _otpCodeController,
                                     style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),
                                     keyboardType: TextInputType.phone,
+                                    maxLength: 4,
                                   ),
                                 ),
                                 Container(
@@ -261,19 +278,17 @@ class _OtpScreenState extends State<OtpScreen> {
                                           if(_otpCodeController.text.length == 4){
                                             FocusScope.of(context).requestFocus(FocusNode());
                                             _verifyOtp(_otpCodeController.text);
+                                            //_logIn();
                                           }else{
-                                            //Fluttertoast.showToast(msg: MyString.txt_otp_not_exceed_4, backgroundColor: Colors.black.withOpacity(0.7));
                                             WarningSnackBar(_globalKey, MyString.txt_otp_not_exceed_4);
                                           }
 
                                         }else{
-                                          //Fluttertoast.showToast(msg: MyString.txt_enter_otp, backgroundColor: Colors.black.withOpacity(0.7));
                                           WarningSnackBar(_globalKey, MyString.txt_enter_otp);
                                         }
                                       }
 
                                     }else{
-                                      //Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7));
                                       WarningSnackBar(_globalKey, MyString.txt_no_internet);
                                     }
                                     },
@@ -317,7 +332,8 @@ class _OtpScreenState extends State<OtpScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    SmsRetriever.stopListening();
+    //SmsRetriever.stopListening();
+    //SmsAutoFill().unregisterListener();
     _timer.cancel();
   }
 }

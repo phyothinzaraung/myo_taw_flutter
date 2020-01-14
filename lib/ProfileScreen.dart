@@ -25,8 +25,10 @@ import 'NewTaxRecordScreen.dart';
 import 'ApplyBizLicenseListScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
+  bool isAdmin;
+  ProfileScreen(this.isAdmin);
   @override
-  _ProfileScreenState createState() => _ProfileScreenState();
+  _ProfileScreenState createState() => _ProfileScreenState(isAdmin);
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -35,13 +37,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
   SaveNewsFeedDb _saveNewsFeedDb = SaveNewsFeedDb();
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
-  bool _isEnd , _isCon, _isLoading = false;
+  bool _isEnd , _isCon,_isWardAdmin, _isLoading = false;
   int page = 1;
   int pageCount = 10;
   var response;
   ImageProvider _profilePhoto;
   List<TaxRecordModel> _taxRecordModelList = new List<TaxRecordModel>();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+
+  _ProfileScreenState(this._isWardAdmin);
 
   @override
   void initState() {
@@ -94,7 +98,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _userModel = model;
     });
-    await _getAllTaxRecord(page);
+    if(!_isWardAdmin){
+      await _getAllTaxRecord(page);
+    }else{
+      _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
+    }
     //print('userphoto; ${_userModel.photoUrl}');
   }
 
@@ -356,7 +364,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     Divider(color: MyColor.colorPrimary,),
-                    GestureDetector(
+                    _isWardAdmin?Container():GestureDetector(
                       onTap: (){
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseListScreen()));
                       },
@@ -369,7 +377,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-                    Divider(color: MyColor.colorPrimary,),
+                    _isWardAdmin?Container():Divider(color: MyColor.colorPrimary,),
                     GestureDetector(
                       onTap: (){
                         _dialogLogOut();
@@ -389,6 +397,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
+        _isWardAdmin?Container():
         Container(
           margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
           child: Column(
@@ -625,14 +634,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
             onRefresh: _handleRefresh,
-            child: _taxRecordModelList.isNotEmpty?
+            child: !_isWardAdmin?_taxRecordModelList.isNotEmpty?
             LoadMore(
                 isFinish: _isEnd,
                 onLoadMore: _loadMore,
                 delegate: DefaultLoadMoreDelegate(),
                 textBuilder: DefaultLoadMoreTextBuilder.english,
                 child: _listView()
-            ) : Column(children: <Widget>[_headerProfile(), emptyView(asyncLoaderState, MyString.txt_no_data)],),
+            ) : Column(children: <Widget>[_headerProfile(), emptyView(asyncLoaderState, MyString.txt_no_data)],) : _headerProfile(),
           ),
         )
     );
@@ -641,7 +650,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
       appBar: AppBar(
         title: Text(MyString.txt_profile, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
-      body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: modalProgressIndicator(),child: _asyncLoader),
+      body: ModalProgressHUD(
+          inAsyncCall: _isLoading,
+          progressIndicator: modalProgressIndicator(),
+          child: _asyncLoader),
     );
   }
 }

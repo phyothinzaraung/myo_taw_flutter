@@ -227,6 +227,8 @@ class MyString{
   static const String txt_top_up_expired = "ငွေဖြည့်ကုဒ်သက်တမ်းကုန်သွားသည်။";
   static const String txt_top_up_already = "ငွေဖြည့်ကုဒ်မှာအသုံးပြုပြီပါပြီး။";
   static const String txt_no_photo = "ဓာတ်ပုံများမရှိပါ";
+  static const String txt_newsfeed = "သတင်းများ";
+  static const String txt_contributions = "အကြုံပြုစာများ";
 
 
   static const String BUILDING_GRADE_A = "building grade A";
@@ -351,6 +353,19 @@ class MyArray{
     'တိရိစ္ဆာန်အရေး',
     'ရေပေးဝေရေး',
     'အများပိုင်နေရာ',
+    'အခြား'];
+
+  static const List<String> suggestion_subject_admin_ward = [
+    'လမ်းပြင်၊ လမ်းပျက်',
+    'အမှိုက်',
+    'ရေမြောင်း',
+    'ရေကြီး၊ ရေလျှံ',
+    'မီးကြိုး',
+    'တိရိစ္ဆာန်အရေး',
+    'ရေပေးဝေရေး',
+    'အများပိုင်နေရာ',
+    'မော်တော်ယာဉ်ဆိုင်ရာ',
+    'မှုခင်း',
     'အခြား'];
 
   //--------------------------------------------------------------------------------------------------------------------------------------------

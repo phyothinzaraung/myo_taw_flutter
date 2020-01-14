@@ -12,7 +12,7 @@ class ServiceHelper{
  final Dio dio = new Dio();
  int conTimeOut = 60000;
 
- getNewsFeed<Response>({int organizationId, int page, int pageSize, String userUniqueKey}) async{
+ getNewsFeed<Response>(int organizationId, int page, int pageSize, String userUniqueKey) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_NEWSFEED+"newsfeedposted/getcitynewsfeedver3",
@@ -110,21 +110,24 @@ class ServiceHelper{
   return response;
  }
 
- sendSuggestion<Response>(String file, String phoneNo, String subject, String message, String uniqueKey, String userName, String lat, String lng,
-     String regionCode) async{
-   FormData formData = new FormData.fromMap({
-     'file' : MultipartFile.fromFile(file,filename: subject),
-     'UserPhoneNo' : phoneNo,
-     'Subject' : subject,
-     'Message' : message,
-     'UniqueKey' : uniqueKey,
-     'UserName' : userName,
-     'Latitude' : lat,
-     'Longitude' : lng,
-     'RegionCode' : regionCode,
-     'IsRead' : false,
-     'Fixed' : false,
-   });
+ sendSuggestion<Response>(String file, String phoneNo, String subject, String message,
+     String uniqueKey, String userName, String lat, String lng, String regionCode, bool isAdmin, String wardName) async{
+  FormData formData = new FormData.fromMap({
+   'file' : await MultipartFile.fromFile(file,filename: subject),
+   'UserPhoneNo' : phoneNo,
+   'Subject' : subject,
+   'Message' : message,
+   'UniqueKey' : uniqueKey,
+   'UserName' : userName,
+   'Latitude' : lat,
+   'Longitude' : lng,
+   'RegionCode' : regionCode,
+   'IsRead' : false,
+   'Fixed' : false,
+   'Source' : 'app',
+   'IsWardAdmin' : isAdmin,
+   'WardName' : wardName,
+  });
    dio.options.connectTimeout = conTimeOut;
    dio.options.receiveTimeout = conTimeOut;
    response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Contribute/UpSertContributeWithPhoto",
@@ -262,6 +265,14 @@ class ServiceHelper{
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_OTP+"smsverification/verifyCodemyotaw",
       queryParameters: {"phone": phoneNo, "code" : code});
+  return response;
+ }
+
+ getUserInfo<Response>(String uniqueKey) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/GetUser",
+      queryParameters: {"Uniquekey": uniqueKey});
   return response;
  }
 

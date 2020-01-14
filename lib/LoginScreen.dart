@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:libphonenumber/libphonenumber.dart';
-import 'package:sms_retriever/sms_retriever.dart';
+import 'package:sms_autofill/sms_autofill.dart';
 import 'helper/MyoTawConstant.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
-import 'model/UserModel.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
-import 'package:myotaw/Database/UserDb.dart';
 import 'OtpScreen.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
 
@@ -40,7 +37,7 @@ class _LoginScreenState extends State<LoginScreen> {
     setState(() {
       _showLoading = true;
     });
-    String _hasyKey = await SmsRetriever.getAppSignature();
+    String _hasyKey = await SmsAutoFill().getAppSignature;
     try{
       response = await ServiceHelper().getOtpCode(_normalizedPhNo, _hasyKey);
       var result = response.data;
@@ -201,20 +198,17 @@ class _LoginScreenState extends State<LoginScreen> {
                                         if(_isValid){
                                           FocusScope.of(context).requestFocus(FocusNode());
                                           _getOtp();
-                                          //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
+                                          //Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
+                                          //print(await SmsAutoFill().getAppSignature);
                                         }else{
-                                          //Fluttertoast.showToast(msg: MyString.txt_wrong_phNo , backgroundColor: Colors.black.withOpacity(0.7));
                                           WarningSnackBar(_globalKey, MyString.txt_wrong_phNo);
                                         }
                                       }else{
-                                        //Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7));
                                         WarningSnackBar(_globalKey, MyString.txt_no_internet);
                                       }
                                     }else if (_dropDownCity == 'နေရပ်ရွေးပါ'){
-                                      //Fluttertoast.showToast(msg: MyString.txt_choose_city, backgroundColor: Colors.black.withOpacity(0.7));
                                       WarningSnackBar(_globalKey, MyString.txt_choose_city);
                                     }else{
-                                      //Fluttertoast.showToast(msg: MyString.txt_fill_phno, backgroundColor: Colors.black.withOpacity(0.7));
                                       WarningSnackBar(_globalKey, MyString.txt_fill_phno);
                                     }
                                     },

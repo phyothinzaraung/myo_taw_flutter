@@ -17,7 +17,15 @@ class UserModel{
   int _pinCode;
   int _amount;
   int _isDeletedDb;
+  int _isWardAdmin;
+  String _wardName;
 
+
+  int get isWardAdmin => _isWardAdmin;
+
+  set isWardAdmin(int value) {
+    _isWardAdmin = value;
+  }
 
   int get isDeletedDb => _isDeletedDb;
 
@@ -137,7 +145,9 @@ class UserModel{
         _androidToken = json['AndroidToken'],
         _currentRegionCode = json['CurrentRegionCode'],
         _pinCode = json['PinCode'],
-        _amount = json['Amount'];
+        _amount = json['Amount'],
+        _isWardAdmin = json['IsWardAdmin']==true?1:0,
+        _wardName = json['WardName'];
 
   Map<String, dynamic> toJson(){
     Map<String, dynamic> json =new Map<String, dynamic>();
@@ -156,6 +166,8 @@ class UserModel{
      json['CurrentRegionCode'] = _currentRegionCode;
      json['PinCode'] = _pinCode;
      json['Amount'] = _amount;
+    json['IsWardAdmin'] = _isWardAdmin==1?true:false;
+    json['WardName'] = _wardName;
 
      return json;
   }
@@ -175,5 +187,13 @@ class UserModel{
         _androidToken = map[DbHelper.COLUMN_USER_ANDROID_TOKEN],
         _currentRegionCode = map[DbHelper.COLUMN_USER_CURRENT_REGION_CODE],
         _pinCode = map[DbHelper.COLUMN_USER_PIN_CODE],
-        _amount = map[DbHelper.COLUMN_USER_AMOUNT];
+        _amount = map[DbHelper.COLUMN_USER_AMOUNT],
+        _isWardAdmin = map[DbHelper.COLUMN_USER_IS_WARD_ADMIN],
+        _wardName = map[DbHelper.COLUMN_USER_WARD_NAME];
+
+  String get wardName => _wardName;
+
+  set wardName(String value) {
+    _wardName = value;
+  }
 }

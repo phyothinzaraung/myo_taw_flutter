@@ -23,6 +23,8 @@ class DbHelper{
   static final COLUMN_USER_CURRENT_REGION_CODE = 'currentRegionCode';
   static final COLUMN_USER_PIN_CODE = 'pinCode';
   static final COLUMN_USER_AMOUNT = 'amount';
+  static final COLUMN_USER_IS_WARD_ADMIN = 'isWardAdmin';
+  static final COLUMN_USER_WARD_NAME = 'wardName';
   //---------------------------------------------------------------------------------------------------------------------//
 
   //SaveNewsFeedTable

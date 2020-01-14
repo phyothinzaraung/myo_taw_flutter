@@ -48,7 +48,8 @@ dependencies:
   url_launcher: ^5.1.2
   html: ^0.14.0+2
   libphonenumber: ^1.0.0
-  sms_retriever: ^0.0.2
+  sms_autofill: ^1.1.1
+#  sms_retriever: ^0.0.2
 
 
 dev_dependencies:

@@ -43,12 +43,14 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
 
   _getUser()async{
     await _sharepreferenceshelper.initSharePref();
-    await _userDb.openUserDb();
-    var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    await _userDb.closeUserDb();
-    setState(() {
-      _userModel = model;
-    });
+    var response = await ServiceHelper().getUserInfo(_sharepreferenceshelper.getUserUniqueKey());
+    if(response != DioErrorType.DEFAULT && response.data != null){
+      setState(() {
+        _userModel = UserModel.fromJson(response.data);
+      });
+    }else{
+      WarningSnackBar(_scaffoldState, MyString.txt_try_again);
+    }
   }
 
   _checkCon()async{
@@ -127,6 +129,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
       _userModel.address = _addressController.text;
       _userModel.state = _dropDownState;
       _userModel.township = _dropDownTownship;
+      print('${_userModel.toJson()}');
       try{
         _response = await ServiceHelper().updateUserInfo(_userModel);
         if(_response.data != null){
@@ -228,11 +231,11 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                     ),
                                   ),
 
-                                  Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
+                                  _sharepreferenceshelper.isWardAdmin()?Container():Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
                                       child: Text(MyString.txt_user_state, style: TextStyle(fontSize: FontSize.textSizeSmall ,color: MyColor.colorTextBlack),)),
 
                                   //dropdown state
-                                  Container(
+                                  _sharepreferenceshelper.isWardAdmin()?Container():Container(
                                     padding: EdgeInsets.symmetric(horizontal: 10.0),
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(7.0),
@@ -268,9 +271,9 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                   ),
 
                                   //dropdown township
-                                  Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
+                                  _sharepreferenceshelper.isWardAdmin()?Container():Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
                                       child: Text(MyString.txt_user_township, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                  Container(
+                                  _sharepreferenceshelper.isWardAdmin()?Container():Container(
                                     padding: EdgeInsets.symmetric(horizontal: 10.0),
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(7.0),
