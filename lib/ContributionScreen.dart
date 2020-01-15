@@ -111,37 +111,39 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
     return showDialog(
         context: context,
         builder: (ctxt){
-          return SimpleDialog(
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-            children: <Widget>[
-              Container(
-                padding: EdgeInsets.all(10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        margin: EdgeInsets.only(bottom: 20.0),
-                        child: Image.asset('images/suggestion_no_circle.png', width: 50.0, height: 50.0,)),
-                    Container(
-                        margin: EdgeInsets.only(bottom: 10.0),
-                        child: Text(MyString.txt_suggestion_finish,
-                          style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),textAlign: TextAlign.center,)),
-                    Container(
-                      width: 200.0,
-                      height: 45.0,
-                      child: RaisedButton(onPressed: ()async{
-                        Navigator.of(context).pop();
-                        Navigator.of(context).pop();
+          return WillPopScope(
+            child: SimpleDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          child: Image.asset('images/suggestion_no_circle.png', width: 50.0, height: 50.0,)),
+                      Container(
+                          margin: EdgeInsets.only(bottom: 10.0),
+                          child: Text(MyString.txt_suggestion_finish,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),textAlign: TextAlign.center,)),
+                      Container(
+                        width: 200.0,
+                        height: 45.0,
+                        child: RaisedButton(onPressed: ()async{
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop();
 
-                      }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                        color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
-                    )
-                  ],
-                ),
-              )
-            ],
+                        }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                          color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),onWillPop: (){},
           );
-        });
+        }, barrierDismissible: false);
   }
 
   Widget modalProgressIndicator(){

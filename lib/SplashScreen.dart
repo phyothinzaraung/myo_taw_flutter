@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:myotaw/WardAdminContributionListScreen.dart';
 import 'main.dart';
 import 'package:flutter/services.dart';
@@ -17,7 +18,7 @@ class SplashScreen extends StatefulWidget {
   _SplashScreenState createState() => _SplashScreenState();
 }
 
-class _SplashScreenState extends State<SplashScreen> {
+class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMixin{
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   LocationDb _locationDb = LocationDb();
   String _logo, _title;
@@ -95,9 +96,9 @@ class _SplashScreenState extends State<SplashScreen> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Flexible(
-                flex: 1,
+                flex: 0,
                 child: _logo!=null?
-                Container(margin: EdgeInsets.only(bottom: 20.0),child: Image.asset(_logo, width: 100.0, height: 100.0,)):Container(width: 0.0,height: 0.0,),
+                Container(margin: EdgeInsets.only(bottom: 20.0),child: Image.asset(_logo, width: 150.0, height: 150.0,)):Container(width: 0.0,height: 0.0,),
               ),
               Flexible(
                 flex: 1,
@@ -110,10 +111,23 @@ class _SplashScreenState extends State<SplashScreen> {
               Flexible(flex: 2,child: Image.asset('images/myo_taw_splash_screen.jpg', width: 250.0, height: 250.0,)),
               Flexible(
                 flex: 1,
-                child: Padding(padding: EdgeInsets.only(bottom: 5.0),
+                child: Container(
+                    margin: EdgeInsets.only(bottom: 10),
                     child: Text('Myo Taw', style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),)),
               ),
-              Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)
+              Flexible(
+                flex: 1,
+                child: Container(
+                  margin: EdgeInsets.only(bottom: 10),
+                  child: SpinKitCircle(
+                    size: 80,
+                    controller: AnimationController(vsync: this, duration: Duration(seconds: 2),
+                  ), color: MyColor.colorPrimary,),
+                ),
+              ),
+              Flexible(
+                  flex: 1,
+                  child: Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
             ],
           ),
         ),

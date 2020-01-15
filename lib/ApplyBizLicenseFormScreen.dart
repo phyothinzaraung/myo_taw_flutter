@@ -929,6 +929,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                         _applyBizLicenseModel.userName = _userModel.name;
                         _applyBizLicenseModel.licenseType = _bizLicenseModel.licenseType;
                         _applyBizLicenseModel.licensetypeId = _bizLicenseModel.id;
+                        _applyBizLicenseModel.source = 'app'; //to know apply biz is from mobile app or chat bot
                         _callWebService(_applyBizLicenseModel);
                       }else{
                         ApplyBizLicenseFormSnackBarWidget(_globalKey, MyString.txt_apply_license_need_to_fill);

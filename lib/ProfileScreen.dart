@@ -273,7 +273,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToProfileScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen()));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_isWardAdmin)));
     if(result != null && result.containsKey('isNeedRefresh') == true){
       //await _getUser();
       await _handleRefresh();
@@ -323,9 +323,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                         child: Stack(
                           children: <Widget>[
-                            CircleAvatar(backgroundImage: _userModel!=null?
-                            _profilePhoto:AssetImage('images/profile_placeholder.png'),
-                              backgroundColor: MyColor.colorGrey, radius: 50.0,),
+                            Hero(
+                              tag: 'profile',
+                              child: CircleAvatar(backgroundImage: _userModel!=null?
+                              _profilePhoto:AssetImage('images/profile_placeholder.png'),
+                                backgroundColor: MyColor.colorGrey, radius: 50.0,),
+                            ),
                             Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
                           ],
                         ),

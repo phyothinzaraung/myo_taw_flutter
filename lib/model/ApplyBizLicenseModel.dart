@@ -29,6 +29,14 @@ class ApplyBizLicenseModel{
   String _accessTime;
   bool _isDeleted;
   bool _isValid;
+  String _source;
+
+
+  String get source => _source;
+
+  set source(String value) {
+    _source = value;
+  }
 
   ApplyBizLicenseModel();
 
@@ -242,7 +250,8 @@ class ApplyBizLicenseModel{
       _regionCode = json['RegionCode'],
       _accessTime = json['Accesstime'],
       _isDeleted = json['IsDeleted'],
-      _isValid = json['IsValid']??false;
+      _isValid = json['IsValid']??false,
+      _source = json['Source'];
 
   Map<String, dynamic> toJson(){
     Map<String, dynamic> json =new Map<String, dynamic>();
@@ -276,6 +285,7 @@ class ApplyBizLicenseModel{
      json['Accesstime'] = _accessTime;
      json['IsDeleted'] = _isDeleted;
      json['IsValid'] = _isValid;
+     json['Source'] = _source;
 
     return json;
   }

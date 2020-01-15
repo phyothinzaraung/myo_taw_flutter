@@ -23,6 +23,7 @@ class BaseUrl{
   static const String WEB_SERVICE_ROOT_ADDRESS = "https://cityappapi.azurewebsites.net/api/";
   static const String WEB_SERVICE_ROOT_ADDRESS_NEWSFEED = "https://generalcontentproviderapi.azurewebsites.net/api/";
   static const String NEWS_FEED_CONTENT_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/NewsFeed/";
+  static const String CONTRIBUTE_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/Contribute/";
   static const String USER_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/Member/";
   static const String DAO_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/AboutDAO/";
   static const String APPLY_BIZ_LICENSE_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/ApplyBiz/";
@@ -229,6 +230,10 @@ class MyString{
   static const String txt_no_photo = "ဓာတ်ပုံများမရှိပါ";
   static const String txt_newsfeed = "သတင်းများ";
   static const String txt_contributions = "အကြုံပြုစာများ";
+  static const String txt_profile_complete = "ကိုယ်ရေးအချက်အလက်ဖြည့်စွက်မှု အောင်မြင်သည်။";
+  static const String txt_empty_contribution = "အကြံပြုစာများ မရှိသေးပါ။";
+  static const String txt_to_contribute = "အကြုံပြုမည်";
+  static const String txt_contribute_fact = "အကြုံပြုချက်";
 
 
   static const String BUILDING_GRADE_A = "building grade A";

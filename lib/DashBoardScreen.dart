@@ -132,7 +132,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoScreen('Tax')));
               break;
             case MyString.txt_suggestion:
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => _sharepreferenceshelper.isWardAdmin()?AdministratorSuggestionScreen():
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():
               SuggestionScreen()));
               break;
             case MyString.txt_business_tax:

@@ -77,7 +77,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                     },
                     placeholder: (context, url) => Center(child: Container(
                       child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 200.0,)),
-                    errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
+                    errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg', width: double.maxFinite, height: 200,fit: BoxFit.cover,),
                   ),
                   Container(
                     width: double.maxFinite,

@@ -169,15 +169,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   Future<Null> _handleRefresh() async {
     await _checkCon();
-    /*if(_isCon){
-      _newsFeedReactModel.clear();
-      page = 0;
-      page++;
-      _getUser();
-      //await _getNewsFeed(page);
-    }else{
-      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
-    }*/
     setState(() {
       page = 0;
       page ++;
@@ -204,7 +195,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
 
-  Widget _newsFeedList(int i){
+  Widget _newsFeedListWidget(int i){
     NewsFeedModel newsFeedModel = _newsFeedReactModel[i].newsFeedModel;
     String newsFeedPhoto = newsFeedModel.photoUrl;
     String newsFeedThumbNail = newsFeedModel.thumbNail;
@@ -430,7 +421,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   ],
                 ),
               ):Container(width: 0.0,height: 0.0,),
-              _newsFeedList(i)
+              _newsFeedListWidget(i)
             ],
           );
         }

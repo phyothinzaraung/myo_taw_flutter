@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 
 class PhotoDetailScreen extends StatelessWidget {
   String photoUrl;
@@ -9,7 +10,11 @@ class PhotoDetailScreen extends StatelessWidget {
       backgroundColor: Colors.black,
       appBar: AppBar(),
       body: Center(
-        child: Image.network(photoUrl, fit: BoxFit.fitHeight,),
+        child: PhotoView(
+          imageProvider: NetworkImage(photoUrl),
+          loadingChild: Center(child: CircularProgressIndicator(),),
+          loadFailedChild: Image.asset('images/placeholder.jpg'),
+        ),
       ),
     );
   }

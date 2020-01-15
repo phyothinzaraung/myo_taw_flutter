@@ -276,6 +276,14 @@ class ServiceHelper{
   return response;
  }
 
+ getContributionList<Response>(String regionCode, int page, int pageSize, String uniqueKey) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Contribute/GetContributeListByAdminId",
+      queryParameters: {"RegionCode": regionCode, "page": page, "pageSize": pageSize, 'UniqueKey' : uniqueKey});
+  return response;
+ }
+
 }
 
 

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:photo_view/photo_view.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'model/NewsFeedPhotoModel.dart';
@@ -13,26 +14,11 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
   void addPhoto(){
     var photoModelList = _photoList.map((i) => NewsFeedPhotoModel.fromJson(i));
     for(var i in photoModelList){
-      _photoWidget.add(CachedNetworkImage(
-        width: double.maxFinite,
-        imageUrl: i.photoUrl!=null?BaseUrl.NEWS_FEED_CONTENT_URL+i.photoUrl:'',
-        imageBuilder: (context, image){
-          return Container(
-            width: double.maxFinite,
-            height: 300.0,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: image,),
-            ),);
-        },
-        errorWidget: (context, url, error)=> Container(
-          width: double.maxFinite,
-          height: 300.0,
-          decoration: BoxDecoration(
-              image: DecorationImage(image: Image.asset('images/placeholder_newsfeed.jpg').image, fit: BoxFit.cover)
-          ),
-        ),
-      ));
+      _photoWidget.add(PhotoView(
+        imageProvider: NetworkImage(BaseUrl.NEWS_FEED_CONTENT_URL+i.photoUrl),
+        loadingChild: Center(child: CircularProgressIndicator(),),
+        loadFailedChild: Image.asset('images/placeholder.jpg'),
+      ),);
     }
   }
   @override
@@ -48,26 +34,10 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           children: _photoWidget
         ) :
-        CachedNetworkImage(
-          width: double.maxFinite,
-          imageUrl: _photoUrl!=null?BaseUrl.NEWS_FEED_CONTENT_URL+_photoUrl:'',
-          imageBuilder: (context, image){
-            return Container(
-              width: double.maxFinite,
-              height: 300.0,
-              decoration: BoxDecoration(
-                image: DecorationImage(
-                    image: image,
-                    fit: BoxFit.cover),
-              ),);
-          },
-          errorWidget: (context, url, error)=> Container(
-            width: double.maxFinite,
-            height: 300.0,
-            decoration: BoxDecoration(
-                image: DecorationImage(image: Image.asset('images/placeholder_newsfeed.jpg').image, fit: BoxFit.cover)
-            ),
-          ),
+        PhotoView(
+          imageProvider: NetworkImage(BaseUrl.NEWS_FEED_CONTENT_URL+_photoUrl),
+          loadingChild: Center(child: CircularProgressIndicator(),),
+          loadFailedChild: Image.asset('images/placeholder.jpg'),
         ),
       ),
     );

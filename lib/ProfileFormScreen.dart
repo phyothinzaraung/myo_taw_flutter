@@ -13,8 +13,11 @@ import 'package:connectivity/connectivity.dart';
 import 'Database/UserDb.dart';
 
 class ProfileFormScreen extends StatefulWidget {
+  bool isAdmin;
+
+  ProfileFormScreen(this.isAdmin);
   @override
-  _ProfileFormScreenState createState() => _ProfileFormScreenState();
+  _ProfileFormScreenState createState() => _ProfileFormScreenState(isAdmin);
 }
 
 class _ProfileFormScreenState extends State<ProfileFormScreen> {
@@ -25,12 +28,14 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   String _dropDownTownship = 'နေရပ်ရွေးပါ';
   List<String> _stateList;
   List<String> _townshipList;
-  bool _isLoading, _isCon = false;
+  bool _isLoading, _isWardAdmin,_isCon = false;
   LocationDb _locationDb = LocationDb();
   Response _response;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
   UserDb _userDb = UserDb();
+
+  _ProfileFormScreenState(this._isWardAdmin);
 
   @override
   void initState() {
@@ -119,6 +124,45 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     );
   }
 
+  _finishDialogBox(){
+    return showDialog(
+        context: context,
+        builder: (ctxt){
+          return WillPopScope(
+            child: SimpleDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          child: Image.asset('images/isvalid.png', width: 50.0, height: 50.0,)),
+                      Container(
+                          margin: EdgeInsets.only(bottom: 10.0),
+                          child: Text(MyString.txt_profile_complete,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),textAlign: TextAlign.center,)),
+                      Container(
+                        width: 200.0,
+                        height: 45.0,
+                        child: RaisedButton(onPressed: ()async{
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop({'isNeedRefresh' : true});
+
+                        }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                          color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ), onWillPop: (){},
+          );
+        }, barrierDismissible: false);
+  }
+
   void _updateUser()async{
     await _checkCon();
     setState(() {
@@ -129,6 +173,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
       _userModel.address = _addressController.text;
       _userModel.state = _dropDownState;
       _userModel.township = _dropDownTownship;
+      //_userModel.isWardAdmin = 0;
       print('${_userModel.toJson()}');
       try{
         _response = await ServiceHelper().updateUserInfo(_userModel);
@@ -136,9 +181,10 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
           await _userDb.openUserDb();
           await _userDb.insert(UserModel.fromJson(_response.data));
           await _userDb.closeUserDb();
+          _sharepreferenceshelper.setIsWardAdmin(UserModel.fromJson(_response.data).isWardAdmin==1?true:false);
+          _finishDialogBox();
           print('usermodel: ${_userModel.name} ${_userModel.address} ${_userModel.state} '
               '${_userModel.township} ${_userModel.currentRegionCode} ${_userModel.androidToken}');
-          Navigator.of(context).pop({'isNeedRefresh' : true});
         }else{
           WarningSnackBar(_scaffoldState, MyString.txt_try_again);
         }
@@ -179,10 +225,13 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                     margin: EdgeInsets.only(top: 40),
                     child: Column(
                       children: <Widget>[
-                        CircleAvatar(backgroundImage: _userModel!=null?
-                        CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):
-                        AssetImage('images/profile_placeholder.png'),
-                          backgroundColor: MyColor.colorGrey, radius: 50.0,),
+                        Hero(
+                          tag: 'profile',
+                          child: CircleAvatar(backgroundImage: _userModel!=null?
+                          CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):
+                          AssetImage('images/profile_placeholder.png'),
+                            backgroundColor: MyColor.colorGrey, radius: 50.0,),
+                        ),
                         Container(
                           margin: EdgeInsets.only(top: 20.0, bottom: 15.0,left: 20.0, right: 20.0),
                           child: Card(
@@ -231,11 +280,11 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                     ),
                                   ),
 
-                                  _sharepreferenceshelper.isWardAdmin()?Container():Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
+                                  _isWardAdmin?Container():Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
                                       child: Text(MyString.txt_user_state, style: TextStyle(fontSize: FontSize.textSizeSmall ,color: MyColor.colorTextBlack),)),
 
                                   //dropdown state
-                                  _sharepreferenceshelper.isWardAdmin()?Container():Container(
+                                  _isWardAdmin?Container():Container(
                                     padding: EdgeInsets.symmetric(horizontal: 10.0),
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(7.0),
@@ -271,9 +320,9 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                   ),
 
                                   //dropdown township
-                                  _sharepreferenceshelper.isWardAdmin()?Container():Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
+                                  _isWardAdmin?Container():Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
                                       child: Text(MyString.txt_user_township, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                  _sharepreferenceshelper.isWardAdmin()?Container():Container(
+                                  _isWardAdmin?Container():Container(
                                     padding: EdgeInsets.symmetric(horizontal: 10.0),
                                     decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(7.0),

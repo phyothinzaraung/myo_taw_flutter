@@ -29,7 +29,7 @@ void main() {
       appBarTheme: AppBarTheme(
           color: MyColor.colorPrimary,
       ),
-      accentColor: MyColor.colorAccent,
+      accentColor: MyColor.colorPrimaryDark,
       scaffoldBackgroundColor: MyColor.colorGrey,
     ),
   ));
@@ -70,7 +70,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   }
 
   _navigateToProfileFormScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen()));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_sharepreferenceshelper.isWardAdmin())));
     if(result != null && result.containsKey('isNeedRefresh') == true){
       Navigator.of(context).pop();
     }

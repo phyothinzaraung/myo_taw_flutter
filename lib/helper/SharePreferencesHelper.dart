@@ -21,6 +21,11 @@ class Sharepreferenceshelper{
         ..setString(USER_WARD_NAME, wardName);
   }
 
+  void setIsWardAdmin(bool isWardAdmin){
+    sharedPreferences
+      ..setBool(USER_IS_WARD_ADMIN, isWardAdmin);
+  }
+
   String getRegionCode(){
     return sharedPreferences.get(USER_REGION_CODE_KEY);
   }

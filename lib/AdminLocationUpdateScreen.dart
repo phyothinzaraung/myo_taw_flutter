@@ -76,7 +76,9 @@ class _AdminLocationUpdateScreenState extends State<AdminLocationUpdateScreen> w
       floatingActionButton: FloatingActionButton.extended(onPressed: (){
         Navigator.of(context).pop({'latLng' : _latLng});
 
-        }, label: Text(MyString.txt_get_location_update),backgroundColor: MyColor.colorPrimary,),
+        }, label: Text(MyString.txt_get_location_update, style: TextStyle(color: Colors.white),),
+            icon: Icon(Icons.pin_drop, color: Colors.white,),
+        backgroundColor: MyColor.colorPrimary,),
       body: _cameraPosition!=null?
       Stack(
         alignment: Alignment.center,

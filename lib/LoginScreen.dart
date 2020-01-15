@@ -119,7 +119,9 @@ class _LoginScreenState extends State<LoginScreen> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
-                      Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,),
+                      Flexible(
+                          flex: 1,
+                          child: Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,)),
                       Container(
                         margin: EdgeInsets.all(30),
                         child: Card(
