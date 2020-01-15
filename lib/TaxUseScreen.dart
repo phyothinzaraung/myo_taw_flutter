@@ -201,7 +201,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
                               _isLoading = false;
                             });
                           },
-                          child: Image.asset('images/arrow_green.png', width: 15.0, height: 15.0,))),
+                          child: Image.asset('images/arrow_green.png', width: 20.0, height: 20.0,))),
                   Expanded(
                       child: Text(TaxUseBudgetYearHelper().getBudgetYear(_year),
                         textAlign: TextAlign.center, style: TextStyle(fontSize: FontSize.textSizeNormal),)),
@@ -227,7 +227,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
                           });
                         }
                       },
-                      child: Image.asset(_image, width: 15.0, height: 15.0,))
+                      child: Image.asset(_image, width: 20.0, height: 20.0,))
                 ],
               ),
             ),
