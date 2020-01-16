@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:libphonenumber/libphonenumber.dart';
 import 'package:myotaw/myWidget/ButtonLoadingIndicatorWidget.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+import 'OtpScreen.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:dio/dio.dart';
@@ -108,12 +109,11 @@ class _LoginScreenState extends State<LoginScreen> {
               //login card
               Container(
                 width: double.maxFinite,
-                margin: EdgeInsets.only(bottom: 50),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                margin: EdgeInsets.only(top: 50),
+                child: ListView(
                   children: <Widget>[
-                    Flexible(
-                        flex: 1,
+                    Hero(
+                        tag: 'myotaw',
                         child: Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,)),
                     Container(
                       margin: EdgeInsets.all(30),
@@ -209,6 +209,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       }else{
                                         WarningSnackBar(_globalKey, MyString.txt_fill_phno);
                                       }
+                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
                                   },
                                   child: Row(
                                     mainAxisAlignment: MainAxisAlignment.center,
@@ -227,16 +228,14 @@ class _LoginScreenState extends State<LoginScreen> {
                         ),
                       ),
                     ),
+                    Align(
+                        alignment: Alignment.bottomCenter,
+                        child: Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
                   ],
                 ),
               ),
               //tv version
-              Padding(
-                padding: EdgeInsets.only(bottom: 20.0),
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
-              ),
+
             ],
           ),
         )

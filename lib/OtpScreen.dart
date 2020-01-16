@@ -219,11 +219,12 @@ class _OtpScreenState extends State<OtpScreen> {
               //login card
               Container(
                 width: double.maxFinite,
-                margin: EdgeInsets.only(bottom: 50),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                margin: EdgeInsets.only(top: 50),
+                child: ListView(
                   children: <Widget>[
-                    Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,),
+                    Hero(
+                        tag: 'myotaw',
+                        child: Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,)),
                     Container(
                       margin: EdgeInsets.all(30),
                       child: Card(
@@ -304,16 +305,16 @@ class _OtpScreenState extends State<OtpScreen> {
                         ),
                       ),
                     ),
+                    Padding(
+                      padding: EdgeInsets.only(bottom: 20.0),
+                      child: Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
+                    ),
                   ],
                 ),
               ),
               //tv version
-              Padding(
-                padding: EdgeInsets.only(bottom: 20.0),
-                child: Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
-              ),
             ],
           ),
         )
