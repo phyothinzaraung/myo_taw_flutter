@@ -105,7 +105,7 @@ flutter:
     - images/edit_profile.png
     - images/log_out.png
     - images/logout_icon.png
-    - images/file_save.png
+    - images/save_file_no_circle.png
     - images/popup_menu.png
     - images/confirm_icon.png
     - images/empty_box.png

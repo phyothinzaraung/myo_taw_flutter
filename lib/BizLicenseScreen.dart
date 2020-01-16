@@ -20,7 +20,7 @@ class BizLicenseScreen extends StatefulWidget {
 class _BizLicenseScreenState extends State<BizLicenseScreen> {
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   bool _isCon;
-  Response _response;
+  var _response;
   String display;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   List<BizLicenseModel> _bizLicenseModelList = new List<BizLicenseModel>();
@@ -43,19 +43,15 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
 
   _getAllBizLicense()async{
     await _sharepreferenceshelper.initSharePref();
-    try{
-      _response = await ServiceHelper().getBizLicense(_sharepreferenceshelper.getRegionCode());
-      List bizLicenseList = _response.data;
-      //var bizLicenseList = [];
-      if(bizLicenseList != null && bizLicenseList.length > 0){
-        for(var i in bizLicenseList){
-          setState(() {
-            _bizLicenseModelList.add(BizLicenseModel.fromJson(i));
-          });
-        }
+    _response = await ServiceHelper().getBizLicense(_sharepreferenceshelper.getRegionCode());
+    List bizLicenseList = _response.data;
+    //var bizLicenseList = [];
+    if(bizLicenseList != null && bizLicenseList.length > 0){
+      for(var i in bizLicenseList){
+        setState(() {
+          _bizLicenseModelList.add(BizLicenseModel.fromJson(i));
+        });
       }
-    }catch(e){
-      print(e);
     }
   }
 
@@ -66,7 +62,7 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
           return Column(
             children: <Widget>[
               //header
-              i==0? headerTitleWidget(MyString.title_biz_license) : Container(),
+              i==0? headerTitleWidget(MyString.title_biz_license, 'business_license_nocircle') : Container(),
               GestureDetector(
                 onTap: (){
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseDetailScreen(_bizLicenseModelList[i])));
@@ -130,7 +126,7 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
               child: _bizLicenseModelList.isNotEmpty? _listView() :
                   Column(
                     children: <Widget>[
-                      headerTitleWidget(MyString.title_biz_license),
+                      headerTitleWidget(MyString.title_biz_license, 'business_license_nocircle'),
                       Expanded(child: emptyView(asyncLoaderState,MyString.txt_no_data)),
                     ],
                   )

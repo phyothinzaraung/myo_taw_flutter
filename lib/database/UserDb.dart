@@ -41,7 +41,8 @@ class UserDb {
             ${DbHelper.COLUMN_USER_PIN_CODE} INTEGER,
             ${DbHelper.COLUMN_USER_AMOUNT} INTEGER,
             ${DbHelper.COLUMN_USER_IS_WARD_ADMIN} INTEGER,
-            ${DbHelper.COLUMN_USER_WARD_NAME} TEXT)
+            ${DbHelper.COLUMN_USER_WARD_NAME} TEXT,
+            ${DbHelper.COLUMN_USER_METER_NO} TEXT)
           ''');
   }
 
@@ -63,7 +64,8 @@ class UserDb {
       DbHelper.COLUMN_USER_PIN_CODE : model.pinCode,
       DbHelper.COLUMN_USER_AMOUNT : model.amount,
       DbHelper.COLUMN_USER_IS_WARD_ADMIN : model.isWardAdmin,
-      DbHelper.COLUMN_USER_WARD_NAME : model.wardName
+      DbHelper.COLUMN_USER_WARD_NAME : model.wardName,
+      DbHelper.COLUMN_USER_METER_NO : model.meterNo
     };
     print('sqlInsert: ${row}');
     return await _database.insert(DbHelper.TABLE_NAME_USER, row, conflictAlgorithm: ConflictAlgorithm.replace);
@@ -128,7 +130,8 @@ class UserDb {
           DbHelper.COLUMN_USER_PIN_CODE,
           DbHelper.COLUMN_USER_AMOUNT,
           DbHelper.COLUMN_USER_WARD_NAME,
-          DbHelper.COLUMN_USER_IS_WARD_ADMIN],
+          DbHelper.COLUMN_USER_IS_WARD_ADMIN,
+          DbHelper.COLUMN_USER_METER_NO],
         where: '${DbHelper.COLUMN_USER_UNIQUE} = ?', whereArgs: ['$uniqueKey']);
     if (result.length == 0) return null;
     for(var i in result){

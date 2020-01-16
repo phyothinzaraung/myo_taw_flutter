@@ -43,8 +43,10 @@ class MyString{
   static const String txt_welcome_mlm ='မော်လမြိုင်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပရီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String TGY_CITY = 'တောင်ကြီးမြို့';
   static const String MLM_CITY = 'မော်လမြိုင်မြို့';
+  static const String MDY_CITY = 'မန္တလေးမြို့';
   static const String TGY_REGIONCODE = "TGY";
   static const String MLM_REGIONCODE = "MLM";
+  static const String MDY_REGIONCODE = "MDY";
   static const String txt_welcome = "မြို့တော်မှ ကြိုဆိုပါ၏";
 
 
@@ -94,7 +96,7 @@ class MyString{
   static const String txt_choose_subject = 'အကြောင်းအရာရွေးချယ်ပါ';
   static const String title_suggestion_mess = 'အကြံပြုစာ';
   static const String txt_send_suggestion = 'စာပို့မည်';
-  static const String txt_suggestion_finish = 'ပူးပေါင်းပါဝင်မှုအတွက် \n ကျေးဇူးတင်ပါသည်';
+  static const String txt_suggestion_finish = 'ပူးပေါင်းပါဝင်မှုအတွက် \n ကျေးဇူးတင်ပါသည်။';
   static const String txt_close = 'ပိတ်မည်';
   static const String txt_location_update = 'တည်နေရာရယူရန်';
   static const String txt_get_location_update = 'တည်နေရာယူမည်';
@@ -230,10 +232,11 @@ class MyString{
   static const String txt_no_photo = "ဓာတ်ပုံများမရှိပါ";
   static const String txt_newsfeed = "သတင်းများ";
   static const String txt_contributions = "အကြုံပြုစာများ";
-  static const String txt_profile_complete = "ကိုယ်ရေးအချက်အလက်ဖြည့်စွက်မှု အောင်မြင်သည်။";
+  static const String txt_profile_complete = "ကိုယ်ရေးအချက်အလက်ဖြည့်သွင်းမှု အောင်မြင်သည်။";
   static const String txt_empty_contribution = "အကြံပြုစာများ မရှိသေးပါ။";
   static const String txt_to_contribute = "အကြုံပြုမည်";
   static const String txt_contribute_fact = "အကြုံပြုချက်";
+  static const String txt_send_contribution = "အကြုံပြုစာပို့မည်";
 
 
   static const String BUILDING_GRADE_A = "building grade A";
@@ -460,6 +463,7 @@ class MyArray{
 }
 
 class OrganizationId{
+  static const int MDY_ORGANIZATION_ID = 7;
   static const int TGY_ORGANIZATION_ID = 8;
   static const int MLM_ORGANIZATION_ID = 9;
 }

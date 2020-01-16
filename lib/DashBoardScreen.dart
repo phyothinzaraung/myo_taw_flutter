@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -11,15 +10,11 @@ import 'DaoScreen.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
 import 'ContributionScreen.dart';
-import 'WardAdminContributionScreen.dart';
 import 'BizLicenseScreen.dart';
 import 'TaxUseScreen.dart';
-import 'OnlineTaxScreen.dart';
 import 'ReferralScreen.dart';
 import 'CalculateTaxScreen.dart';
 import 'OnlineTaxChooseScreen.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'helper/MyoTawConstant.dart';
 
 class DashBoardScreen extends StatefulWidget {
   @override
@@ -71,6 +66,10 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         break;
       case MyString.MLM_REGIONCODE:
         _city = MyString.MLM_CITY;
+        break;
+      case MyString.MDY_REGIONCODE:
+        _city = MyString.MDY_CITY;
+        break;
     }
   }
 
@@ -132,16 +131,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoScreen('Tax')));
               break;
             case MyString.txt_suggestion:
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():
-              SuggestionScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ContributionScreen()));
               break;
             case MyString.txt_business_tax:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseScreen()));
               break;
             case MyString.txt_online_tax:
               _regionCode == MyString.TGY_REGIONCODE?
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineTaxChooseScreen(_userModel))) :
-                  //Fluttertoast.showToast(msg: MyString.txt_coming_soon, backgroundColor: Colors.black54, fontSize: FontSize.textSizeNormal);
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineTaxChooseScreen())) :
               PrimaryColorSnackBarWidget(_globalKey, MyString.txt_coming_soon);
               break;
             case MyString.txt_tax_use:
@@ -157,7 +154,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedScreen()));
               break;
             case MyString.txt_profile:
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_sharepreferenceshelper.isWardAdmin())));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel.isWardAdmin==1?true:false)));
               break;
             case MyString.txt_referral:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => ReferralScreen(_userModel)));

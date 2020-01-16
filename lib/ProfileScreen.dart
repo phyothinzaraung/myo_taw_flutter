@@ -55,28 +55,22 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _getAllTaxRecord(int p)async{
-    _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
-    try{
-      response = await ServiceHelper().getAllTaxRecord(p, pageCount, _userModel.currentRegionCode, _userModel.uniqueKey);
-      var result = response.data['Results'];
-      //var result = [];
-      if(result != null){
-        if(result.length > 0){
-          for(var model in result){
-            _taxRecordModelList.add(TaxRecordModel.fromJson(model));
-          }
-          //prevent set state is called after NewsFeedScreen is disposed
-          if(this.mounted){
-            setState(() {
-              _isEnd = false;
-            });
-          }
-        }else{
-          if(this.mounted){
-            setState(() {
-              _isEnd = true;
-            });
-          }
+    _profilePhoto = _userModel.photoUrl!=null?
+    new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl) :
+    AssetImage('images/profile_placeholder.png');
+    response = await ServiceHelper().getAllTaxRecord(p, pageCount, _userModel.currentRegionCode, _userModel.uniqueKey);
+    var result = response.data['Results'];
+    //var result = [];
+    if(result != null){
+      if(result.length > 0){
+        for(var model in result){
+          _taxRecordModelList.add(TaxRecordModel.fromJson(model));
+        }
+        //prevent set state is called after profilescreen is disposed
+        if(this.mounted){
+          setState(() {
+            _isEnd = false;
+          });
         }
       }else{
         if(this.mounted){
@@ -85,8 +79,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
           });
         }
       }
-    }catch(e){
-      print(e);
+    }else{
+      if(this.mounted){
+        setState(() {
+          _isEnd = true;
+        });
+      }
     }
   }
 
@@ -101,7 +99,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if(!_isWardAdmin){
       await _getAllTaxRecord(page);
     }else{
-      _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
+      _profilePhoto = _userModel.photoUrl!=null?
+      new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl) :
+      AssetImage('images/profile_placeholder.png');
     }
     //print('userphoto; ${_userModel.photoUrl}');
   }
@@ -325,8 +325,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           children: <Widget>[
                             Hero(
                               tag: 'profile',
-                              child: CircleAvatar(backgroundImage: _userModel!=null?
-                              _profilePhoto:AssetImage('images/profile_placeholder.png'),
+                              child: CircleAvatar(backgroundImage: _profilePhoto,
                                 backgroundColor: MyColor.colorGrey, radius: 50.0,),
                             ),
                             Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
@@ -457,8 +456,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                         child: Stack(
                           children: <Widget>[
-                            CircleAvatar(backgroundImage: _userModel!=null?
-                            _profilePhoto:AssetImage('images/profile_placeholder.png'),
+                            CircleAvatar(backgroundImage: _profilePhoto,
                               backgroundColor: MyColor.colorGrey, radius: 50.0,),
                             Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
                           ],
@@ -497,8 +495,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-                    Divider(color: MyColor.colorPrimary,),
-                    GestureDetector(
+                    _isWardAdmin?Container():Divider(color: MyColor.colorPrimary,),
+                    _isWardAdmin?Container():GestureDetector(
                       onTap: (){
 
                       },
@@ -531,7 +529,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-        Container(
+        _isWardAdmin?Container():Container(
           margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,

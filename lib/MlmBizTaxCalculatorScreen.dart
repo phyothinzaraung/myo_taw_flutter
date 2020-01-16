@@ -313,7 +313,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
           Container(
             child: Column(
               children: <Widget>[
-                headerTitleWidget(MyString.title_biz_tax_calculate),
+                headerTitleWidget(MyString.title_biz_tax_calculate, 'calculate_tax_no_circle'),
                 Card(
                   margin: EdgeInsets.only(left: 0, right: 0),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),

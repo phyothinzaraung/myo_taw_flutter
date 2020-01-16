@@ -135,25 +135,21 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
-    try{
-      response = await ServiceHelper().getNewsFeed(_organizationId,p,pageCount,_userUniqueKey);
-      var result = response.data['Results'];
-      //var result = [];
-      print('loadmore: ${p}');
-      if(result != null && result.length > 0){
-        for(var i in result){
-          _newsFeedReactModel.add(NewsFeedReactModel.fromJson(i));
-        }
-        setState(() {
-          _isEnd = false;
-        });
-      }else{
-        setState(() {
-          _isEnd = true;
-        });
+    response = await ServiceHelper().getNewsFeed(_organizationId,p,pageCount,_userUniqueKey);
+    var result = response.data['Results'];
+    //var result = [];
+    print('loadmore: ${p}');
+    if(result != null && result.length > 0){
+      for(var i in result){
+        _newsFeedReactModel.add(NewsFeedReactModel.fromJson(i));
       }
-    }catch(e){
-      print(e);
+      setState(() {
+        _isEnd = false;
+      });
+    }else{
+      setState(() {
+        _isEnd = true;
+      });
     }
     print('isEnd: ${_isEnd}');
   }
@@ -180,7 +176,9 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
 
   _initHeaderTitle(){
-    _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
+    _profilePhoto = _userModel.photoUrl!=null?
+    new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl) :
+    AssetImage('images/profile_placeholder.png');
     switch(_userModel.currentRegionCode){
       case MyString.TGY_REGIONCODE:
         _city = _userModel.isWardAdmin==1? MyString.TGY_CITY +' '+'(Ward admin)':MyString.TGY_CITY;
@@ -189,6 +187,10 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       case MyString.MLM_REGIONCODE:
         _city = _userModel.isWardAdmin==1? MyString.MLM_CITY +' '+'(Ward admin)': MyString.MLM_CITY;
         _organizationId = OrganizationId.MLM_ORGANIZATION_ID;
+        break;
+      case MyString.MDY_REGIONCODE:
+        _city = _userModel.isWardAdmin==1? MyString.MDY_CITY +' '+'(Ward admin)': MyString.MDY_CITY;
+        _organizationId = OrganizationId.MDY_ORGANIZATION_ID;
         break;
       default:
     }
@@ -360,11 +362,10 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             ),
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_sharepreferenceshelper.isWardAdmin())));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel.isWardAdmin==1?true:false)));
 
               },
-              child: CircleAvatar(backgroundImage: _userModel!=null?
-              _profilePhoto:AssetImage('images/profile_placeholder.png'),
+              child: CircleAvatar(backgroundImage: _profilePhoto,
                 backgroundColor: MyColor.colorGrey, radius: 25.0,),
             )
           ],
@@ -391,10 +392,9 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               ),
               GestureDetector(
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_sharepreferenceshelper.isWardAdmin())));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel.isWardAdmin==1?true:false)));
                 },
-                child: CircleAvatar(backgroundImage: _userModel!=null?
-                _profilePhoto:AssetImage('images/profile_placeholder.png'),
+                child: CircleAvatar(backgroundImage:_profilePhoto,
                   backgroundColor: MyColor.colorGrey, radius: 25.0,),
               )
             ],

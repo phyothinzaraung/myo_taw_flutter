@@ -21,7 +21,7 @@ class TaxUserScreen extends StatefulWidget {
 class _TaxUserScreenState extends State<TaxUserScreen> {
   Map<String, double> dataMap;
   bool _isCon, _isLoading = false;
-  Response _response;
+  var _response;
   List<TaxUserModel> _taxUserModelList = new List<TaxUserModel>();
   List<Widget> _legnedList = new List<Widget>();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
@@ -50,36 +50,32 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
 
   _getTaxUse(int year)async{
     await _sharepreferenceshelper.initSharePref();
-    try{
-      _response = await ServiceHelper().getTaxUser(_sharepreferenceshelper.getRegionCode(), TaxUseBudgetYearHelper().getBudgetYear(year));
-      List list = _response.data;
-      //List list = [];
-      if(list != null && list.length > 0){
-        for(var i in list){
-          setState(() {
-            _taxUserModelList.add(TaxUserModel.fromJson(i));
-          });
-          dataMap.putIfAbsent(TaxUserModel.fromJson(i).taxTitle, () => TaxUserModel.fromJson(i).amount);
-        }
-        for(int i=0; i<_taxUserModelList.length; i++){
-          _legnedList.add(Container(
-            margin: EdgeInsets.only(bottom: 10.0),
-            child: Row(
-              children: <Widget>[
-                Container(
-                  width: 20.0,
-                  height: 20.0,
-                  color: PieChartColorHelper().defaultColorList[i],
-                ),
-                Container(margin: EdgeInsets.only(left: 10.0),
-                  child: Text(_taxUserModelList[i].taxTitle, style: TextStyle(fontSize: FontSize.textSizeSmall),),),
-              ],
-            ),
-          ),);
-        }
+    _response = await ServiceHelper().getTaxUser(_sharepreferenceshelper.getRegionCode(), TaxUseBudgetYearHelper().getBudgetYear(year));
+    List list = _response.data;
+    //List list = [];
+    if(list != null && list.length > 0){
+      for(var i in list){
+        setState(() {
+          _taxUserModelList.add(TaxUserModel.fromJson(i));
+        });
+        dataMap.putIfAbsent(TaxUserModel.fromJson(i).taxTitle, () => TaxUserModel.fromJson(i).amount);
       }
-    }catch(e){
-      print(e);
+      for(int i=0; i<_taxUserModelList.length; i++){
+        _legnedList.add(Container(
+          margin: EdgeInsets.only(bottom: 10.0),
+          child: Row(
+            children: <Widget>[
+              Container(
+                width: 20.0,
+                height: 20.0,
+                color: PieChartColorHelper().defaultColorList[i],
+              ),
+              Container(margin: EdgeInsets.only(left: 10.0),
+                child: Text(_taxUserModelList[i].taxTitle, style: TextStyle(fontSize: FontSize.textSizeSmall),),),
+            ],
+          ),
+        ),);
+      }
     }
   }
 

@@ -25,6 +25,7 @@ class DbHelper{
   static final COLUMN_USER_AMOUNT = 'amount';
   static final COLUMN_USER_IS_WARD_ADMIN = 'isWardAdmin';
   static final COLUMN_USER_WARD_NAME = 'wardName';
+  static final COLUMN_USER_METER_NO = 'meterNo';
   //---------------------------------------------------------------------------------------------------------------------//
 
   //SaveNewsFeedTable

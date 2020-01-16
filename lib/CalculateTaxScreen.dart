@@ -35,7 +35,7 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
       body: Container(
         child: Column(
           children: <Widget>[
-            headerTitleWidget(MyString.title_calculate_tax),
+            headerTitleWidget(MyString.title_calculate_tax, 'calculate_tax_no_circle'),
             Container(
               margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
               child: Row(

@@ -22,7 +22,7 @@ class DaoScreen extends StatefulWidget {
 class _DaoScreenState extends State<DaoScreen> {
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   bool _isCon;
-  Response _response;
+  var _response;
   int page = 1;
   int pageSize = 100;
   String display;
@@ -48,18 +48,14 @@ class _DaoScreenState extends State<DaoScreen> {
 
   _getAllDao()async{
     await _sharepreferenceshelper.initSharePref();
-    try{
-      _response = await ServiceHelper().getDao(page, pageSize, _sharepreferenceshelper.getRegionCode(), display);
-      var daoViewModelList = _response.data['Results'];
-      if(daoViewModelList != null && daoViewModelList.length > 0){
-        for(var i in daoViewModelList){
-          setState(() {
-            _daoViewModelList.add(DaoViewModel.fromJson(i));
-          });
-        }
+    _response = await ServiceHelper().getDao(page, pageSize, _sharepreferenceshelper.getRegionCode(), display);
+    var daoViewModelList = _response.data['Results'];
+    if(daoViewModelList != null && daoViewModelList.length > 0){
+      for(var i in daoViewModelList){
+        setState(() {
+          _daoViewModelList.add(DaoViewModel.fromJson(i));
+        });
       }
-    }catch(e){
-      print(e);
     }
   }
 

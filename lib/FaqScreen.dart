@@ -17,7 +17,7 @@ class FaqScreen extends StatefulWidget {
 }
 
 class _FaqScreenState extends State<FaqScreen> {
-  Response _response;
+  var _response;
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   String _regionCode, _category = '';
   int page = 1;
@@ -69,21 +69,17 @@ class _FaqScreenState extends State<FaqScreen> {
 
   _getAllFaqByCategory(String category)async{
     await _sharepreferenceshelper.initSharePref();
-    try{
-      _regionCode = await _sharepreferenceshelper.getRegionCode();
-      _response = await ServiceHelper().getAllFaq(_regionCode, page, pageSize, category);
-      faqModelList = _response.data['FAQwithPaging']['Results'];
-      if(_response.data != null){
+    _regionCode = await _sharepreferenceshelper.getRegionCode();
+    _response = await ServiceHelper().getAllFaq(_regionCode, page, pageSize, category);
+    faqModelList = _response.data['FAQwithPaging']['Results'];
+    if(_response.data != null){
 
-        for(var i in faqModelList){
-          setState(() {
-            _faqList.add(FaqModel.fromJson(i));
-            _isLoading = false;
-          });
-        }
+      for(var i in faqModelList){
+        setState(() {
+          _faqList.add(FaqModel.fromJson(i));
+          _isLoading = false;
+        });
       }
-    }catch(e){
-      print(e);
     }
   }
 
@@ -160,7 +156,7 @@ class _FaqScreenState extends State<FaqScreen> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
-          headerTitleWidget(MyString.title_faq),
+          headerTitleWidget(MyString.title_faq, 'questions_mark_no_circle'),
           Container(margin: EdgeInsets.only(top: 10.0),child: CircularProgressIndicator())
         ],
       )
@@ -197,7 +193,7 @@ class _FaqScreenState extends State<FaqScreen> {
         renderSuccess: ({data}) => Container(
           child: Column(
             children: <Widget>[
-              headerTitleWidget(MyString.title_faq),
+              headerTitleWidget(MyString.title_faq, 'questions_mark_no_circle'),
               Card(
                 margin: EdgeInsets.all(0.0),
                   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),

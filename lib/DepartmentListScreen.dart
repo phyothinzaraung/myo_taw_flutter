@@ -32,7 +32,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
   int _currentPhoto = 0;
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   bool _isCon;
-  Response _response;
+  var _response;
   int page = 1;
   int pageSize = 100;
   String deptType = 'Manager';
@@ -111,19 +111,15 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
 
   _getDaoByDeptType(int p) async{
     await _sharepreferenceshelper.initSharePref();
-    try{
-      _response = await ServiceHelper().getDaoByDeptType(page, pageSize, _sharepreferenceshelper.getRegionCode(), deptType);
-      if(_response.data != null){
-        var daoViewModelList = _response.data['Results'];
-        for(var i in daoViewModelList){
-          setState(() {
-            _daoViewModelList.add(DaoViewModel.fromJson(i));
-          });
-          print('daoviewmodel :${_daoViewModelList}');
-        }
+    _response = await ServiceHelper().getDaoByDeptType(page, pageSize, _sharepreferenceshelper.getRegionCode(), deptType);
+    if(_response.data != null){
+      var daoViewModelList = _response.data['Results'];
+      for(var i in daoViewModelList){
+        setState(() {
+          _daoViewModelList.add(DaoViewModel.fromJson(i));
+        });
+        print('daoviewmodel :${_daoViewModelList}');
       }
-    }catch(e){
-      print(e);
     }
     setState(() {
       _isLoading = false;

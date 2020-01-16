@@ -57,7 +57,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
   UserModel _userModel;
-  Response _response;
+  var _response;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   _ApplyBizLicenseFormScreenState(this._bizLicenseModel);
 

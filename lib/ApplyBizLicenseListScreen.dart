@@ -20,7 +20,7 @@ class ApplyBizLicenseListScreen extends StatefulWidget {
 class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   bool _isCon;
-  Response _response;
+  var _response;
   String display;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   List<ApplyBizLicenseModel> _applyBizLicenseModelList = new List<ApplyBizLicenseModel>();
@@ -43,19 +43,15 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
 
   _getAllApplyBizLicense()async{
      await _sharepreferenceshelper.initSharePref();
-     try{
-       _response = await ServiceHelper().getAllApplyBizLicenseByUser(_sharepreferenceshelper.getRegionCode(), _sharepreferenceshelper.getUserUniqueKey());
-       List applyBizLicenseList = _response.data;
-       //List applyBizLicenseList = [];
-       if(applyBizLicenseList != null && applyBizLicenseList.length > 0){
-         for(var i in applyBizLicenseList){
-           setState(() {
-             _applyBizLicenseModelList.add(ApplyBizLicenseModel.fromJson(i));
-           });
-         }
+     _response = await ServiceHelper().getAllApplyBizLicenseByUser(_sharepreferenceshelper.getRegionCode(), _sharepreferenceshelper.getUserUniqueKey());
+     List applyBizLicenseList = _response.data;
+     //List applyBizLicenseList = [];
+     if(applyBizLicenseList != null && applyBizLicenseList.length > 0){
+       for(var i in applyBizLicenseList){
+         setState(() {
+           _applyBizLicenseModelList.add(ApplyBizLicenseModel.fromJson(i));
+         });
        }
-     }catch(e){
-       print(e);
      }
   }
 
@@ -66,7 +62,7 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
           return Column(
             children: <Widget>[
               //header
-              i==0? headerTitleWidget(MyString.txt_apply_biz_license) : Container(),
+              i==0? headerTitleWidget(MyString.txt_apply_biz_license, 'business_license_nocircle') : Container(),
               GestureDetector(
                 onTap: (){
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseDetailScreen(_applyBizLicenseModelList[i])));

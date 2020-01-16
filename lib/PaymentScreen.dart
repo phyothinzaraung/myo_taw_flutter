@@ -28,7 +28,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   int _taxAmount = 0;
   String _taxType;
-  Response _response;
+  var _response;
   PaymentLogModel _paymentLogModel = PaymentLogModel();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   InvoiceModel _invoiceModel;
@@ -55,25 +55,20 @@ class _PaymentScreenState extends State<PaymentScreen> {
       _isLoading = true;
     });
     print(_taxType);
-    try{
-      _response = await ServiceHelper().getAmountFromInvoiceNo(_taxType, _invoiceNoController.text);
-      _invoiceModel = InvoiceModel.fromJson(_response.data);
-      if(_invoiceModel != null){
-        if(_invoiceModel.totalAmt != 0){
+    _response = await ServiceHelper().getAmountFromInvoiceNo(_taxType, _invoiceNoController.text);
+    _invoiceModel = InvoiceModel.fromJson(_response.data);
+    if(_invoiceModel != null){
+      if(_invoiceModel.totalAmt != 0){
 
-          _taxAmount = _invoiceModel.totalAmt;
-          _isInvoiceNoEnable = false;
-          _isDropDownEnable = false;
+        _taxAmount = _invoiceModel.totalAmt;
+        _isInvoiceNoEnable = false;
+        _isDropDownEnable = false;
 
-        }else{
-          WarningSnackBar(_scaffoldState, MyString.txt_wrong_invoice_or_tax_type);
-        }
       }else{
         WarningSnackBar(_scaffoldState, MyString.txt_wrong_invoice_or_tax_type);
       }
-    }catch(e){
-      print(e);
-      WarningSnackBar(_scaffoldState, MyString.txt_try_again);
+    }else{
+      WarningSnackBar(_scaffoldState, MyString.txt_wrong_invoice_or_tax_type);
     }
 
     setState(() {

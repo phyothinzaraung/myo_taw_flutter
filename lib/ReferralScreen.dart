@@ -33,7 +33,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
   String _scanResult;
   List<String> _data = List<String>();
   ReferralModel _referralModel = new ReferralModel();
-  Response _response;
+  var _response;
   bool _isCon;
   GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
   _ReferralScreenState(this._userModel);

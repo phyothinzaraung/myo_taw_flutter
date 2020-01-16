@@ -27,7 +27,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
   ApplyBizLicenseModel _applyBizLicenseModel;
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   bool _isCon, _isLoading;
-  Response _response;
+  var _response;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   List<ApplyBizLicensePhotoModel> _applyBizLicensePhotoModelList = new List<ApplyBizLicensePhotoModel>();
   TextEditingController _fileTitleController = TextEditingController();
@@ -62,19 +62,15 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
 
   _getAllBizLicense()async{
     await _sharepreferenceshelper.initSharePref();
-    try{
-      _response = await ServiceHelper().getApplyBizPhotoList(_applyBizLicenseModel.id);
-      List applyBizLicensePhotoList = _response.data;
-      //List applyBizLicensePhotoList = [];
-      if(applyBizLicensePhotoList != null && applyBizLicensePhotoList.length > 0){
-        for(var i in applyBizLicensePhotoList){
-          setState(() {
-            _applyBizLicensePhotoModelList.add(ApplyBizLicensePhotoModel.fromJson(i));
-          });
-        }
+    _response = await ServiceHelper().getApplyBizPhotoList(_applyBizLicenseModel.id);
+    List applyBizLicensePhotoList = _response.data;
+    //List applyBizLicensePhotoList = [];
+    if(applyBizLicensePhotoList != null && applyBizLicensePhotoList.length > 0){
+      for(var i in applyBizLicensePhotoList){
+        setState(() {
+          _applyBizLicensePhotoModelList.add(ApplyBizLicensePhotoModel.fromJson(i));
+        });
       }
-    }catch(e){
-      print(e);
     }
   }
 
@@ -226,16 +222,13 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                                 _uploadPhoto();
                               }
                             }else{
-                              //Fluttertoast.showToast(msg: MyString.txt_check_internet, backgroundColor: Colors.black.withOpacity(0.7));
                               WarningSnackBar(_globalKey, MyString.txt_check_internet);
                             }
                             if(_image == null){
-                              //Fluttertoast.showToast(msg: MyString.txt_need_suggestion_photo, backgroundColor: Colors.black.withOpacity(0.7));
                               WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
                             }
 
                             if(_fileTitleController.text.isEmpty){
-                              //Fluttertoast.showToast(msg: MyString.txt_need_apply_biz_photo_name, backgroundColor: Colors.black.withOpacity(0.7));
                               WarningSnackBar(_globalKey, MyString.txt_need_apply_biz_photo_name);
                             }
                           },

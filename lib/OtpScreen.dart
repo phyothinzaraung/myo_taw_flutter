@@ -12,6 +12,7 @@ import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:myotaw/Database/UserDb.dart';
 import 'WardAdminContributionListScreen.dart';
+import 'myWidget/ButtonLoadingIndicatorWidget.dart';
 
 class OtpScreen extends StatefulWidget {
   String _phNo, _regionCode;
@@ -109,18 +110,13 @@ class _OtpScreenState extends State<OtpScreen> {
     setState(() {
       _showLoading = true;
     });
-    try{
-      response = await ServiceHelper().verifyOtp(_phNo, code);
-      var result = response.data;
-      if(result != null){
-        if(result['code'] == '002'){
-          _logIn();
-        }
-      }else{
-        WarningSnackBar(_globalKey, MyString.txt_try_again);
+    response = await ServiceHelper().verifyOtp(_phNo, code);
+    var result = response.data;
+    if(result != null){
+      if(result['code'] == '002'){
+        await _logIn();
       }
-    }catch(e){
-      print(e);
+    }else{
       WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
 
@@ -211,118 +207,114 @@ class _OtpScreenState extends State<OtpScreen> {
     return Scaffold(
       key: _globalKey,
         backgroundColor: Colors.white,
-        body: ModalProgressHUD(
-          inAsyncCall: _showLoading,
-          progressIndicator: modalProgressIndicator(),
-          child: Center(
-            child: Stack(
-              children: <Widget>[
-                //color primary bg
-                Container(
-                  color: MyColor.colorPrimary,
-                  width: double.maxFinite,
-                  height: 300,
-                ),
-                //login card
-                Container(
-                  width: double.maxFinite,
-                  margin: EdgeInsets.only(bottom: 50),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: <Widget>[
-                      Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,),
-                      Container(
-                        margin: EdgeInsets.all(30),
-                        child: Card(
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                          child: Container(
-                            margin: EdgeInsets.all(30),
-                            child: Column(
-                              children: <Widget>[
-                                Container(
-                                    margin: EdgeInsets.only(bottom: 30),
-                                    child: Text(MyString.txt_enter_otp, style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary), textAlign: TextAlign.center,)),
-                                Container(
-                                  margin: EdgeInsets.only(bottom: 30.0),
-                                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                  decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(7.0),
-                                      border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
-                                  ),
-                                  child: TextField(
-                                    decoration: InputDecoration(
-                                      border: InputBorder.none,
-                                      suffixIcon: Icon(Icons.phone_android, color: MyColor.colorPrimary,),
-                                      hintText: 'xxxxxx',
-                                    ),
-                                    cursorColor: MyColor.colorPrimary,
-                                    controller: _otpCodeController,
-                                    style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),
-                                    keyboardType: TextInputType.phone,
-                                    maxLength: 4,
-                                  ),
+        body: Center(
+          child: Stack(
+            children: <Widget>[
+              //color primary bg
+              Container(
+                color: MyColor.colorPrimary,
+                width: double.maxFinite,
+                height: 300,
+              ),
+              //login card
+              Container(
+                width: double.maxFinite,
+                margin: EdgeInsets.only(bottom: 50),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: <Widget>[
+                    Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,),
+                    Container(
+                      margin: EdgeInsets.all(30),
+                      child: Card(
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                        child: Container(
+                          margin: EdgeInsets.all(30),
+                          child: Column(
+                            children: <Widget>[
+                              Container(
+                                  margin: EdgeInsets.only(bottom: 30),
+                                  child: Text(MyString.txt_enter_otp, style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary), textAlign: TextAlign.center,)),
+                              Container(
+                                margin: EdgeInsets.only(bottom: 30.0),
+                                padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7.0),
+                                    border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
                                 ),
-                                Container(
-                                  width: double.maxFinite,
-                                  height: 45.0,
-                                  margin: EdgeInsets.only(bottom: 20),
-                                  child: RaisedButton(onPressed: () async{
-                                    //_logIn();
-                                    await _checkCon();
-                                    if(_isCon){
-                                      if(_isExpire){
-                                        _getOtp();
-
-                                      }else{
-                                        if(_otpCodeController.text.isNotEmpty && _otpCodeController.text != null){
-                                          if(_otpCodeController.text.length == 4){
-                                            FocusScope.of(context).requestFocus(FocusNode());
-                                            _verifyOtp(_otpCodeController.text);
-                                            //_logIn();
-                                          }else{
-                                            WarningSnackBar(_globalKey, MyString.txt_otp_not_exceed_4);
-                                          }
-
-                                        }else{
-                                          WarningSnackBar(_globalKey, MyString.txt_enter_otp);
-                                        }
-                                      }
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                    suffixIcon: Icon(Icons.phone_android, color: MyColor.colorPrimary,),
+                                    hintText: 'xxxxxx',
+                                  ),
+                                  cursorColor: MyColor.colorPrimary,
+                                  controller: _otpCodeController,
+                                  style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),
+                                  keyboardType: TextInputType.phone,
+                                  maxLength: 4,
+                                ),
+                              ),
+                              Container(
+                                width: double.maxFinite,
+                                height: 45.0,
+                                margin: EdgeInsets.only(bottom: 20),
+                                child: RaisedButton(onPressed: () async{
+                                  //_logIn();
+                                  await _checkCon();
+                                  if(_isCon){
+                                    if(_isExpire){
+                                      _getOtp();
 
                                     }else{
-                                      WarningSnackBar(_globalKey, MyString.txt_no_internet);
+                                      if(_otpCodeController.text.isNotEmpty && _otpCodeController.text != null){
+                                        if(_otpCodeController.text.length == 4){
+                                          FocusScope.of(context).requestFocus(FocusNode());
+                                          _verifyOtp(_otpCodeController.text);
+                                          //_logIn();
+                                        }else{
+                                          WarningSnackBar(_globalKey, MyString.txt_otp_not_exceed_4);
+                                        }
+
+                                      }else{
+                                        WarningSnackBar(_globalKey, MyString.txt_enter_otp);
+                                      }
                                     }
-                                    },
-                                    child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.center,
-                                      children: <Widget>[
-                                        Container(
-                                            margin: EdgeInsets.only(right: 20),
-                                            child: Text(_isExpire?MyString.txt_get_otp:MyString.txt_fill_otp,style: TextStyle(color: Colors.white),)),
-                                        Image.asset(_isExpire?'images/get_otp.png':'images/send_otp.png', width: 25, height: 25,)
-                                      ],
-                                    ),
-                                      color: MyColor.colorPrimary,
-                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
-                                ),
-                                _isExpire? Container() :
-                                Text('OTP expire in - $_minute : $_sec min', style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)
-                              ],
-                            ),
+
+                                  }else{
+                                    WarningSnackBar(_globalKey, MyString.txt_no_internet);
+                                  }
+                                  },
+                                  child: Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: <Widget>[
+                                      Container(
+                                          margin: EdgeInsets.only(right: 20),
+                                          child: Text(_isExpire?MyString.txt_get_otp:MyString.txt_fill_otp,style: TextStyle(color: Colors.white),)),
+                                      _showLoading?ButtonLoadingIndicatorWidget():Image.asset(_isExpire?'images/get_otp.png':'images/send_otp.png', width: 25, height: 25,)
+                                    ],
+                                  ),
+                                    color: MyColor.colorPrimary,
+                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
+                              ),
+                              _isExpire? Container() :
+                              Text('OTP expire in - $_minute : $_sec min', style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)
+                            ],
                           ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                //tv version
-                Padding(
-                  padding: EdgeInsets.only(bottom: 20.0),
-                  child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
-                ),
-              ],
-            ),
+              ),
+              //tv version
+              Padding(
+                padding: EdgeInsets.only(bottom: 20.0),
+                child: Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
+              ),
+            ],
           ),
         )
     );

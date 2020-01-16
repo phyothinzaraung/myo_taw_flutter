@@ -15,24 +15,25 @@ import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
 
-class SuggestionScreen extends StatefulWidget {
+class ContributionScreen extends StatefulWidget {
   @override
-  _SuggestionScreenState createState() => _SuggestionScreenState();
+  _ContributionScreenState createState() => _ContributionScreenState();
 }
 
-class _SuggestionScreenState extends State<SuggestionScreen> {
+class _ContributionScreenState extends State<ContributionScreen> {
   List<String> _subjectList = new List<String>();
   String _dropDownSubject = MyString.txt_choose_subject;
-  String _mess,_lat, _lng;
+  String _lat, _lng;
   bool _isCon, _isLoading;
   File _image;
   var _location = new Location();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
   UserModel _userModel;
-  Response _response;
+  var _response;
   StreamSubscription<LocationData> _streamSubscription;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+  TextEditingController _messController = TextEditingController();
 
   @override
   void initState() {
@@ -88,8 +89,8 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
     await _userDb.closeUserDb();
     _userModel = model;
     try{
-      _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _mess,
-          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, _sharepreferenceshelper.isWardAdmin(), _sharepreferenceshelper.getWardName());
+      _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
+          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, false, _sharepreferenceshelper.getWardName());
       //print('sendsuggest: ${_mess} ${_dropDownSubject} ${_lat} ${_lng}');
       if(_response.data != null){
         _finishDialogBox();
@@ -183,7 +184,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
         progressIndicator: modalProgressIndicator(),
         child: ListView(
           children: <Widget>[
-            headerTitleWidget(MyString.title_suggestion),
+            headerTitleWidget(MyString.title_suggestion, 'suggestion_no_circle'),
             Card(
               margin: EdgeInsets.all(0.0),
               child: Container(
@@ -258,9 +259,7 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                                 border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
                             ),
                             child: TextField(
-                              onChanged: (value){
-                                _mess = value;
-                              },
+                              maxLines: null,
                               decoration: InputDecoration(
                                   border: InputBorder.none
                               ),
@@ -276,27 +275,22 @@ class _SuggestionScreenState extends State<SuggestionScreen> {
                               await _checkCon();
                               //await _getLatLng();
                               if(_isCon){
-                                if(_mess != null && _image != null && _dropDownSubject != MyString.txt_choose_subject && _lat != null && _lng != null){
+                                if(_messController.text.isNotEmpty && _image != null && _dropDownSubject != MyString.txt_choose_subject && _lat != null && _lng != null){
                                   setState(() {
                                     _isLoading = true;
                                   });
                                   _sendSuggestion();
                                   print('latlng: ${_lat} ${_lng}');
                                 }else if(_image == null){
-                                  //Fluttertoast.showToast(msg: MyString.txt_need_suggestion_photo, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
                                 }else if(_dropDownSubject == MyString.txt_choose_subject){
-                                  //Fluttertoast.showToast(msg: MyString.txt_need_subject, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                   WarningSnackBar(_globalKey, MyString.txt_need_subject);
-                                }else if(_mess == null){
-                                  //Fluttertoast.showToast(msg: MyString.txt_need_suggestion, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                                }else if(_messController.text.isEmpty == null){
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion);
                                 }else if(_lat == null && _lng == null){
-                                  //Fluttertoast.showToast(msg: MyString.txt_need_suggestion_location, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion_location);
                                 }
                               }else{
-                                //Fluttertoast.showToast(msg: MyString.txt_no_internet, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                 WarningSnackBar(_globalKey, MyString.txt_no_internet);
                               }
 

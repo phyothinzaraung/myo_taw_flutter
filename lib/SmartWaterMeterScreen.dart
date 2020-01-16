@@ -28,7 +28,7 @@ class SmartWaterMeterScreen extends StatefulWidget {
 class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   bool _isCon;
-  Response _responseWaterMeterUnit, _responseWaterMeterLog;
+  var _responseWaterMeterUnit, _responseWaterMeterLog;
   int _amount,_finalUnit = 0;
   String _name, _meterNo;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
@@ -57,30 +57,22 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
 
   _getWaterMeterUnit()async{
     await _sharepreferenceshelper.initSharePref();
-    try{
-      _responseWaterMeterUnit = await ServiceHelper().getSmartWaterMeterUnit(_sharepreferenceshelper.getUserPhoneNo());
-      if(_responseWaterMeterUnit.data != null){
-        _smartWaterMeterUnitModel = SmartWaterMeterUnitModel.fromJson(_responseWaterMeterUnit.data);
-        _meterNo = _smartWaterMeterUnitModel.meterNo;
-        _finalUnit = _smartWaterMeterUnitModel.finalUnit;
-      }
-    }catch(e){
-      print(e);
+    _responseWaterMeterUnit = await ServiceHelper().getSmartWaterMeterUnit(_sharepreferenceshelper.getUserPhoneNo());
+    if(_responseWaterMeterUnit.data != null){
+      _smartWaterMeterUnitModel = SmartWaterMeterUnitModel.fromJson(_responseWaterMeterUnit.data);
+      _meterNo = _smartWaterMeterUnitModel.meterNo;
+      _finalUnit = _smartWaterMeterUnitModel.finalUnit;
     }
   }
 
   _getSmartWaterMeterLog()async{
-    try{
-      _responseWaterMeterLog = await ServiceHelper().getSmartWaterMeterLog(_sharepreferenceshelper.getUserPhoneNo());
-      _amount = _responseWaterMeterLog.data['Amount'];
-      var list = _responseWaterMeterLog.data['Log'];
-      for(var i in list){
-        setState(() {
-          _smartWaterMeterLogList.add(SmartWaterMeterLogModel.fromJson(i));
-        });
-      }
-    }catch(e){
-      print(e);
+    _responseWaterMeterLog = await ServiceHelper().getSmartWaterMeterLog(_sharepreferenceshelper.getUserPhoneNo());
+    _amount = _responseWaterMeterLog.data['Amount'];
+    var list = _responseWaterMeterLog.data['Log'];
+    for(var i in list){
+      setState(() {
+        _smartWaterMeterLogList.add(SmartWaterMeterLogModel.fromJson(i));
+      });
     }
   }
 

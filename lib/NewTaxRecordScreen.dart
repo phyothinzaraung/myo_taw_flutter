@@ -24,7 +24,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
   UserDb _userDb = UserDb();
   UserModel _userModel;
   bool _isCon ,_isLoading = false;
-  Response _response;
+  var _response;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
   @override

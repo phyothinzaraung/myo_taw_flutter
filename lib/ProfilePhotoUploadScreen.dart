@@ -20,7 +20,7 @@ class ProfilePhotoUploadScreen extends StatefulWidget {
 class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
   File _image;
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
-  Response _response;
+  var _response;
   UserDb _userDb = UserDb();
   UserModel _userModel;
   bool _isCon,_isLoading = false;

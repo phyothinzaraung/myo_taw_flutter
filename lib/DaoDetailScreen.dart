@@ -176,7 +176,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
               child: FlatButton(
                   onPressed: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => _daoViewModel.daoModel.title.contains('လိုင်စင်')?
-                    BizLicenseScreen() : SuggestionScreen()));
+                    BizLicenseScreen() : ContributionScreen()));
                   },
                   child: Text(_daoViewModel.daoModel.title.contains('လိုင်စင်')?MyString.txt_biz_license:MyString.txt_suggestion,
                     style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),color: MyColor.colorPrimary,),

@@ -19,7 +19,14 @@ class UserModel{
   int _isDeletedDb;
   int _isWardAdmin;
   String _wardName;
+  String _meterNo;
 
+
+  String get meterNo => _meterNo;
+
+  set meterNo(String value) {
+    _meterNo = value;
+  }
 
   int get isWardAdmin => _isWardAdmin;
 
@@ -124,10 +131,10 @@ class UserModel{
     _amount = value;
   }
 
-  UserModel.map(dynamic obj){
-    _uniqueKey = obj['_id'];
-    _name = obj['_name'];
-    _phoneNo = obj['_phNo'];
+  String get wardName => _wardName;
+
+  set wardName(String value) {
+    _wardName = value;
   }
 
   UserModel.fromJson(Map<String, dynamic> json):
@@ -147,7 +154,8 @@ class UserModel{
         _pinCode = json['PinCode'],
         _amount = json['Amount'],
         _isWardAdmin = json['IsWardAdmin']==true?1:0,
-        _wardName = json['WardName'];
+        _wardName = json['WardName'],
+        _meterNo = json['MeterNo'];
 
   Map<String, dynamic> toJson(){
     Map<String, dynamic> json =new Map<String, dynamic>();
@@ -168,6 +176,7 @@ class UserModel{
       json['Amount'] = _amount;
       json['IsWardAdmin'] = _isWardAdmin==1?true:false;
       json['WardName'] = _wardName;
+      json['MeterNo'] = _meterNo;
 
      return json;
   }
@@ -189,11 +198,6 @@ class UserModel{
         _pinCode = map[DbHelper.COLUMN_USER_PIN_CODE],
         _amount = map[DbHelper.COLUMN_USER_AMOUNT],
         _isWardAdmin = map[DbHelper.COLUMN_USER_IS_WARD_ADMIN],
-        _wardName = map[DbHelper.COLUMN_USER_WARD_NAME];
-
-  String get wardName => _wardName;
-
-  set wardName(String value) {
-    _wardName = value;
-  }
+        _wardName = map[DbHelper.COLUMN_USER_WARD_NAME],
+        _meterNo = map[DbHelper.COLUMN_USER_METER_NO];
 }

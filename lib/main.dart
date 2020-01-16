@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
+import 'package:myotaw/LoginScreen.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'Database/UserDb.dart';
 import 'SplashScreen.dart';
@@ -70,7 +71,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   }
 
   _navigateToProfileFormScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_sharepreferenceshelper.isWardAdmin())));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_userModel.isWardAdmin==1?true:false)));
     if(result != null && result.containsKey('isNeedRefresh') == true){
       Navigator.of(context).pop();
     }

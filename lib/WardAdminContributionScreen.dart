@@ -24,19 +24,20 @@ class WardAdminContributionScreen extends StatefulWidget {
 class _WardAdminContributionScreenState extends State<WardAdminContributionScreen> {
   List<String> _subjectList = new List<String>();
   String _dropDownSubject = MyString.txt_choose_subject;
-  String _mess, _lat, _lng;
+  String _lat, _lng;
   bool _isCon, _isLoading;
   File _image;
   var _location = new Location();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
   UserModel _userModel;
-  Response _response;
+  var _response;
   Completer<GoogleMapController> _controller = Completer();
   CameraPosition _cameraPosition;
   StreamSubscription<LocationData> _streamSubscription;
   Set<Marker> _markers = Set();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+  TextEditingController _messController = TextEditingController();
 
   @override
   void initState() {
@@ -129,9 +130,9 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
       _userModel = model;
     });
     try{
-      _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _mess,
-          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, _sharepreferenceshelper.isWardAdmin(), _userModel.wardName);
-      print('sendsuggest: ${_sharepreferenceshelper.isWardAdmin()} ${_userModel.wardName}');
+      _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
+          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, true, _userModel.wardName);
+      //print('sendsuggest: ${_sharepreferenceshelper.isWardAdmin()} ${_userModel.wardName}');
       if(_response.data != null){
         _finishDialogBox();
       }else{
@@ -338,23 +339,23 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                             ),color: Colors.white,elevation: 1.0,
                               shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
                           ),
-                        //gallery
-                        Container(
-                          height: 45.0,
-                          margin: EdgeInsets.only(bottom: 10.0),
-                          child: RaisedButton(onPressed: (){
-                            gallery();
+                          //gallery
+                          Container(
+                            height: 45.0,
+                            margin: EdgeInsets.only(bottom: 10.0),
+                            child: RaisedButton(onPressed: (){
+                              gallery();
                             },child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
-                              Container(
-                                  margin: EdgeInsets.only(right: 30.0),
-                                  child: Image.asset('images/gallery.png', width: 25.0, height: 25.0,)),
-                              Text(MyString.txt_upload_photo_gallery, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
-                            ],
-                          ),color: Colors.white,elevation: 1.0,
-                            shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
-                        ),
+                                Container(
+                                    margin: EdgeInsets.only(right: 30.0),
+                                    child: Image.asset('images/gallery.png', width: 25.0, height: 25.0,)),
+                                Text(MyString.txt_upload_photo_gallery, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
+                              ],
+                            ),color: Colors.white,elevation: 1.0,
+                              shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
+                          ),
                           Container(
                             margin: EdgeInsets.only(bottom: 10.0),
                               child: Text(MyString.title_suggestion_subject, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
@@ -399,13 +400,11 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                                 border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
                             ),
                             child: TextField(
+                              maxLines: null,
                               decoration: InputDecoration(
                                   border: InputBorder.none
                               ),
                               style: TextStyle(fontSize: FontSize.textSizeNormal),
-                              onChanged: (value){
-                                _mess = value;
-                              },
                             ),
                           ),
                           Container(
@@ -416,7 +415,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                               await _checkCon();
                               //await _getLatLng();
                               if(_isCon){
-                                if(_mess != null && _image != null && _dropDownSubject != MyString.txt_choose_subject && _lat != null && _lng != null){
+                                if(_messController.text.isNotEmpty && _image != null && _dropDownSubject != MyString.txt_choose_subject && _lat != null && _lng != null){
                                   setState(() {
                                     _isLoading = true;
                                   });
@@ -425,7 +424,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
                                 }else if(_dropDownSubject == MyString.txt_choose_subject){
                                   WarningSnackBar(_globalKey, MyString.txt_need_subject);
-                                }else if(_mess == null){
+                                }else if(_messController.text.isEmpty){
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion);
                                 }else if(_lat == null && _lng == null){
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion_location);
@@ -435,7 +434,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                               }
 
 
-                              }, child: Text(MyString.txt_save_user_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                              }, child: Text(MyString.txt_send_contribution, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
                               color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
                           )
                         ],

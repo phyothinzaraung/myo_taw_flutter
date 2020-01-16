@@ -96,14 +96,13 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Flexible(
-                flex: 0,
+                flex: 1,
                 child: _logo!=null?
                 Container(margin: EdgeInsets.only(bottom: 20.0),child: Image.asset(_logo, width: 150.0, height: 150.0,)):Container(width: 0.0,height: 0.0,),
               ),
               Flexible(
                 flex: 1,
                 child: _title!=null?Container(
-                  margin: EdgeInsets.only(bottom: 20.0),
                   child: Text(_title,
                     style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeNormal,),softWrap: true,maxLines: 3, textAlign: TextAlign.center,),
                 ):Container(width: 0.0,height: 0.0,),

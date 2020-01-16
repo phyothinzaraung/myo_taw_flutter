@@ -87,7 +87,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
           return Container(
             child: Column(
               children: <Widget>[
-                i==0?headerTitleWidget(MyString.title_save_nf) : Container(width: 0.0, height: 0.0,),
+                i==0?headerTitleWidget(MyString.title_save_nf, '') : Container(width: 0.0, height: 0.0,),
                 GestureDetector(
                   onTap: (){
                     Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedDetailScreen(model)));
@@ -159,7 +159,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
         Container(
           child: Column(
             children: <Widget>[
-              headerTitleWidget(MyString.title_save_nf),
+              headerTitleWidget(MyString.title_save_nf, 'save_file_no_circle'),
               Expanded(
                 child: Center(
                   child: Image.asset('images/empty_box.png', width: 70.0, height: 70.0,),

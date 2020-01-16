@@ -27,11 +27,10 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
-  String _userUniqueKey,_city;
+  String _city;
   UserDb _userDb = new UserDb();
   UserModel _userModel;
   ImageProvider _profilePhoto;
-  int _organizationId;
   bool _isCon, _isEnd;
   List<ContributionModel> _contributionModelList = new List();
   int page = 1;
@@ -59,7 +58,6 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
 
   _getUser() async{
     await _sharepreferenceshelper.initSharePref();
-    _userUniqueKey = _sharepreferenceshelper.getUserUniqueKey();
     print(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
@@ -125,8 +123,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
               },
               child: Hero(
                 tag: 'profile',
-                child: CircleAvatar(backgroundImage: _userModel!=null?
-                _profilePhoto:AssetImage('images/profile_placeholder.png'),
+                child: CircleAvatar(backgroundImage: _profilePhoto,
                   backgroundColor: MyColor.colorGrey, radius: 25.0,),
               ),
             )
@@ -180,7 +177,8 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                               margin: EdgeInsets.only(right: 10),
                               child: Image.asset("images/calendar.png", width: 15, height: 15,)),
                           //calendar date
-                          Text(showDateTimeDifference(_contributionModelList[i].accesstime), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)
+                          Expanded(child: Text(showDateTimeDifference(_contributionModelList[i].accesstime), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
+                          Image.asset('images/suggestion_no_circle.png', width: 25, height: 25,)
                         ],
                       ),
                     ),
@@ -238,15 +236,18 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
   }
 
   _initHeaderTitle(){
-    _profilePhoto = new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl);
+    _profilePhoto = _userModel.photoUrl!=null?
+    new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl) :
+    AssetImage('images/profile_placeholder.png');
     switch(_userModel.currentRegionCode){
       case MyString.TGY_REGIONCODE:
         _city = _userModel.isWardAdmin==1? MyString.TGY_CITY +' '+'(Ward admin)':MyString.TGY_CITY;
-        _organizationId = OrganizationId.TGY_ORGANIZATION_ID;
         break;
       case MyString.MLM_REGIONCODE:
         _city = _userModel.isWardAdmin==1? MyString.MLM_CITY +' '+'(Ward admin)': MyString.MLM_CITY;
-        _organizationId = OrganizationId.MLM_ORGANIZATION_ID;
+        break;
+      case MyString.MDY_REGIONCODE:
+        _city = _userModel.isWardAdmin==1? MyString.MDY_CITY +' '+'(Ward admin)': MyString.MDY_CITY;
         break;
       default:
     }
@@ -296,7 +297,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
-                    Text(MyString.txt_newsfeed, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
+                    Text(MyString.txt_contributions, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                   ],
                 ),
               ),
@@ -304,8 +305,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                 onTap: (){
                   Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_sharepreferenceshelper.isWardAdmin())));
                 },
-                child: CircleAvatar(backgroundImage: _userModel!=null?
-                _profilePhoto:AssetImage('images/profile_placeholder.png'),
+                child: CircleAvatar(backgroundImage: _profilePhoto,
                   backgroundColor: MyColor.colorGrey, radius: 25.0,),
               )
             ],

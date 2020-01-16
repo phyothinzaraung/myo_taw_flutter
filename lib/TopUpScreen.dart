@@ -23,7 +23,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
   bool _isLoading = false;
   bool _hasError = false;
   bool _isCon = false;
-  Response _response;
+  var _response;
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
   _TopUpScreenState(this._userModel);
 
@@ -37,19 +37,14 @@ class _TopUpScreenState extends State<TopUpScreen> {
     setState(() {
       _isLoading = true;
     });
-   try{
-     _response = await ServiceHelper().getTopUp(_prepaidCodeController.text, _userModel.uniqueKey);
-     if(_response.data == 'Success'){
-       Navigator.of(context).pop({'isNeedRefresh' : true});
-     }else if(_response.data == 'Expired Date'){
-       WarningSnackBar(_scaffoldState, MyString.txt_top_up_expired);
-     }else{
-       WarningSnackBar(_scaffoldState, MyString.txt_top_up_already);
-     }
-   }catch(e){
-     print(e);
-     WarningSnackBar(_scaffoldState, MyString.txt_try_again);
-   }
+    _response = await ServiceHelper().getTopUp(_prepaidCodeController.text, _userModel.uniqueKey);
+    if(_response.data == 'Success'){
+      Navigator.of(context).pop({'isNeedRefresh' : true});
+    }else if(_response.data == 'Expired Date'){
+      WarningSnackBar(_scaffoldState, MyString.txt_top_up_expired);
+    }else{
+      WarningSnackBar(_scaffoldState, MyString.txt_top_up_already);
+    }
 
     setState(() {
       _isLoading = false;

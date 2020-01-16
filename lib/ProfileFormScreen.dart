@@ -30,7 +30,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   List<String> _townshipList;
   bool _isLoading, _isWardAdmin,_isCon = false;
   LocationDb _locationDb = LocationDb();
-  Response _response;
+  var _response;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
   UserDb _userDb = UserDb();
@@ -41,6 +41,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _isLoading = false;
     _init();
     _stateList = [_dropDownState];
     _townshipList = [_dropDownTownship];
@@ -69,25 +70,34 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   }
 
   _init()async{
-    setState(() {
-      _isLoading = true;
-    });
-    await _getUser();
-    _nameController.text = _userModel.name;
-    _addressController.text = _userModel.address;
-    await _locationDb.openLocationDb();
-    var state = await _locationDb.getState();
-    await _locationDb.closeLocationDb();
-    for(var i in state){
-      _stateList.add(i);
-      print('stateList: ${i}');
+    try{
+      setState(() {
+        _isLoading = true;
+      });
+
+      await _getUser();
+      _nameController.text = _userModel.name;
+      _addressController.text = _userModel.address;
+      await _locationDb.openLocationDb();
+      var state = await _locationDb.getState();
+      await _locationDb.closeLocationDb();
+      for(var i in state){
+        _stateList.add(i);
+        print('stateList: ${i}');
+      }
+      await _getTownshipByState(_userModel.state);
+      print(_userModel.toJson());
+      setState(() {
+        if(!_sharepreferenceshelper.isWardAdmin()){
+          _dropDownState = _userModel.state;
+          _dropDownTownship = _userModel.township;
+        }
+        _isLoading = false;
+      });
+    }catch (e){
+      print(e);
+      _getFailUserInfoDialogBox();
     }
-    await _getTownshipByState(_userModel.state);
-    setState(() {
-      _dropDownState = _userModel.state;
-      _dropDownTownship = _userModel.township;
-      _isLoading = false;
-    });
     print('initlocation');
   }
 
@@ -122,6 +132,45 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
         ),
       ),
     );
+  }
+
+  _getFailUserInfoDialogBox(){
+    return showDialog(
+        context: context,
+        builder: (ctxt){
+          return WillPopScope(
+            child: SimpleDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          child: Image.asset('images/warning.png', width: 50.0, height: 50.0,)),
+                      Container(
+                          margin: EdgeInsets.only(bottom: 10.0),
+                          child: Text(MyString.txt_no_internet,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),textAlign: TextAlign.center,)),
+                      Container(
+                        width: 200.0,
+                        height: 45.0,
+                        child: RaisedButton(onPressed: (){
+                          Navigator.of(context).pop();
+                          _init();
+
+                        }, child: Text(MyString.txt_try_again, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                          color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ), onWillPop: (){},
+          );
+        }, barrierDismissible: false);
   }
 
   _finishDialogBox(){
@@ -171,9 +220,11 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     if(_isCon){
       _userModel.name = _nameController.text;
       _userModel.address = _addressController.text;
-      _userModel.state = _dropDownState;
-      _userModel.township = _dropDownTownship;
-      //_userModel.isWardAdmin = 0;
+      if(!_sharepreferenceshelper.isWardAdmin()){
+        _userModel.state = _dropDownState;
+        _userModel.township = _dropDownTownship;
+      }
+      //_userModel.isWardAdmin = 0;//1 is true -- 0 is false
       print('${_userModel.toJson()}');
       try{
         _response = await ServiceHelper().updateUserInfo(_userModel);
@@ -183,8 +234,8 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
           await _userDb.closeUserDb();
           _sharepreferenceshelper.setIsWardAdmin(UserModel.fromJson(_response.data).isWardAdmin==1?true:false);
           _finishDialogBox();
-          print('usermodel: ${_userModel.name} ${_userModel.address} ${_userModel.state} '
-              '${_userModel.township} ${_userModel.currentRegionCode} ${_userModel.androidToken}');
+          /*print('usermodel: ${_userModel.name} ${_userModel.address} ${_userModel.state} '
+              '${_userModel.township} ${_userModel.currentRegionCode} ${_userModel.androidToken}');*/
         }else{
           WarningSnackBar(_scaffoldState, MyString.txt_try_again);
         }
@@ -227,9 +278,9 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                       children: <Widget>[
                         Hero(
                           tag: 'profile',
-                          child: CircleAvatar(backgroundImage: _userModel!=null?
+                          child: CircleAvatar(backgroundImage: _userModel!=null?_userModel.photoUrl!=null?
                           CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):
-                          AssetImage('images/profile_placeholder.png'),
+                          AssetImage('images/profile_placeholder.png') : AssetImage('images/profile_placeholder.png'),
                             backgroundColor: MyColor.colorGrey, radius: 50.0,),
                         ),
                         Container(
@@ -254,11 +305,12 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                         border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
                                     ),
                                     child: TextField(
+                                      maxLines: null,
                                       decoration: InputDecoration(
                                           border: InputBorder.none
                                       ),
                                       controller: _nameController,
-                                      style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
+                                      style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),
                                     ),
                                   ),
                                   Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
@@ -272,11 +324,12 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                         border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
                                     ),
                                     child: TextField(
+                                      maxLines: null,
                                       decoration: InputDecoration(
                                           border: InputBorder.none
                                       ),
                                       controller: _addressController,
-                                      style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
+                                      style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),
                                     ),
                                   ),
 
