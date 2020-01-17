@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/WardAdminContributionScreen.dart';
 import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
@@ -131,7 +132,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoScreen('Tax')));
               break;
             case MyString.txt_suggestion:
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ContributionScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():
+              ContributionScreen()));
               break;
             case MyString.txt_business_tax:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseScreen()));
@@ -154,7 +156,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedScreen()));
               break;
             case MyString.txt_profile:
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel.isWardAdmin==1?true:false)));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
               break;
             case MyString.txt_referral:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => ReferralScreen(_userModel)));

@@ -1,14 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:myotaw/WardAdminContributionListScreen.dart';
+import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
 import 'helper/MyoTawConstant.dart';
 import 'main.dart';
 import 'package:flutter/services.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'LoginScreen.dart';
-import 'package:myotaw/Database/UserDb.dart';
-import 'model/UserModel.dart';
 import 'Database/LocationDb.dart';
 import 'model/LocationModel.dart';
 import 'dart:convert';
@@ -23,6 +21,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   LocationDb _locationDb = LocationDb();
   String _logo, _title;
+  bool _isDbSetup = true;
 
   @override
   void initState() {
@@ -58,6 +57,9 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     await _locationDb.openLocationDb();
     bool isSetup = await _locationDb.isLocationDbSetup();
     await _locationDb.closeLocationDb();
+    setState(() {
+      _isDbSetup = isSetup;
+    });
     if(!isSetup){
       var stringJson = await rootBundle.loadString('assets/location.json');
       var list = jsonDecode(stringJson);
@@ -74,14 +76,23 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     if(_sharepreferenceshelper.isLogin()){
       Future.delayed(Duration(seconds: 2), (){
         if(_sharepreferenceshelper.isWardAdmin()){
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => WardAdminContributionListScreen()));
+          Navigator.pushReplacement(context, PageRouteBuilder(
+              transitionDuration: Duration(milliseconds: 1000),
+              pageBuilder: (context,value,ani) => WardAdminFeatureChooseScreen()
+          ));
         }else{
-          Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => MainScreen()));
+          Navigator.pushReplacement(context, PageRouteBuilder(
+              transitionDuration: Duration(milliseconds: 1000),
+              pageBuilder: (context,value,ani) => MainScreen()
+          ));
         }
       });
     }else{
       Future.delayed(Duration(seconds: 2), (){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => LoginScreen()));
+        Navigator.pushReplacement(context, PageRouteBuilder(
+            transitionDuration: Duration(milliseconds: 1000),
+            pageBuilder: (context,value,ani) => LoginScreen()
+        ));
       });
     }
   }
@@ -105,22 +116,22 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                 flex: 1,
                 child: _title!=null?Container(
                   child: Text(_title,
-                    style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeNormal,),softWrap: true,maxLines: 3, textAlign: TextAlign.center,),
+                    style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal,),softWrap: true,maxLines: 3, textAlign: TextAlign.center,),
                 ):Container(width: 0.0,height: 0.0,),
               ),
               Flexible(flex: 2,
                   child: Container(
-                      margin: EdgeInsets.only(bottom: 30, top: 1),
+                      margin: EdgeInsets.only(bottom: 30, top: 20),
                       child: Hero(
                           tag: 'myotaw',
-                          child: Image.asset('images/myotaw_icon_white.png', width: 100.0, height: 100.0,)))),
+                          child: Image.asset('images/myo_taw_logo_eng.png', width: 100.0, height: 100.0,)))),
               /*Flexible(
                 flex: 1,
                 child: Container(
                     margin: EdgeInsets.only(bottom: 20),
                     child: Text('Myo Taw', style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: Colors.white),)),
               ),*/
-              Flexible(
+              !_isDbSetup?Flexible(
                 flex: 1,
                 child: Container(
                   margin: EdgeInsets.only(bottom: 30),
@@ -129,7 +140,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                     controller: AnimationController(vsync: this, duration: Duration(seconds: 2),
                   ), color: Colors.white,),
                 ),
-              ),
+              ) : Container(),
               Flexible(
                   flex: 1,
                   child: Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),)),

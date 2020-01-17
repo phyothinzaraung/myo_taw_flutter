@@ -114,7 +114,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   children: <Widget>[
                     Hero(
                         tag: 'myotaw',
-                        child: Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,)),
+                        child: Image.asset("images/myo_taw_logo_eng.png", width: 90, height: 80,)),
                     Container(
                       margin: EdgeInsets.all(30),
                       child: Card(

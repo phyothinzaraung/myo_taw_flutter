@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'helper/MyoTawConstant.dart';
@@ -57,19 +58,6 @@ class _OtpScreenState extends State<OtpScreen> {
       }
       print('otp code : $code');
     });
-
-   /* String _sms = await SmsRetriever.startListening();
-    List _smsList = _sms.split(':');
-    if(_smsList.length == 2){
-      String _string = _smsList[1];
-      List _list1 = _string.split(' ');
-      _otpCode = _list1[1];
-      print('otpCode : ${_list1[1]}');
-    }
-    setState(() {
-      _otpCodeController.text = _otpCode;
-    });
-    _verifyOtp(_otpCode);*/
   }
 
   void _logIn()async{
@@ -88,7 +76,7 @@ class _OtpScreenState extends State<OtpScreen> {
         await _userDb.insert(_userModel);
         await _userDb.closeUserDb();
         if(_userModel.isWardAdmin==1){
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WardAdminContributionListScreen()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WardAdminFeatureChooseScreen()));
         }else{
           Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
         }
@@ -129,25 +117,21 @@ class _OtpScreenState extends State<OtpScreen> {
     setState(() {
       _showLoading = true;
     });
-    /*String _hasyKey = await SmsRetriever.getAppSignature();
-    try{
-      response = await ServiceHelper().getOtpCode(_phNo, _hasyKey);
-      var result = response.data;
-      if(result != null){
-        if(result['code'] == '002'){
-          setState(() {
-            _minute = 9;
-            _sec = 59;
-            _isExpire = false;
-            _startTimer();
-          });
-        }
-      }else{
-        WarningSnackBar(_globalKey, MyString.txt_try_again);
+    String _hasyKey = await SmsAutoFill().getAppSignature;
+    response = await ServiceHelper().getOtpCode(_phNo, _hasyKey);
+    var result = response.data;
+    if(result != null){
+      if(result['code'] == '002'){
+        setState(() {
+          _minute = 9;
+          _sec = 59;
+          _isExpire = false;
+          _startTimer();
+        });
       }
-    }catch(e){
-      print(e);
-    }*/
+    }else{
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
+    }
 
     setState(() {
       _showLoading = false;
@@ -224,7 +208,7 @@ class _OtpScreenState extends State<OtpScreen> {
                   children: <Widget>[
                     Hero(
                         tag: 'myotaw',
-                        child: Image.asset("images/myotaw_icon_white.png", width: 90, height: 80,)),
+                        child: Image.asset("images/myo_taw_logo_eng.png", width: 90, height: 80,)),
                     Container(
                       margin: EdgeInsets.all(30),
                       child: Card(

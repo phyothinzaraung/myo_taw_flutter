@@ -50,7 +50,7 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
     _dashBoardModelList.add(model2);
   }
 
-  _getUser()async{
+  void _getUser()async{
     await _sharepreferenceshelper.initSharePref();
     var response = await ServiceHelper().getUserInfo(_sharepreferenceshelper.getUserUniqueKey());
     print(response.data);
@@ -229,46 +229,6 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
           title: Text(MyString.txt_online_payment_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),)
       ),
       body: _asyncLoader,
-      /*body: Container(
-        child: Column(
-          children: <Widget>[
-            headerTitleWidget(MyString.txt_online_tax, 'online_tax_no_circle'),
-            Container(
-              margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-              child: Row(
-                children: <Widget>[
-
-                  Flexible(
-                    flex: 1,
-                    child: GestureDetector(
-                      onTap: (){
-                        if(_userModel.pinCode != null){
-                          _dialogPinRequest('SmartWm');
-                        }else{
-                          Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
-                        }
-                      },
-                      child: Container(
-                        padding: EdgeInsets.all(15),
-                        child: Column(
-                          children: <Widget>[
-                            //image property tax
-                            Container(
-                                margin: EdgeInsets.only(bottom: 10),
-                                child: Image.asset('images/smart_water_meter.png')),
-                            //text property tax
-                            Text(MyString.title_smart_water_meter, textAlign: TextAlign.center,style: TextStyle(fontSize: FontSize.textSizeNormal))
-                          ],
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            )
-          ],
-        ),
-      ),*/
     );
   }
 }

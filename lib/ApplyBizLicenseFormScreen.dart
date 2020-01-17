@@ -520,6 +520,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                             iconEnabledColor: MyColor.colorPrimary,
                             value: _dropDownBizState,
                             onChanged: (String value){
+                              FocusScope.of(context).requestFocus(FocusNode());
                               setState(() {
                                 _dropDownBizState = value;
                               });
@@ -567,6 +568,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                             iconEnabledColor: MyColor.colorPrimary,
                             value: _dropDownBizTownship,
                             onChanged: (String value){
+                              FocusScope.of(context).requestFocus(FocusNode());
                               setState(() {
                                 _dropDownBizTownship = value;
                               });
@@ -806,6 +808,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                           iconEnabledColor: MyColor.colorPrimary,
                           value: _dropDownOwnerState,
                           onChanged: (String value){
+                            FocusScope.of(context).requestFocus(FocusNode());
                             setState(() {
                               _dropDownOwnerState = value;
                             });
@@ -853,6 +856,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                           iconEnabledColor: MyColor.colorPrimary,
                           value: _dropDownOwnerTownship,
                           onChanged: (String value){
+                            FocusScope.of(context).requestFocus(FocusNode());
                             setState(() {
                               _dropDownOwnerTownship = value;
                             });

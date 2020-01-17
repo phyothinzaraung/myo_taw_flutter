@@ -111,7 +111,7 @@ class ServiceHelper{
  }
 
  sendSuggestion<Response>(String file, String phoneNo, String subject, String message,
-     String uniqueKey, String userName, String lat, String lng, String regionCode, bool isAdmin, String wardName) async{
+     String uniqueKey, String userName, String lat, String lng, String regionCode, bool isAdmin, String wardName, double floodLevel) async{
   FormData formData = new FormData.fromMap({
    'file' : await MultipartFile.fromFile(file,filename: subject),
    'UserPhoneNo' : phoneNo,
@@ -127,6 +127,7 @@ class ServiceHelper{
    'Source' : 'app',
    'IsWardAdmin' : isAdmin,
    'WardName' : wardName,
+   'FloodLevel' : floodLevel
   });
    dio.options.connectTimeout = conTimeOut;
    dio.options.receiveTimeout = conTimeOut;

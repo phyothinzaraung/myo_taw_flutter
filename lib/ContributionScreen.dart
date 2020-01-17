@@ -90,7 +90,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
     _userModel = model;
     try{
       _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
-          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, false, _sharepreferenceshelper.getWardName());
+          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, false, _sharepreferenceshelper.getWardName(),0);
       //print('sendsuggest: ${_mess} ${_dropDownSubject} ${_lat} ${_lng}');
       if(_response.data != null){
         _finishDialogBox();

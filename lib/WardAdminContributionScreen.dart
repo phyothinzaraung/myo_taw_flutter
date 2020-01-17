@@ -131,7 +131,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     });
     try{
       _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
-          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, true, _userModel.wardName);
+          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, true, _userModel.wardName,0);
       //print('sendsuggest: ${_sharepreferenceshelper.isWardAdmin()} ${_userModel.wardName}');
       if(_response.data != null){
         _finishDialogBox();

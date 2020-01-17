@@ -143,13 +143,17 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       for(var i in result){
         _newsFeedReactModel.add(NewsFeedReactModel.fromJson(i));
       }
-      setState(() {
-        _isEnd = false;
-      });
+      if(mounted){
+        setState(() {
+          _isEnd = false;
+        });
+      }
     }else{
-      setState(() {
-        _isEnd = true;
-      });
+     if(mounted){
+       setState(() {
+         _isEnd = true;
+       });
+     }
     }
     print('isEnd: ${_isEnd}');
   }
@@ -356,13 +360,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
-                  Text('သတင်းများ', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
+                  Text(MyString.txt_newsfeed, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                 ],
               ),
             ),
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel.isWardAdmin==1?true:false)));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
 
               },
               child: CircleAvatar(backgroundImage: _profilePhoto,
@@ -392,7 +396,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               ),
               GestureDetector(
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_userModel.isWardAdmin==1?true:false)));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
                 },
                 child: CircleAvatar(backgroundImage:_profilePhoto,
                   backgroundColor: MyColor.colorGrey, radius: 25.0,),

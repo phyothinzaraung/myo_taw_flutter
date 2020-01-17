@@ -118,7 +118,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
             ),
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_sharepreferenceshelper.isWardAdmin())));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
 
               },
               child: Hero(
@@ -303,7 +303,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
               ),
               GestureDetector(
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(_sharepreferenceshelper.isWardAdmin())));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
                 },
                 child: CircleAvatar(backgroundImage: _profilePhoto,
                   backgroundColor: MyColor.colorGrey, radius: 25.0,),

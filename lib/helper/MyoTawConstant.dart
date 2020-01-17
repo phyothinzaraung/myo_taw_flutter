@@ -237,6 +237,9 @@ class MyString{
   static const String txt_to_contribute = "အကြုံပြုမည်";
   static const String txt_contribute_fact = "အကြုံပြုချက်";
   static const String txt_send_contribution = "အကြုံပြုစာပို့မည်";
+  static const String txt_admin_user = "Ward Admin ၏ ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
+  static const String txt_myotaw_user = "မြို့တော်အသုံးပြုသူကဏ္ဍ";
+  static const String txt_choose_feature = "ကဏ္ဍရွေးချယ်ပေးပါ";
 
 
   static const String BUILDING_GRADE_A = "building grade A";

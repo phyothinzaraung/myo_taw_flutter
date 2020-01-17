@@ -25,10 +25,8 @@ import 'NewTaxRecordScreen.dart';
 import 'ApplyBizLicenseListScreen.dart';
 
 class ProfileScreen extends StatefulWidget {
-  bool isAdmin;
-  ProfileScreen(this.isAdmin);
   @override
-  _ProfileScreenState createState() => _ProfileScreenState(isAdmin);
+  _ProfileScreenState createState() => _ProfileScreenState();
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
@@ -37,15 +35,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   SaveNewsFeedDb _saveNewsFeedDb = SaveNewsFeedDb();
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
-  bool _isEnd , _isCon,_isWardAdmin, _isLoading = false;
+  bool _isEnd , _isCon, _isLoading = false;
   int page = 1;
   int pageCount = 10;
   var response;
   ImageProvider _profilePhoto;
   List<TaxRecordModel> _taxRecordModelList = new List<TaxRecordModel>();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
-
-  _ProfileScreenState(this._isWardAdmin);
 
   @override
   void initState() {
@@ -96,13 +92,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _userModel = model;
     });
-    if(!_isWardAdmin){
-      await _getAllTaxRecord(page);
-    }else{
-      _profilePhoto = _userModel.photoUrl!=null?
-      new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl) :
-      AssetImage('images/profile_placeholder.png');
-    }
+    await _getAllTaxRecord(page);
     //print('userphoto; ${_userModel.photoUrl}');
   }
 
@@ -273,7 +263,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToProfileScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_isWardAdmin)));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_sharepreferenceshelper.isWardAdmin())));
     if(result != null && result.containsKey('isNeedRefresh') == true){
       //await _getUser();
       await _handleRefresh();
@@ -366,7 +356,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     Divider(color: MyColor.colorPrimary,),
-                    _isWardAdmin?Container():GestureDetector(
+                    GestureDetector(
                       onTap: (){
                         Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseListScreen()));
                       },
@@ -379,7 +369,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-                    _isWardAdmin?Container():Divider(color: MyColor.colorPrimary,),
+                    Divider(color: MyColor.colorPrimary,),
                     GestureDetector(
                       onTap: (){
                         _dialogLogOut();
@@ -399,7 +389,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-        _isWardAdmin?Container():
         Container(
           margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
           child: Column(
@@ -495,8 +484,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         ),
                       ),
                     ),
-                    _isWardAdmin?Container():Divider(color: MyColor.colorPrimary,),
-                    _isWardAdmin?Container():GestureDetector(
+                    Divider(color: MyColor.colorPrimary,),
+                    GestureDetector(
                       onTap: (){
 
                       },
@@ -529,7 +518,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-        _isWardAdmin?Container():Container(
+        Container(
           margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -635,14 +624,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
             onRefresh: _handleRefresh,
-            child: !_isWardAdmin?_taxRecordModelList.isNotEmpty?
+            child: _taxRecordModelList.isNotEmpty?
             LoadMore(
                 isFinish: _isEnd,
                 onLoadMore: _loadMore,
                 delegate: DefaultLoadMoreDelegate(),
                 textBuilder: DefaultLoadMoreTextBuilder.english,
                 child: _listView()
-            ) : Column(children: <Widget>[_headerProfile(), emptyView(asyncLoaderState, MyString.txt_no_data)],) : _headerProfile(),
+            ) : Column(children: <Widget>[_headerProfile(), emptyView(asyncLoaderState, MyString.txt_no_data)],)
           ),
         )
     );

@@ -148,6 +148,8 @@ flutter:
     - images/get_otp.png
     - images/phone.png
     - images/send_otp.png
+    - images/myo_taw_logo_eng.png
+    - images/ward_admin_circle.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:
