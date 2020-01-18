@@ -85,8 +85,8 @@ class _DaoScreenState extends State<DaoScreen> {
                   );
                 },childCount: _daoViewModelList.length),
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200.0,
-                    crossAxisSpacing: 10.0,))
+                    maxCrossAxisExtent: 250.0,
+                    crossAxisSpacing: 0.0,))
           ],
         )
     );

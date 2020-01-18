@@ -113,7 +113,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-      top: false,
+      top: true,
       bottom: true,
       left: false,
       right: false,

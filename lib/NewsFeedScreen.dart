@@ -43,6 +43,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   ImageProvider _profilePhoto;
   UserDb _userDb = UserDb();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+  bool _isTop = true;
 
   @override
   // TODO: implement wantKeepAlive
@@ -52,6 +53,17 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   void initState() {
     // TODO: implement initState
     super.initState();
+    _scrollController.addListener((){
+      if(_scrollController.offset == 0){
+        setState(() {
+          _isTop = true;
+        });
+      }else{
+        setState(() {
+          _isTop = false;
+        });
+      }
+    });
   }
 
 
@@ -370,7 +382,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
               },
               child: CircleAvatar(backgroundImage: _profilePhoto,
-                backgroundColor: MyColor.colorGrey, radius: 25.0,),
+                backgroundColor: MyColor.colorGrey, radius: 30.0,),
             )
           ],
         ),
@@ -458,6 +470,24 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     );
   }
 
+  Widget _floatActionButton(){
+    if(!_isTop){
+      return FloatingActionButton(
+        onPressed: (){
+          _topToScreen();
+        },
+        child: Icon(Icons.arrow_upward, color: Colors.white, size: 20,),
+        mini: true,
+      );
+    }else{
+      return null;
+    }
+  }
+
+  void _topToScreen(){
+    _scrollController.animateTo(0, duration: Duration(milliseconds: 700), curve: Curves.easeIn);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -484,6 +514,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     return Scaffold(
       key: _globalKey,
       body: SafeArea(child: _asyncLoader),
+      floatingActionButton: _floatActionButton()
     );
   }
 

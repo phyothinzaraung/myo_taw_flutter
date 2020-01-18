@@ -14,39 +14,55 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
       ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            GestureDetector(
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionListScreen()));
-              },
-              child: Column(
-                children: <Widget>[
-                  //image dao
-                  Container(
-                      margin: EdgeInsets.only(bottom: 20),
-                      child: Image.asset('images/suggestion.png', width: 130, height: 130,)),
-                  //text title
-                  Text(MyString.txt_admin_user,textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),)],),
+            Expanded(
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionListScreen()));
+                },
+                child: Container(
+                  color: MyColor.colorGrey,
+                  width: double.maxFinite,
+                  height: double.maxFinite,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      //image dao
+                      Container(
+                          margin: EdgeInsets.only(bottom: 20),
+                          child: Image.asset('images/suggestion.png', width: 130, height: 130,)),
+                      //text title
+                      Text(MyString.txt_admin_user,textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),)],),
+                ),
+              ),
             ),
             Divider(
               color: MyColor.colorPrimary,
               thickness: 2,
             ),
-            GestureDetector(
-              onTap: (){
-                Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
-              },
-              child: Column(
-                children: <Widget>[
-                  //image dao
-                  Container(
-                      margin: EdgeInsets.only(bottom: 20),
-                      child: Image.asset('images/profile_placeholder.png', width: 130, height: 130)),
-                  //text title
-                  Text(MyString.txt_myotaw_user,textAlign: TextAlign.center,
-                    style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),)],),
+            Expanded(
+              child: GestureDetector(
+                onTap: (){
+                  Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+                },
+                child: Container(
+                  color: MyColor.colorGrey,
+                  width: double.maxFinite,
+                  height: double.maxFinite,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: <Widget>[
+                      //image dao
+                      Container(
+                          margin: EdgeInsets.only(bottom: 20),
+                          child: Image.asset('images/profile_placeholder.png', width: 130, height: 130)),
+                      //text title
+                      Text(MyString.txt_myotaw_user,textAlign: TextAlign.center,
+                        style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),)],),
+                ),
+              ),
             )
           ],
         ),

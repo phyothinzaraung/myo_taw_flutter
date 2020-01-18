@@ -5,6 +5,7 @@ import 'package:myotaw/OnlineTaxScreen.dart';
 import 'package:myotaw/database/UserDb.dart';
 import 'package:myotaw/model/DashBoardModel.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
+import 'package:myotaw/myWidget/OnlineTaxPinRequestDialogWidget.dart';
 import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'PinCodeSetUpScreen.dart';
 import 'helper/MyoTawConstant.dart';
@@ -28,7 +29,7 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
   TextEditingController _pinCodeController = new TextEditingController();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   bool _hasError = false;
-  List<DashBoardModel> _dashBoardModelList = new List();
+  List<DashBoardModel> _widgetList = new List();
   UserDb _userDb = UserDb();
 
   @override
@@ -37,7 +38,7 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
     super.initState();
   }
 
-  _initDashBoardWidget(){
+  _initOnlineTaxChooseWidget(){
     DashBoardModel model1 = new DashBoardModel();
     model1.image = 'images/online_tax.png';
     model1.title = MyString.title_online_tax_payment;
@@ -46,8 +47,8 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
     model2.image = 'images/smart_water_meter.png';
     model2.title = MyString.title_smart_water_meter;
 
-    _dashBoardModelList.add(model1);
-    _dashBoardModelList.add(model2);
+    _widgetList.add(model1);
+    _widgetList.add(model2);
   }
 
   void _getUser()async{
@@ -60,83 +61,14 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
       await _userDb.insert(_userModel);
       await _userDb.closeUserDb();
       setState(() {
-        _initDashBoardWidget();
+        _initOnlineTaxChooseWidget();
       });
     }
   }
 
   _dialogPinRequest(String type){
     return showDialog(context: context, builder: (context){
-      return SimpleDialog(
-        contentPadding: EdgeInsets.all(20.0),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              GestureDetector(
-                onTap: (){
-                  Navigator.of(context).pop();
-                },
-                child: Container(
-                    alignment: Alignment.centerRight,
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Image.asset('images/close.png', width: 25.0, height: 25.0,)),
-              ),
-              Container(
-                  margin: EdgeInsets.only(bottom: 20.0),
-                  child: Image.asset('images/pin_lock.png', width: 50.0, height: 50.0,)),
-              Container(
-                margin: EdgeInsets.only(bottom: 10.0),
-                child: Text(MyString.txt_fill_pin_code,
-                  style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
-              ),
-              Container(
-                margin: EdgeInsets.only(bottom: 10.0),
-                alignment: Alignment.center,
-                child: PinCodeTextField(
-                  pinTextAnimatedSwitcherTransition: ProvidedPinBoxTextAnimation.scalingTransition,
-                  pinTextAnimatedSwitcherDuration: Duration(milliseconds: 100),
-                  pinBoxHeight: 40,
-                  pinBoxWidth: 40,
-                  defaultBorderColor: MyColor.colorPrimary,
-                  hideCharacter: true,
-                  maskCharacter: '*',
-                  hasTextBorderColor: Colors.white,
-                  pinTextStyle: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),
-                  controller:  _pinCodeController,
-                  hasError: _hasError,
-                  onDone: (str){
-                    if(_userModel.pinCode.toString() == str){
-                      Navigator.of(context).pop();
-                      if(type == 'OnlineTax'){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineTaxScreen()));
-                      }else{
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => SmartWaterMeterScreen()));
-                      }
-
-                      setState(() {
-                        _hasError = false;
-                        _pinCodeController.text = '';
-                      });
-                    }else{
-                      setState(() {
-                        _hasError = true;
-                        _pinCodeController.text = '';
-                      });
-                    }
-                  },
-                ),
-              ),
-              /*RaisedButton(onPressed: (){
-
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => SmartWaterMeterScreen()));
-
-                },child: Text(MyString.txt_profile_set_up,
-                style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),)*/
-            ],
-          )
-        ],);
+      return OnlineTaxPinRequestDialogWidget(type, _userModel);
     }, barrierDismissible: false);
   }
 
@@ -163,6 +95,7 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
                         //Fluttertoast.showToast(msg: MyString.txt_coming_soon, backgroundColor: Colors.black54, fontSize: FontSize.textSizeNormal);
                         if(_userModel.currentRegionCode == MyString.TGY_REGIONCODE){
                           _dialogPinRequest(index==0?'OnlineTax':'SmartWm');
+                          OnlineTaxPinRequestDialogWidget(index==0?'OnlineTax':'SmartWm', _userModel);
                         }else{
                           PrimaryColorSnackBarWidget(_globalKey, MyString.txt_coming_soon);
                         }
@@ -172,16 +105,16 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
                       }
                     },
                     child: Container(
-                      margin: EdgeInsets.only(top: 7, bottom: 7),
+                      //margin: EdgeInsets.only(top: 7, bottom: 7),
                       child: Column(
                         children: <Widget>[
                           //image dao
-                          Flexible(flex: 2,child: Image.asset(_dashBoardModelList[index].image,)),
+                          Flexible(flex: 2,child: Image.asset(_widgetList[index].image,)),
                           //text title
-                          Flexible(flex: 1,child: Text(_dashBoardModelList[index].title,textAlign: TextAlign.center,
+                          Flexible(flex: 1,child: Text(_widgetList[index].title,textAlign: TextAlign.center,
                             style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),))],),),
                   );
-                },childCount: _dashBoardModelList.length),
+                },childCount: _widgetList.length),
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                   maxCrossAxisExtent: 250.0,
                   crossAxisSpacing: 0.0,))
@@ -191,7 +124,7 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
   }
 
   Future<Null> _handleRefresh() async {
-    _dashBoardModelList.clear();
+    _widgetList.clear();
     asyncLoaderState.currentState.reloadState();
     return null;
   }

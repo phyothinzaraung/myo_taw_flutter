@@ -392,10 +392,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Container(
           margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(margin: EdgeInsets.only(bottom: 5.0),
-                  child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(margin: EdgeInsets.only(bottom: 5.0),
+                    child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
+              ),
               Container(
                 margin: EdgeInsets.only(bottom: 20.0),
                 height: 50.0,
@@ -419,7 +421,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Widget _headerProfileRefresh(){
-    return Column(
+    return ListView(
       children: <Widget>[
         Container(
           margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
@@ -521,10 +523,12 @@ class _ProfileScreenState extends State<ProfileScreen> {
         Container(
           margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              Container(margin: EdgeInsets.only(bottom: 5.0),
-                  child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Container(margin: EdgeInsets.only(bottom: 5.0),
+                    child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
+              ),
               Container(
                 margin: EdgeInsets.only(bottom: 20.0),
                 height: 50.0,
@@ -543,7 +547,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-        CircularProgressIndicator()
+        Column(
+          children: <Widget>[
+            CircularProgressIndicator()
+          ],
+        )
       ],
     );
   }

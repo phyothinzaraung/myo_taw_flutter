@@ -103,6 +103,8 @@ class _OtpScreenState extends State<OtpScreen> {
     if(result != null){
       if(result['code'] == '002'){
         await _logIn();
+      }else{
+        WarningSnackBar(_globalKey, MyString.txt_wrong_pin_code);
       }
     }else{
       WarningSnackBar(_globalKey, MyString.txt_try_again);

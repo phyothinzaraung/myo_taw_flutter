@@ -240,6 +240,8 @@ class MyString{
   static const String txt_admin_user = "Ward Admin ၏ ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
   static const String txt_myotaw_user = "မြို့တော်အသုံးပြုသူကဏ္ဍ";
   static const String txt_choose_feature = "ကဏ္ဍရွေးချယ်ပေးပါ";
+  static const String txt_title_dashboard = "ကဏ္ဍများ";
+  static const String txt_title_notification = "အသိပေးနှိုးဆော်ချက်";
 
 
   static const String BUILDING_GRADE_A = "building grade A";
