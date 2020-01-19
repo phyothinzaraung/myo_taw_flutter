@@ -143,7 +143,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
               ) : Container(),
               Flexible(
                   flex: 1,
-                  child: Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),)),
+                  child: Text("Version 1.2", style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),)),
             ],
           ),
         ),
