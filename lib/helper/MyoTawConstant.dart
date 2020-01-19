@@ -242,6 +242,7 @@ class MyString{
   static const String txt_choose_feature = "ကဏ္ဍရွေးချယ်ပေးပါ";
   static const String txt_title_dashboard = "ကဏ္ဍများ";
   static const String txt_title_notification = "အသိပေးနှိုးဆော်ချက်";
+  static const String txt_login = "ဝင်မည်";
 
 
   static const String BUILDING_GRADE_A = "building grade A";

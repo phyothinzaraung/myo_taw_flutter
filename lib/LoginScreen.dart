@@ -230,7 +230,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Align(
                         alignment: Alignment.bottomCenter,
-                        child: Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
+                        child: Text("Version 1.2", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
                   ],
                 ),
               ),

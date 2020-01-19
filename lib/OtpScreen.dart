@@ -277,7 +277,7 @@ class _OtpScreenState extends State<OtpScreen> {
                                     children: <Widget>[
                                       Container(
                                           margin: EdgeInsets.only(right: 20),
-                                          child: Text(_isExpire?MyString.txt_get_otp:MyString.txt_fill_otp,style: TextStyle(color: Colors.white),)),
+                                          child: Text(_isExpire?MyString.txt_get_otp:MyString.txt_login,style: TextStyle(color: Colors.white),)),
                                       _showLoading?ButtonLoadingIndicatorWidget():Image.asset(_isExpire?'images/get_otp.png':'images/send_otp.png', width: 25, height: 25,)
                                     ],
                                   ),
@@ -295,7 +295,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       padding: EdgeInsets.only(bottom: 20.0),
                       child: Align(
                           alignment: Alignment.bottomCenter,
-                          child: Text("Version 1.0", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
+                          child: Text("Version 1.2", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
                     ),
                   ],
                 ),
