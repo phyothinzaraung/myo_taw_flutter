@@ -56,6 +56,7 @@ class _OnlineTaxPinRequestDialogWidgetState extends State<OnlineTaxPinRequestDia
                 hasTextBorderColor: Colors.white,
                 pinTextStyle: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),
                 controller:  _pinCodeController,
+                autofocus: true,
                 hasError: _hasError,
                 onDone: (str){
                   if(widget._userModel.pinCode.toString() == str){
@@ -63,7 +64,7 @@ class _OnlineTaxPinRequestDialogWidgetState extends State<OnlineTaxPinRequestDia
                     if(widget._type == 'OnlineTax'){
                       Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineTaxScreen()));
                     }else{
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SmartWaterMeterScreen()));
+                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => SmartWaterMeterScreen(widget._userModel)));
                     }
 
                     setState(() {

@@ -60,9 +60,11 @@ class _PaymentScreenState extends State<PaymentScreen> {
     if(_invoiceModel != null){
       if(_invoiceModel.totalAmt != 0){
 
-        _taxAmount = _invoiceModel.totalAmt;
-        _isInvoiceNoEnable = false;
-        _isDropDownEnable = false;
+       setState(() {
+         _taxAmount = _invoiceModel.totalAmt;
+         _isInvoiceNoEnable = false;
+         _isDropDownEnable = false;
+       });
 
       }else{
         WarningSnackBar(_scaffoldState, MyString.txt_wrong_invoice_or_tax_type);

@@ -128,7 +128,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
     return Scaffold(
       key: _scaffoldState,
       appBar: AppBar(
-        title: Text(MyString.title_top_up, style: TextStyle(fontSize: FontSize.textSizeNormal),),
+        title: Text(MyString.txt_top_up_record, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
       body: ModalProgressHUD(
         inAsyncCall: _isLoading,
@@ -267,14 +267,11 @@ class _TopUpScreenState extends State<TopUpScreen> {
                                           ),duration: Duration(seconds: 2),backgroundColor: Colors.red,));
                                       }
                                     }else{
-                                      //Fluttertoast.showToast(msg: MyString.txt_wrong_pin_code, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                       WarningSnackBar(_scaffoldState, MyString.txt_wrong_pin_code);
                                     }
                                   }else if(_prepaidCodeController.text.isEmpty){
-                                    //Fluttertoast.showToast(msg: MyString.txt_need_prepaid_code, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                     WarningSnackBar(_scaffoldState, MyString.txt_need_prepaid_code);
                                   }else if(_pinCodeController.text.isEmpty){
-                                    //Fluttertoast.showToast(msg: MyString.txt_need_pin_code, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                     WarningSnackBar(_scaffoldState, MyString.txt_need_pin_code);
                                   }
 

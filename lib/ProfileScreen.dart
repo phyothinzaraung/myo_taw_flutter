@@ -447,8 +447,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
                         },
                         child: Stack(
                           children: <Widget>[
-                            CircleAvatar(backgroundImage: _profilePhoto,
-                              backgroundColor: MyColor.colorGrey, radius: 50.0,),
+                            Hero(
+                              tag: 'profile',
+                              child: CircleAvatar(backgroundImage: _profilePhoto,
+                                backgroundColor: MyColor.colorGrey, radius: 50.0,),
+                            ),
                             Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
                           ],
                         ),

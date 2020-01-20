@@ -401,6 +401,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                             ),
                             child: TextField(
                               maxLines: null,
+                              controller: _messController,
                               decoration: InputDecoration(
                                   border: InputBorder.none
                               ),

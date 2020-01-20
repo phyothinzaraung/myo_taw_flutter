@@ -60,9 +60,11 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
       await _userDb.openUserDb();
       await _userDb.insert(_userModel);
       await _userDb.closeUserDb();
-      setState(() {
-        _initOnlineTaxChooseWidget();
-      });
+      if(mounted){
+        setState(() {
+          _initOnlineTaxChooseWidget();
+        });
+      }
     }
   }
 

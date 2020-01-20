@@ -44,7 +44,7 @@ dependencies:
   webview_flutter: ^0.3.13
   qr_flutter: ^3.0.1
   unique_identifier: ^0.0.3
-  flutter_barcode_scanner: ^0.1.5+1
+#  flutter_barcode_scanner: ^0.1.5+1
   url_launcher: ^5.1.2
   html: ^0.14.0+2
   libphonenumber: ^1.0.0

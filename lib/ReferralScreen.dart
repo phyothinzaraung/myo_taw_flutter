@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'package:connectivity/connectivity.dart';
-import 'package:flutter_barcode_scanner/flutter_barcode_scanner.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter/material.dart';
 import 'helper/MyoTawConstant.dart';
@@ -11,8 +10,6 @@ import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'model/ReferralModel.dart';
 import 'helper/ServiceHelper.dart';
-import 'package:dio/dio.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'model/ReferralResponseModel.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
 
@@ -60,8 +57,8 @@ class _ReferralScreenState extends State<ReferralScreen> {
 
   Future<void> _barcode() async {
     try {
-      _scanResult =
-      await FlutterBarcodeScanner.scanBarcode("#ff6666", "Cancel", true);
+      /*_scanResult =
+      await FlutterBarcodeScanner.scanBarcode("#ff6666", "Cancel", true);*/
     } on PlatformException {
       _scanResult = 'Failed to get platform version.';
     }

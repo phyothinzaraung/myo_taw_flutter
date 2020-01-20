@@ -12,7 +12,7 @@ import 'model/PaymentLogModel.dart';
 import 'helper/NumConvertHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
-import 'TopUpScreen.dart';
+import 'TopUpRecordListScreen.dart';
 import 'PinCodeSetUpScreen.dart';
 import 'PaymentScreen.dart';
 
@@ -198,7 +198,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                                 }else{
                                   _navigateToPinCodeSetUpScreen();
                                 }
-                                }, child: Text(MyString.txt_top_up, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                                }, child: Text(MyString.txt_top_up_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                                 color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
                             ),
                           ),

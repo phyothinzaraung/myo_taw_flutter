@@ -381,8 +381,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
 
               },
-              child: CircleAvatar(backgroundImage: _profilePhoto,
-                backgroundColor: MyColor.colorGrey, radius: 30.0,),
+              child: Hero(
+                tag: 'profile',
+                child: CircleAvatar(backgroundImage: _profilePhoto,
+                  backgroundColor: MyColor.colorGrey, radius: 30.0,),
+              ),
             )
           ],
         ),

@@ -235,21 +235,21 @@ class ServiceHelper{
   return response;
  }
 
- getSmartWaterMeterUnit<Response>(String phoneNo) async{
+ getSmartWaterMeterUnit<Response>(String meterNo) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
   _interceptor();
-  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_DAO_INVOICE_NO+"SmartWaterMeter/GetSmartMeterData",
-      queryParameters: {"PhoneNo": phoneNo});
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_DAO_INVOICE_NO+"SmartWaterMeter/GetFinalUnit",
+      queryParameters: {"MeterNo": meterNo});
   return response;
  }
 
- getSmartWaterMeterLog<Response>(String phoneNo) async{
+ getSmartWaterMeterLog<Response>(String meterNo) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
   _interceptor();
-  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Payment/SmartMeterPaymentLogWithUserAmount",
-      queryParameters: {"PhoneNo": phoneNo});
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Payment/GetPaymentLog",
+      queryParameters: {"MeterNo": meterNo});
   return response;
  }
 

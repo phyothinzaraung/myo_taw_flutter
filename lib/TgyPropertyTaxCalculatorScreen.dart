@@ -391,19 +391,14 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                                 _dropDownBlockNo != MyString.txt_no_selected && _lengthContorller.text.isNotEmpty && _widthContorller.text.isNotEmpty){
                                 _calculateTaxDialog();
                               }else if(_dropDownBuildingType == MyString.txt_no_selected){
-                                //Fluttertoast.showToast(msg: MyString.txt_choose_building_type, backgroundColor: Colors.black.withOpacity(0.7));
                                 WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
                               }else if(_dropDownRoad == MyString.txt_no_selected){
-                                //Fluttertoast.showToast(msg: MyString.txt_choose_story, backgroundColor: Colors.black.withOpacity(0.7));
                                 WarningSnackBar(_globalKey, MyString.txt_choose_story);
                               }else if(_dropDownBlockNo == MyString.txt_no_selected){
-                                //Fluttertoast.showToast(msg: MyString.txt_choose_blockNo, backgroundColor: Colors.black.withOpacity(0.7));
                                 WarningSnackBar(_globalKey, MyString.txt_choose_blockNo);
                               }else if(_lengthContorller.text.isEmpty){
-                                //Fluttertoast.showToast(msg: MyString.txt_type_length, backgroundColor: Colors.black.withOpacity(0.7));
                                 WarningSnackBar(_globalKey, MyString.txt_type_length);
                               }else if(_widthContorller.text.isEmpty){
-                                //Fluttertoast.showToast(msg: MyString.txt_type_width, backgroundColor: Colors.black.withOpacity(0.7));
                                 WarningSnackBar(_globalKey, MyString.txt_type_width);
                               }
 

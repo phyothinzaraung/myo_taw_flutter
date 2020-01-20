@@ -14,13 +14,15 @@ import 'model/PaymentLogModel.dart';
 import 'helper/NumConvertHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
-import 'TopUpScreen.dart';
+import 'TopUpRecordListScreen.dart';
 import 'PinCodeSetUpScreen.dart';
 import 'PaymentScreen.dart';
 import 'model/SmartWaterMeterLogModel.dart';
 import 'helper/ShowDateTimeHelper.dart';
 
 class SmartWaterMeterScreen extends StatefulWidget {
+  UserModel _userModel;
+  SmartWaterMeterScreen(this._userModel);
   @override
   _SmartWaterMeterScreenState createState() => _SmartWaterMeterScreenState();
 }
@@ -56,12 +58,10 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
   }
 
   _getWaterMeterUnit()async{
-    await _sharepreferenceshelper.initSharePref();
-    _responseWaterMeterUnit = await ServiceHelper().getSmartWaterMeterUnit(_sharepreferenceshelper.getUserPhoneNo());
+    _responseWaterMeterUnit = await ServiceHelper().getSmartWaterMeterUnit(widget._userModel.meterNo);
     if(_responseWaterMeterUnit.data != null){
-      _smartWaterMeterUnitModel = SmartWaterMeterUnitModel.fromJson(_responseWaterMeterUnit.data);
-      _meterNo = _smartWaterMeterUnitModel.meterNo;
-      _finalUnit = _smartWaterMeterUnitModel.finalUnit;
+      _finalUnit = _responseWaterMeterUnit.data;
+      _meterNo = widget._userModel.meterNo;
     }
   }
 
@@ -86,9 +86,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
     });
     _name = _userModel.name;
     await _getWaterMeterUnit();
-    if(_responseWaterMeterUnit.data != null){
-      await _getSmartWaterMeterLog();
-    }
+    await _getSmartWaterMeterLog();
     setState(() {
       _isRefresh = false;
     });
@@ -194,7 +192,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
                           ),
                           Expanded(
                             child: Text(_meterNo,
-                              style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.white),),
+                              style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: Colors.white),),
                           ),
                         ],
                       ),
@@ -209,7 +207,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
                         }else{
                           _navigateToPinCodeSetUpScreen();
                         }
-                        }, child: Text(MyString.txt_top_up, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+                        }, child: Text(MyString.txt_top_up_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                         color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
                     ),
                   ],
@@ -294,7 +292,6 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
       });
       _getUser();
     }else{
-      //Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
       WarningSnackBar(_globalKey, MyString.txt_no_internet);
     }
     return null;
@@ -310,7 +307,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
               onRefresh: _handleRefresh,
-              child: _responseWaterMeterUnit.data!=null?_isRefresh == false?_smartWaterMeterLogList.isNotEmpty?_listView() :
+              child: widget._userModel.meterNo!=null?_isRefresh == false?_smartWaterMeterLogList.isNotEmpty?_listView() :
                   ListView(children: <Widget>[_header()],) :
               Container(
                 margin: EdgeInsets.only(top: 10.0),

@@ -170,7 +170,7 @@ class MyString{
   static const String txt_referral_wrong_app = "အပရီကေရှင်း မှားယွင်းနေပါသည်";
   static const String title_calculate_tax = "အခွန်အမျိုးအစား ရွေးပါ";
   static const String txt_property_tax = "ပစ္စည်းခွန်";
-  static const String title_property_tax_calculate = "ပစ္စည်းခွန် အခွန်ငွေတွက်ချက်ရန်အတွက်";
+  static const String title_property_tax_calculate = "ပစ္စည်းခွန် တွက်ချက်ရန်အတွက်";
   static const String title_biz_tax_calculate = "လုပ်ငန်းလိုင်စင်ခွန် တွက်ချက်ရန်အတွက်";
   static const String txt_biz_tax = "လုပ်ငန်းလိုင်စင်ခွန်";
   static const String txt_building_type = "အဆောက်အဦးအမျိုးအစား";
@@ -243,6 +243,7 @@ class MyString{
   static const String txt_title_dashboard = "ကဏ္ဍများ";
   static const String txt_title_notification = "အသိပေးနှိုးဆော်ချက်";
   static const String txt_login = "ဝင်မည်";
+  static const String txt_top_up_record = 'ငွေဖြည့်မှတ်တမ်း';
 
 
   static const String BUILDING_GRADE_A = "building grade A";
