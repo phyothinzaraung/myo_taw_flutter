@@ -1,10 +1,9 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/helper/NumberFormatterHelper.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserBillAmountViewModel.dart';
-import 'package:dio/dio.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:async_loader/async_loader.dart';
 import 'helper/ServiceHelper.dart';
@@ -15,6 +14,7 @@ import 'model/UserModel.dart';
 import 'TopUpRecordListScreen.dart';
 import 'PinCodeSetUpScreen.dart';
 import 'PaymentScreen.dart';
+import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 
 class OnlineTaxScreen extends StatefulWidget {
   @override
@@ -106,7 +106,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
   }
 
   _navigateToTopUpScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpScreen(_userModel)));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpRecordListScreen(_userModel)));
     if(result != null && result.containsKey('isNeedRefresh') == true){
       _handleRefresh();
     }
@@ -181,7 +181,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                           Container(
                             margin: EdgeInsets.only(right: 10),
                               child: Image.asset('images/money.png', width: 35, height: 35,)),
-                          Text(NumConvertHelper().getMyanNumInt(_amount)+' '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeLarge, color: Colors.white),),
+                          Text(NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_amount.toString())) +' '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeLarge, color: Colors.white),),
                         ],
                       ),
                     ),
@@ -260,7 +260,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                             Row(
                               children: <Widget>[
                                 Expanded(child: Text(MyString.txt_tax_bill_amount, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                Expanded(child: Text(NumConvertHelper().getMyanNumInt(_paymentLogList[index].useAmount)+'  '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
+                                Expanded(child: Text(NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_paymentLogList[index].useAmount.toString()))+'  '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
                               ],
                             )
                           ],

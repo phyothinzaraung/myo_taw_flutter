@@ -85,7 +85,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                       decoration: BoxDecoration(
                           color: Colors.black.withOpacity(0.6)
                       ),
-                      child: Text('${NumConvertHelper().getMyanNumInt(index)}${'.'} ${_title}  ',
+                      child: Text('${NumConvertHelper.getMyanNumInt(index)}${'.'} ${_title}  ',
                         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),)),
                 ],
               ),));

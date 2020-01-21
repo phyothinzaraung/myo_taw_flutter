@@ -26,10 +26,10 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
     // TODO: implement initState
     super.initState();
     _bizLicenseTypeList = [_dropDownBizLicenseType];
-    _bizLicenseTypeList.addAll(MyArray.biz_tgy_license);
+    _bizLicenseTypeList.addAll(MyStringList.biz_tgy_license);
     _bizList = [_dropDownBizType];
     _gradeList = [_dropDownBizType];
-    _gradeList.addAll(MyArray.biz_tgy_grade);
+    _gradeList.addAll(MyStringList.biz_tgy_grade);
   }
 
   _getBizByLicenseType(){
@@ -37,25 +37,25 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
       case 'စားသောက်ဆိုင်လုပ်ငန်းလိုင်စင်':
         setState(() {
           _bizList = [_dropDownBizType];
-          _bizList.addAll(MyArray.biz_tgy_food);
+          _bizList.addAll(MyStringList.biz_tgy_food);
         });
         break;
       case 'ဘေးအန္တရာယ်လုပ်ငန်းလိုင်စင်':
         setState(() {
           _bizList = [_dropDownBizType];
-          _bizList.addAll(MyArray.biz_tgy_danger);
+          _bizList.addAll(MyStringList.biz_tgy_danger);
         });
         break;
       case 'ကိုယ်ပိုင်ဈေး၊ စတိုးဆိုင်လိုင်စင်':
         setState(() {
           _bizList = [_dropDownBizType];
-          _bizList.addAll(MyArray.biz_tgy_store);
+          _bizList.addAll(MyStringList.biz_tgy_store);
         });
         break;
       case 'တည်းခိုခန်း/ဘော်ဒါဆောင်/မင်္ဂလာခန်းမလုပ်ငန်းလိုင်စင်':
         setState(() {
           _bizList = [_dropDownBizType];
-          _bizList.addAll(MyArray.biz_tgy_hotel);
+          _bizList.addAll(MyStringList.biz_tgy_hotel);
         });
         break;
     }
@@ -195,7 +195,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
         }
         break;
     }
-    return '${NumConvertHelper().getMyanNumString(_taxRange)}';
+    return '${NumConvertHelper.getMyanNumString(_taxRange)}';
   }
 
   _calculateTaxDialog(){
@@ -342,7 +342,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                               onChanged: (String value){
                                 setState(() {
                                   _dropDownBizType = value;
-                                  _dropDownBizType == MyArray.biz_tgy_hotel[0]? _isHotel = true : _isHotel = false;
+                                  _dropDownBizType == MyStringList.biz_tgy_hotel[0]? _isHotel = true : _isHotel = false;
                                 });
                               },
                               items: _bizList.map<DropdownMenuItem<String>>((String str){

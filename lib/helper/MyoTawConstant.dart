@@ -244,6 +244,9 @@ class MyString{
   static const String txt_title_notification = "အသိပေးနှိုးဆော်ချက်";
   static const String txt_login = "ဝင်မည်";
   static const String txt_top_up_record = 'ငွေဖြည့်မှတ်တမ်း';
+  static const String txt_top_up_amount = 'ငွေဖြည့်ကဒ်တန်ဖိုး';
+  static const String txt_top_up_amount_before = 'ငွေမဖြည့်ရသေးသည့်တန်ဖိုး';
+  static const String txt_top_up_amount_after = 'ငွေဖြည့်ပြီးတန်ဖိုး';
 
 
   static const String BUILDING_GRADE_A = "building grade A";
@@ -256,9 +259,34 @@ class MyString{
   static final String ADMIN_PH_2 = "+959794797489";
   static final String ADMIN_PH_3 = "+959975526335";
   static final String ADMIN_PH_4 = "+959254900916";
+
+  //contribution
+  static const String FIX_ROAD_CONTRIBUTE = "လမ်းပြင်၊ လမ်းပျက်";
+  static const String GARBAGE_CONTRIBUTE = "အမှိုက်";
+  static const String DRAINAGE_CONTRIBUTE = "ရေမြောင်း";
+  static const String FLOOD_CONTRIBUTE = "ရေကြီး၊ ရေလျှံ";
+  static const String ELECTRIC_CONTRIBUTE = "မီးကြိုး";
+  static const String ANIMAL_CONTRIBUTE = "တိရိစ္ဆာန်အရေး";
+  static const String WATER_DISTRIBUTION_CONTRIBUTE = "ရေပေးဝေရေး";
+  static const String PUBLIC_PLACE_CONTRIBUTE = "အများပိုင်နေရာ";
+  static const String TRAFFIC_CONTRIBUTE = "မော်တော်ယာဉ်ဆိုင်ရာ";
+  static const String CRIME_CONTRIBUTE = "မှုခင်း";
+  static const String OTHER_CONTRIBUTE = "အခြား";
+
+  static const String FIX_ROAD_ICON = "fix_road_nocircle";
+  static const String GARBAGE_ICON = "cleaning_nocircle";
+  static const String DRAINAGE_ICON = "city_drain_nocircle";
+  static const String FLOOD_ICON = "flood_nocircle";
+  static const String ELECTRIC_ICON = "electric_nocircle";
+  static const String ANIMAL_ICON = "animal_nocircle";
+  static const String WATER_DISTRIBUTION_ICON = "water_nocircle";
+  static const String PUBLIC_PLACE_ICON = "public_nocircle";
+  static const String TRAFFIC_ICON = "traffic_nocircle";
+  static const String CRIME_ICON = "criminal_nocircle";
+  static const String OTHER_ICON= "other_nocircle";
 }
 
-class MyArray{
+class MyStringList{
 
   //admin ward ph no
   static const List<String> adminPhno = ["+959425317337", "+959794797489", "+959975526335", "+959254900916"];

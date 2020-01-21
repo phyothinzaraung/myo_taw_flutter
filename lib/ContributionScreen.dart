@@ -40,7 +40,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
     // TODO: implement initState
     super.initState();
     _subjectList = [_dropDownSubject,];
-    _subjectList.addAll(MyArray.suggestion_subject);
+    _subjectList.addAll(MyStringList.suggestion_subject);
     _location.changeSettings(accuracy: LocationAccuracy.HIGH, interval: 3000, distanceFilter: 0);
     _location.serviceEnabled().then((isEnable){
       if(!isEnable){

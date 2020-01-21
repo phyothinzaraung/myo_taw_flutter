@@ -1,6 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/helper/NumberFormatterHelper.dart';
 import 'package:myotaw/model/SmartWaterMeterUnitModel.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
@@ -66,7 +67,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
   }
 
   _getSmartWaterMeterLog()async{
-    _responseWaterMeterLog = await ServiceHelper().getSmartWaterMeterLog(_sharepreferenceshelper.getUserPhoneNo());
+    _responseWaterMeterLog = await ServiceHelper().getSmartWaterMeterLog(widget._userModel.meterNo);
     _amount = _responseWaterMeterLog.data['Amount'];
     var list = _responseWaterMeterLog.data['Log'];
     for(var i in list){
@@ -93,7 +94,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
   }
 
   _navigateToTopUpScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpScreen(_userModel)));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpRecordListScreen(_userModel)));
     if(result != null && result.containsKey('isNeedRefresh') == true){
       _handleRefresh();
     }
@@ -161,7 +162,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
                           Container(
                             margin: EdgeInsets.only(right: 10),
                               child: Image.asset('images/money.png', width: 35, height: 35,)),
-                          Text(NumConvertHelper().getMyanNumInt(_amount)+' '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeLarge, color: Colors.white),),
+                          Text(NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_amount.toString()))+' '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeLarge, color: Colors.white),),
                         ],
                       ),
                     ),

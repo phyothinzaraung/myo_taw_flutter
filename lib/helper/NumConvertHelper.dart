@@ -3,7 +3,7 @@ Created by yeyint 31/7/2019*/
 
 class NumConvertHelper{
 
-   String getMyanNumInt(int num){
+   static String getMyanNumInt(int num){
     String str = num.toString();
     String myanNum = '';
     for(int i=0;i<str.length; i++){
@@ -27,6 +27,8 @@ class NumConvertHelper{
         myanNum += '၉';
       }else if(str[i] == '0'){
         myanNum += '၀';
+      }else if(str[i] == ','){
+        myanNum += ',';
       }else{
         myanNum += str[i];
       }
@@ -34,7 +36,7 @@ class NumConvertHelper{
     return myanNum;
   }
 
-   String getMyanNumString(String num){
+   static String getMyanNumString(String num){
     String str = num.toString();
     String myanNum = '';
     for(int i=0;i<str.length; i++){
@@ -58,6 +60,8 @@ class NumConvertHelper{
         myanNum += '၉';
       }else if(str[i] == '0'){
         myanNum += '၀';
+      }else if(str[i] == ','){
+        myanNum += ',';
       }else{
         myanNum += str[i];
       }
@@ -65,7 +69,7 @@ class NumConvertHelper{
     return myanNum;
   }
 
-   String getMyanNumDou(double num){
+   static String getMyanNumDou(double num){
     String str = num.toString();
     String myanNum = '';
     for(int i=0;i<str.length; i++){
@@ -91,6 +95,8 @@ class NumConvertHelper{
         myanNum += '၀';
       }else if(str[i] == '.'){
         myanNum += '.';
+      }else if(str[i] == ','){
+        myanNum += ',';
       }else{
         myanNum += str[i];
       }

@@ -337,7 +337,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           child: Row(
                             children: <Widget>[
                               Expanded(child: Text(MyString.txt_tax_amount, style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.white),)),
-                              Text(NumConvertHelper().getMyanNumInt(_taxAmount) +' '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.white),)
+                              Text(NumConvertHelper.getMyanNumInt(_taxAmount) +' '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.white),)
                             ],
                           )),
                       Container(

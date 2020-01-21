@@ -28,11 +28,11 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
     // TODO: implement initState
     super.initState();
     _buildingTypeList = [_dropDownBuildingType];
-    _buildingTypeList.addAll(MyArray.property_tgy_building_type);
+    _buildingTypeList.addAll(MyStringList.property_tgy_building_type);
     _roadList = [_dropDownRoad];
-    _roadList.addAll(MyArray.property_tgy_road);
+    _roadList.addAll(MyStringList.property_tgy_road);
     _blockNoList = [_dropDownRoad];
-    _blockNoList.addAll(MyArray.property_tgy_block_no);
+    _blockNoList.addAll(MyStringList.property_tgy_block_no);
   }
 
   _calculateTaxDialog(){
@@ -146,7 +146,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
     }
     print('rentalRate : ${rentalRate}');
 
-    return NumConvertHelper().getMyanNumInt((finalArv * 0.02 + finalArv * 0.02).round());
+    return NumConvertHelper.getMyanNumInt((finalArv * 0.02 + finalArv * 0.02).round());
   }
 
   String _buildingGrade(){

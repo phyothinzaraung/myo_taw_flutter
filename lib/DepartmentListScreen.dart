@@ -92,7 +92,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                         color: Colors.black.withOpacity(0.6)
                     ),
                     //text image title
-                    child: Text('${NumConvertHelper().getMyanNumInt(index)}${'.'} ${_daoViewModel.daoModel.title}  ',
+                    child: Text('${NumConvertHelper.getMyanNumInt(index)}${'.'} ${_daoViewModel.daoModel.title}  ',
                       style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),)),
               ],
             ),));

@@ -23,7 +23,7 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
     // TODO: implement initState
     super.initState();
     _buildingTypeList = [_dropDownBuildingType];
-    _buildingTypeList.addAll(MyArray.property_mlm_building);
+    _buildingTypeList.addAll(MyStringList.property_mlm_building);
     _storyList = [_dropDownStory];
   }
 
@@ -152,7 +152,7 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
         _taxRange1 = 10000;
         break;
     }
-    return '${NumConvertHelper().getMyanNumInt(_taxRange)} - ${NumConvertHelper().getMyanNumInt(_taxRange1)}';
+    return '${NumConvertHelper.getMyanNumInt(_taxRange)} - ${NumConvertHelper.getMyanNumInt(_taxRange1)}';
   }
 
   _calculateTaxDialog(){

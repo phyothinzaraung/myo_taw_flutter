@@ -23,7 +23,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
     // TODO: implement initState
     super.initState();
     _bizLicenseTypeList = [_dropDownBizLicenseType];
-    _bizLicenseTypeList.addAll(MyArray.biz_mlm_license);
+    _bizLicenseTypeList.addAll(MyStringList.biz_mlm_license);
     _bizList = [_dropDownBizType];
   }
 
@@ -32,19 +32,19 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
       case 'စားသောက်ဆိုင်လုပ်ငန်းလိုင်စင်':
         setState(() {
           _bizList = [_dropDownBizType];
-          _bizList.addAll(MyArray.biz_mlm_food);
+          _bizList.addAll(MyStringList.biz_mlm_food);
         });
         break;
       case 'ဘေးအန္တရာယ်လုပ်ငန်းလိုင်စင်':
         setState(() {
           _bizList = [_dropDownBizType];
-          _bizList.addAll(MyArray.biz_mlm_danger);
+          _bizList.addAll(MyStringList.biz_mlm_danger);
         });
         break;
       case 'ပုဂ္ဂလိကအိမ်ဆိုင်လုပ်ငန်းလိုင်စင်':
         setState(() {
           _bizList = [_dropDownBizType,];
-          _bizList.addAll(MyArray.biz_mlm_store);
+          _bizList.addAll(MyStringList.biz_mlm_store);
         });
         break;
     }
@@ -242,7 +242,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
         }
         break;
     }
-    return '${NumConvertHelper().getMyanNumString(_taxRange)}';
+    return '${NumConvertHelper.getMyanNumString(_taxRange)}';
   }
 
   _calculateTaxDialog(){

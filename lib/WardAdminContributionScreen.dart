@@ -44,7 +44,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     // TODO: implement initState
     super.initState();
     _subjectList = [_dropDownSubject,];
-    _subjectList.addAll(MyArray.suggestion_subject_admin_ward);
+    _subjectList.addAll(MyStringList.suggestion_subject_admin_ward);
     _location.changeSettings(accuracy: LocationAccuracy.HIGH, interval: 3000, distanceFilter: 0);
     _location.serviceEnabled().then((isEnable){
       if(!isEnable){

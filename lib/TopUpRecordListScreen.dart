@@ -1,31 +1,34 @@
+import 'package:async_loader/async_loader.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
+import 'package:myotaw/helper/NumConvertHelper.dart';
+import 'package:myotaw/helper/NumberFormatterHelper.dart';
+import 'package:myotaw/model/TopUpLogModel.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:dio/dio.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'helper/ServiceHelper.dart';
+import 'myWidget/EmptyViewWidget.dart';
+import 'myWidget/NoConnectionWidget.dart';
 
-class TopUpScreen extends StatefulWidget {
+class TopUpRecordListScreen extends StatefulWidget {
   UserModel model;
-  TopUpScreen(this.model);
+  TopUpRecordListScreen(this.model);
   @override
-  _TopUpScreenState createState() => _TopUpScreenState(this.model);
+  _TopUpRecordListScreenState createState() => _TopUpRecordListScreenState(this.model);
 }
 
-class _TopUpScreenState extends State<TopUpScreen> {
+class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
   UserModel _userModel;
   TextEditingController _prepaidCodeController = TextEditingController();
   TextEditingController _pinCodeController = TextEditingController();
   bool _isLoading = false;
   bool _hasError = false;
   bool _isCon = false;
-  var _response;
   GlobalKey<ScaffoldState> _scaffoldState = GlobalKey<ScaffoldState>();
-  _TopUpScreenState(this._userModel);
+  final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
+  List<TopUpLogModel> _topUpLogModelList = List();
+
+  _TopUpRecordListScreenState(this._userModel);
 
   @override
   void initState() {
@@ -33,10 +36,72 @@ class _TopUpScreenState extends State<TopUpScreen> {
     super.initState();
   }
 
-  _callWebService() async{
-    setState(() {
-      _isLoading = true;
-    });
+  _getTopUpList()async{
+    var _response = await ServiceHelper().getTopUpLogList(_userModel.meterNo);
+    if(_response.data != null && _response.data.length > 0){
+      for(var i in _response.data){
+        _topUpLogModelList.add(TopUpLogModel.fromJson(i));
+      }
+    }
+  }
+
+  _listView(){
+    return ListView.builder(
+        itemCount: _topUpLogModelList.length,
+        itemBuilder: (context, index){
+          return Card(
+            margin: EdgeInsets.only(top: 15, right: 15, left: 15),
+            child: Padding(
+              padding: EdgeInsets.all(15),
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  Flexible(
+                    flex: 1,
+                    child: Container(
+                        margin: EdgeInsets.only(right: 10),
+                        child: Image.asset('images/payment_history.png', width: 35, height: 35,)),
+                  ),
+                  Flexible(
+                    flex: 4,
+                    child: Column(
+                      children: <Widget>[
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                                child: Text(MyString.txt_top_up_amount, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),)),
+                            Text('${NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_topUpLogModelList[index].amount.toString()))} ${MyString.txt_kyat}',
+                                style: TextStyle(fontSize: FontSize.textSizeNormal))
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                                child: Text(MyString.txt_top_up_amount_before, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),)),
+                            Text('${NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_topUpLogModelList[index].leftAmount.toString()))} ${MyString.txt_kyat}',
+                                style: TextStyle(fontSize: FontSize.textSizeNormal))
+                          ],
+                        ),
+                        Row(
+                          children: <Widget>[
+                            Expanded(
+                                child: Text(MyString.txt_top_up_amount_after, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),)),
+                            Text('${NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_topUpLogModelList[index].totalAmount.toString()))} ${MyString.txt_kyat}',
+                                style: TextStyle(fontSize: FontSize.textSizeNormal))
+                          ],
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              ),
+            ),
+          );
+        }
+    );
+  }
+
+  /*_callWebService() async{
     _response = await ServiceHelper().getTopUp(_prepaidCodeController.text, _userModel.uniqueKey);
     if(_response.data == 'Success'){
       Navigator.of(context).pop({'isNeedRefresh' : true});
@@ -45,30 +110,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
     }else{
       WarningSnackBar(_scaffoldState, MyString.txt_top_up_already);
     }
-
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  Widget modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  }*/
 
   _checkCon()async{
     var conResult = await(Connectivity().checkConnectivity());
@@ -79,7 +121,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
     }
   }
 
-  _dialogConfirm(){
+  /*_dialogConfirm(){
     return showDialog(context: context, builder: (context){
       return WillPopScope(
           child: SimpleDialog(
@@ -121,16 +163,48 @@ class _TopUpScreenState extends State<TopUpScreen> {
               )
             ],), onWillPop: (){});
     }, barrierDismissible: false);
+  }*/
+
+  Widget _renderLoad(){
+    return Container(
+      margin: EdgeInsets.only(top: 10.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
+        ],
+      ),
+    );
+  }
+
+  Future<Null> _handleRefresh() async {
+    _topUpLogModelList.clear();
+    asyncLoaderState.currentState.reloadState();
+    return null;
   }
 
   @override
   Widget build(BuildContext context) {
+
+    var _asyncLoader = new AsyncLoader(
+        key: asyncLoaderState,
+        initState: () async => await _getTopUpList(),
+        renderLoad: () => _renderLoad(),
+        renderError: ([error]) => noConnectionWidget(asyncLoaderState),
+        renderSuccess: ({data}) => Container(
+          child: RefreshIndicator(
+            onRefresh: _handleRefresh,
+            child: _topUpLogModelList.isNotEmpty?_listView() : emptyView(asyncLoaderState,MyString.txt_no_data),
+          ),
+        )
+    );
     return Scaffold(
       key: _scaffoldState,
       appBar: AppBar(
         title: Text(MyString.txt_top_up_record, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
-      body: ModalProgressHUD(
+      body: _asyncLoader,
+      /*body: ModalProgressHUD(
         inAsyncCall: _isLoading,
         progressIndicator: modalProgressIndicator(),
         child: ListView(
@@ -289,7 +363,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
             )
           ],
         ),
-      ),
+      ),*/
     );
   }
 }

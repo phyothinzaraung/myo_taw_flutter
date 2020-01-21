@@ -203,6 +203,46 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
     });
   }
 
+  String _contributionIconType(String type){
+    String icon = '';
+    switch(type){
+      case MyString.FIX_ROAD_CONTRIBUTE:
+        icon = MyString.FIX_ROAD_ICON;
+          break;
+      case MyString.GARBAGE_CONTRIBUTE:
+        icon = MyString.GARBAGE_ICON;
+        break;
+      case MyString.DRAINAGE_CONTRIBUTE:
+        icon = MyString.DRAINAGE_ICON;
+        break;
+      case MyString.FLOOD_CONTRIBUTE:
+        icon = MyString.FLOOD_ICON;
+        break;
+      case MyString.ELECTRIC_CONTRIBUTE:
+        icon = MyString.ELECTRIC_ICON;
+        break;
+      case MyString.ANIMAL_CONTRIBUTE:
+        icon = MyString.ANIMAL_ICON;
+        break;
+      case MyString.WATER_DISTRIBUTION_CONTRIBUTE:
+        icon = MyString.WATER_DISTRIBUTION_ICON;
+        break;
+      case MyString.PUBLIC_PLACE_CONTRIBUTE:
+        icon = MyString.PUBLIC_PLACE_ICON;
+        break;
+      case MyString.TRAFFIC_CONTRIBUTE:
+        icon = MyString.TRAFFIC_ICON;
+        break;
+      case MyString.CRIME_CONTRIBUTE:
+        icon = MyString.CRIME_ICON;
+        break;
+      case MyString.OTHER_CONTRIBUTE:
+        icon = MyString.OTHER_ICON;
+        break;
+    }
+    return icon;
+  }
+
   Widget _contributionListWidget(int i){
     return Card(
       margin: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 10.0),
@@ -228,7 +268,6 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                               child: Image.asset("images/calendar.png", width: 15, height: 15,)),
                           //calendar date
                           Expanded(child: Text(showDateTimeDifference(_contributionModelList[i].accesstime), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
-                          Image.asset('images/suggestion_no_circle.png', width: 25, height: 25,)
                         ],
                       ),
                     ),
@@ -237,9 +276,12 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                       margin: EdgeInsets.only(bottom: 5.0),
                       child: Row(mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
+                          Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: Image.asset('images/${_contributionIconType(_contributionModelList[i].subject)}.png', width: 30, height: 30,)),
                           //title
-                          Expanded(child: Text(_contributionModelList[i].subject!=null?_contributionModelList[i].subject:'---',
-                            style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack), maxLines: 1, overflow: TextOverflow.ellipsis,))
+                          Text(_contributionModelList[i].subject!=null?_contributionModelList[i].subject:'---',
+                            style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack), maxLines: 1, overflow: TextOverflow.ellipsis,)
                         ],),
                     ),
                     Container(

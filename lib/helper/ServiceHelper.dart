@@ -285,6 +285,14 @@ class ServiceHelper{
   return response;
  }
 
+ getTopUpLogList<Response>(String meterNo) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Payment/GetTopUpLogByMyoTawApp",
+      queryParameters: {"MeterNo": meterNo});
+  return response;
+ }
+
 }
 
 
