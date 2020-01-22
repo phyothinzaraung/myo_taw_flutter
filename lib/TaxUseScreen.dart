@@ -59,6 +59,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
           _taxUserModelList.add(TaxUserModel.fromJson(i));
         });
         dataMap.putIfAbsent(TaxUserModel.fromJson(i).taxTitle, () => TaxUserModel.fromJson(i).amount);
+        print(i);
       }
       for(int i=0; i<_taxUserModelList.length; i++){
         _legnedList.add(Container(
@@ -189,6 +190,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
                               _taxUserModelList.clear();
                               _legnedList.clear();
                               _image = 'images/arrow_green.png';
+                              dataMap.clear();
                             });
                             //await _getTaxUse(_year);
                             asyncLoaderState.currentState.reloadState();
@@ -209,6 +211,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
                             _year++;
                             _taxUserModelList.clear();
                             _legnedList.clear();
+                            dataMap.clear();
                           });
                           //await _getTaxUse(_year);
                           asyncLoaderState.currentState.reloadState();
