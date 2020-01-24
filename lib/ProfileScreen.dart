@@ -247,7 +247,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   children: <Widget>[
                     Container(margin: EdgeInsets.only(bottom: 5.0),
                         child: Text(taxRecordModel.subject,style: TextStyle(fontSize: FontSize.textSizeNormal,color: MyColor.colorTextBlack),overflow: TextOverflow.ellipsis,maxLines: 1,)),
-                    Text(showDateTimeDifference(taxRecordModel.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)
+                    Text(ShowDateTimeHelper().showDateTimeDifference(taxRecordModel.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)
                   ],
                 ),
               ),

@@ -23,7 +23,7 @@ class ContributionScreen extends StatefulWidget {
 class _ContributionScreenState extends State<ContributionScreen> {
   List<String> _subjectList = new List<String>();
   String _dropDownSubject = MyString.txt_choose_subject;
-  String _lat, _lng;
+  double _lat, _lng;
   bool _isCon, _isLoading;
   File _image;
   var _location = new Location();
@@ -47,8 +47,8 @@ class _ContributionScreenState extends State<ContributionScreen> {
         _location.requestService().then((value){
           if(value){
             _streamSubscription = _location.onLocationChanged().listen((currentLocation){
-              _lat = currentLocation.latitude.toString();
-              _lng = currentLocation.longitude.toString();
+              _lat = currentLocation.latitude;
+              _lng = currentLocation.longitude;
             });
           }else{
             Navigator.of(context).pop();
@@ -56,8 +56,8 @@ class _ContributionScreenState extends State<ContributionScreen> {
         });
       }else{
         _streamSubscription = _location.onLocationChanged().listen((currentLocation){
-          _lat = currentLocation.latitude.toString();
-          _lng = currentLocation.longitude.toString();
+          _lat = currentLocation.latitude;
+          _lng = currentLocation.longitude;
         });
       }
     });
@@ -199,7 +199,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           Container(
-                            height: 45.0,
+                            height: 50,
                             margin: EdgeInsets.only(bottom: 10.0),
                             child: RaisedButton(onPressed: (){
                               camera();
@@ -211,7 +211,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
                                     child: Image.asset('images/camera.png', width: 25.0, height: 25.0,)),
                                 Text(MyString.txt_upload_photo_camera, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
                               ],
-                            ),color: Colors.white,elevation: 1.0,
+                            ),color: Colors.white,elevation: 5.0,
                               shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
                           ),
                           Container(
@@ -275,7 +275,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
                               await _checkCon();
                               //await _getLatLng();
                               if(_isCon){
-                                if(_messController.text.isNotEmpty && _image != null && _dropDownSubject != MyString.txt_choose_subject && _lat != null && _lng != null){
+                                if(_messController.text.isNotEmpty && _image != null && _dropDownSubject != MyString.txt_choose_subject){
                                   setState(() {
                                     _isLoading = true;
                                   });
@@ -283,12 +283,12 @@ class _ContributionScreenState extends State<ContributionScreen> {
                                   print('latlng: ${_lat} ${_lng}');
                                 }else if(_image == null){
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
+
                                 }else if(_dropDownSubject == MyString.txt_choose_subject){
                                   WarningSnackBar(_globalKey, MyString.txt_need_subject);
+
                                 }else if(_messController.text.isEmpty == null){
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion);
-                                }else if(_lat == null && _lng == null){
-                                  WarningSnackBar(_globalKey, MyString.txt_need_suggestion_location);
                                 }
                               }else{
                                 WarningSnackBar(_globalKey, MyString.txt_no_internet);

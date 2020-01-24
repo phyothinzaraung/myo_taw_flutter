@@ -63,7 +63,7 @@ class _SaveNewsFeedDetailScreenState extends State<SaveNewsFeedDetailScreen> {
                             Expanded(
                                 child: Container(
                                     margin: EdgeInsets.only(left: 10.0),
-                                    child: Text(showDateTimeDifference(_saveNewsFeedModel.accessTime), style: TextStyle(color: MyColor.colorTextGrey, fontSize: FontSize.textSizeSmall),)))
+                                    child: Text(ShowDateTimeHelper().showDateTimeDifference(_saveNewsFeedModel.accessTime), style: TextStyle(color: MyColor.colorTextGrey, fontSize: FontSize.textSizeSmall),)))
                           ],
                         ),
                       ),

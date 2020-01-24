@@ -9,6 +9,7 @@ class ContributionModel {
   String _latitude;
   String _longitude;
   String _source;
+  double _floodLevel;
   String _regionCode;
   bool _isRead;
   bool _fixed;
@@ -28,6 +29,7 @@ class ContributionModel {
         String latitude,
         String longitude,
         String source,
+        double floodLevel,
         String regionCode,
         bool isRead,
         bool fixed,
@@ -45,6 +47,7 @@ class ContributionModel {
     this._latitude = latitude;
     this._longitude = longitude;
     this._source = source;
+    this._floodLevel = floodLevel;
     this._regionCode = regionCode;
     this._isRead = isRead;
     this._fixed = fixed;
@@ -74,6 +77,8 @@ class ContributionModel {
   set longitude(String longitude) => _longitude = longitude;
   String get source => _source;
   set source(String source) => _source = source;
+  double get floodLevel => _floodLevel;
+  set floodLevel(double floodLevel) => _floodLevel = floodLevel;
   String get regionCode => _regionCode;
   set regionCode(String regionCode) => _regionCode = regionCode;
   bool get isRead => _isRead;
@@ -100,6 +105,7 @@ class ContributionModel {
     _latitude = json['Latitude'];
     _longitude = json['Longitude'];
     _source = json['Source'];
+    _floodLevel = json['FloodLevel'];
     _regionCode = json['RegionCode'];
     _isRead = json['IsRead'];
     _fixed = json['Fixed'];
@@ -121,6 +127,7 @@ class ContributionModel {
     data['Latitude'] = this._latitude;
     data['Longitude'] = this._longitude;
     data['Source'] = this._source;
+    data['FloodLevel'] = this._floodLevel;
     data['RegionCode'] = this._regionCode;
     data['IsRead'] = this._isRead;
     data['Fixed'] = this._fixed;

@@ -111,7 +111,7 @@ class ServiceHelper{
  }
 
  sendSuggestion<Response>(String file, String phoneNo, String subject, String message,
-     String uniqueKey, String userName, String lat, String lng, String regionCode, bool isAdmin, String wardName, double floodLevel) async{
+     String uniqueKey, String userName, double lat, double lng, String regionCode, bool isAdmin, String wardName, double floodLevel) async{
   FormData formData = new FormData.fromMap({
    'file' : await MultipartFile.fromFile(file,filename: subject),
    'UserPhoneNo' : phoneNo,
@@ -290,6 +290,14 @@ class ServiceHelper{
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Payment/GetTopUpLogByMyoTawApp",
       queryParameters: {"MeterNo": meterNo});
+  return response;
+ }
+
+ getFloodLevelReportList<Response>(String regionCode, String uniqueKey) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Contribute/GetFloodListByUser",
+      queryParameters: {"RegionCode": regionCode, "UniqueKey": uniqueKey});
   return response;
  }
 

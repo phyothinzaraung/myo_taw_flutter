@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/PhotoDetailScreen.dart';
+import 'package:myotaw/helper/FloodLevelFtInHelper.dart';
 import 'package:myotaw/model/ContributionModel.dart';
 
 import 'helper/MyoTawConstant.dart';
@@ -45,14 +46,19 @@ class WardAdminContributionDetailScreen extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: <Widget>[
-                Container(
+                _contributionModel.floodLevel==0?Container(
                     margin: EdgeInsets.only(bottom: 10),
                     child: Text(MyString.txt_contribute_fact,
-                      style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack),)),
-                Container(
+                      style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack),)) : Container(),
+                _contributionModel.floodLevel==0?Container(
                     margin: EdgeInsets.only(left: 20),
                     child: Text(_contributionModel.message,
-                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),))
+                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),)) : Container(),
+                _contributionModel.floodLevel!=0?Container(
+                    margin: EdgeInsets.only(left: 20),
+                    child: Text(MyString.txt_flood_level_inch+FloodLevelFtInHelper().getFtInFromWaterLevel(_contributionModel.floodLevel),
+                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),)) : Container(),
+
               ],
             ),
           )

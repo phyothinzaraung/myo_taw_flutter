@@ -237,8 +237,8 @@ class MyString{
   static const String txt_to_contribute = "အကြုံပြုမည်";
   static const String txt_contribute_fact = "အကြုံပြုချက်";
   static const String txt_send_contribution = "အကြုံပြုစာပို့မည်";
-  static const String txt_admin_user = "Ward Admin ၏ ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
-  static const String txt_myotaw_user = "မြို့တော်အသုံးပြုသူကဏ္ဍ";
+  static const String txt_ward_admin_feature = "Ward Admin ၏ ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
+  static const String txt_myotaw_feature = "မြို့တော်အပ်ပလီကေရှင်းကဏ္ဍ";
   static const String txt_choose_feature = "ကဏ္ဍရွေးချယ်ပေးပါ";
   static const String txt_title_dashboard = "ကဏ္ဍများ";
   static const String txt_title_notification = "အသိပေးနှိုးဆော်ချက်";
@@ -247,6 +247,17 @@ class MyString{
   static const String txt_top_up_amount = 'ငွေဖြည့်ကဒ်တန်ဖိုး';
   static const String txt_top_up_amount_before = 'ငွေမဖြည့်ရသေးသည့်တန်ဖိုး';
   static const String txt_top_up_amount_after = 'ငွေဖြည့်ပြီးတန်ဖိုး';
+  static const String txt_flood_level = 'ရေကြီးခြင်းမှတ်တမ်း';
+  static const String txt_flood_level_inch = 'ရေကြီးခြင်းအတိုင်းအတာအမြင့်';
+  static const String txt_add_flood_level_record = 'မှတ်တမ်းတင်မည်';
+  static const String txt_flood_level_height = 'ရေကြီးခြင်းအတိုင်းအတာ';
+  static const String txt_get_flood_level= 'အတိုင်းအတာယူမည်';
+  static const String txt_inch = 'လက်မ';
+  static const String txt_feet = 'ပေ';
+  static const String txt_flood_report_finish = 'မှတ်တမ်းမှုအောင်မြင်သည်။';
+  static const String txt_need_flood_level = 'ရေကြီးခြင်းအတိုင်းအတာလိုအပ်သည်။';
+  static const String txt_flood_level_no_record = 'မှတ်တမ်းမရှိပါ။';
+
 
 
   static const String BUILDING_GRADE_A = "building grade A";
@@ -287,9 +298,6 @@ class MyString{
 }
 
 class MyStringList{
-
-  //admin ward ph no
-  static const List<String> adminPhno = ["+959425317337", "+959794797489", "+959975526335", "+959254900916"];
 
   //Tgy
   static const List<String> biz_tgy_food = [

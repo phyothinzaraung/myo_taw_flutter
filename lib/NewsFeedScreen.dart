@@ -219,7 +219,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     String newsFeedThumbNail = newsFeedModel.thumbNail;
     String title = newsFeedModel.title;
     String body = newsFeedModel.body;
-    String date = showDateTimeDifference(newsFeedModel.accesstime);
+    String date = ShowDateTimeHelper().showDateTimeDifference(newsFeedModel.accesstime);
     bool isPhoto = _isPhoto(newsFeedModel.uploadType);
 
     return Card(
@@ -234,6 +234,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               },
               child: Container(
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
                       padding: EdgeInsets.only(left: 10, right: 10, top: 20),
@@ -277,7 +278,9 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                             },
                             placeholder: (context, url) => Center(child: Container(
                               child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 150.0,)),
-                            errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
+                            errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg', width: double.maxFinite,
+                              height: 180, fit: BoxFit.cover,
+                            ),
                           ),
                         ],
                       ),
@@ -516,7 +519,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     );
     return Scaffold(
       key: _globalKey,
-      body: SafeArea(child: _asyncLoader),
+      body: _asyncLoader,
       floatingActionButton: _floatActionButton()
     );
   }

@@ -52,6 +52,7 @@ dependencies:
   flutter_spinkit: ^4.1.1+1
   photo_view: ^0.9.1
   flutter_money_formatter: ^0.8.3
+  flutter_xlider: ^3.0.1
 
 
 dev_dependencies:
@@ -162,6 +163,12 @@ flutter:
     - images/public_nocircle.png
     - images/traffic_nocircle.png
     - images/water_nocircle.png
+    - images/flood_report.png
+    - images/flood.png
+    - images/plus.png
+    - images/flood_level.png
+    - images/myotaw_man.png
+    - images/newsfeed_grey.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

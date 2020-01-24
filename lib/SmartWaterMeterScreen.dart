@@ -244,7 +244,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
                             Row(
                               children: <Widget>[
                                 Expanded(child: Text(MyString.txt_smart_wm_date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                Expanded(child: Text(showDateTimeFromServer(_smartWaterMeterLogList[index].date), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
+                                Expanded(child: Text(ShowDateTimeHelper().showDateTimeFromServer(_smartWaterMeterLogList[index].date), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
                               ],
                             ),
                             Row(

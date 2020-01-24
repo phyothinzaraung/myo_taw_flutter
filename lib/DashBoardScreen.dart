@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/FloodReportListScreen.dart';
 import 'package:myotaw/WardAdminContributionScreen.dart';
 import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -119,7 +120,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     model11.image = 'images/referral.png';
     model11.title = MyString.txt_referral;
 
-    _dashBoardModelList = [model1,model2,model3,model4,model5,model6,model7,model8,model9,model10];
+    DashBoardModel model12 = new DashBoardModel();
+    model12.image = 'images/flood_report.png';
+    model12.title = MyString.txt_flood_level;
+
+    _dashBoardModelList = [model1,model2,model3, model12, model4,model5,model6,model7,model8,model9,model10];
 
     for(var i in _dashBoardModelList){
         _widget.add(GestureDetector(
@@ -160,6 +165,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               break;
             case MyString.txt_referral:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => ReferralScreen(_userModel)));
+              break;
+            case MyString.txt_flood_level:
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => FloodReportListScreen()));
               break;
             default:
           }
@@ -209,7 +217,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                   },childCount: _widget.length),
                   gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                       maxCrossAxisExtent: 200.0,
-                      crossAxisSpacing: 50.0,
+                      crossAxisSpacing: 30.0,
                       mainAxisSpacing: 10))
             ],
           )

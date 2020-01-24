@@ -139,7 +139,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                     ),
                     //camera
                     Container(
-                      height: 45.0,
+                      height: 50,
                       margin: EdgeInsets.only(bottom: 15.0),
                       child: RaisedButton(onPressed: (){
                         camera();
@@ -151,12 +151,12 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                               child: Image.asset('images/camera.png', width: 25.0, height: 25.0,)),
                           Text(MyString.txt_upload_photo_camera, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
                         ],
-                      ),color: Colors.white,elevation: 1.0,
+                      ),color: Colors.white,elevation: 5.0,
                         shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
                     ),
                     //gallery
                     Container(
-                      height: 45.0,
+                      height: 50,
                       child: RaisedButton(onPressed: (){
                         gallery();
                         },child: Row(
@@ -167,7 +167,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                               child: Image.asset('images/gallery.png', width: 25.0, height: 25.0,)),
                           Text(MyString.txt_upload_photo_gallery, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
                         ],
-                      ),color: Colors.white,elevation: 1.0,
+                      ),color: Colors.white,elevation: 5.0,
                         shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
                     )
                   ],
@@ -190,16 +190,11 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                     });
                     _uploadTaxRecord();
                   } else if(_recordNameController.text == ''){
-                    /*Fluttertoast.showToast(msg: 'Please fill record name', backgroundColor: Colors.black.withOpacity(0.7),
-                        fontSize: FontSize.textSizeNormal);*/
                     WarningSnackBar(_globalKey, MyString.txt_need_tax_record_name);
                   }else{
-                    /*Fluttertoast.showToast(msg: 'Choose Photo Form camera or gallery', backgroundColor: Colors.black.withOpacity(0.7),
-                        fontSize: FontSize.textSizeNormal);*/
                     WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
                   }
                 }else{
-                  //Fluttertoast.showToast(msg: 'No internet connection', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                   WarningSnackBar(_globalKey, MyString.txt_no_internet);
                 }
 

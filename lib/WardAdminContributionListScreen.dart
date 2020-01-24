@@ -245,7 +245,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
 
   Widget _contributionListWidget(int i){
     return Card(
-      margin: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 10.0),
+      margin: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 20.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
       child: Container(
         child: Column(
@@ -267,7 +267,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                               margin: EdgeInsets.only(right: 10),
                               child: Image.asset("images/calendar.png", width: 15, height: 15,)),
                           //calendar date
-                          Expanded(child: Text(showDateTimeDifference(_contributionModelList[i].accesstime), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
+                          Expanded(child: Text(ShowDateTimeHelper().showDateTimeDifference(_contributionModelList[i].accesstime), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
                         ],
                       ),
                     ),
@@ -291,32 +291,35 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                           //contribute image
                           Hero(
                             tag: _contributionModelList[i].photoUrl,
-                            child: CachedNetworkImage(
-                              imageUrl: BaseUrl.CONTRIBUTE_PHOTO_URL+_contributionModelList[i].photoUrl,
-                              imageBuilder: (context, image){
-                                return Container(
-                                  width: double.maxFinite,
-                                  height: 180.0,
-                                  decoration: BoxDecoration(
-                                    image: DecorationImage(
-                                        image: image,
-                                        fit: BoxFit.cover),
-                                  ),);
-                              },
-                              placeholder: (context, url) => Center(child: Container(
-                                child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 150.0,)),
-                              errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(7), bottomRight: Radius.circular(7)),
+                              child: CachedNetworkImage(
+                                imageUrl: BaseUrl.CONTRIBUTE_PHOTO_URL+_contributionModelList[i].photoUrl,
+                                imageBuilder: (context, image){
+                                  return Container(
+                                    width: double.maxFinite,
+                                    height: 180.0,
+                                    decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          image: image,
+                                          fit: BoxFit.cover),
+                                    ),);
+                                },
+                                placeholder: (context, url) => Center(child: Container(
+                                  child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 150.0,)),
+                                errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
+                              ),
                             ),
                           ),
                         ],
                       ),
                     ),
-                    Container(
+                    /*Container(
                       padding: EdgeInsets.all(20),
                       //contribute body
                       child: Text(_contributionModelList[i].message, maxLines: 2, overflow: TextOverflow.ellipsis,
                         style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
-                    ),
+                    ),*/
                   ],
                 ),
               ),
