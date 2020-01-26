@@ -76,9 +76,12 @@ class _OtpScreenState extends State<OtpScreen> {
         await _userDb.insert(_userModel);
         await _userDb.closeUserDb();
         if(_userModel.isWardAdmin==1){
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WardAdminFeatureChooseScreen()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WardAdminFeatureChooseScreen(),
+            settings: RouteSettings(name: 'WardAdminFeatureChoose Screen')
+          ));
         }else{
-          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen()));
+          Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(),
+          ));
         }
 
       }else{

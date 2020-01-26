@@ -44,7 +44,9 @@ class _LoginScreenState extends State<LoginScreen> {
     var result = response.data;
     if(result != null){
       if(result['code'] == '002'){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
+        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode),
+          settings: RouteSettings(name: 'Otp Screen')
+        ));
       }
     }else{
       WarningSnackBar(_globalKey, MyString.txt_try_again);

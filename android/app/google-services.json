@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "431280028308",
+    "firebase_url": "https://myotaw-flutter.firebaseio.com",
+    "project_id": "myotaw-flutter",
+    "storage_bucket": "myotaw-flutter.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:431280028308:android:ac2f0cb560ec26a7325281",
+        "android_client_info": {
+          "package_name": "com.koekoetech.myotaw"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "431280028308-nsfertdtgvoemcpvcb7834ahnlnv96s9.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.koekoetech.myotaw",
+            "certificate_hash": "31abee7066b72359a209063395cf496ab1688934"
+          }
+        },
+        {
+          "client_id": "431280028308-8etvsoe8n7h4mcp5nq99sp3uopstmt2p.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCeJZW4hGB3dda1AEP6yq36UGzNpoVXIw8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "431280028308-8etvsoe8n7h4mcp5nq99sp3uopstmt2p.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

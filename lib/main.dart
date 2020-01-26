@@ -1,3 +1,5 @@
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:myotaw/LoginScreen.dart';
@@ -25,8 +27,13 @@ void main() {
   }  catch (e) {
     print(e);
   }
+  FirebaseAnalytics fireBaseAnalytics = FirebaseAnalytics();
+  FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: fireBaseAnalytics);
   runApp(MaterialApp(
     home: SplashScreen(),
+    navigatorObservers: [
+      observer
+    ],
     theme: ThemeData(
       appBarTheme: AppBarTheme(
           color: MyColor.colorPrimary,

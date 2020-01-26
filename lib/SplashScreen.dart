@@ -91,7 +91,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       Future.delayed(Duration(seconds: 2), (){
         Navigator.pushReplacement(context, PageRouteBuilder(
             transitionDuration: Duration(milliseconds: 1000),
-            pageBuilder: (context,value,ani) => LoginScreen()
+            pageBuilder: (context,value,ani) => LoginScreen(), settings: RouteSettings(name: 'Login screen')
         ));
       });
     }
