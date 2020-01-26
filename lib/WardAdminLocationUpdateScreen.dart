@@ -5,12 +5,12 @@ import 'package:location/location.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-class AdminLocationUpdateScreen extends StatefulWidget {
+class WardAdminLocationUpdateScreen extends StatefulWidget {
   @override
-  _AdminLocationUpdateScreenState createState() => _AdminLocationUpdateScreenState();
+  _WardAdminLocationUpdateScreenState createState() => _WardAdminLocationUpdateScreenState();
 }
 
-class _AdminLocationUpdateScreenState extends State<AdminLocationUpdateScreen> with TickerProviderStateMixin {
+class _WardAdminLocationUpdateScreenState extends State<WardAdminLocationUpdateScreen> with TickerProviderStateMixin {
   Completer<GoogleMapController> _controller = Completer();
   var _location = new Location();
   CameraPosition _cameraPosition;

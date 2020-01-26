@@ -510,3 +510,36 @@ class OrganizationId{
   static const int TGY_ORGANIZATION_ID = 8;
   static const int MLM_ORGANIZATION_ID = 9;
 }
+
+class ScreenName{
+  //static const String SCREEN = 'screen';
+
+  static const String WARD_ADMIN_FEATURE_SCREEN = 'Ward admin choose feature screen';
+  static const String LOGIN_SCREEN = 'Login screen';
+  static const String OTP_SCREEN = 'Otp screen';
+
+  //ward admin contribution list screen
+  static const String WARD_ADMIN_CONTRIBUTION_LIST_SCREEN = 'Ward admin contribution list screen';
+  static const String PROFILE_SCREEN = 'Profile screen';
+  static const String CONTRIBUTION_DETAIL_SCREEN = 'Contribution detail screen';
+  static const String WARD_ADMIN_CONTRIBUTION_SCREEN = 'Ward admin contribution screen';
+  static const String WARD_ADMIN_LOCATION_UPDATE_SCREEN = 'Ward admin location update screen';
+
+  static const String FLOOD_REPORT_LIST_SCREEN = 'Flood report list screen';
+  static const String NEWS_FLOOD_REPORT_SCREEN = 'New flood report screen';
+
+  static const String NEWS_FEED_SCREEN = 'News feed screen';
+
+
+  static const String DASHBOARD_SCREEN = 'Dashboard screen';
+
+
+  static const String NOTIFICATION_SCREEN = 'Notification screen';
+}
+
+class ClickEvent{
+  static const String GALLERY_CLICK_EVENT = 'Gallery click event';
+  static const String CAMERA_CLICK_EVENT = 'Gallery click event';
+  static const String SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT = 'Send ward admin contribution click event';
+
+}

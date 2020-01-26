@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:html/parser.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
 import 'helper/ServiceHelper.dart';
 import 'Model/NewsFeedReactModel.dart';
@@ -64,6 +65,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
         });
       }
     });
+    FireBaseAnalyticsHelper().TrackCurrentScreen(ScreenName.NEWS_FEED_SCREEN);
   }
 
 

@@ -3,17 +3,16 @@ import 'dart:io';
 import 'package:location/location.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
-import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'AdminLocationUpdateScreen.dart';
+import 'WardAdminLocationUpdateScreen.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
 
 class WardAdminContributionScreen extends StatefulWidget {
@@ -206,7 +205,9 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   }
 
   _navigateToAdminLocationUpdateScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => AdminLocationUpdateScreen()));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => WardAdminLocationUpdateScreen(),
+      settings: RouteSettings(name: ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN)
+    ));
     if(result != null && result.containsKey('latLng') != null){
       setState(() {
         LatLng latLng = result['latLng'];
@@ -326,8 +327,10 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                           Container(
                             height: 50,
                             margin: EdgeInsets.only(bottom: 10.0),
-                            child: RaisedButton(onPressed: (){
+                            child: RaisedButton(onPressed: ()async{
                               camera();
+                              await _sharepreferenceshelper.initSharePref();
+                              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                               },child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
@@ -343,8 +346,10 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                           Container(
                             height: 50,
                             margin: EdgeInsets.only(bottom: 10.0),
-                            child: RaisedButton(onPressed: (){
+                            child: RaisedButton(onPressed: ()async{
                               gallery();
+                              await _sharepreferenceshelper.initSharePref();
+                              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                             },child: Row(
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: <Widget>[
@@ -421,6 +426,8 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                                     _isLoading = true;
                                   });
                                   _sendSuggestion();
+                                  await _sharepreferenceshelper.initSharePref();
+                                  FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                                 }else if(_image == null){
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
                                 }else if(_dropDownSubject == MyString.txt_choose_subject){

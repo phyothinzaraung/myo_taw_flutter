@@ -71,7 +71,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
     final model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     _userModel = model;
     await _userDb.closeUserDb();
-     Future.delayed(Duration(seconds: 1)).whenComplete((){
+     Future.delayed(Duration(milliseconds: 100)).whenComplete((){
        if(_userModel.name == null){
          _dialogProfileSetup();
        }

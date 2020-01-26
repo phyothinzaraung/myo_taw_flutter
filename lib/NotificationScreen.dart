@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
 import 'helper/SharePreferencesHelper.dart';
@@ -20,6 +21,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     // TODO: implement initState
     super.initState();
     _getUser();
+    FireBaseAnalyticsHelper().TrackCurrentScreen(ScreenName.NOTIFICATION_SCREEN);
   }
 
   _getUser()async{

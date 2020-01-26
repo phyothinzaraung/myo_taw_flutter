@@ -135,7 +135,9 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
   }
 
   _navigateToNewFloodReportScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewFloodReportScreen()));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewFloodReportScreen(),
+      settings: RouteSettings(name: ScreenName.NEWS_FLOOD_REPORT_SCREEN)
+    ));
     if(result != null && result.containsKey('isNeedRefresh')){
       _handleRefresh();
     }

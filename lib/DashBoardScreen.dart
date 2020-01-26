@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myotaw/FloodReportListScreen.dart';
 import 'package:myotaw/WardAdminContributionScreen.dart';
 import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
+import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
 import 'package:myotaw/ProfileScreen.dart';
@@ -37,6 +38,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
     // TODO: implement initState
     super.initState();
     _getUser();
+    FireBaseAnalyticsHelper().TrackCurrentScreen(ScreenName.DASHBOARD_SCREEN);
   }
 
   _getUser()async{
@@ -53,9 +55,9 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       setState(() {
         _userModel = model;
       });
+      _initHeaderTitle();
+      _initDashBoardWidget();
     }
-    _initHeaderTitle();
-    _initDashBoardWidget();
     /*if(Platform.isIOS){
       _widget.removeLast();
     }*/

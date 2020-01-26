@@ -78,7 +78,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         if(_sharepreferenceshelper.isWardAdmin()){
           Navigator.pushReplacement(context, PageRouteBuilder(
               transitionDuration: Duration(milliseconds: 1000),
-              pageBuilder: (context,value,ani) => WardAdminFeatureChooseScreen()
+              pageBuilder: (context,value,ani) => WardAdminFeatureChooseScreen(), settings: RouteSettings(name: ScreenName.WARD_ADMIN_FEATURE_SCREEN)
           ));
         }else{
           Navigator.pushReplacement(context, PageRouteBuilder(
@@ -91,7 +91,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       Future.delayed(Duration(seconds: 2), (){
         Navigator.pushReplacement(context, PageRouteBuilder(
             transitionDuration: Duration(milliseconds: 1000),
-            pageBuilder: (context,value,ani) => LoginScreen(), settings: RouteSettings(name: 'Login screen')
+            pageBuilder: (context,value,ani) => LoginScreen(), settings: RouteSettings(name: ScreenName.LOGIN_SCREEN)
         ));
       });
     }

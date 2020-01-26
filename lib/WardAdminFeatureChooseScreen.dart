@@ -30,13 +30,15 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
       onTap: (){
         switch(_list[i].title){
           case MyString.txt_ward_admin_feature:
-            Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionListScreen()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionListScreen(),
+                settings: RouteSettings(name: ScreenName.WARD_ADMIN_CONTRIBUTION_LIST_SCREEN)));
             break;
           case MyString.txt_myotaw_feature:
             Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
             break;
           case MyString.txt_flood_level:
-            Navigator.push(context, MaterialPageRoute(builder: (context) => FloodReportListScreen()));
+            Navigator.push(context, MaterialPageRoute(builder: (context) => FloodReportListScreen(),
+                settings: RouteSettings(name: ScreenName.FLOOD_REPORT_LIST_SCREEN)));
             break;
         }
       },

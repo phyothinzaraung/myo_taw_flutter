@@ -42,55 +42,6 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
     // TODO: implement initState
     super.initState();
     _requestPermission();
-    getUserData();
-  }
-
-  getUserData() async{
-    await _userDb.openUserDb();
-    final model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    _userModel = model;
-    await _userDb.closeUserDb();
-    Future.delayed(Duration(seconds: 1)).whenComplete((){
-      if(_userModel.name == null){
-        _dialogProfileSetup();
-      }
-    });
-  }
-
-  _dialogProfileSetup(){
-    return showDialog(context: context, builder: (context){
-      return WillPopScope(
-          child: SimpleDialog(
-            contentPadding: EdgeInsets.all(20.0),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      child: Image.asset('images/logout_icon.png', width: 60.0, height: 60.0,)),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(MyString.txt_profile_set_up_need,
-                      style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
-                  ),
-                  RaisedButton(onPressed: (){
-                    _navigateToProfileFormScreen();
-
-                  },child: Text(MyString.txt_profile_set_up,
-                    style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),)
-                ],
-              )
-            ],), onWillPop: (){});
-    }, barrierDismissible: false);
-  }
-
-  _navigateToProfileFormScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_userModel.isWardAdmin==1?true:false)));
-    if(result != null && result.containsKey('isNeedRefresh') == true){
-      Navigator.of(context).pop();
-    }
   }
 
   _checkCon()async{
@@ -168,7 +119,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
             ),
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(), settings: RouteSettings(name: ScreenName.PROFILE_SCREEN)));
 
               },
               child: Hero(
@@ -252,7 +203,8 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
           children: <Widget>[
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => WardAdminContributionDetailScreen(_contributionModelList[i])));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => WardAdminContributionDetailScreen(_contributionModelList[i]),
+                    settings: RouteSettings(name: ScreenName.CONTRIBUTION_DETAIL_SCREEN)));
               },
               child: Container(
                 child: Column(
@@ -281,7 +233,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                               child: Image.asset('images/${_contributionIconType(_contributionModelList[i].subject)}.png', width: 30, height: 30,)),
                           //title
                           Text(_contributionModelList[i].subject!=null?_contributionModelList[i].subject:'---',
-                            style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack), maxLines: 1, overflow: TextOverflow.ellipsis,)
+                            style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack), maxLines: 1, overflow: TextOverflow.ellipsis,)
                         ],),
                     ),
                     Container(
@@ -412,7 +364,9 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
   }
 
   _navigateToWardAdminContributionScreen()async{
-    Map result = await Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionScreen()));
+    Map result = await Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionScreen(),
+      settings: RouteSettings(name: ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN)
+    ));
     if(result != null && result.containsKey('isNeedRefresh') == true){
       await _handleRefresh();
     }
