@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/SaveNewsFeedModel.dart';
 import 'Database/SaveNewsFeedDb.dart';
 import 'helper/ShowDateTimeHelper.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'SaveNewsFeedDetailScreen.dart';
 
 class SaveNewsFeedScreen extends StatefulWidget {
@@ -15,6 +16,7 @@ class SaveNewsFeedScreen extends StatefulWidget {
 class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
   SaveNewsFeedDb _saveNewsFeedDb = SaveNewsFeedDb();
   List _saveNewsFeedList = new List();
+  Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
 
 
   @override
@@ -43,7 +45,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
   _dialogDelete(String id, int i){
     showDialog(
         context: context,
-        builder: (ctxt){
+        builder: (context){
           return Dialog(
             child: Container(
               margin: EdgeInsets.all(10.0),
@@ -58,14 +60,22 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        RaisedButton(onPressed: (){
+                        RaisedButton(onPressed: ()async{
                             _deleteNewsFeed(id);
-                            _saveNewsFeedList.removeAt(i);
                             setState(() {
+                              _saveNewsFeedList.removeAt(i);
                             });
                             Navigator.of(context).pop();
+                            await _sharepreferenceshelper.initSharePref();
+                            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.SAVED_NEWS_FEED_SCREEN, ClickEvent.DELETE_SAVED_NEWS_FEED_CLICK_EVENT,
+                                _sharepreferenceshelper.getUserUniqueKey());
                         },child: Text(MyString.txt_delete,
-                          style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,),
+                          style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                          color: MyColor.colorPrimary,
+                          shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.all(Radius.circular(5))
+                          ),
+                        ),
                         RaisedButton(onPressed: (){
                             Navigator.of(context).pop();
                         },child: Text(MyString.txt_delete_cancel, style: TextStyle(fontSize: FontSize.textSizeSmall),),color: MyColor.colorGrey,)
@@ -87,10 +97,12 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
           return Container(
             child: Column(
               children: <Widget>[
-                i==0?headerTitleWidget(MyString.title_save_nf, '') : Container(width: 0.0, height: 0.0,),
+                i==0?headerTitleWidget(MyString.title_save_nf, 'save_file_no_circle') : Container(width: 0.0, height: 0.0,),
                 GestureDetector(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedDetailScreen(model)));
+                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedDetailScreen(model),
+                      settings: RouteSettings(name: ScreenName.SAVED_NEWS_FEED_DETAIL_SCREEN)
+                    ));
                   },
                   child: Card(
                     margin: EdgeInsets.only(bottom: 1.0),
@@ -158,6 +170,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
         child: _saveNewsFeedList.isNotEmpty?_listView():
         Container(
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
             children: <Widget>[
               headerTitleWidget(MyString.title_save_nf, 'save_file_no_circle'),
               Expanded(

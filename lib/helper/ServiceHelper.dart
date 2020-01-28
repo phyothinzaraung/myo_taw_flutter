@@ -301,6 +301,14 @@ class ServiceHelper{
   return response;
  }
 
+ updateUserActiveTime<Response>(String uniqueKey) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/UpdateActiveTime",
+      queryParameters: {"UniqueKey": uniqueKey});
+  return response;
+ }
+
 }
 
 

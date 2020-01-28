@@ -89,8 +89,8 @@ class SaveNewsFeedDb{
     await _database.delete(DbHelper.TABLE_NAME_SAVE_NEWS_FEED);
   }
 
-  Future<SaveNewsFeedModel> getNewsFeedById(String uniqueKey) async {
-    SaveNewsFeedModel saveModel;
+  Future<bool> isNewsFeedSaved(String id) async {
+    bool isSaved;
     var result = await _database.query(DbHelper.TABLE_NAME_SAVE_NEWS_FEED,
         columns: [DbHelper.COLUMN_SAVE_NF_ID,
           DbHelper.COLUMN_SAVE_NF_TITLE,
@@ -100,13 +100,13 @@ class SaveNewsFeedDb{
           DbHelper.COLUMN_SAVE_NF_THUMBNAIL,
           DbHelper.COLUMN_SAVE_NF_ACCESSTIME,
           DbHelper.COLUMN_SAVE_NF_CONTENT_TYPE,],
-        where: '${DbHelper.COLUMN_SAVE_NF_ID} = ?', whereArgs: ['$uniqueKey']);
-    if (result.length == 0) return null;
-    for(var i in result){
-      saveModel = SaveNewsFeedModel.fromMap(i);
+        where: '${DbHelper.COLUMN_SAVE_NF_ID} = ?', whereArgs: ['$id']);
+    if(result.isNotEmpty){
+      isSaved = true;
+    }else{
+      isSaved = false;
     }
-    //print('getuserid ${saveModel.photoUrl}');
-    return saveModel;
+    return isSaved;
   }
 
 /* _onUpgrade(Database db, int oldVersion, int newVersion) async{

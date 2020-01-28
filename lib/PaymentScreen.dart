@@ -1,6 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/model/InvoiceModel.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -347,31 +348,25 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           await _checkCon();
                           if(_isCon){
                             if(_taxAmount == 0){
-                              if(_invoiceNoController.text.isNotEmpty && _dropDownTaxType != 'သတ်မှတ်ထားခြင်းမရှိ'){
+                              if(_invoiceNoController.text.isNotEmpty && _dropDownTaxType != MyString.txt_no_selected){
                                 _getTaxType();
                                 _getAmount();
-
+                                await _sharepreferenceshelper.initSharePref();
+                                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.ONLINE_TAX_PAYMENT_SCREEN, ClickEvent.GET_TAX_AMOUNT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                               }else if (_invoiceNoController.text.isEmpty){
-                                //Fluttertoast.showToast(msg: 'Please fill invoice no', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                                 WarningSnackBar(_scaffoldState, MyString.txt_need_invoice_no);
 
-                              }else if (_dropDownTaxType == 'သတ်မှတ်ထားခြင်းမရှိ'){
-                                //Fluttertoast.showToast(msg: 'Choose tax type', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
+                              }else if (_dropDownTaxType == MyString.txt_no_selected){
                                 WarningSnackBar(_scaffoldState, MyString.txt_choose_tax_type);
 
                               }
                             }else{
+                              await _sharepreferenceshelper.initSharePref();
+                              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.ONLINE_TAX_PAYMENT_SCREEN, ClickEvent.PAY_TAX_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                               _dialogConfirm();
                             }
                           }else{
-                            _scaffoldState.currentState.showSnackBar(SnackBar(
-                              content: Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: <Widget>[
-                                  Container(margin: EdgeInsets.only(right: 20.0),child: Image.asset('images/no_connection.png', width: 30.0, height: 30.0,)),
-                                  Text('Check internet connection', style: TextStyle(fontSize: FontSize.textSizeNormal),),
-                                ],
-                              ),duration: Duration(seconds: 2),backgroundColor: Colors.red,));
+                            WarningSnackBar(_scaffoldState, MyString.txt_no_internet);
                           }
 
                           }, child: Text(_taxAmount == 0?MyString.txt_get_tax_amount : MyString.txt_pay_tax, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),

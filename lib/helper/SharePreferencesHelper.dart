@@ -8,7 +8,7 @@ class Sharepreferenceshelper{
   static String USER_WARD_NAME = 'user_ward_name';
   SharedPreferences sharedPreferences;
 
-  void initSharePref() async{
+  Future initSharePref() async{
     sharedPreferences = await SharedPreferences.getInstance();
   }
 

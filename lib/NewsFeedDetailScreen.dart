@@ -58,7 +58,9 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         _photoWidget.add(
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen(_photoList, null)));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen(_photoList, null),
+                  settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
+                ));
               },
               child: Stack(
                 alignment: Alignment.bottomLeft,

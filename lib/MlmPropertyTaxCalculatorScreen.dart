@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
+import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
+import 'helper/SharePreferencesHelper.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
 
 class MlmPropertyTaxCalculatorScreen extends StatefulWidget {
@@ -17,6 +19,7 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
   List<String> _storyList;
   int _taxRange ,_taxRange1;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+  Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
 
   @override
   void initState() {
@@ -311,14 +314,16 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
                         width: double.maxFinite,
                         height: 50.0,
                         child: RaisedButton(
-                          onPressed: (){
+                          onPressed: ()async{
                             if(_dropDownStory != MyString.txt_no_selected && _dropDownBuildingType != MyString.txt_no_selected){
                               _calculateTaxDialog();
+                              await _sharepreferenceshelper.initSharePref();
+                              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_PROPERTY_TAX_CLICK_EVENT,
+                                  _sharepreferenceshelper.getUserUniqueKey());
+
                             }else if(_dropDownBuildingType == MyString.txt_no_selected){
-                              //Fluttertoast.showToast(msg: MyString.txt_choose_building_type, backgroundColor: Colors.black.withOpacity(0.7));
                               WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
                             }else if(_dropDownStory == MyString.txt_no_selected){
-                              //Fluttertoast.showToast(msg: MyString.txt_choose_story, backgroundColor: Colors.black.withOpacity(0.7));
                               WarningSnackBar(_globalKey, MyString.txt_choose_story);
                             }
                           },color: MyColor.colorPrimary,

@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -7,6 +8,7 @@ import 'package:location/location.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/GetFloodLevelScreen.dart';
 import 'package:myotaw/database/UserDb.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/FloodLevelFtInHelper.dart';
 import 'package:myotaw/helper/NumConvertHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
@@ -32,12 +34,22 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
   UserDb _userDb = UserDb();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   bool _showLoading = false;
+  bool _isCon = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _locationInit();
+  }
+
+  _checkCon()async{
+    var conResult = await(Connectivity().checkConnectivity());
+    if (conResult == ConnectivityResult.none) {
+      _isCon = false;
+    }else{
+      _isCon = true;
+    }
   }
 
   _locationInit(){
@@ -64,14 +76,16 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
   }
 
   Future camera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1024, maxHeight: 768);
+    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
     setState(() {
       _image = image;
     });
   }
 
   _navigateToGetFloodLevelScreen() async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => GetFloodLevelScreen()));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => GetFloodLevelScreen(),
+      settings: RouteSettings(name: ScreenName.GET_FLOOD_LEVEL_SCREEN)
+    ));
     if(result != null && result.containsKey('FloodLevel')){
       setState(() {
         _floodLevel = result['FloodLevel'];
@@ -133,6 +147,8 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                         width: 200.0,
                         height: 45.0,
                         child: RaisedButton(onPressed: ()async{
+                          await _sharepreferenceshelper.initSharePref();
+                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                           Navigator.of(context).pop();
                           Navigator.of(context).pop({'isNeedRefresh' : true});
 
@@ -163,8 +179,10 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
             Container(
               height: 50,
               margin: EdgeInsets.only(bottom: 20.0, top: 20, left: 20, right: 20),
-              child: RaisedButton(onPressed: (){
+              child: RaisedButton(onPressed: ()async{
                 camera();
+                await _sharepreferenceshelper.initSharePref();
+                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
               },child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
@@ -231,13 +249,20 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                       height: 50,
                       width: double.maxFinite,
                       margin: EdgeInsets.only(bottom: 40),
-                      child: RaisedButton(onPressed: (){
-                        if(_image != null && _floodLevel != 0){
-                          _reportFloodLevel();
-                        }else if(_image == null){
-                          WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
-                        }else if(_floodLevel == 0){
-                          WarningSnackBar(_globalKey, MyString.txt_need_flood_level);
+                      child: RaisedButton(onPressed: ()async{
+                        await _checkCon();
+                        if(_isCon){
+                          if(_image != null && _floodLevel != 0){
+                            await _sharepreferenceshelper.initSharePref();
+                            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_FLOOD_LEVEL_REPORT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                            _reportFloodLevel();
+                          }else if(_image == null){
+                            WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
+                          }else if(_floodLevel == 0){
+                            WarningSnackBar(_globalKey, MyString.txt_need_flood_level);
+                          }
+                        }else{
+                          WarningSnackBar(_globalKey, MyString.txt_no_internet);
                         }
                       },child: Text(MyString.txt_add_flood_level_record,
                         style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),

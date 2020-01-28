@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
+import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'helper/SharePreferencesHelper.dart';
@@ -72,11 +73,10 @@ class _ContributionScreenState extends State<ContributionScreen> {
     }else{
       _isCon = true;
     }
-    //print('isCon : ${_isCon}');
   }
 
   Future camera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1024, maxHeight: 768);
+    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
     setState(() {
       _image = image;
     });
@@ -201,8 +201,11 @@ class _ContributionScreenState extends State<ContributionScreen> {
                           Container(
                             height: 50,
                             margin: EdgeInsets.only(bottom: 10.0),
-                            child: RaisedButton(onPressed: (){
+                            child: RaisedButton(onPressed: ()async{
                               camera();
+                              await _sharepreferenceshelper.initSharePref();
+                              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.CONTRIBUTION_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+
                               },child: Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: <Widget>[
@@ -273,13 +276,15 @@ class _ContributionScreenState extends State<ContributionScreen> {
                             child: RaisedButton(onPressed: ()async{
 
                               await _checkCon();
-                              //await _getLatLng();
                               if(_isCon){
                                 if(_messController.text.isNotEmpty && _image != null && _dropDownSubject != MyString.txt_choose_subject){
                                   setState(() {
                                     _isLoading = true;
                                   });
                                   _sendSuggestion();
+                                  await _sharepreferenceshelper.initSharePref();
+                                  FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_CLICK_EVENT,
+                                      _sharepreferenceshelper.getUserUniqueKey());
                                   print('latlng: ${_lat} ${_lng}');
                                 }else if(_image == null){
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);

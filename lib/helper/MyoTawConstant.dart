@@ -22,16 +22,19 @@ class FontSize{
 class BaseUrl{
   static const String WEB_SERVICE_ROOT_ADDRESS = "https://cityappapi.azurewebsites.net/api/";
   static const String WEB_SERVICE_ROOT_ADDRESS_NEWSFEED = "https://generalcontentproviderapi.azurewebsites.net/api/";
-  static const String NEWS_FEED_CONTENT_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/NewsFeed/";
-  static const String CONTRIBUTE_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/Contribute/";
-  static const String USER_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/Member/";
-  static const String DAO_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/AboutDAO/";
-  static const String APPLY_BIZ_LICENSE_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/ApplyBiz/";
   static const String WEB_SERVICE_ROOT_ADDRESS_TAX_PAYMENT = "https://taxpaymentservice.azurewebsites.net/api/";
   static const String WEB_SERVICE_ROOT_ADDRESS_REFERRAL = "https://newmaymay.azurewebsites.net/api/";
   static const String WEB_SERVICE_ROOT_ADDRESS_DAO_INVOICE_NO = "https://daoapifinal.azurewebsites.net/api/";
   static const String REFERRAL_URL = "https://maymayadmin.azurewebsites.net/Referral/CityAppReferralDetail?referralpno=";
   static const String WEB_SERVICE_ROOT_ADDRESS_OTP = "https://kktsmsverification.azurewebsites.net/api/";
+
+  //photo url
+  static const String NEWS_FEED_CONTENT_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/NewsFeed/";
+  static const String CONTRIBUTE_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/Contribute/";
+  static const String USER_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/Member/";
+  static const String DAO_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/AboutDAO/";
+  static const String APPLY_BIZ_LICENSE_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/ApplyBiz/";
+  static const String TAX_RECORD_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/TaxRecord/";
 }
 
 class MyString{
@@ -152,6 +155,7 @@ class MyString{
   static const String txt_scan_qr_code = 'ဤနေရာကို Scan ဖတ်ပါ';
   static const String txt_send = 'ပို့မည်';
   static const String txt_not_send = 'မပို့ပါ';
+  static const String txt_pin_set_up_success = 'ပင်ကုဒ်ပြုလုပ်မှု အောင်မြင်သည်။';
 
   static const String PROPERTY_TAX = "PropertyTax";
   static const String BIZ_LICENSE = "BizLicense";
@@ -257,6 +261,10 @@ class MyString{
   static const String txt_flood_report_finish = 'မှတ်တမ်းမှုအောင်မြင်သည်။';
   static const String txt_need_flood_level = 'ရေကြီးခြင်းအတိုင်းအတာလိုအပ်သည်။';
   static const String txt_flood_level_no_record = 'မှတ်တမ်းမရှိပါ။';
+  static const String txt_no_top_up_record = 'ငွေဖြည့်မှတ်တမ်းမရှိပါ။';
+  static const String txt_tax_record_upload_success = 'အခွန်မှတ်တမ်းအသစ်တင်မှုအောင်မြင်သည်။';
+  static const String txt_tax_record_upload = 'အခွန်မှတ်တမ်းတင်မည်';
+  static const String txt_saved_news_feed = 'သိမ်းပြီး';
 
 
 
@@ -264,12 +272,6 @@ class MyString{
   static const String BUILDING_GRADE_B = "building grade B";
   static const String BUILDING_GRADE_C = "building grade C";
   static const String GOV_BUILDING = "gov";
-
-  //admin ph no
-  static final String ADMIN_PH_1 = "+959425317337";
-  static final String ADMIN_PH_2 = "+959794797489";
-  static final String ADMIN_PH_3 = "+959975526335";
-  static final String ADMIN_PH_4 = "+959254900916";
 
   //contribution
   static const String FIX_ROAD_CONTRIBUTE = "လမ်းပြင်၊ လမ်းပျက်";
@@ -295,6 +297,10 @@ class MyString{
   static const String TRAFFIC_ICON = "traffic_nocircle";
   static const String CRIME_ICON = "criminal_nocircle";
   static const String OTHER_ICON= "other_nocircle";
+
+
+  static const double PHOTO_MAX_WIDTH= 1024;
+  static const double PHOTO_MAX_HEIGHT= 720;
 }
 
 class MyStringList{
@@ -520,26 +526,97 @@ class ScreenName{
 
   //ward admin contribution list screen
   static const String WARD_ADMIN_CONTRIBUTION_LIST_SCREEN = 'Ward admin contribution list screen';
-  static const String PROFILE_SCREEN = 'Profile screen';
   static const String CONTRIBUTION_DETAIL_SCREEN = 'Contribution detail screen';
   static const String WARD_ADMIN_CONTRIBUTION_SCREEN = 'Ward admin contribution screen';
   static const String WARD_ADMIN_LOCATION_UPDATE_SCREEN = 'Ward admin location update screen';
 
   static const String FLOOD_REPORT_LIST_SCREEN = 'Flood report list screen';
   static const String NEWS_FLOOD_REPORT_SCREEN = 'New flood report screen';
+  static const String GET_FLOOD_LEVEL_SCREEN = 'Get flood level screen';
 
   static const String NEWS_FEED_SCREEN = 'News feed screen';
+  static const String NEWS_FEED_DETAIL_SCREEN = 'News feed detail screen';
 
 
   static const String DASHBOARD_SCREEN = 'Dashboard screen';
+  static const String ABOUT_DAO_SCREEN = 'About dao screen';
+  static const String ABOUT_TAX_SCREEN = 'About tax screen';
+  static const String CONTRIBUTION_SCREEN = 'Contribution screen';
+  static const String BIZ_LICENSE_SCREEN = 'Biz license screen';
+  static const String ONLINE_TAX_CHOOSE_SCREEN = 'Online tax choose screen';
+  static const String TAX_USE_SCREEN = 'Tax use screen';
+  static const String CALCULATE_TAX_SCREEN = 'Calculate tax screen';
+  static const String FAQ_SCREEN = 'Faq screen';
+  static const String SAVED_NEWS_FEED_SCREEN = 'Saved news feed screen';
+  static const String PROFILE_SCREEN = 'Profile screen';
+  static const String ABOUT_DAO_DETAIL_SCREEN = 'About dao detail screen';
+  static const String ABOUT_TAX_DETAIL_SCREEN = 'About tax detail screen';
+  static const String DEPARTMENT_LIST_SCREEN = 'Department list screen';
+  static const String BIZ_LICENSE_DETAIL_SCREEN = 'Biz license detail screen';
+  static const String APPLY_BIZ_LICENSE_FORM_SCREEN = 'Apply biz license form screen';
+  static const String APPLY_BIZ_LICENSE_LIST_SCREEN = 'Apply biz license list screen';
+  static const String APPLY_BIZ_LICENSE_DETAIL_SCREEN = 'Apply biz license detail screen';
+  static const String APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN = 'Apply biz license photo list screen';
+  static const String PIN_CODE_SET_UP_SCREEN = 'Pin code set up screen';
+  static const String ONLINE_TAX_SCREEN = 'Online tax screen';
+  static const String SMART_WATER_METER_SCREEN = 'Smart water meter screen';
+  static const String TOP_UP_RECORD_LIST_SCREEN = 'Top up record list screen';
+  static const String ONLINE_TAX_PAYMENT_SCREEN = 'Online tax payment screen';
+  static const String TGY_PROPERTY_TAX_CALCULATOR_SCREEN = 'Tgy property tax calculator screen';
+  static const String TGY_BIZ_TAX_CALCULATOR_SCREEN = 'Tgy biz tax calculator screen';
+  static const String MLM_PROPERTY_TAX_CALCULATOR_SCREEN = 'Mlm property tax calculator screen';
+  static const String MLM_BIZ_TAX_CALCULATOR_SCREEN = 'Mlm biz tax calculator screen';
+  static const String SAVED_NEWS_FEED_DETAIL_SCREEN = 'Saved news feed detail screen';
+  static const String PROFILE_PHOTO_SCREEN = 'Profile photo screen';
+  static const String PROFILE_FORM_SCREEN = 'Profile form screen';
+  static const String NEW_TAX_RECORD_SCREEN = 'New tax record screen';
 
 
   static const String NOTIFICATION_SCREEN = 'Notification screen';
+
+  static const String PHOTO_DETAIL_SCREEN = 'Photo detail screen';
+
 }
 
 class ClickEvent{
+  //static const String _CLICK_EVENT = 'click event';
   static const String GALLERY_CLICK_EVENT = 'Gallery click event';
-  static const String CAMERA_CLICK_EVENT = 'Gallery click event';
+  static const String CAMERA_CLICK_EVENT = 'Camera click event';
   static const String SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT = 'Send ward admin contribution click event';
+  static const String GET_LOCATION_FROM_GOOGLE_MAP = 'Get location from google map event';
+  static const String SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT = 'Send contribution success click event';
+  static const String SEND_FLOOD_LEVEL_REPORT_SUCCESS_CLICK_EVENT = 'Send flood level report success click event';
+
+  static const String SEND_FLOOD_LEVEL_REPORT_CLICK_EVENT = 'Send flood level report click event';
+  static const String GET_FLOOD_LEVEL_CLICK_EVENT = 'Get flood level click event';
+
+
+  static const String NEWS_FEED_LIKE_CLICK_EVENT = 'News feed like click event';
+  static const String NEWS_FEED_SAVE_CLICK_EVENT = 'News feed save click event';
+  static const String GO_TO_TOP_CLICK_EVENT = 'Go to top click event';
+
+
+  static const String MANAGEMENT_CLICK_EVENT = 'Management click event';
+  static const String ENGINEER_CLICK_EVENT = 'Engineer click event';
+  static const String SEND_CONTRIBUTION_CLICK_EVENT = 'Send contribution click event';
+  static const String BIZ_LICENSE_APPLIED_CLICK_EVENT = 'Biz license applied click event';
+  static const String APPLY_BIZ_LICENSE_PHOTO_UPLOAD_CLICK_EVENT = 'Apply biz license photo upload click event';
+  static const String PIN_CODE_SET_UP_CLICK_EVENT = 'Pin code set up click event';
+  static const String GET_TAX_AMOUNT_CLICK_EVENT = 'Get tax amount click event';
+  static const String PAY_TAX_CLICK_EVENT = 'Pay tax click event';
+  static const String CALCULATE_PROPERTY_TAX_CLICK_EVENT = 'Calculate property tax click event';
+  static const String CALCULATE_BIZ_TAX_CLICK_EVENT = 'Calculate biz tax click event';
+  static const String FAQ_BY_CATEGORY_CLICK_EVENT = 'Faq by category click event';
+  static const String FAQ_ANSWER_CLICK_EVENT = 'Faq answer click event';
+  static const String DELETE_SAVED_NEWS_FEED_CLICK_EVENT = 'Delete saved news feed click event';
+  static const String PROFILE_PHOTO_UPLOAD_CLICK_EVENT = 'Profile photo upload click event';
+  static const String PROFILE_INFORMATION_UPLOAD_CLICK_EVENT = 'Profile information upload click event';
+  static const String USER_LOG_OUT_CLICK_EVENT = 'User log out click event';
+  static const String TAX_RECORD_DELETE_CLICK_EVENT = 'Tax record delete click event';
+  static const String NEW_TAX_RECORD_UPLOAD_CLICK_EVENT = 'New tax record upload click event';
+
+
+
+
 
 }

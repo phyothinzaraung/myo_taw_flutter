@@ -194,7 +194,7 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
             onRefresh: _handleRefresh,
-            child: _topUpLogModelList.isNotEmpty?_listView() : emptyView(asyncLoaderState,MyString.txt_no_data),
+            child: _topUpLogModelList.isNotEmpty?_listView() : emptyView(asyncLoaderState,MyString.txt_no_top_up_record),
           ),
         )
     );

@@ -106,14 +106,14 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   }
 
   Future camera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1024, maxHeight: 768);
+    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
     setState(() {
       _image = image;
     });
   }
 
   Future gallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1024, maxHeight: 768);
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
 
     setState(() {
       _image = image;
@@ -170,6 +170,8 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                         width: 200.0,
                         height: 45.0,
                         child: RaisedButton(onPressed: ()async{
+                          await _sharepreferenceshelper.initSharePref();
+                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                           Navigator.of(context).pop();
                           Navigator.of(context).pop({'isNeedRefresh' : true});
 
@@ -425,9 +427,10 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                                   setState(() {
                                     _isLoading = true;
                                   });
-                                  _sendSuggestion();
                                   await _sharepreferenceshelper.initSharePref();
-                                  FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                                  FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT,
+                                      _sharepreferenceshelper.getUserUniqueKey());
+                                  _sendSuggestion();
                                 }else if(_image == null){
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
                                 }else if(_dropDownSubject == MyString.txt_choose_subject){

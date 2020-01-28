@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
@@ -19,7 +20,7 @@ class FaqScreen extends StatefulWidget {
 class _FaqScreenState extends State<FaqScreen> {
   var _response;
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
-  String _regionCode, _category = '';
+  String _regionCode, _userUniqueKey, _category = '';
   int page = 1;
   int pageSize = 100;
   List<FaqModel> _faqList = new List<FaqModel>();
@@ -38,7 +39,8 @@ class _FaqScreenState extends State<FaqScreen> {
 
   _getAllFaq(String category)async{
     await _sharepreferenceshelper.initSharePref();
-    _regionCode = await _sharepreferenceshelper.getRegionCode();
+    _regionCode = _sharepreferenceshelper.getRegionCode();
+    _userUniqueKey = _sharepreferenceshelper.getUserUniqueKey();
     try{
       _response = await ServiceHelper().getAllFaq(_regionCode, page, pageSize, category);
       faqModelList = _response.data['FAQwithPaging']['Results'];
@@ -47,10 +49,12 @@ class _FaqScreenState extends State<FaqScreen> {
         var categoryList = _response.data['CategoryList'];
         for(var i in categoryList){
           if(i != null){
-            setState(() {
-              //_categoryList.add(model);
-              _categoryList.add(i);
-            });
+            if(mounted){
+              setState(() {
+                //_categoryList.add(model);
+                _categoryList.add(i);
+              });
+            }
           }
         }
         if(_response.data != null){
@@ -69,7 +73,7 @@ class _FaqScreenState extends State<FaqScreen> {
 
   _getAllFaqByCategory(String category)async{
     await _sharepreferenceshelper.initSharePref();
-    _regionCode = await _sharepreferenceshelper.getRegionCode();
+    _regionCode = _sharepreferenceshelper.getRegionCode();
     _response = await ServiceHelper().getAllFaq(_regionCode, page, pageSize, category);
     faqModelList = _response.data['FAQwithPaging']['Results'];
     if(_response.data != null){
@@ -100,6 +104,7 @@ class _FaqScreenState extends State<FaqScreen> {
                 }else{
                   _faqList[i].isVisible = true;
                 }
+                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_ANSWER_CLICK_EVENT, _userUniqueKey);
               });
             },
             child: Container(
@@ -124,7 +129,7 @@ class _FaqScreenState extends State<FaqScreen> {
                                 child: Text(_faqList[i].question, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
                             //text answer
                             _faqList[i].isVisible?Text(_faqList[i].answer, style: TextStyle(fontSize: FontSize.textSizeSmall),):
-                                Container(width: 0.0,height: 0.0,)
+                                Container()
                       ],)),
                       //image arrow
                       Container(
@@ -224,7 +229,7 @@ class _FaqScreenState extends State<FaqScreen> {
                             }else{
                               _getFaqByCategory(_dropDownCategory);
                             }
-
+                            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_BY_CATEGORY_CLICK_EVENT, _userUniqueKey);
                           },
                           items: _categoryList.map<DropdownMenuItem<String>>((String str){
                             return DropdownMenuItem<String>(

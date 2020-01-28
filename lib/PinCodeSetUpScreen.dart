@@ -1,5 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:myotaw/model/UserModel.dart';
@@ -40,6 +41,45 @@ class _PinCodeSetUpScreenState extends State<PinCodeSetUpScreen> {
     }
   }
 
+  _finishDialogBox(){
+    return showDialog(
+        context: context,
+        builder: (ctxt){
+          return WillPopScope(
+            child: SimpleDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          child: Image.asset('images/pin_lock.png', width: 50.0, height: 50.0,)),
+                      Container(
+                          margin: EdgeInsets.only(bottom: 10.0),
+                          child: Text(MyString.txt_pin_set_up_success,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),textAlign: TextAlign.center,)),
+                      Container(
+                        width: 200.0,
+                        height: 45.0,
+                        child: RaisedButton(onPressed: ()async{
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop({'isNeedRefresh' : true});
+
+                        }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                          color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),onWillPop: (){},
+          );
+        }, barrierDismissible: false);
+  }
+
   void _updateUser()async{
     await _checkCon();
     setState(() {
@@ -52,7 +92,7 @@ class _PinCodeSetUpScreenState extends State<PinCodeSetUpScreen> {
           await _userDb.openUserDb();
           await _userDb.insert(UserModel.fromJson(_response.data));
           await _userDb.closeUserDb();
-          Navigator.of(context).pop({'isNeedRefresh' : true});
+          _finishDialogBox();
         }else{
           WarningSnackBar(_scaffoldState, MyString.txt_try_again);
         }
@@ -159,18 +199,10 @@ class _PinCodeSetUpScreenState extends State<PinCodeSetUpScreen> {
                               child: RaisedButton(onPressed: (){
                                 if(_pinCodeController.text.isNotEmpty){
                                   _userModel.pinCode = int.parse(_pinCodeController.text);
+                                  FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PIN_CODE_SET_UP_SCREEN, ClickEvent.PIN_CODE_SET_UP_CLICK_EVENT, _userModel.uniqueKey);
                                   _updateUser();
                                 }else{
-                                  _scaffoldState.currentState.showSnackBar(
-                                      SnackBar(
-                                        content: Row(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: <Widget>[
-                                            Container(margin: EdgeInsets.only(right: 20.0),
-                                              child: Icon(Icons.lock)),
-                                            Text('Need to Fill Pin', style: TextStyle(fontSize: FontSize.textSizeNormal),),
-                                      ],
-                                    ),duration: Duration(seconds: 2),backgroundColor: Colors.red,));
+                                  WarningSnackBar(_scaffoldState, MyString.txt_need_pin_code);
                                 }
 
                                 }, child: Text(MyString.txt_create_pin, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),

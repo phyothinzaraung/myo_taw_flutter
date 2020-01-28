@@ -2,8 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
+import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
+import 'helper/SharePreferencesHelper.dart';
 
 class TgyBizTaxCalculatorScreen extends StatefulWidget {
   @override
@@ -20,6 +22,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
   String _taxRange;
   bool _isHotel = false;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+  Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
 
   @override
   void initState() {
@@ -238,6 +241,9 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                   RaisedButton(onPressed: (){
                     Navigator.of(context).pop();
                     clearDropDown();
+                    setState(() {
+                      _isHotel = false;
+                    });
                     },child: Text(MyString.txt_close,
                     style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
                     shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),)
@@ -399,24 +405,27 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                           width: double.maxFinite,
                           height: 50.0,
                           child: RaisedButton(
-                            onPressed: (){
+                            onPressed: ()async{
                               if(_dropDownBizType != MyString.txt_no_selected && _dropDownBizLicenseType != MyString.txt_no_selected){
                                 if(_isHotel){
                                   if(_dropDownGrade != MyString.txt_no_selected){
                                     _calculateTaxDialog();
+                                    await _sharepreferenceshelper.initSharePref();
+                                    FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
+                                        _sharepreferenceshelper.getUserUniqueKey());
                                   }else{
-                                    //Fluttertoast.showToast(msg: MyString.txt_choose_grade, backgroundColor: Colors.black.withOpacity(0.7));
                                     WarningSnackBar(_globalKey, MyString.txt_choose_grade);
                                   }
                                 }else{
                                   _calculateTaxDialog();
+                                  await _sharepreferenceshelper.initSharePref();
+                                  FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
+                                      _sharepreferenceshelper.getUserUniqueKey());
                                 }
 
                               }else if(_dropDownBizLicenseType == MyString.txt_no_selected){
-                                //Fluttertoast.showToast(msg: MyString.txt_choose_building_type, backgroundColor: Colors.black.withOpacity(0.7));
                                 WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
                               }else if(_dropDownBizType == MyString.txt_no_selected){
-                                //Fluttertoast.showToast(msg: MyString.txt_choose_biz_license, backgroundColor: Colors.black.withOpacity(0.7));
                                 WarningSnackBar(_globalKey, MyString.txt_choose_biz_license);
                               }
 

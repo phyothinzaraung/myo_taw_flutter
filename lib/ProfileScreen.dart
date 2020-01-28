@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/LoginScreen.dart';
+import 'package:myotaw/PhotoDetailScreen.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
@@ -115,7 +118,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await _saveNewsFeedDb.openSaveNfDb();
     await _saveNewsFeedDb.deleteSavedNewsFeed();
     await _saveNewsFeedDb.closeSaveNfDb();
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => SplashScreen()),(Route<dynamic>route) => false);
+    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginScreen(),
+      settings: RouteSettings(name: ScreenName.LOGIN_SCREEN)
+    ),(Route<dynamic>route) => false);
   }
 
   _dialogLogOut(){
@@ -134,7 +139,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         height: 40.0,
                         width: 90.0,
-                        child: RaisedButton(onPressed: (){
+                        child: RaisedButton(onPressed: ()async{
+                          await _sharepreferenceshelper.initSharePref();
+                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.USER_LOG_OUT_CLICK_EVENT,
+                              _sharepreferenceshelper.getUserUniqueKey());
                           _logOutClear();
                         },child: Text(MyString.txt_log_out,style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
                           color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
@@ -208,12 +216,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        RaisedButton(onPressed: (){
+                        RaisedButton(onPressed: ()async{
                           Navigator.of(context).pop();
                           setState(() {
                             _isLoading = true;
                           });
                           _deleteTaxRecord(id);
+                          await _sharepreferenceshelper.initSharePref();
+                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.TAX_RECORD_DELETE_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                         },child: Text(MyString.txt_delete,
                           style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,),
                         RaisedButton(onPressed: (){
@@ -231,31 +241,38 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   Widget _taxRecordList(int i){
     TaxRecordModel taxRecordModel = _taxRecordModelList[i];
-    return Card(
-      margin: EdgeInsets.only(bottom: 1.0),
-      elevation: 0.5,
-      child: Container(
-        margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
-        child: Row(
-          children: <Widget>[
-            Image.asset('images/tax_record.png', width: 50.0, height: 50.0,),
-            Expanded(
-              child: Container(
-                margin: EdgeInsets.all(15.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(margin: EdgeInsets.only(bottom: 5.0),
-                        child: Text(taxRecordModel.subject,style: TextStyle(fontSize: FontSize.textSizeNormal,color: MyColor.colorTextBlack),overflow: TextOverflow.ellipsis,maxLines: 1,)),
-                    Text(ShowDateTimeHelper().showDateTimeDifference(taxRecordModel.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)
-                  ],
+    return GestureDetector(
+      onTap: (){
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => PhotoDetailScreen(BaseUrl.TAX_RECORD_PHOTO_URL+taxRecordModel.photoUrl),
+          settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
+        ));
+      },
+      child: Card(
+        margin: EdgeInsets.only(bottom: 1.0),
+        elevation: 0.5,
+        child: Container(
+          margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
+          child: Row(
+            children: <Widget>[
+              Image.asset('images/tax_record.png', width: 50.0, height: 50.0,),
+              Expanded(
+                child: Container(
+                  margin: EdgeInsets.all(15.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(margin: EdgeInsets.only(bottom: 5.0),
+                          child: Text(taxRecordModel.subject,style: TextStyle(fontSize: FontSize.textSizeNormal,color: MyColor.colorTextBlack),overflow: TextOverflow.ellipsis,maxLines: 1,)),
+                      Text(ShowDateTimeHelper().showDateTimeDifference(taxRecordModel.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)
+                    ],
+                  ),
                 ),
               ),
-            ),
-            GestureDetector(onTap: (){
-              _dialogDelete(taxRecordModel.id);
-            },child: Icon(Icons.delete, color: MyColor.colorPrimary,))
-          ],
+              GestureDetector(onTap: (){
+                _dialogDelete(taxRecordModel.id);
+              },child: Icon(Icons.delete, color: MyColor.colorPrimary,))
+            ],
+          ),
         ),
       ),
     );
@@ -263,7 +280,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToProfileScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_sharepreferenceshelper.isWardAdmin())));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(
+        builder: (context) => ProfileFormScreen(_sharepreferenceshelper.isWardAdmin()),
+      settings: RouteSettings(name: ScreenName.PROFILE_FORM_SCREEN)
+    ));
     if(result != null && result.containsKey('isNeedRefresh') == true){
       //await _getUser();
       await _handleRefresh();
@@ -271,7 +291,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToProfilePhotoScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePhotoUploadScreen()));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePhotoUploadScreen(),
+      settings: RouteSettings(name: ScreenName.PROFILE_PHOTO_SCREEN)
+    ));
     if(result != null && result.containsKey('isNeedRefresh') == true){
       //await _getUser();
       await _handleRefresh();
@@ -279,9 +301,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToNewTaxRecordScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewTaxRecordScreen()));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewTaxRecordScreen(),
+      settings: RouteSettings(name: ScreenName.NEW_TAX_RECORD_SCREEN)
+    ));
     if(result != null && result.containsKey('isNeedRefresh') == true){
-      //await _getUser();
       await _handleRefresh();
     }
   }
@@ -358,7 +381,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Divider(color: MyColor.colorPrimary,),
                     GestureDetector(
                       onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseListScreen()));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseListScreen(),
+                          settings: RouteSettings(name: ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN)
+                        ));
                       },
                       child: Container(
                         child: Row(
@@ -597,15 +622,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   Future<Null> _handleRefresh() async {
-   /* await _checkCon();
-    if(_isCon){
-      _taxRecordModelList.clear();
-      page = 0;
-      page++;
-      _getUser();
-    }else{
-      Fluttertoast.showToast(msg: 'Check Connection', backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
-    }*/
    setState(() {
      page = 0;
      page ++;
@@ -620,7 +636,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     if(_isCon){
       page++;
       await _getAllTaxRecord(page);
-      //Fluttertoast.showToast(msg: 'call loadmore');
     }
     return _isCon;
   }

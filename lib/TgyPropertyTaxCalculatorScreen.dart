@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
+import 'helper/SharePreferencesHelper.dart';
 
 class TgyPropertyTaxCalculatorScreen extends StatefulWidget {
   @override
@@ -22,6 +24,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
   static const int base_value = 70;
   double buildingValue, roadValue, zoneValue, rentalRate, arv;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+  Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
 
   @override
   void initState() {
@@ -385,11 +388,16 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                           width: double.maxFinite,
                           height: 50.0,
                           child: RaisedButton(
-                            onPressed: (){
+                            onPressed: ()async{
 
                               if(_dropDownRoad != MyString.txt_no_selected && _dropDownBuildingType != MyString.txt_no_selected &&
                                 _dropDownBlockNo != MyString.txt_no_selected && _lengthContorller.text.isNotEmpty && _widthContorller.text.isNotEmpty){
                                 _calculateTaxDialog();
+                                FocusScope.of(context).requestFocus(FocusNode());
+                                await _sharepreferenceshelper.initSharePref();
+                                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_PROPERTY_TAX_CLICK_EVENT,
+                                    _sharepreferenceshelper.getUserUniqueKey());
+
                               }else if(_dropDownBuildingType == MyString.txt_no_selected){
                                 WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
                               }else if(_dropDownRoad == MyString.txt_no_selected){

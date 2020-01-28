@@ -66,9 +66,13 @@ class _DaoScreenState extends State<DaoScreen> {
                   return GestureDetector(
                     onTap: (){
                       if(_daoViewModelList[index].daoModel.title.contains('ဌာနများ')){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DepartmentListScreen(_daoViewModelList[index])));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DepartmentListScreen(_daoViewModelList[index]),
+                          settings: RouteSettings(name: ScreenName.DEPARTMENT_LIST_SCREEN)
+                        ));
                       }else{
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoDetailScreen(_daoViewModelList[index])));
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoDetailScreen(_daoViewModelList[index]),
+                            settings: RouteSettings(name: display.isEmpty?ScreenName.ABOUT_DAO_DETAIL_SCREEN : ScreenName.ABOUT_TAX_DETAIL_SCREEN)
+                        ));
                       }
                     },
                     child: Container(

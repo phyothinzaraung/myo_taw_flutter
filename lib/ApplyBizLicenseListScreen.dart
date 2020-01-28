@@ -65,7 +65,9 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
               i==0? headerTitleWidget(MyString.txt_apply_biz_license, 'business_license_nocircle') : Container(),
               GestureDetector(
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseDetailScreen(_applyBizLicenseModelList[i])));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseDetailScreen(_applyBizLicenseModelList[i]),
+                    settings: RouteSettings(name: ScreenName.APPLY_BIZ_LICENSE_DETAIL_SCREEN)
+                  ));
                 },
                 child: Card(
                   margin: EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.5),

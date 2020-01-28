@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -43,7 +44,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
   }
 
   Future gallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1024, maxHeight: 768);
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
 
     setState(() {
       _image = image;
@@ -83,12 +84,24 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                 delegate: SliverChildBuilderDelegate((context, index){
                   return GestureDetector(
                     onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(builder: (context) => PhotoDetailScreen(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl)));
+                      Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => PhotoDetailScreen(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl),
+                        settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
+                      ));
                     },
                     child: Padding(
                       padding: EdgeInsets.all(10.0),
                       child: Image.network(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl
-                      , width: 160.0, height: 160.0, fit: BoxFit.cover,),
+                      , width: 160.0, height: 160.0, fit: BoxFit.cover, loadingBuilder: (context, child, loadingProgress){
+                          if (loadingProgress == null) return child;
+                          return Center(
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null ?
+                              loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
+                                  : null,
+                            ),
+                          );
+                        },),
                     ),
                   );
                 },childCount: _applyBizLicensePhotoModelList.length),
@@ -178,11 +191,13 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                       Flexible(
                           flex: 2,
                           child: GestureDetector(
-                            onTap: (){
+                            onTap: ()async{
                               gallery();
+                              await _sharepreferenceshelper.initSharePref();
+                              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                             },
                             child: _image==null?Image.asset('images/add_image_placeholder.png', width: double.maxFinite, height: 50.0,):
-                            Image.file(_image, width: 50.0, height: 50.0, fit: BoxFit.cover,),
+                            Image.file(_image, width: double.maxFinite, height: 50.0, fit: BoxFit.cover,),
                           )),
                       Flexible(
                           flex: 8,
@@ -219,6 +234,8 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                                 setState(() {
                                   _isLoading = true;
                                 });
+                                await _sharepreferenceshelper.initSharePref();
+                                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN, ClickEvent.APPLY_BIZ_LICENSE_PHOTO_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                                 _uploadPhoto();
                               }
                             }else{
@@ -232,7 +249,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                               WarningSnackBar(_globalKey, MyString.txt_need_apply_biz_photo_name);
                             }
                           },
-                            child: Text('Upload', style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,),
+                            child: Text(MyString.txt_send, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,),
                         ),
                       )
                     ],

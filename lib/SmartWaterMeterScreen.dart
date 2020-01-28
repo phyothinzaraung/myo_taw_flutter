@@ -93,20 +93,6 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
     });
   }
 
-  _navigateToTopUpScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpRecordListScreen(_userModel)));
-    if(result != null && result.containsKey('isNeedRefresh') == true){
-      _handleRefresh();
-    }
-  }
-
-  _navigateToPinCodeSetUpScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
-    if(result != null && result.containsKey('isNeedRefresh') == true){
-      _handleRefresh();
-    }
-  }
-
   Widget _header(){
     return Container(
       child: Column(
@@ -203,11 +189,11 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
                       height: 45.0,
                       width: double.maxFinite,
                       child: RaisedButton(onPressed: ()async{
-                        if(_userModel.pinCode != 0){
-                          _navigateToTopUpScreen();
-                        }else{
-                          _navigateToPinCodeSetUpScreen();
-                        }
+
+                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpRecordListScreen(_userModel),
+                          settings: RouteSettings(name: ScreenName.TOP_UP_RECORD_LIST_SCREEN)
+                        ));
+
                         }, child: Text(MyString.txt_top_up_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                         color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
                     ),

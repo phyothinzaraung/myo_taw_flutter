@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_xlider/flutter_xlider.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/FloodLevelFtInHelper.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/helper/NumConvertHelper.dart';
+import 'package:myotaw/helper/SharePreferencesHelper.dart';
 
 class GetFloodLevelScreen extends StatefulWidget {
   @override
@@ -14,6 +16,7 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
   double _waterLevel = 0;
   GlobalKey _globalKey = GlobalKey();
   String _convertFloodLevel = '';
+  Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
 
   @override
   void initState() {
@@ -149,7 +152,9 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
                   margin: EdgeInsets.all(20),
                   height: 50,
                   width: double.maxFinite,
-                  child: RaisedButton(onPressed: (){
+                  child: RaisedButton(onPressed: ()async{
+                    await _sharepreferenceshelper.initSharePref();
+                    FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.GET_FLOOD_LEVEL_SCREEN, ClickEvent.GET_FLOOD_LEVEL_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                     Navigator.of(context).pop({'FloodLevel' : _floodLevel});
                   },child: Text(MyString.txt_get_flood_level,
                     style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),

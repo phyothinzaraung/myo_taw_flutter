@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
+import 'package:myotaw/helper/ServiceHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'main.dart';
 import 'package:flutter/services.dart';
@@ -28,6 +29,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     // TODO: implement initState
     super.initState();
     _init();
+    _updateUserActiveTime();
   }
   _init()async{
     await _sharepreferenceshelper.initSharePref();
@@ -51,6 +53,16 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     }
     await _locationInit();
     navigateMainScreen();
+  }
+
+  _updateUserActiveTime() async{
+    await _sharepreferenceshelper.initSharePref();
+    try{
+      var response = await ServiceHelper().updateUserActiveTime(_sharepreferenceshelper.getUserUniqueKey());
+      print(response.data);
+    }catch(e){
+      print(e);
+    }
   }
 
   _locationInit()async{

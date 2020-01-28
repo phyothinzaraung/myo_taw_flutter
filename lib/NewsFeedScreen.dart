@@ -128,11 +128,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     PrimaryColorSnackBarWidget(_globalKey, MyString.txt_save_newsFeed_success);
   }
 
-  _callLikeWebService(String newsFeedId)async{
-    response = await ServiceHelper().likeReact(_userUniqueKey, newsFeedId, 'like');
-    print('responseLike: ${response}');
-  }
-
   _getUser() async{
     await _sharepreferenceshelper.initSharePref();
     _userUniqueKey = _sharepreferenceshelper.getUserUniqueKey();
@@ -232,7 +227,10 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
           children: <Widget>[
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModel[i].photoList)));
+                Navigator.of(context).push(MaterialPageRoute(
+                    builder: (context) => NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModel[i].photoList),
+                  settings: RouteSettings(name: ScreenName.NEWS_FEED_DETAIL_SCREEN)
+                ));
               },
               child: Container(
                 child: Column(
@@ -331,6 +329,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                             newsFeedModel.likeCount--;
                           }
                         }
+                        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_LIKE_CLICK_EVENT, _userUniqueKey);
                         _callLikeWebService(newsFeedModel.uniqueKey);
                       });
                     },
@@ -346,8 +345,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   ),
                   //save newsfeed button
                   Expanded(child: GestureDetector(onTap: (){
+                    FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_SAVE_CLICK_EVENT, _userUniqueKey);
                     _saveNewsFeed(newsFeedModel);
-
                     },
                     child: Row(mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
@@ -367,6 +366,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     );
   }
 
+  _callLikeWebService(String newsFeedId)async{
+    response = await ServiceHelper().likeReact(_userUniqueKey, newsFeedId, 'like');
+    print('responseLike: ${response}');
+  }
+
   Widget _headerNewsFeed(){
     return Column(
       children: <Widget>[
@@ -383,7 +387,9 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             ),
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(),
+                  settings: RouteSettings(name: ScreenName.PROFILE_SCREEN)
+                ));
 
               },
               child: Hero(
@@ -482,6 +488,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     if(!_isTop){
       return FloatingActionButton(
         onPressed: (){
+          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.GO_TO_TOP_CLICK_EVENT, _userUniqueKey);
           _topToScreen();
         },
         child: Icon(Icons.arrow_upward, color: Colors.white, size: 20,),

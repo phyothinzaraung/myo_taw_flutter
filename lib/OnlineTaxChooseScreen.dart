@@ -26,9 +26,7 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
   UserModel _userModel;
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
-  TextEditingController _pinCodeController = new TextEditingController();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
-  bool _hasError = false;
   List<DashBoardModel> _widgetList = new List();
   UserDb _userDb = UserDb();
 
@@ -74,6 +72,15 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
     }, barrierDismissible: false);
   }
 
+  _navigateToPinCodeSetupScreen()async{
+    Map result = await  Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel),
+        settings: RouteSettings(name: ScreenName.PIN_CODE_SET_UP_SCREEN)
+    ));
+    if(result != null && result.containsKey('isNeedRefresh')){
+      _handleRefresh();
+    }
+  }
+
   _listView(){
     return Container(
         child: CustomScrollView(
@@ -90,11 +97,6 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
                   return GestureDetector(
                     onTap: (){
                       if(_userModel.pinCode != null){
-                        setState(() {
-                          _hasError = false;
-                        });
-                        //_dialogPinRequest('OnlineTax');
-                        //Fluttertoast.showToast(msg: MyString.txt_coming_soon, backgroundColor: Colors.black54, fontSize: FontSize.textSizeNormal);
                         if(_userModel.currentRegionCode == MyString.TGY_REGIONCODE){
                           _dialogPinRequest(index==0?'OnlineTax':'SmartWm');
                           OnlineTaxPinRequestDialogWidget(index==0?'OnlineTax':'SmartWm', _userModel);
@@ -103,8 +105,9 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
                         }
 
                       }else{
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
+                       _navigateToPinCodeSetupScreen();
                       }
+
                     },
                     child: Container(
                       //margin: EdgeInsets.only(top: 7, bottom: 7),

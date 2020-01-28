@@ -8,6 +8,31 @@ class ApplyBizLicenseDetailScreen extends StatelessWidget {
   ApplyBizLicenseModel _applyBizLicenseModel;
   ApplyBizLicenseDetailScreen(this._applyBizLicenseModel);
 
+  Widget _applyBizLicensePhotoListWidget(BuildContext context){
+    return Container(
+      height: 45.0,
+      width: double.maxFinite,
+      margin: EdgeInsets.all(20.0),
+      decoration: BoxDecoration(borderRadius: BorderRadius.circular(7.0),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+                color: Colors.black.withOpacity(0.3),
+                blurRadius: 10.0,
+                spreadRadius: 1.0,
+                offset: Offset(0.0, 2.0)
+            )
+          ]),
+      child: OutlineButton(onPressed: (){
+        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicensePhotoListScreen(_applyBizLicenseModel),
+          settings: RouteSettings(name: ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN)
+        ));
+
+      }, child: Text(MyString.txt_need_paper_work, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)), borderSide: BorderSide(color: MyColor.colorPrimary),),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -16,26 +41,7 @@ class ApplyBizLicenseDetailScreen extends StatelessWidget {
       ),
       body: ListView(
         children: <Widget>[
-          Container(
-            height: 45.0,
-            width: double.maxFinite,
-            margin: EdgeInsets.all(20.0),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(7.0),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withOpacity(0.3),
-                    blurRadius: 10.0,
-                    spreadRadius: 1.0,
-                    offset: Offset(0.0, 2.0)
-                  )
-                ]),
-            child: OutlineButton(onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicensePhotoListScreen(_applyBizLicenseModel)));
-
-              }, child: Text(MyString.txt_need_paper_work, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)), borderSide: BorderSide(color: MyColor.colorPrimary),),
-          ),
+          _applyBizLicensePhotoListWidget(context),
           Card(
             margin: EdgeInsets.only(bottom: 50.0),
             elevation: 0.5,
@@ -245,26 +251,7 @@ class ApplyBizLicenseDetailScreen extends StatelessWidget {
               ),
             ),
           ),
-          Container(
-            height: 45.0,
-            width: double.maxFinite,
-            margin: EdgeInsets.all(20.0),
-            decoration: BoxDecoration(borderRadius: BorderRadius.circular(7.0),
-                color: Colors.white,
-                boxShadow: [
-                  BoxShadow(
-                      color: Colors.black.withOpacity(0.3),
-                      blurRadius: 10.0,
-                      spreadRadius: 1.0,
-                      offset: Offset(0.0, 2.0)
-                  )
-                ]),
-            child: OutlineButton(onPressed: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicensePhotoListScreen(_applyBizLicenseModel)));
-
-              }, child: Text(MyString.txt_need_paper_work, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)), borderSide: BorderSide(color: MyColor.colorPrimary),),
-          ),
+          _applyBizLicensePhotoListWidget(context),
         ],
       ),
     );

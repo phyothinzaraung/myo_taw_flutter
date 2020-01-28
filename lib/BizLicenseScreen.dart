@@ -48,9 +48,11 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
     //var bizLicenseList = [];
     if(bizLicenseList != null && bizLicenseList.length > 0){
       for(var i in bizLicenseList){
-        setState(() {
-          _bizLicenseModelList.add(BizLicenseModel.fromJson(i));
-        });
+        if(mounted){
+          setState(() {
+            _bizLicenseModelList.add(BizLicenseModel.fromJson(i));
+          });
+        }
       }
     }
   }
@@ -65,7 +67,9 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
               i==0? headerTitleWidget(MyString.title_biz_license, 'business_license_nocircle') : Container(),
               GestureDetector(
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseDetailScreen(_bizLicenseModelList[i])));
+                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseDetailScreen(_bizLicenseModelList[i]),
+                    settings: RouteSettings(name: ScreenName.BIZ_LICENSE_DETAIL_SCREEN)
+                  ));
                 },
                 child: Card(
                   margin: EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.5),
@@ -139,7 +143,9 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
         actions: <Widget>[
           GestureDetector(
             onTap: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseListScreen()));
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseListScreen(),
+                settings: RouteSettings(name: ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN)
+              ));
             },
             child: Container(
                 margin: EdgeInsets.only(right: 10.0),

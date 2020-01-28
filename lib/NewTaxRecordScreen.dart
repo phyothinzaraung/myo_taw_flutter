@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -34,14 +35,14 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
   }
 
   Future camera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1024, maxHeight: 768);
+    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
     setState(() {
       _image = image;
     });
   }
 
   Future gallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1024, maxHeight: 768);
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
 
     setState(() {
       _image = image;
@@ -77,6 +78,47 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
     //print('isCon : ${_isCon}');
   }
 
+  _finishDialogBox(){
+    return showDialog(
+        context: context,
+        builder: (context){
+          return WillPopScope(
+            child: SimpleDialog(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+              children: <Widget>[
+                Container(
+                  padding: EdgeInsets.all(10.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Container(
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          child: Image.asset('images/isvalid.png', width: 50.0, height: 50.0,)),
+                      Container(
+                          margin: EdgeInsets.only(bottom: 10.0),
+                          child: Text(MyString.txt_tax_record_upload_success,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),textAlign: TextAlign.center,)),
+                      Container(
+                        width: 200.0,
+                        height: 45.0,
+                        child: RaisedButton(onPressed: ()async{
+                          await _sharepreferenceshelper.initSharePref();
+                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.NEW_TAX_RECORD_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                          Navigator.of(context).pop();
+                          Navigator.of(context).pop({'isNeedRefresh' : true});
+
+                        }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                          color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ), onWillPop: (){},
+          );
+        }, barrierDismissible: false);
+  }
+
   _uploadTaxRecord() async{
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
@@ -85,11 +127,9 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
     _userModel = model;
     try{
       _response = await ServiceHelper().uploadTaxRecord(_image.path, _recordNameController.text, _userModel.uniqueKey, _userModel.name, _userModel.currentRegionCode);
-      //print('uploaddata: ${_recordName} ${_userModel.uniqueKey} ${_userModel.name} ${_userModel.currentRegionCode}');
       if(_response.data != null){
-        Navigator.of(context).pop({'isNeedRefresh' : true});
+        _finishDialogBox();
       }else{
-        //Fluttertoast.showToast(msg: MyString.txt_try_again, fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
         WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
     }catch(e){
@@ -141,8 +181,10 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                     Container(
                       height: 50,
                       margin: EdgeInsets.only(bottom: 15.0),
-                      child: RaisedButton(onPressed: (){
+                      child: RaisedButton(onPressed: ()async{
                         camera();
+                        await _sharepreferenceshelper.initSharePref();
+                        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                         },child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: <Widget>[
@@ -157,8 +199,10 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                     //gallery
                     Container(
                       height: 50,
-                      child: RaisedButton(onPressed: (){
+                      child: RaisedButton(onPressed: ()async{
                         gallery();
+                        await _sharepreferenceshelper.initSharePref();
+                        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                         },child: Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: <Widget>[
@@ -198,7 +242,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                   WarningSnackBar(_globalKey, MyString.txt_no_internet);
                 }
 
-                }, child: Text(MyString.txt_save_user_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                }, child: Text(MyString.txt_tax_record_upload, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
                 color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
             )
           ],

@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
@@ -217,35 +218,27 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     setState(() {
       _isLoading = true;
     });
-    if(_isCon){
-      _userModel.name = _nameController.text;
-      _userModel.address = _addressController.text;
-      if(!_sharepreferenceshelper.isWardAdmin()){
-        _userModel.state = _dropDownState;
-        _userModel.township = _dropDownTownship;
-      }
-      //_userModel.isWardAdmin = 1;//1 is true -- 0 is false
-      print('${_userModel.toJson()}');
-      try{
-        _response = await ServiceHelper().updateUserInfo(_userModel);
-        if(_response.data != null){
-          await _userDb.openUserDb();
-          await _userDb.insert(UserModel.fromJson(_response.data));
-          await _userDb.closeUserDb();
-          //_sharepreferenceshelper.setIsWardAdmin(UserModel.fromJson(_response.data).isWardAdmin==1?true:false);
-          _finishDialogBox();
-          /*print('usermodel: ${_userModel.name} ${_userModel.address} ${_userModel.state} '
-              '${_userModel.township} ${_userModel.currentRegionCode} ${_userModel.androidToken}');*/
-        }else{
-          WarningSnackBar(_scaffoldState, MyString.txt_try_again);
-        }
-      }catch(e){
-        print(e);
+    _userModel.name = _nameController.text;
+    _userModel.address = _addressController.text;
+    if(!_sharepreferenceshelper.isWardAdmin()){
+      _userModel.state = _dropDownState;
+      _userModel.township = _dropDownTownship;
+    }
+    //_userModel.isWardAdmin = 1;//1 is true -- 0 is false
+    print('${_userModel.toJson()}');
+    try{
+      _response = await ServiceHelper().updateUserInfo(_userModel);
+      if(_response.data != null){
+        await _userDb.openUserDb();
+        await _userDb.insert(UserModel.fromJson(_response.data));
+        await _userDb.closeUserDb();
+        _finishDialogBox();
+      }else{
         WarningSnackBar(_scaffoldState, MyString.txt_try_again);
       }
-
-    }else{
-      WarningSnackBar(_scaffoldState, MyString.txt_no_internet);
+    }catch(e){
+      print(e);
+      WarningSnackBar(_scaffoldState, MyString.txt_try_again);
     }
     setState(() {
       _isLoading = false;
@@ -409,8 +402,17 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                     width: double.maxFinite,
                                     height: 50.0,
                                     child: RaisedButton(
-                                      onPressed: (){
-                                        _updateUser();
+                                      onPressed: ()async{
+                                        await _checkCon();
+                                        if(_isCon){
+                                          _updateUser();
+                                          await _sharepreferenceshelper.initSharePref();
+                                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_FORM_SCREEN, ClickEvent.PROFILE_INFORMATION_UPLOAD_CLICK_EVENT,
+                                              _sharepreferenceshelper.getUserUniqueKey());
+                                        }else{
+                                          WarningSnackBar(_scaffoldState, MyString.txt_no_internet);
+                                        }
+
                                       },color: MyColor.colorPrimary,
                                       shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(8.0)

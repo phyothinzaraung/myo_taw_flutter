@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/DaoViewModel.dart';
@@ -62,7 +63,9 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
           GestureDetector(
             onTap: (){
               if(_daoPhotoModelList.isNotEmpty){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoPhotoDetailScreen(_daoPhotoModelList)));
+                Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoPhotoDetailScreen(_daoPhotoModelList),
+                  settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
+                ));
               }
             },
             child: Stack(
@@ -118,7 +121,6 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
         setState(() {
           _daoViewModelList.add(DaoViewModel.fromJson(i));
         });
-        print('daoviewmodel :${_daoViewModelList}');
       }
     }
     setState(() {
@@ -135,9 +137,9 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
-              //button manater
+
               RaisedButton(
-                  onPressed: (){
+                  onPressed: ()async{
                     setState(() {
                       _isLoading = true;
                       _isManager = true;
@@ -146,15 +148,17 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                       _daoViewModelList.clear();
                       _getDaoByDeptType(page);
                     });
+                    await _sharepreferenceshelper.initSharePref();
+                    FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.DEPARTMENT_LIST_SCREEN, ClickEvent.MANAGEMENT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
 
                   },child: Text(MyString.txt_dept_manager, style: TextStyle(color: _isManager?Colors.white:MyColor.colorPrimary),),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
                 color: _isManager?MyColor.colorPrimary:Colors.white,
                 elevation: 1.0,
                 padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 7.0, bottom: 7.0),),
-              //button engineer
+
               RaisedButton(
-                onPressed: (){
+                onPressed: ()async{
                   setState(() {
                     _isLoading = true;
                     _isManager = false;
@@ -163,6 +167,8 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                     _daoViewModelList.clear();
                     _getDaoByDeptType(page);
                   });
+                  await _sharepreferenceshelper.initSharePref();
+                  FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.DEPARTMENT_LIST_SCREEN, ClickEvent.ENGINEER_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
 
                 },child: Text(MyString.txt_dept_engineer, style: TextStyle(color: _isEngineer?Colors.white:MyColor.colorPrimary),),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),

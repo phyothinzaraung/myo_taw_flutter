@@ -105,22 +105,11 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
     });
   }
 
-  _navigateToTopUpScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpRecordListScreen(_userModel)));
-    if(result != null && result.containsKey('isNeedRefresh') == true){
-      _handleRefresh();
-    }
-  }
-
-  _navigateToPinCodeSetUpScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel)));
-    if(result != null && result.containsKey('isNeedRefresh') == true){
-      _handleRefresh();
-    }
-  }
 
   _navigateToPaymentScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => PaymentScreen()));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => PaymentScreen(),
+      settings: RouteSettings(name: ScreenName.ONLINE_TAX_PAYMENT_SCREEN)
+    ));
     if(result != null && result.containsKey('isNeedRefresh') == true){
       _handleRefresh();
     }
@@ -193,11 +182,11 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                               margin: EdgeInsets.only(right: 2.5),
                               height: 45.0,
                               child: RaisedButton(onPressed: ()async{
-                                if(_userModel.pinCode != null){
-                                  _navigateToTopUpScreen();
-                                }else{
-                                  _navigateToPinCodeSetUpScreen();
-                                }
+
+                                Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpRecordListScreen(_userModel),
+                                  settings: RouteSettings(name: ScreenName.TOP_UP_RECORD_LIST_SCREEN)
+                                ));
+
                                 }, child: Text(MyString.txt_top_up_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                                 color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
                             ),
@@ -207,11 +196,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                               margin: EdgeInsets.only(left: 2.5),
                               height: 45.0,
                               child: RaisedButton(onPressed: ()async{
-                                if(_userModel.pinCode != null){
-                                  _navigateToPaymentScreen();
-                                }else{
-                                  _navigateToPinCodeSetUpScreen();
-                                }
+                                _navigateToPaymentScreen();
 
                                 }, child: Text(MyString.txt_pay_tax, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                                 color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
@@ -322,7 +307,6 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
       });
       _getUser();
     }else{
-      //Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
       WarningSnackBar(_globalKey, MyString.txt_no_internet);
     }
     return null;

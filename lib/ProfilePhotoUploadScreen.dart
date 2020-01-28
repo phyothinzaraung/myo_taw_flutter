@@ -1,6 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:image_picker/image_picker.dart';
@@ -33,14 +34,14 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
   }
 
   Future camera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: 1024, maxHeight: 768);
+    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
     setState(() {
       _image = image;
     });
   }
 
   Future gallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: 1024, maxHeight: 768);
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
 
     setState(() {
       _image = image;
@@ -129,8 +130,11 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
                   _image==null?Expanded(
                     child: Container(
                       height: 50.0,
-                      child: FlatButton(onPressed: (){
+                      child: FlatButton(onPressed: ()async{
                         gallery();
+                        await _sharepreferenceshelper.initSharePref();
+                        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.GALLERY_CLICK_EVENT,
+                            _sharepreferenceshelper.getUserUniqueKey());
                         }, child: Text(MyString.txt_gallery, style: TextStyle(color: Colors.white),),
                         color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),
                     ),
@@ -145,9 +149,11 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
                           setState(() {
                             _isLoading = true;
                           });
+                          await _sharepreferenceshelper.initSharePref();
+                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.PROFILE_PHOTO_UPLOAD_CLICK_EVENT,
+                              _sharepreferenceshelper.getUserUniqueKey());
                           _uploadPhoto();
                         }else{
-                          //Fluttertoast.showToast(msg: 'No internet connection', fontSize: FontSize.textSizeNormal, backgroundColor: Colors.black.withOpacity(0.7));
                           WarningSnackBar(_globalKey, MyString.txt_no_internet);
                         }
                       }, child: Text(MyString.txt_upload_photo, style: TextStyle(color: Colors.white),),
@@ -158,8 +164,11 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
                   _image==null?Expanded(
                     child: Container(
                       height: 50.0,
-                      child: FlatButton(onPressed: (){
+                      child: FlatButton(onPressed: ()async{
                         camera();
+                        await _sharepreferenceshelper.initSharePref();
+                        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.CAMERA_CLICK_EVENT,
+                            _sharepreferenceshelper.getUserUniqueKey());
                         }, child: Text(MyString.txt_camera, style: TextStyle(color: Colors.white),),
                         color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),
                     ),
@@ -168,7 +177,7 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
                   Expanded(
                     child: Container(
                       height: 50.0,
-                      child: FlatButton(onPressed: (){
+                      child: FlatButton(onPressed: ()async{
                         setState(() {
                           _image = null;
                         });
