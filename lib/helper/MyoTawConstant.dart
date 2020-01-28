@@ -42,8 +42,8 @@ class MyString{
 
   static const String txt_like = "နှစ်သက်";
   static const String txt_save = "သိမ်းမည်";
-  static const String txt_welcome_tgy ='တောင်ကြီးမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပရီကေးရှင်းမှ ကြိုဆိုပါသည်။';
-  static const String txt_welcome_mlm ='မော်လမြိုင်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပရီကေးရှင်းမှ ကြိုဆိုပါသည်။';
+  static const String txt_welcome_tgy ='တောင်ကြီးမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
+  static const String txt_welcome_mlm ='မော်လမြိုင်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String TGY_CITY = 'တောင်ကြီးမြို့';
   static const String MLM_CITY = 'မော်လမြိုင်မြို့';
   static const String MDY_CITY = 'မန္တလေးမြို့';
@@ -242,7 +242,7 @@ class MyString{
   static const String txt_contribute_fact = "အကြုံပြုချက်";
   static const String txt_send_contribution = "အကြုံပြုစာပို့မည်";
   static const String txt_ward_admin_feature = "Ward Admin ၏ ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
-  static const String txt_myotaw_feature = "မြို့တော်အပ်ပလီကေရှင်းကဏ္ဍ";
+  static const String txt_myotaw_feature = "မြို့တော်အပ်ပလီကေးရှင်းကဏ္ဍ";
   static const String txt_choose_feature = "ကဏ္ဍရွေးချယ်ပေးပါ";
   static const String txt_title_dashboard = "ကဏ္ဍများ";
   static const String txt_title_notification = "အသိပေးနှိုးဆော်ချက်";
@@ -258,13 +258,13 @@ class MyString{
   static const String txt_get_flood_level= 'အတိုင်းအတာယူမည်';
   static const String txt_inch = 'လက်မ';
   static const String txt_feet = 'ပေ';
-  static const String txt_flood_report_finish = 'မှတ်တမ်းမှုအောင်မြင်သည်။';
+  static const String txt_flood_report_finish = 'မှတ်တမ်းတင်မှုအောင်မြင်သည်။';
   static const String txt_need_flood_level = 'ရေကြီးခြင်းအတိုင်းအတာလိုအပ်သည်။';
   static const String txt_flood_level_no_record = 'မှတ်တမ်းမရှိပါ။';
   static const String txt_no_top_up_record = 'ငွေဖြည့်မှတ်တမ်းမရှိပါ။';
   static const String txt_tax_record_upload_success = 'အခွန်မှတ်တမ်းအသစ်တင်မှုအောင်မြင်သည်။';
   static const String txt_tax_record_upload = 'အခွန်မှတ်တမ်းတင်မည်';
-  static const String txt_saved_news_feed = 'သိမ်းပြီး';
+  static const String txt_saved_news_feed = 'သိမ်းဆည်းထားပြီး';
 
 
 

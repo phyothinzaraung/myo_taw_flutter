@@ -3,12 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:html/parser.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/model/NewsFeedReactModel.dart';
 import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
 import 'helper/ServiceHelper.dart';
-import 'Model/NewsFeedReactModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'helper/ShowDateTimeHelper.dart';
-import 'Model/NewsFeedModel.dart';
 import 'NewsFeedDetailScreen.dart';
 import 'helper/MyLoadMore.dart';
 import 'package:connectivity/connectivity.dart';
@@ -21,6 +20,7 @@ import 'ProfileScreen.dart';
 import 'Database/UserDb.dart';
 import 'myWidget/EmptyViewWidget.dart';
 import 'myWidget/NoConnectionWidget.dart';
+import 'model/NewsFeedModel.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   @override
@@ -30,7 +30,7 @@ class NewsFeedScreen extends StatefulWidget {
 class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAliveClientMixin<NewsFeedScreen> {
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   var response;
-  List<NewsFeedReactModel> _newsFeedReactModel = new List<NewsFeedReactModel>();
+  List<NewsFeedReactModel> _newsFeedReactModelList = new List<NewsFeedReactModel>();
   ScrollController _scrollController = new ScrollController();
   bool _isEnd = false, _isCon= false;
   int page = 1;
@@ -115,17 +115,20 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   _saveNewsFeed(NewsFeedModel model)async{
     await _saveNewsFeedDb.openSaveNfDb();
-    _saveNewsFeedModel.id = model.uniqueKey;
-    _saveNewsFeedModel.title = model.title;
-    _saveNewsFeedModel.body = model.body;
-    _saveNewsFeedModel.photoUrl = model.photoUrl;
-    _saveNewsFeedModel.videoUrl = model.videoUrl;
-    _saveNewsFeedModel.thumbNail = model.thumbNail;
-    _saveNewsFeedModel.contentType = model.uploadType;
-    _saveNewsFeedModel.accessTime = DateTime.now().toString();
-    await _saveNewsFeedDb.insert(_saveNewsFeedModel);
+    bool _isNewsfeedSaved = await _saveNewsFeedDb.isNewsFeedSaved(model.uniqueKey);
+    if(!_isNewsfeedSaved){
+      _saveNewsFeedModel.id = model.uniqueKey;
+      _saveNewsFeedModel.title = model.title;
+      _saveNewsFeedModel.body = model.body;
+      _saveNewsFeedModel.photoUrl = model.photoUrl;
+      _saveNewsFeedModel.videoUrl = model.videoUrl;
+      _saveNewsFeedModel.thumbNail = model.thumbNail;
+      _saveNewsFeedModel.contentType = model.uploadType;
+      _saveNewsFeedModel.accessTime = DateTime.now().toString();
+      await _saveNewsFeedDb.insert(_saveNewsFeedModel);
+      //PrimaryColorSnackBarWidget(_globalKey, MyString.txt_save_newsFeed_success);
+    }
     await _saveNewsFeedDb.closeSaveNfDb();
-    PrimaryColorSnackBarWidget(_globalKey, MyString.txt_save_newsFeed_success);
   }
 
   _getUser() async{
@@ -150,7 +153,12 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     print('loadmore: ${p}');
     if(result != null && result.length > 0){
       for(var i in result){
-        _newsFeedReactModel.add(NewsFeedReactModel.fromJson(i));
+        NewsFeedReactModel _newsFeedReactModel = NewsFeedReactModel.fromJson(i);
+        await _saveNewsFeedDb.openSaveNfDb();
+        bool isSaved = await _saveNewsFeedDb.isNewsFeedSaved(_newsFeedReactModel.newsFeedModel.uniqueKey);
+        await _saveNewsFeedDb.closeSaveNfDb();
+        _newsFeedReactModel.newsFeedModel.isSaved = isSaved;
+        _newsFeedReactModelList.add(_newsFeedReactModel);
       }
       if(mounted){
         setState(() {
@@ -181,7 +189,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     setState(() {
       page = 0;
       page ++;
-      _newsFeedReactModel.clear();
+      _newsFeedReactModelList.clear();
     });
     asyncLoaderState.currentState.reloadState();
     return null;
@@ -211,7 +219,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
 
   Widget _newsFeedListWidget(int i){
-    NewsFeedModel newsFeedModel = _newsFeedReactModel[i].newsFeedModel;
+    NewsFeedModel newsFeedModel = _newsFeedReactModelList[i].newsFeedModel;
     String newsFeedPhoto = newsFeedModel.photoUrl;
     String newsFeedThumbNail = newsFeedModel.thumbNail;
     String title = newsFeedModel.title;
@@ -228,7 +236,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             GestureDetector(
               onTap: (){
                 Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModel[i].photoList),
+                    builder: (context) => NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModelList[i].photoList),
                   settings: RouteSettings(name: ScreenName.NEWS_FEED_DETAIL_SCREEN)
                 ));
               },
@@ -320,11 +328,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     onTap: (){
                       //print('like: ${isLike}');
                       setState(() {
-                        if(_newsFeedReactModel[i].reactType == null){
+                        if(_newsFeedReactModelList[i].reactType == null){
                           newsFeedModel.likeCount++;
-                          _newsFeedReactModel[i].reactType = 'like';
+                          _newsFeedReactModelList[i].reactType = 'like';
                         }else{
-                          _newsFeedReactModel[i].reactType = null;
+                          _newsFeedReactModelList[i].reactType = null;
                           if(newsFeedModel.likeCount >= 0){
                             newsFeedModel.likeCount--;
                           }
@@ -336,7 +344,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     child: Row(
                       children: <Widget>[
                         Container(margin: EdgeInsets.only(right: 5.0),
-                            child: Image.asset(_newsFeedReactModel[i].reactType!=null?'images/like_fill.png':'images/like.png',
+                            child: Image.asset(_newsFeedReactModelList[i].reactType!=null?'images/like_fill.png':'images/like.png',
                               width: 20.0,height: 20.0,)),
                         Text('${MyString.txt_like}',
                           style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeSmall),)
@@ -347,13 +355,18 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   Expanded(child: GestureDetector(onTap: (){
                     FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_SAVE_CLICK_EVENT, _userUniqueKey);
                     _saveNewsFeed(newsFeedModel);
+                    if(!newsFeedModel.isSaved){
+                      setState(() {
+                        newsFeedModel.isSaved = true;
+                      });
+                    }
                     },
                     child: Row(mainAxisAlignment: MainAxisAlignment.end,
                       children: <Widget>[
                         Container(
                             margin: EdgeInsets.only(right: 5),
-                            child: Image.asset('images/save.png', width: 20.0,height: 20.0,)),
-                        Text('${MyString.txt_save}',
+                            child: Image.asset(newsFeedModel.isSaved? 'images/isvalid.png' : 'images/save.png', width: 20.0,height: 20.0,)),
+                        Text(newsFeedModel.isSaved?MyString.txt_saved_news_feed : MyString.txt_save,
                           style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeSmall),)
                       ],),
                   ))
@@ -437,7 +450,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   Widget _listView(){
     return ListView.builder(
-        itemCount: _newsFeedReactModel.length,
+        itemCount: _newsFeedReactModelList.length,
         controller: _scrollController,
         physics: AlwaysScrollableScrollPhysics(),
         itemBuilder: (BuildContext context, int i){
@@ -515,7 +528,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       renderSuccess: ({data}) => Container(
         child: RefreshIndicator(
           onRefresh: _handleRefresh,
-          child: _newsFeedReactModel.isNotEmpty?
+          child: _newsFeedReactModelList.isNotEmpty?
           LoadMore(
               isFinish: _isEnd,
               onLoadMore: _loadMore,

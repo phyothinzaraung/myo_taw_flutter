@@ -18,6 +18,16 @@ class NewsFeedModel{
   String _thumbNail;
   String _subscription;
 
+  //local field
+  bool _isSaved;
+
+
+  bool get isSaved => _isSaved;
+
+  set isSaved(bool value) {
+    _isSaved = value;
+  }
+
   String get uniqueKey => _uniqueKey;
 
   set uniqueKey(String value) {

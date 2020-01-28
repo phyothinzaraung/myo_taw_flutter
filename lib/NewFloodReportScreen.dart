@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +9,6 @@ import 'package:myotaw/GetFloodLevelScreen.dart';
 import 'package:myotaw/database/UserDb.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/FloodLevelFtInHelper.dart';
-import 'package:myotaw/helper/NumConvertHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/model/UserModel.dart';
@@ -75,11 +73,12 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
     });
   }
 
-  Future camera() async {
+  Future<File> camera() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
     setState(() {
       _image = image;
     });
+    return image;
   }
 
   _navigateToGetFloodLevelScreen() async{
@@ -180,7 +179,11 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
               height: 50,
               margin: EdgeInsets.only(bottom: 20.0, top: 20, left: 20, right: 20),
               child: RaisedButton(onPressed: ()async{
-                camera();
+                camera().then((image){
+                  if(image != null){
+                    _navigateToGetFloodLevelScreen();
+                  }
+                });
                 await _sharepreferenceshelper.initSharePref();
                 FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
               },child: Row(
@@ -195,7 +198,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                 shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
               ),
             ),
-            Container(
+            /*Container(
               height: 50,
               margin: EdgeInsets.only(bottom: 50.0,left: 20, right: 20),
               child: RaisedButton(onPressed: (){
@@ -211,7 +214,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
               ),color: Colors.white,elevation: 5.0,
                 shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
               ),
-            ),
+            ),*/
             Card(
               margin: EdgeInsets.all(0),
               color: Colors.white,

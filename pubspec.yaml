@@ -72,9 +72,9 @@ flutter:
   # the material Icons class.
   uses-material-design: true
   fonts:
-    - family: CustomIcons
+    - family: MyoTawCustomIcon
       fonts:
-        - asset: fonts/CustomIcons.ttf
+        - asset: fonts/MyoTawCustomIcon.ttf
 
 
   assets:
@@ -170,6 +170,8 @@ flutter:
     - images/flood_level.png
     - images/myotaw_man.png
     - images/newsfeed_grey.png
+    - images/dashboard_grey.png
+    - images/noti_grey.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

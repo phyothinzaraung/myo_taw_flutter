@@ -1,16 +1,15 @@
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
-import 'package:myotaw/LoginScreen.dart';
-import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
+import 'package:myotaw/customIcons/MyoTawCustomIcon.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'Database/UserDb.dart';
 import 'SplashScreen.dart';
 import 'NewsFeedScreen.dart';
 import 'DashBoardScreen.dart';
 import 'NotificationScreen.dart';
-import 'customIcons/my_flutter_app_icons.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/UserModel.dart';
@@ -29,19 +28,21 @@ void main() {
   }
   FirebaseAnalytics fireBaseAnalytics = FirebaseAnalytics();
   FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: fireBaseAnalytics);
-  runApp(MaterialApp(
-    home: SplashScreen(),
-    navigatorObservers: [
-      observer
-    ],
-    theme: ThemeData(
-      appBarTheme: AppBarTheme(
+  SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_){
+    runApp(MaterialApp(
+      home: SplashScreen(),
+      navigatorObservers: [
+        observer
+      ],
+      theme: ThemeData(
+        appBarTheme: AppBarTheme(
           color: MyColor.colorPrimary,
+        ),
+        accentColor: MyColor.colorPrimaryDark,
+        scaffoldBackgroundColor: MyColor.colorGrey,
       ),
-      accentColor: MyColor.colorPrimaryDark,
-      scaffoldBackgroundColor: MyColor.colorGrey,
-    ),
-  ));
+    ));
+  });
 }
 
 class MainScreen extends StatefulWidget {
@@ -145,9 +146,9 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
               unselectedLabelColor: MyColor.colorGreyDark,
               controller: _tabController,
               tabs: [
-                Tab(icon: Icon(MyFlutterApp.newsfeed, size: 20.0,)),
-                Tab(icon: Icon(Icons.dashboard)),
-                Tab(icon: Icon(Icons.notifications))
+                Tab(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,)),
+                Tab(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
+                Tab(icon: Icon(MyoTawCustomIcon.Notification_icon, size: 25,))
               ],
             ),
           ),

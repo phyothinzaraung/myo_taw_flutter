@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'model/NewsFeedPhotoModel.dart';
-import 'Model/NewsFeedModel.dart';
+import 'model/NewsFeedModel.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'helper/ShowDateTimeHelper.dart';

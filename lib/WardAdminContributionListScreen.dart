@@ -9,8 +9,6 @@ import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/model/ContributionModel.dart';
 import 'package:myotaw/model/UserModel.dart';
 import 'package:permission_handler/permission_handler.dart';
-
-import 'ProfileFormScreen.dart';
 import 'ProfileScreen.dart';
 import 'helper/MyLoadMore.dart';
 import 'helper/MyoTawConstant.dart';
@@ -103,6 +101,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
       ),
     );
   }
+
   Widget _headerContribution(){
     return Column(
       children: <Widget>[
@@ -112,6 +111,10 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: Icon(Icons.arrow_back),
+                  ),
                   Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
                   Text(MyString.txt_contributions, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                 ],
@@ -396,11 +399,14 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
     return Scaffold(
       key: _globalKey,
       body: SafeArea(child: _asyncLoader),
-      floatingActionButton: FloatingActionButton.extended(
-          onPressed: (){
-            _navigateToWardAdminContributionScreen();
-          }, label: Text(MyString.txt_to_contribute, style: TextStyle(color: Colors.white),),
-        icon: Icon(Icons.create, color: Colors.white,), backgroundColor: MyColor.colorPrimary,),
+      floatingActionButton: Container(
+        margin: EdgeInsets.only(bottom: 10),
+        child: FloatingActionButton.extended(
+            onPressed: (){
+              _navigateToWardAdminContributionScreen();
+            }, label: Text(MyString.txt_to_contribute, style: TextStyle(color: Colors.white),),
+          icon: Icon(Icons.create, color: Colors.white,), backgroundColor: MyColor.colorPrimary,),
+      ),
     );
   }
 }
