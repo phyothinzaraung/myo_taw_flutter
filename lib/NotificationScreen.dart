@@ -43,8 +43,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
       case MyString.MLM_REGIONCODE:
         _city = MyString.MLM_CITY;
         break;
-      case MyString.MDY_REGIONCODE:
-        _city = MyString.MDY_CITY;
+      case MyString.LKW_REGIONCODE:
+        _city = MyString.LKW_CITY;
         break;
     }
   }

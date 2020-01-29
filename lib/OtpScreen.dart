@@ -1,18 +1,16 @@
 import 'dart:async';
-
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'helper/MyoTawConstant.dart';
 import 'main.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'helper/ServiceHelper.dart';
 import 'model/UserModel.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:myotaw/Database/UserDb.dart';
-import 'WardAdminContributionListScreen.dart';
 import 'myWidget/ButtonLoadingIndicatorWidget.dart';
 
 class OtpScreen extends StatefulWidget {
@@ -65,7 +63,13 @@ class _OtpScreenState extends State<OtpScreen> {
       _showLoading = true;
     });
     String fcmtoken = 'doRMZhpJvpY:APA91bG4XW1tHVIxf_jbUAT8WekmgAlDd4JZAKQm9o3DUDYqVCoWmmmaznHTgbyMxXXNZZ9FwFewZz5DcSE7ooxdLZAPdUDXeD7iD16IUP1P0DwGzzWlsRxovB1zq16FHKUcdgDGud4t';
+    if(Platform.isAndroid){
+      _platForm = 'Android';
+    }else{
+      _platForm = 'Ios';
+    }
     try{
+      print('$_phNo $_regionCode $fcmtoken $_platForm' );
       response = await ServiceHelper().userLogin(_phNo, _regionCode, fcmtoken, _platForm);
       var result = response.data;
       print('user : $result');

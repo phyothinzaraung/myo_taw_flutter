@@ -111,9 +111,14 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: Icon(Icons.arrow_back),
+                  GestureDetector(
+                    onTap: (){
+                      Navigator.of(context).pop();
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(bottom: 10),
+                      child: Icon(Icons.arrow_back),
+                    ),
                   ),
                   Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
                   Text(MyString.txt_contributions, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
@@ -296,8 +301,8 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
       case MyString.MLM_REGIONCODE:
         _city = _userModel.isWardAdmin==1? MyString.MLM_CITY +' '+'(Ward admin)': MyString.MLM_CITY;
         break;
-      case MyString.MDY_REGIONCODE:
-        _city = _userModel.isWardAdmin==1? MyString.MDY_CITY +' '+'(Ward admin)': MyString.MDY_CITY;
+      case MyString.LKW_REGIONCODE:
+        _city = _userModel.isWardAdmin==1? MyString.LKW_CITY +' '+'(Ward admin)': MyString.LKW_CITY;
         break;
       default:
     }

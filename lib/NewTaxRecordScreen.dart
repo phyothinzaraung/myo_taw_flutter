@@ -5,12 +5,10 @@ import 'package:image_picker/image_picker.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 
 class NewTaxRecordScreen extends StatefulWidget {
@@ -102,6 +100,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                         width: 200.0,
                         height: 45.0,
                         child: RaisedButton(onPressed: ()async{
+                          FocusScope.of(context).requestFocus(FocusNode());
                           await _sharepreferenceshelper.initSharePref();
                           FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.NEW_TAX_RECORD_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                           Navigator.of(context).pop();

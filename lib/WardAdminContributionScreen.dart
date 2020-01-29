@@ -170,6 +170,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                         width: 200.0,
                         height: 45.0,
                         child: RaisedButton(onPressed: ()async{
+                          FocusScope.of(context).requestFocus(FocusNode());
                           await _sharepreferenceshelper.initSharePref();
                           FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                           Navigator.of(context).pop();

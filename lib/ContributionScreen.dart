@@ -132,6 +132,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
                         width: 200.0,
                         height: 45.0,
                         child: RaisedButton(onPressed: ()async{
+                          FocusScope.of(context).requestFocus(FocusNode());
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
 

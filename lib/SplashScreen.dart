@@ -48,6 +48,12 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
             _title = MyString.txt_welcome_mlm;
           });
           break;
+        case MyString.LKW_REGIONCODE:
+          setState(() {
+            //_logo = 'images/mlm_logo.png';
+            _title = MyString.txt_welcome_lkw;
+          });
+          break;
         default:
       }
     }

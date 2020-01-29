@@ -44,12 +44,13 @@ class MyString{
   static const String txt_save = "သိမ်းမည်";
   static const String txt_welcome_tgy ='တောင်ကြီးမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String txt_welcome_mlm ='မော်လမြိုင်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
+  static const String txt_welcome_lkw ='လွိုင်ကော်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String TGY_CITY = 'တောင်ကြီးမြို့';
   static const String MLM_CITY = 'မော်လမြိုင်မြို့';
-  static const String MDY_CITY = 'မန္တလေးမြို့';
+  static const String LKW_CITY = 'လွိုင်ကော်မြို့';
   static const String TGY_REGIONCODE = "TGY";
   static const String MLM_REGIONCODE = "MLM";
-  static const String MDY_REGIONCODE = "MDY";
+  static const String LKW_REGIONCODE = "LKW";
   static const String txt_welcome = "မြို့တော်မှ ကြိုဆိုပါ၏။";
 
 
@@ -265,6 +266,9 @@ class MyString{
   static const String txt_tax_record_upload_success = 'အခွန်မှတ်တမ်းအသစ်တင်မှုအောင်မြင်သည်။';
   static const String txt_tax_record_upload = 'အခွန်မှတ်တမ်းတင်မည်';
   static const String txt_saved_news_feed = 'သိမ်းဆည်းထားပြီး';
+  static const String txt_choose_state_township = 'နေရပ်ရွေးပါ';
+  static const String txt_need_user_information = 'ကိုယ်ရေးအချက်အလက်ဖြည့်ပေးပါ။';
+
 
 
 
@@ -512,7 +516,7 @@ class MyStringList{
 }
 
 class OrganizationId{
-  static const int MDY_ORGANIZATION_ID = 7;
+  static const int LKW_ORGANIZATION_ID = 13;
   static const int TGY_ORGANIZATION_ID = 8;
   static const int MLM_ORGANIZATION_ID = 9;
 }

@@ -31,7 +31,7 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _cityList = [_dropDownCity,MyString.TGY_CITY,MyString.MLM_CITY, MyString.MDY_CITY];
+    _cityList = [_dropDownCity,MyString.TGY_CITY,MyString.MLM_CITY, MyString.LKW_CITY];
     _sharePrefHelper.initSharePref();
   }
 
@@ -189,8 +189,8 @@ class _LoginScreenState extends State<LoginScreen> {
                                         case MyString.MLM_CITY:
                                           _regionCode = MyString.MLM_REGIONCODE;
                                           break;
-                                        case MyString.MDY_CITY:
-                                          _regionCode = MyString.MDY_REGIONCODE;
+                                        case MyString.LKW_CITY:
+                                          _regionCode = MyString.LKW_REGIONCODE;
                                           break;
                                         default:
                                       }

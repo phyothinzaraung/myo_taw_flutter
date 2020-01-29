@@ -25,8 +25,8 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   UserModel _userModel;
   TextEditingController _nameController = new TextEditingController();
   TextEditingController _addressController = new TextEditingController();
-  String _dropDownState = 'နေရပ်ရွေးပါ';
-  String _dropDownTownship = 'နေရပ်ရွေးပါ';
+  String _dropDownState = MyString.txt_choose_state_township;
+  String _dropDownTownship = MyString.txt_choose_state_township;
   List<String> _stateList;
   List<String> _townshipList;
   bool _isLoading, _isWardAdmin,_isCon = false;
@@ -43,9 +43,9 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     // TODO: implement initState
     super.initState();
     _isLoading = false;
-    _init();
     _stateList = [_dropDownState];
     _townshipList = [_dropDownTownship];
+    _init();
   }
 
   _getUser()async{
@@ -71,35 +71,38 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   }
 
   _init()async{
+    setState(() {
+      _isLoading = true;
+    });
     try{
-      setState(() {
-        _isLoading = true;
-      });
 
       await _getUser();
-      _nameController.text = _userModel.name;
-      _addressController.text = _userModel.address;
+
       await _locationDb.openLocationDb();
       var state = await _locationDb.getState();
       await _locationDb.closeLocationDb();
+      print(state);
       for(var i in state){
         _stateList.add(i);
         print('stateList: ${i}');
       }
-      await _getTownshipByState(_userModel.state);
+
+      //bind user data
+      if(_userModel.name != null){
+        _nameController.text = _userModel.name;
+        _addressController.text = _userModel.address;
+        _dropDownState = _userModel.state;
+        _dropDownTownship = _userModel.township;
+        await _getTownshipByState(_userModel.state);
+      }
       print(_userModel.toJson());
-      setState(() {
-        if(!_sharepreferenceshelper.isWardAdmin()){
-          _dropDownState = _userModel.state;
-          _dropDownTownship = _userModel.township;
-        }
-        _isLoading = false;
-      });
     }catch (e){
       print(e);
       _getFailUserInfoDialogBox();
     }
-    print('initlocation');
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   _getTownshipByState(String state)async{
@@ -220,10 +223,8 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     });
     _userModel.name = _nameController.text;
     _userModel.address = _addressController.text;
-    if(!_sharepreferenceshelper.isWardAdmin()){
-      _userModel.state = _dropDownState;
-      _userModel.township = _dropDownTownship;
-    }
+    _userModel.state = _dropDownState;
+    _userModel.township = _dropDownTownship;
     //_userModel.isWardAdmin = 1;//1 is true -- 0 is false
     print('${_userModel.toJson()}');
     try{
@@ -232,6 +233,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
         await _userDb.openUserDb();
         await _userDb.insert(UserModel.fromJson(_response.data));
         await _userDb.closeUserDb();
+        //_sharepreferenceshelper.setIsWardAdmin(_userModel.isWardAdmin==1? true : false);
         _finishDialogBox();
       }else{
         WarningSnackBar(_scaffoldState, MyString.txt_try_again);
@@ -345,6 +347,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                         iconEnabledColor: MyColor.colorPrimary,
                                         value: _dropDownState,
                                         onChanged: (String value){
+                                          FocusScope.of(context).requestFocus(FocusNode());
                                           setState(() {
                                             _dropDownState = value;
                                           });
@@ -383,6 +386,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                         iconEnabledColor: MyColor.colorPrimary,
                                         value: _dropDownTownship,
                                         onChanged: (String value){
+                                          FocusScope.of(context).requestFocus(FocusNode());
                                           setState(() {
                                             _dropDownTownship = value;
                                           });
@@ -405,10 +409,13 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                       onPressed: ()async{
                                         await _checkCon();
                                         if(_isCon){
-                                          _updateUser();
-                                          await _sharepreferenceshelper.initSharePref();
-                                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_FORM_SCREEN, ClickEvent.PROFILE_INFORMATION_UPLOAD_CLICK_EVENT,
-                                              _sharepreferenceshelper.getUserUniqueKey());
+                                          if(_nameController.text.isNotEmpty && _addressController.text.isNotEmpty && _dropDownState != MyString.txt_choose_state_township &&
+                                              _dropDownTownship != MyString.txt_choose_state_township
+                                          ){
+                                            _updateUser();
+                                          }else{
+                                            WarningSnackBar(_scaffoldState, MyString.txt_need_user_information);
+                                          }
                                         }else{
                                           WarningSnackBar(_scaffoldState, MyString.txt_no_internet);
                                         }
