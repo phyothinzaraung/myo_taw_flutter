@@ -75,9 +75,6 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
 
   Future<File> camera() async {
     var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
-    setState(() {
-      _image = image;
-    });
     return image;
   }
 
@@ -179,9 +176,12 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
               height: 50,
               margin: EdgeInsets.only(bottom: 20.0, top: 20, left: 20, right: 20),
               child: RaisedButton(onPressed: ()async{
-                camera().then((image){
+                camera().then((image)async{
                   if(image != null){
-                    _navigateToGetFloodLevelScreen();
+                    await _navigateToGetFloodLevelScreen();
+                    setState(() {
+                      _image = image;
+                    });
                   }
                 });
                 await _sharepreferenceshelper.initSharePref();

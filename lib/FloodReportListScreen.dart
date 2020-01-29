@@ -6,6 +6,7 @@ import 'package:myotaw/helper/FloodLevelFtInHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/model/ContributionModel.dart';
+import 'PhotoDetailScreen.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/ShowDateTimeHelper.dart';
 import 'myWidget/EmptyViewWidget.dart';
@@ -42,73 +43,79 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
         padding: EdgeInsets.all(20),
         itemCount: _floodLevelReportModelList.length,
         itemBuilder: (context, index){
-          return Container(
-            child: Card(
-              margin: EdgeInsets.only(bottom: 20),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(0)
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                    width: 3,
-                    height: 130,
-                    color: MyColor.colorPrimaryDark,
-                  ),
-                  Flexible(
-                    flex: 1,
-                    child: Padding(
-                      padding: const EdgeInsets.all(15.0),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                              margin: EdgeInsets.only(right: 5),
-                              child: Image.asset('images/flood_nocircle.png', width: 30, height: 30,)),
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                    margin: EdgeInsets.only(bottom: 10, right: 10),
-                                    child: Text(MyString.txt_flood_level_inch + ' '+FloodLevelFtInHelper().getFtInFromWaterLevel(_floodLevelReportModelList[index].floodLevel), style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeSmall),)),
-                                Row(
-                                  children: <Widget>[
-                                    Container(
-                                        margin: EdgeInsets.only(right: 10),
-                                        child: Image.asset('images/calendar.png', width: 15, height: 15, color: MyColor.colorPrimary,)),
-                                    Text(ShowDateTimeHelper().showDateTimeFromServer(_floodLevelReportModelList[index].accesstime), style: TextStyle(fontSize: FontSize.textSizeSmall),)
-                                  ],
-                                )
-                              ],
-                            ),
-                          ),
-                          ClipRRect(
-                              borderRadius: BorderRadius.all(Radius.circular(5)),
-                              child: CachedNetworkImage(
-                                  imageUrl: BaseUrl.CONTRIBUTE_PHOTO_URL+_floodLevelReportModelList[index].photoUrl,
-                                imageBuilder: (context, image){
-                                  return Container(
-                                    width: 90,
-                                    height: 90.0,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: image,
-                                          fit: BoxFit.cover),
-                                    ),);
-                                },
-                                placeholder: (context, url) => Center(child: Container(
-                                  child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: 90, height: 90.0,)),
-                                errorWidget: (context, url, error)=> Image.asset('images/placeholder.jpg',width: 90,
-                                  height: 90, fit: BoxFit.cover,),
-                              )
-                          )
-                        ],
-                      ),
+          return GestureDetector(
+            onTap: (){
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
+                  PhotoDetailScreen(BaseUrl.CONTRIBUTE_PHOTO_URL+_floodLevelReportModelList[index].photoUrl)));
+            },
+            child: Container(
+              child: Card(
+                margin: EdgeInsets.only(bottom: 20),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(0)
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: <Widget>[
+                    Container(
+                      width: 3,
+                      height: 130,
+                      color: MyColor.colorPrimaryDark,
                     ),
-                  )
-                ],
+                    Flexible(
+                      flex: 1,
+                      child: Padding(
+                        padding: const EdgeInsets.all(15.0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: <Widget>[
+                            Container(
+                                margin: EdgeInsets.only(right: 5),
+                                child: Image.asset('images/flood_nocircle.png', width: 30, height: 30,)),
+                            Expanded(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: <Widget>[
+                                  Container(
+                                      margin: EdgeInsets.only(bottom: 10, right: 10),
+                                      child: Text(MyString.txt_flood_level_inch + ' '+FloodLevelFtInHelper().getFtInFromWaterLevel(_floodLevelReportModelList[index].floodLevel), style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeSmall),)),
+                                  Row(
+                                    children: <Widget>[
+                                      Container(
+                                          margin: EdgeInsets.only(right: 10),
+                                          child: Image.asset('images/calendar.png', width: 15, height: 15, color: MyColor.colorPrimary,)),
+                                      Text(ShowDateTimeHelper().showDateTimeFromServer(_floodLevelReportModelList[index].accesstime), style: TextStyle(fontSize: FontSize.textSizeSmall),)
+                                    ],
+                                  )
+                                ],
+                              ),
+                            ),
+                            ClipRRect(
+                                borderRadius: BorderRadius.all(Radius.circular(5)),
+                                child: CachedNetworkImage(
+                                    imageUrl: BaseUrl.CONTRIBUTE_PHOTO_URL+_floodLevelReportModelList[index].photoUrl,
+                                  imageBuilder: (context, image){
+                                    return Container(
+                                      width: 90,
+                                      height: 90.0,
+                                      decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            image: image,
+                                            fit: BoxFit.cover),
+                                      ),);
+                                  },
+                                  placeholder: (context, url) => Center(child: Container(
+                                    child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: 90, height: 90.0,)),
+                                  errorWidget: (context, url, error)=> Image.asset('images/placeholder.jpg',width: 90,
+                                    height: 90, fit: BoxFit.cover,),
+                                )
+                            )
+                          ],
+                        ),
+                      ),
+                    )
+                  ],
+                ),
               ),
             ),
           );
