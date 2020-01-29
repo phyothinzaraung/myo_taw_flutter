@@ -8,17 +8,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:431280028308:android:ac2f0cb560ec26a7325281",
+        "mobilesdk_app_id": "1:431280028308:android:21e3d4b73d27cb88325281",
         "android_client_info": {
-          "package_name": "com.koekoetech.myotaw"
+          "package_name": "com.koekoetech.cityapp"
         }
       },
       "oauth_client": [
         {
-          "client_id": "431280028308-nsfertdtgvoemcpvcb7834ahnlnv96s9.apps.googleusercontent.com",
+          "client_id": "431280028308-puksnmqpn2cocmt7ic7sn00mecc0ne5s.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.koekoetech.myotaw",
+            "package_name": "com.koekoetech.cityapp",
             "certificate_hash": "31abee7066b72359a209063395cf496ab1688934"
           }
         },

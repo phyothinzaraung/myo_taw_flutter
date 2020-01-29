@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:libphonenumber/libphonenumber.dart';
 import 'package:myotaw/myWidget/ButtonLoadingIndicatorWidget.dart';
+import 'package:package_info/package_info.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'OtpScreen.dart';
 import 'helper/MyoTawConstant.dart';
@@ -26,6 +27,7 @@ class _LoginScreenState extends State<LoginScreen> {
   Sharepreferenceshelper _sharePrefHelper = new Sharepreferenceshelper();
   TextEditingController _phoneNoController = new TextEditingController();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+  String _appVersion = '';
 
   @override
   void initState() {
@@ -33,6 +35,11 @@ class _LoginScreenState extends State<LoginScreen> {
     super.initState();
     _cityList = [_dropDownCity,MyString.TGY_CITY,MyString.MLM_CITY, MyString.LKW_CITY];
     _sharePrefHelper.initSharePref();
+    PackageInfo.fromPlatform().then((info){
+      setState(() {
+        _appVersion = info.version;
+      });
+    });
   }
 
   void _getOtp()async{
@@ -232,7 +239,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                     Align(
                         alignment: Alignment.bottomCenter,
-                        child: Text("Version 1.2", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
+                        child: Text(_appVersion, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextGrey),)),
                   ],
                 ),
               ),

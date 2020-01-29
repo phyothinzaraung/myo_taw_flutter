@@ -78,13 +78,17 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
       for(var i in result){
         _contributionModelList.add(ContributionModel.fromJson(i));
       }
-      setState(() {
-        _isEnd = false;
-      });
+      if(mounted){
+        setState(() {
+          _isEnd = false;
+        });
+      }
     }else{
-      setState(() {
-        _isEnd = true;
-      });
+      if(mounted){
+        setState(() {
+          _isEnd = true;
+        });
+      }
     }
   }
 

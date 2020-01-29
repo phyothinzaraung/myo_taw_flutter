@@ -111,7 +111,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _logOutClear()async{
     await _sharepreferenceshelper.initSharePref();
-    await _sharepreferenceshelper.logOutSharePref();
+    _sharepreferenceshelper.logOutSharePref();
     await _userDb.openUserDb();
     await _userDb.deleteUser();
     await _userDb.closeUserDb();
@@ -448,133 +448,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   Widget _headerProfileRefresh(){
     return ListView(
       children: <Widget>[
-        Container(
-          margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-          child: Row(
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/profile.png', width: 30.0, height: 30.0,)),
-              Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)
-            ],
-          ),
-        ),
-        Card(
-          margin: EdgeInsets.all(0.0),
-          child: Column(
-            children: <Widget>[
-              Container(
-                  margin: EdgeInsets.only(left: 30.0, right: 30.0, top: 10.0, bottom: 10.0),
-                  alignment: Alignment.topLeft,
-                  child: Row(
-                    children: <Widget>[
-                      GestureDetector(
-                        onTap: (){
-                          _navigateToProfilePhotoScreen();
-                        },
-                        child: Stack(
-                          children: <Widget>[
-                            Hero(
-                              tag: 'profile',
-                              child: CircleAvatar(backgroundImage: _profilePhoto,
-                                backgroundColor: MyColor.colorGrey, radius: 50.0,),
-                            ),
-                            Image.asset('images/photo_edit.png', width: 25.0, height: 25.0,)
-                          ],
-                        ),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(left: 40.0),
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: <Widget>[
-                            Container(margin: EdgeInsets.only(bottom: 10.0),
-                                child: Text(_userModel!=null?_userModel.name!=null?_userModel.name:'':'', style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)),
-                            Text(NumConvertHelper.getMyanNumString(_userModel!=null?_userModel.phoneNo!=null?_userModel.phoneNo:'':''), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
-                          ],
-                        ),
-                      )
-                    ],
-                  )
-              ),
-              Container(
-                margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Container(margin: EdgeInsets.only(bottom: 5.0),child: Text(MyString.txt_setting, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
-                    GestureDetector(
-                      onTap: (){
-                        _navigateToProfileScreen();
-                      },
-                      child: Container(
-                        child: Row(
-                          children: <Widget>[
-                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/edit_profile.png',width: 30.0, height: 38.0,)),
-                            Text(MyString.txt_edit_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Divider(color: MyColor.colorPrimary,),
-                    GestureDetector(
-                      onTap: (){
-
-                      },
-                      child: Container(
-                        child: Row(
-                          children: <Widget>[
-                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/apply_biz_list.png',width: 30.0, height: 38.0,)),
-                            Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                          ],
-                        ),
-                      ),
-                    ),
-                    Divider(color: MyColor.colorPrimary,),
-                    GestureDetector(
-                      onTap: (){
-                        _dialogLogOut();
-                      },
-                      child: Container(
-                        child: Row(
-                          children: <Widget>[
-                            Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/log_out.png',width: 30.0, height: 38.0,)),
-                            Text(MyString.txt_log_out, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                          ],
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
-          child: Column(
-            children: <Widget>[
-              Align(
-                alignment: Alignment.centerLeft,
-                child: Container(margin: EdgeInsets.only(bottom: 5.0),
-                    child: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)),
-              ),
-              Container(
-                margin: EdgeInsets.only(bottom: 20.0),
-                height: 50.0,
-                width: 300.0,
-                //new tax record
-                child: RaisedButton(onPressed: (){
-                  _navigateToNewTaxRecordScreen();
-                },child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[
-                    Container(margin: EdgeInsets.only(right: 10.0),child: Text(MyString.txt_tax_new_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
-                    Icon(Icons.add, color: Colors.white,)
-                  ],
-                ),color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
-              )
-            ],
-          ),
-        ),
+        _headerProfile(),
         Column(
           children: <Widget>[
             CircularProgressIndicator()

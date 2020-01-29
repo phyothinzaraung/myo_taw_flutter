@@ -11,7 +11,7 @@ description: Myo taw flutter application
 # In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
 # Read more about iOS versioning at
 # https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
-version: 1.0.0+1
+version: 1.3.0+9
 
 environment:
   sdk: ">=2.1.0 <3.0.0"
@@ -54,6 +54,8 @@ dependencies:
   flutter_money_formatter: ^0.8.3
   flutter_xlider: ^3.0.1
   firebase_analytics: ^5.0.10
+  package_info: ^0.4.0+13
+
 
 
 dev_dependencies:
@@ -172,6 +174,7 @@ flutter:
     - images/newsfeed_grey.png
     - images/dashboard_grey.png
     - images/noti_grey.png
+    - images/done.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

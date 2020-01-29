@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
+import 'package:package_info/package_info.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'helper/MyoTawConstant.dart';
 import 'main.dart';
@@ -33,6 +34,7 @@ class _OtpScreenState extends State<OtpScreen> {
   int _minute = 9;
   int _sec = 59;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+  String _appVersion = '';
 
   _OtpScreenState(this._phNo, this._regionCode);
   @override
@@ -43,6 +45,11 @@ class _OtpScreenState extends State<OtpScreen> {
     _isExpire = false;
     _startTimer();
     _smsStartListening();
+    PackageInfo.fromPlatform().then((info){
+      setState(() {
+        _appVersion = info.version;
+      });
+    });
   }
 
   _smsStartListening() async{
@@ -302,7 +309,7 @@ class _OtpScreenState extends State<OtpScreen> {
                       padding: EdgeInsets.only(bottom: 20.0),
                       child: Align(
                           alignment: Alignment.bottomCenter,
-                          child: Text("Version 1.2", style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
+                          child: Text(_appVersion, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextGrey),)),
                     ),
                   ],
                 ),

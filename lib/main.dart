@@ -148,7 +148,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
               tabs: [
                 Tab(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,)),
                 Tab(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
-                Tab(icon: Icon(Icons.notifications, size: 30,))
+                Tab(icon: Icon(Icons.notifications_none, size: 30,))
               ],
             ),
           ),

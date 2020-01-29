@@ -114,9 +114,6 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
       _townshipList.add(i);
       print('townshipList: ${i}');
     }
-    setState(() {
-
-    });
   }
 
   Widget modalProgressIndicator(){

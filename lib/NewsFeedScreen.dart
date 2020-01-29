@@ -365,7 +365,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       children: <Widget>[
                         Container(
                             margin: EdgeInsets.only(right: 5),
-                            child: Image.asset(newsFeedModel.isSaved? 'images/isvalid.png' : 'images/save.png', width: 20.0,height: 20.0,)),
+                            child: Image.asset(newsFeedModel.isSaved? 'images/done.png' : 'images/save.png', width: 20.0,height: 20.0,)),
                         Text(newsFeedModel.isSaved?MyString.txt_saved_news_feed : MyString.txt_save,
                           style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeSmall),)
                       ],),

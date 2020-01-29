@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
+import 'package:package_info/package_info.dart';
 import 'helper/MyoTawConstant.dart';
 import 'main.dart';
 import 'package:flutter/services.dart';
@@ -23,6 +24,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   LocationDb _locationDb = LocationDb();
   String _logo, _title;
   bool _isDbSetup = true;
+  String _appVersion = '';
 
   @override
   void initState() {
@@ -33,6 +35,9 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
   _init()async{
     await _sharepreferenceshelper.initSharePref();
+    PackageInfo.fromPlatform().then((info){
+      _appVersion = info.version;
+    });
     if(_sharepreferenceshelper.getRegionCode()!=null){
       //await getUserData();
       switch(_sharepreferenceshelper.getRegionCode()){
@@ -161,7 +166,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
               ) : Container(),
               Flexible(
                   flex: 1,
-                  child: Text("Version 1.2", style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),)),
+                  child: Text(_appVersion, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.white),)),
             ],
           ),
         ),
