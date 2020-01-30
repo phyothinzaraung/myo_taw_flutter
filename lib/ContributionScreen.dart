@@ -263,6 +263,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
                                 border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
                             ),
                             child: TextField(
+                              controller: _messController,
                               maxLines: null,
                               decoration: InputDecoration(
                                   border: InputBorder.none
@@ -293,7 +294,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
                                 }else if(_dropDownSubject == MyString.txt_choose_subject){
                                   WarningSnackBar(_globalKey, MyString.txt_need_subject);
 
-                                }else if(_messController.text.isEmpty == null){
+                                }else if(_messController.text.isEmpty){
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion);
                                 }
                               }else{
