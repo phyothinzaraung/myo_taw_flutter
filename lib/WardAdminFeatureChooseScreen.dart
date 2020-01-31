@@ -3,8 +3,8 @@ import 'package:myotaw/WardAdminContributionListScreen.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/main.dart';
 import 'package:myotaw/model/DashBoardModel.dart';
-
 import 'FloodReportListScreen.dart';
+import 'helper/NavigatorHelper.dart';
 
 class WardAdminFeatureChooseScreen extends StatelessWidget {
   List<DashBoardModel> _list = List();
@@ -30,15 +30,18 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
       onTap: (){
         switch(_list[i].title){
           case MyString.txt_ward_admin_feature:
-            Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionListScreen(),
-                settings: RouteSettings(name: ScreenName.WARD_ADMIN_CONTRIBUTION_LIST_SCREEN)));
+            NavigatorHelper().MyNavigatorPush(context, WardAdminContributionListScreen(), ScreenName.WARD_ADMIN_CONTRIBUTION_LIST_SCREEN);
+            /*Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionListScreen(),
+                settings: RouteSettings(name: ScreenName.WARD_ADMIN_CONTRIBUTION_LIST_SCREEN)));*/
             break;
           case MyString.txt_myotaw_feature:
-            Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
+            NavigatorHelper().MyNavigatorPush(context, MainScreen(), null);
+            //Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
             break;
           case MyString.txt_flood_level:
-            Navigator.push(context, MaterialPageRoute(builder: (context) => FloodReportListScreen(),
-                settings: RouteSettings(name: ScreenName.FLOOD_REPORT_LIST_SCREEN)));
+            NavigatorHelper().MyNavigatorPush(context, FloodReportListScreen(), ScreenName.FLOOD_REPORT_LIST_SCREEN);
+            /*Navigator.push(context, MaterialPageRoute(builder: (context) => FloodReportListScreen(),
+                settings: RouteSettings(name: ScreenName.FLOOD_REPORT_LIST_SCREEN)));*/
             break;
         }
       },

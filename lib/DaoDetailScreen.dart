@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myotaw/WardAdminContributionScreen.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'model/DaoViewModel.dart';
 import 'helper/MyoTawConstant.dart';
@@ -45,9 +46,10 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
           GestureDetector(
             onTap: (){
               if(_daoPhotoModelList.isNotEmpty){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoPhotoDetailScreen(_daoPhotoModelList),
+                /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoPhotoDetailScreen(_daoPhotoModelList),
                   settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
-                ));
+                ));*/
+                NavigatorHelper().MyNavigatorPush(context, DaoPhotoDetailScreen(_daoPhotoModelList), ScreenName.PHOTO_DETAIL_SCREEN);
               }
             },
             child: Stack(
@@ -181,11 +183,18 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
               child: FlatButton(
                   onPressed: ()async{
                     await _sharepreferenceshelper.initSharePref();
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => _daoViewModel.daoModel.title.contains('လိုင်စင်')?
+                    /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => _daoViewModel.daoModel.title.contains('လိုင်စင်')?
                     BizLicenseScreen() : _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():ContributionScreen(),
                         settings: RouteSettings(name: _daoViewModel.daoModel.title.contains('လိုင်စင်')?ScreenName.BIZ_LICENSE_SCREEN :
                         _sharepreferenceshelper.isWardAdmin()?ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN : ScreenName.CONTRIBUTION_SCREEN)
-                    ));
+                    ));*/
+                    NavigatorHelper().MyNavigatorPush(context,
+                      //screen
+                      _daoViewModel.daoModel.title.contains('လိုင်စင်')?
+                    BizLicenseScreen() : _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():ContributionScreen(),
+                        //screenName
+                        _daoViewModel.daoModel.title.contains('လိုင်စင်')?ScreenName.BIZ_LICENSE_SCREEN :
+                        _sharepreferenceshelper.isWardAdmin()?ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN : ScreenName.CONTRIBUTION_SCREEN);
                   },
                   child: Text(_daoViewModel.daoModel.title.contains('လိုင်စင်')?MyString.txt_biz_license:MyString.txt_suggestion,
                     style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),color: MyColor.colorPrimary,),

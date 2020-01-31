@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/ApplyBizLicenseModel.dart';
 import 'helper/NumConvertHelper.dart';
@@ -24,9 +25,10 @@ class ApplyBizLicenseDetailScreen extends StatelessWidget {
             )
           ]),
       child: OutlineButton(onPressed: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicensePhotoListScreen(_applyBizLicenseModel),
+        /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicensePhotoListScreen(_applyBizLicenseModel),
           settings: RouteSettings(name: ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN)
-        ));
+        ));*/
+        NavigatorHelper().MyNavigatorPush(context, ApplyBizLicensePhotoListScreen(_applyBizLicenseModel), ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN);
 
       }, child: Text(MyString.txt_need_paper_work, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)), borderSide: BorderSide(color: MyColor.colorPrimary),),

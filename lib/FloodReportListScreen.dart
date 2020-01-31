@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/NewFloodReportScreen.dart';
 import 'package:myotaw/helper/FloodLevelFtInHelper.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/model/ContributionModel.dart';
@@ -142,9 +143,10 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
   }
 
   _navigateToNewFloodReportScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewFloodReportScreen(),
+    /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewFloodReportScreen(),
       settings: RouteSettings(name: ScreenName.NEWS_FLOOD_REPORT_SCREEN)
-    ));
+    ));*/
+    Map result = await NavigatorHelper().MyNavigatorPush(context, NewFloodReportScreen(), ScreenName.NEWS_FLOOD_REPORT_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh')){
       _handleRefresh();
     }

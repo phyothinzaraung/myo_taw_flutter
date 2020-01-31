@@ -1,5 +1,6 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -67,9 +68,10 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
               i==0? headerTitleWidget(MyString.title_biz_license, 'business_license_nocircle') : Container(),
               GestureDetector(
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseDetailScreen(_bizLicenseModelList[i]),
+                  /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseDetailScreen(_bizLicenseModelList[i]),
                     settings: RouteSettings(name: ScreenName.BIZ_LICENSE_DETAIL_SCREEN)
-                  ));
+                  ));*/
+                  NavigatorHelper().MyNavigatorPush(context, BizLicenseDetailScreen(_bizLicenseModelList[i]), ScreenName.BIZ_LICENSE_DETAIL_SCREEN);
                 },
                 child: Card(
                   margin: EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.5),
@@ -143,9 +145,10 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
         actions: <Widget>[
           GestureDetector(
             onTap: (){
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseListScreen(),
+              /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseListScreen(),
                 settings: RouteSettings(name: ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN)
-              ));
+              ));*/
+              NavigatorHelper().MyNavigatorPush(context, ApplyBizLicenseListScreen(), ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN);
             },
             child: Container(
                 margin: EdgeInsets.only(right: 10.0),

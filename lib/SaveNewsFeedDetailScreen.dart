@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'model/SaveNewsFeedModel.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/ShowDateTimeHelper.dart';
@@ -31,9 +32,10 @@ class _SaveNewsFeedDetailScreenState extends State<SaveNewsFeedDetailScreen> {
                 _saveNewsFeedModel.contentType==MyString.NEWS_FEED_CONTENT_TYPE_PHOTO?
                 _saveNewsFeedModel.photoUrl!=null?GestureDetector(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen([], _saveNewsFeedModel.photoUrl),
+                    /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen([], _saveNewsFeedModel.photoUrl),
                       settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
-                    ));
+                    ));*/
+                    NavigatorHelper().MyNavigatorPush(context, NewsFeedPhotoDetailScreen([], _saveNewsFeedModel.photoUrl), ScreenName.PHOTO_DETAIL_SCREEN);
                   },
                   child: Image.network(BaseUrl.NEWS_FEED_CONTENT_URL+_saveNewsFeedModel.photoUrl,
                     width: double.maxFinite, height: 180.0, fit: BoxFit.cover,),

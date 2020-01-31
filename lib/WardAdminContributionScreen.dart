@@ -5,6 +5,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'helper/SharePreferencesHelper.dart';
@@ -208,9 +209,10 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   }
 
   _navigateToAdminLocationUpdateScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => WardAdminLocationUpdateScreen(),
+    /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => WardAdminLocationUpdateScreen(),
       settings: RouteSettings(name: ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN)
-    ));
+    ));*/
+    Map result = await NavigatorHelper().MyNavigatorPush(context, WardAdminLocationUpdateScreen(), ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN);
     if(result != null && result.containsKey('latLng') != null){
       setState(() {
         LatLng latLng = result['latLng'];

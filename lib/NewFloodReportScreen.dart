@@ -9,6 +9,7 @@ import 'package:myotaw/GetFloodLevelScreen.dart';
 import 'package:myotaw/database/UserDb.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/FloodLevelFtInHelper.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/model/UserModel.dart';
@@ -79,9 +80,10 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
   }
 
   _navigateToGetFloodLevelScreen() async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => GetFloodLevelScreen(),
+    /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => GetFloodLevelScreen(),
       settings: RouteSettings(name: ScreenName.GET_FLOOD_LEVEL_SCREEN)
-    ));
+    ));*/
+    Map result = await NavigatorHelper().MyNavigatorPush(context, GetFloodLevelScreen(), ScreenName.GET_FLOOD_LEVEL_SCREEN);
     if(result != null && result.containsKey('FloodLevel')){
       setState(() {
         _floodLevel = result['FloodLevel'];

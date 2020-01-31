@@ -2,6 +2,7 @@ import 'package:async_loader/async_loader.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
@@ -65,9 +66,10 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
               i==0? headerTitleWidget(MyString.txt_apply_biz_license, 'business_license_nocircle') : Container(),
               GestureDetector(
                 onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseDetailScreen(_applyBizLicenseModelList[i]),
+                  /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseDetailScreen(_applyBizLicenseModelList[i]),
                     settings: RouteSettings(name: ScreenName.APPLY_BIZ_LICENSE_DETAIL_SCREEN)
-                  ));
+                  ));*/
+                  NavigatorHelper().MyNavigatorPush(context, ApplyBizLicenseDetailScreen(_applyBizLicenseModelList[i]), ScreenName.APPLY_BIZ_LICENSE_DETAIL_SCREEN);
                 },
                 child: Card(
                   margin: EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.5),

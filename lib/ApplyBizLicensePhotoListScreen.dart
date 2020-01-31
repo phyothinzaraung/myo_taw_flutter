@@ -9,6 +9,7 @@ import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
+import 'helper/NavigatorHelper.dart';
 import 'model/ApplyBizLicenseModel.dart';
 import 'model/ApplyBizLicensePhotoModel.dart';
 import 'helper/SharePreferencesHelper.dart';
@@ -84,10 +85,12 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                 delegate: SliverChildBuilderDelegate((context, index){
                   return GestureDetector(
                     onTap: (){
-                      Navigator.of(context).push(MaterialPageRoute(
+                      /*Navigator.of(context).push(MaterialPageRoute(
                           builder: (context) => PhotoDetailScreen(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl),
                         settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
-                      ));
+                      ));*/
+                      NavigatorHelper().MyNavigatorPush(context, PhotoDetailScreen(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl),
+                          ScreenName.PHOTO_DETAIL_SCREEN);
                     },
                     child: Padding(
                       padding: EdgeInsets.all(10.0),

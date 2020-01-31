@@ -8,6 +8,7 @@ import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/model/ContributionModel.dart';
 import 'package:myotaw/model/UserModel.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'ProfileScreen.dart';
 import 'helper/MyLoadMore.dart';
@@ -131,7 +132,9 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
             ),
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(), settings: RouteSettings(name: ScreenName.PROFILE_SCREEN)));
+                /*Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => ProfileScreen(), settings: RouteSettings(name: ScreenName.PROFILE_SCREEN)));*/
+                NavigatorHelper().MyNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
 
               },
               child: Hero(
@@ -215,8 +218,11 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
           children: <Widget>[
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => WardAdminContributionDetailScreen(_contributionModelList[i]),
-                    settings: RouteSettings(name: ScreenName.CONTRIBUTION_DETAIL_SCREEN)));
+                /*Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => WardAdminContributionDetailScreen(_contributionModelList[i]),
+                    settings: RouteSettings(name: ScreenName.CONTRIBUTION_DETAIL_SCREEN)));*/
+                NavigatorHelper().MyNavigatorPush(context,
+                    WardAdminContributionDetailScreen(_contributionModelList[i]), ScreenName.CONTRIBUTION_DETAIL_SCREEN);
               },
               child: Container(
                 child: Column(
@@ -376,9 +382,10 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
   }
 
   _navigateToWardAdminContributionScreen()async{
-    Map result = await Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionScreen(),
+    /*Map result = await Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionScreen(),
       settings: RouteSettings(name: ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN)
-    ));
+    ));*/
+    Map result = await NavigatorHelper().MyNavigatorPush(context, WardAdminContributionScreen(), ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       await _handleRefresh();
     }

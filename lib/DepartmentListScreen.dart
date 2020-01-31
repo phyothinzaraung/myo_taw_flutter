@@ -2,9 +2,9 @@ import 'package:async_loader/async_loader.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
+import 'helper/NavigatorHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/DaoViewModel.dart';
 import 'helper/MyoTawConstant.dart';
@@ -12,7 +12,6 @@ import 'model/DaoPhotoModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'DaoPhotoDetailScreen.dart';
 import 'helper/NumConvertHelper.dart';
-import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'DaoDetailScreen.dart';
@@ -63,9 +62,10 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
           GestureDetector(
             onTap: (){
               if(_daoPhotoModelList.isNotEmpty){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoPhotoDetailScreen(_daoPhotoModelList),
+                /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoPhotoDetailScreen(_daoPhotoModelList),
                   settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
-                ));
+                ));*/
+                NavigatorHelper().MyNavigatorPush(context, DaoPhotoDetailScreen(_daoPhotoModelList), ScreenName.PHOTO_DETAIL_SCREEN);
               }
             },
             child: Stack(

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'MlmPropertyTaxCalculatorScreen.dart';
 import 'helper/MyoTawConstant.dart';
@@ -62,27 +63,31 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
                       if(index == 0){
                         switch (_sharepreferenceshelper.getRegionCode()){
                           case MyString.TGY_REGIONCODE:
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => TgyPropertyTaxCalculatorScreen(),
+                            /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => TgyPropertyTaxCalculatorScreen(),
                               settings: RouteSettings(name: ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN)
-                            ));
+                            ));*/
+                            NavigatorHelper().MyNavigatorPush(context, TgyPropertyTaxCalculatorScreen(), ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN);
                             break;
                           case MyString.MLM_REGIONCODE:
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => MlmPropertyTaxCalculatorScreen(),
+                            /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => MlmPropertyTaxCalculatorScreen(),
                                 settings: RouteSettings(name: ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN)
-                            ));
+                            ));*/
+                            NavigatorHelper().MyNavigatorPush(context, MlmPropertyTaxCalculatorScreen(), ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN);
                             break;
                         }
                       }else{
                         switch (_sharepreferenceshelper.getRegionCode()){
                           case MyString.TGY_REGIONCODE:
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => TgyBizTaxCalculatorScreen(),
+                            /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => TgyBizTaxCalculatorScreen(),
                                 settings: RouteSettings(name: ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN)
-                            ));
+                            ));*/
+                            NavigatorHelper().MyNavigatorPush(context, TgyBizTaxCalculatorScreen(), ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN);
                             break;
                           case MyString.MLM_REGIONCODE:
-                            Navigator.of(context).push(MaterialPageRoute(builder: (context) => MlmBizTaxCalculatorScreen(),
+                            /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => MlmBizTaxCalculatorScreen(),
                                 settings: RouteSettings(name: ScreenName.MLM_BIZ_TAX_CALCULATOR_SCREEN)
-                            ));
+                            ));*/
+                            NavigatorHelper().MyNavigatorPush(context, MlmBizTaxCalculatorScreen(), ScreenName.MLM_BIZ_TAX_CALCULATOR_SCREEN);
                             break;
                         }
                       }

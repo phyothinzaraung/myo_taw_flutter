@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/ServiceHelper.dart';
 import 'helper/MyoTawConstant.dart';
@@ -66,13 +67,16 @@ class _DaoScreenState extends State<DaoScreen> {
                   return GestureDetector(
                     onTap: (){
                       if(_daoViewModelList[index].daoModel.title.contains('ဌာနများ')){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DepartmentListScreen(_daoViewModelList[index]),
+                        /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => DepartmentListScreen(_daoViewModelList[index]),
                           settings: RouteSettings(name: ScreenName.DEPARTMENT_LIST_SCREEN)
-                        ));
+                        ));*/
+                        NavigatorHelper().MyNavigatorPush(context, DepartmentListScreen(_daoViewModelList[index]), ScreenName.DEPARTMENT_LIST_SCREEN);
                       }else{
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoDetailScreen(_daoViewModelList[index]),
+                        /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoDetailScreen(_daoViewModelList[index]),
                             settings: RouteSettings(name: display.isEmpty?ScreenName.ABOUT_DAO_DETAIL_SCREEN : ScreenName.ABOUT_TAX_DETAIL_SCREEN)
-                        ));
+                        ));*/
+                        NavigatorHelper().MyNavigatorPush(context, DaoDetailScreen(_daoViewModelList[index]),
+                            display.isEmpty?ScreenName.ABOUT_DAO_DETAIL_SCREEN : ScreenName.ABOUT_TAX_DETAIL_SCREEN);
                       }
                     },
                     child: Container(

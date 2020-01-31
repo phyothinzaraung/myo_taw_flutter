@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/BizLicenseModel.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -50,9 +51,10 @@ class _BizLicenseDetailScreenState extends State<BizLicenseDetailScreen> {
                   width: double.maxFinite,
                   margin: EdgeInsets.all(20.0),
                   child: RaisedButton(onPressed: ()async{
-                    Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ApplyBizLicenseFormScreen(_bizLicenseModel),
+                    /*Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ApplyBizLicenseFormScreen(_bizLicenseModel),
                       settings: RouteSettings(name: ScreenName.APPLY_BIZ_LICENSE_FORM_SCREEN)
-                    ));
+                    ));*/
+                    NavigatorHelper().MyNavigatorPushReplacement(context, ApplyBizLicenseFormScreen(_bizLicenseModel), ScreenName.APPLY_BIZ_LICENSE_FORM_SCREEN);
                     }, child: Text(MyString.txt_apply_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
                     color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
                 ) : Container()

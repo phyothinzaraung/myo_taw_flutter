@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -100,9 +101,10 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                 i==0?headerTitleWidget(MyString.title_save_nf, 'save_file_no_circle') : Container(width: 0.0, height: 0.0,),
                 GestureDetector(
                   onTap: (){
-                    Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedDetailScreen(model),
+                    /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedDetailScreen(model),
                       settings: RouteSettings(name: ScreenName.SAVED_NEWS_FEED_DETAIL_SCREEN)
-                    ));
+                    ));*/
+                    NavigatorHelper().MyNavigatorPush(context, SaveNewsFeedDetailScreen(model), ScreenName.SAVED_NEWS_FEED_DETAIL_SCREEN);
                   },
                   child: Card(
                     margin: EdgeInsets.only(bottom: 1.0),

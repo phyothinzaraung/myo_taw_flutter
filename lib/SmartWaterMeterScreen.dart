@@ -1,6 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/NumberFormatterHelper.dart';
 import 'package:myotaw/model/SmartWaterMeterUnitModel.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
@@ -190,9 +191,10 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
                       width: double.maxFinite,
                       child: RaisedButton(onPressed: ()async{
 
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpRecordListScreen(_userModel),
+                        /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpRecordListScreen(_userModel),
                           settings: RouteSettings(name: ScreenName.TOP_UP_RECORD_LIST_SCREEN)
-                        ));
+                        ));*/
+                        NavigatorHelper().MyNavigatorPush(context, TopUpRecordListScreen(_userModel), ScreenName.TOP_UP_RECORD_LIST_SCREEN);
 
                         }, child: Text(MyString.txt_top_up_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                         color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),

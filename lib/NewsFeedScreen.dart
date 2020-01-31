@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:html/parser.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/model/NewsFeedReactModel.dart';
 import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
 import 'helper/ServiceHelper.dart';
@@ -235,10 +236,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
           children: <Widget>[
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(
+                /*Navigator.of(context).push(MaterialPageRoute(
                     builder: (context) => NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModelList[i].photoList),
                   settings: RouteSettings(name: ScreenName.NEWS_FEED_DETAIL_SCREEN)
-                ));
+                ));*/
+                NavigatorHelper().MyNavigatorPush(context, NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModelList[i].photoList), ScreenName.NEWS_FEED_DETAIL_SCREEN);
               },
               child: Container(
                 child: Column(
@@ -409,9 +411,10 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             ),
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(),
+                /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(),
                   settings: RouteSettings(name: ScreenName.PROFILE_SCREEN)
-                ));
+                ));*/
+                NavigatorHelper().MyNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
 
               },
               child: Hero(

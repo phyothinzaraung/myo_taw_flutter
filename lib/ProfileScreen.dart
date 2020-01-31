@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myotaw/LoginScreen.dart';
 import 'package:myotaw/PhotoDetailScreen.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
@@ -118,9 +119,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await _saveNewsFeedDb.openSaveNfDb();
     await _saveNewsFeedDb.deleteSavedNewsFeed();
     await _saveNewsFeedDb.closeSaveNfDb();
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginScreen(),
+    /*Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginScreen(),
       settings: RouteSettings(name: ScreenName.LOGIN_SCREEN)
-    ),(Route<dynamic>route) => false);
+    ),(Route<dynamic>route) => false);*/
+    NavigatorHelper().MyNavigatorPushAndRemoveUntil(context, LoginScreen(), ScreenName.LOGIN_SCREEN);
   }
 
   _dialogLogOut(){
@@ -243,9 +245,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     TaxRecordModel taxRecordModel = _taxRecordModelList[i];
     return GestureDetector(
       onTap: (){
-        Navigator.of(context).push(MaterialPageRoute(builder: (context) => PhotoDetailScreen(BaseUrl.TAX_RECORD_PHOTO_URL+taxRecordModel.photoUrl),
+        /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => PhotoDetailScreen(BaseUrl.TAX_RECORD_PHOTO_URL+taxRecordModel.photoUrl),
           settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
-        ));
+        ));*/
+        NavigatorHelper().MyNavigatorPush(context, PhotoDetailScreen(BaseUrl.TAX_RECORD_PHOTO_URL+taxRecordModel.photoUrl),
+            ScreenName.PHOTO_DETAIL_SCREEN);
       },
       child: Card(
         margin: EdgeInsets.only(bottom: 1.0),
@@ -280,10 +284,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToProfileScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(
+    /*Map result = await Navigator.of(context).push(MaterialPageRoute(
         builder: (context) => ProfileFormScreen(_sharepreferenceshelper.isWardAdmin()),
       settings: RouteSettings(name: ScreenName.PROFILE_FORM_SCREEN)
-    ));
+    ));*/
+    Map result = await NavigatorHelper().MyNavigatorPush(context, ProfileFormScreen(_sharepreferenceshelper.isWardAdmin()), ScreenName.PROFILE_FORM_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       //await _getUser();
       await _handleRefresh();
@@ -291,9 +296,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToProfilePhotoScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePhotoUploadScreen(),
+    /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePhotoUploadScreen(),
       settings: RouteSettings(name: ScreenName.PROFILE_PHOTO_SCREEN)
-    ));
+    ));*/
+    Map result = await NavigatorHelper().MyNavigatorPush(context, ProfilePhotoUploadScreen(), ScreenName.PROFILE_PHOTO_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       //await _getUser();
       await _handleRefresh();
@@ -301,9 +307,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToNewTaxRecordScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewTaxRecordScreen(),
+    /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewTaxRecordScreen(),
       settings: RouteSettings(name: ScreenName.NEW_TAX_RECORD_SCREEN)
-    ));
+    ));*/
+    Map result = await NavigatorHelper().MyNavigatorPush(context, NewTaxRecordScreen(), ScreenName.NEW_TAX_RECORD_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       await _handleRefresh();
     }
@@ -381,9 +388,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Divider(color: MyColor.colorPrimary,),
                     GestureDetector(
                       onTap: (){
-                        Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseListScreen(),
+                        /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseListScreen(),
                           settings: RouteSettings(name: ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN)
-                        ));
+                        ));*/
+                        NavigatorHelper().MyNavigatorPush(context, ApplyBizLicenseListScreen(), ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN);
                       },
                       child: Container(
                         child: Row(

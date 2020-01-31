@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:libphonenumber/libphonenumber.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/ButtonLoadingIndicatorWidget.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -51,9 +52,10 @@ class _LoginScreenState extends State<LoginScreen> {
     var result = response.data;
     if(result != null){
       if(result['code'] == '002'){
-        Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode),
-          settings: RouteSettings(name: 'Otp Screen')
-        ));
+        /*Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode),
+          settings: RouteSettings(name: ScreenName.OTP_SCREEN)
+        ));*/
+        NavigatorHelper().MyNavigatorPushReplacement(context, OtpScreen(_normalizedPhNo, _regionCode), ScreenName.OTP_SCREEN);
       }
     }else{
       WarningSnackBar(_globalKey, MyString.txt_try_again);

@@ -1,5 +1,8 @@
+import 'dart:io';
+
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
@@ -118,6 +121,68 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   _requestPermission()async{
     await PermissionHandler().requestPermissions([PermissionGroup.camera, PermissionGroup.storage,PermissionGroup.photos, PermissionGroup.location]);
   }
+
+  Widget _androidNavigation(){
+    return Scaffold(
+      body: TabBarView(
+        children: [
+          NewsFeedScreen(),
+          DashBoardScreen(),
+          NotificationScreen(),
+        ],
+        controller: _tabController,
+      ),
+      bottomNavigationBar: Container(
+        color: Colors.white,
+        child: WillPopScope(
+          onWillPop: onWillPop,
+          child: TabBar(
+            indicatorColor: Colors.white,
+            labelColor: MyColor.colorPrimary,
+            indicatorSize: TabBarIndicatorSize.tab,
+            indicatorWeight: 2.0,
+            unselectedLabelColor: MyColor.colorGreyDark,
+            controller: _tabController,
+            tabs: [
+              Tab(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,)),
+              Tab(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
+              Tab(icon: Icon(Icons.notifications_none, size: 30,))
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _iosNavigation(){
+    return CupertinoPageScaffold(
+        child: CupertinoTabScaffold(
+            tabBar: CupertinoTabBar(
+              activeColor: MyColor.colorPrimary,
+              inactiveColor: MyColor.colorGreyDark,
+              backgroundColor: Colors.white,
+              items: [
+                BottomNavigationBarItem(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,)),
+                BottomNavigationBarItem(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
+                BottomNavigationBarItem(icon: Icon(Icons.notifications_none, size: 30,)),
+              ],
+            ),
+            tabBuilder: (context, index){
+              switch (index){
+                case 0:
+                  return NewsFeedScreen();
+                  break;
+                case 1:
+                  return DashBoardScreen();
+                  break;
+                case 2:
+                  return NotificationScreen();
+              }
+              return null;
+            }
+        )
+    );
+  }
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -125,35 +190,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
       bottom: true,
       left: false,
       right: false,
-      child: Scaffold(
-        body: TabBarView(
-          children: [
-            NewsFeedScreen(),
-            DashBoardScreen(),
-            NotificationScreen(),
-          ],
-          controller: _tabController,
-        ),
-        bottomNavigationBar: Container(
-          color: Colors.white,
-          child: WillPopScope(
-            onWillPop: onWillPop,
-            child: TabBar(
-              indicatorColor: Colors.white,
-              labelColor: MyColor.colorPrimary,
-              indicatorSize: TabBarIndicatorSize.tab,
-              indicatorWeight: 2.0,
-              unselectedLabelColor: MyColor.colorGreyDark,
-              controller: _tabController,
-              tabs: [
-                Tab(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,)),
-                Tab(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
-                Tab(icon: Icon(Icons.notifications_none, size: 30,))
-              ],
-            ),
-          ),
-        ),
-      ),
+      child: Platform.isAndroid? _androidNavigation() : _iosNavigation(),
     );
   }
 

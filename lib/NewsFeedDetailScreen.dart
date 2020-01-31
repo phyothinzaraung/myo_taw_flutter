@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'helper/NavigatorHelper.dart';
 import 'model/NewsFeedPhotoModel.dart';
 import 'model/NewsFeedModel.dart';
 import 'helper/MyoTawConstant.dart';
@@ -9,7 +10,6 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'NewsFeedPhotoDetailScreen.dart';
 import 'helper/NumConvertHelper.dart';
 import 'NewsFeedVideoScreen.dart';
-import 'helper/ShowDateTimeHelper.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NewsFeedDetailScreen extends StatefulWidget {
@@ -58,9 +58,11 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         _photoWidget.add(
             GestureDetector(
               onTap: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen(_photoList, null),
+                /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen(_photoList, null),
                   settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
-                ));
+                ));*/
+                NavigatorHelper().MyNavigatorPush(context, NewsFeedPhotoDetailScreen(_photoList, null),
+                    ScreenName.PHOTO_DETAIL_SCREEN);
               },
               child: Stack(
                 alignment: Alignment.bottomLeft,

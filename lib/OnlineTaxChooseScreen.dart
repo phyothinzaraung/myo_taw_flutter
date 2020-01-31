@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/OnlineTaxScreen.dart';
 import 'package:myotaw/database/UserDb.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/model/DashBoardModel.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/OnlineTaxPinRequestDialogWidget.dart';
@@ -73,9 +74,10 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
   }
 
   _navigateToPinCodeSetupScreen()async{
-    Map result = await  Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel),
+    /*Map result = await  Navigator.of(context).push(MaterialPageRoute(builder: (context) => PinCodeSetUpScreen(_userModel),
         settings: RouteSettings(name: ScreenName.PIN_CODE_SET_UP_SCREEN)
-    ));
+    ));*/
+    Map result = await NavigatorHelper().MyNavigatorPush(context, PinCodeSetUpScreen(_userModel), ScreenName.PIN_CODE_SET_UP_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh')){
       _handleRefresh();
     }
