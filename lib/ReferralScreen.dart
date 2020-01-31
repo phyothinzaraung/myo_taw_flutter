@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 import 'model/UserModel.dart';
-import 'package:unique_identifier/unique_identifier.dart';
+//import 'package:unique_identifier/unique_identifier.dart';
 import 'package:flutter/services.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'model/ReferralModel.dart';
@@ -44,11 +44,11 @@ class _ReferralScreenState extends State<ReferralScreen> {
 
   Future<void> initUniqueId() async {
     String id;
-    try {
-      id = await UniqueIdentifier.serial;
-    } on PlatformException {
-      id = 'Failed to get Unique Identifier';
-    }
+//    try {
+//      id = await UniqueIdentifier.serial;
+//    } on PlatformException {
+//      id = 'Failed to get Unique Identifier';
+//    }
     setState(() {
       _uniqueId = id;
     });
