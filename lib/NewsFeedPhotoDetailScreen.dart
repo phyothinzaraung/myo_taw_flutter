@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:photo_view/photo_view.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -24,15 +25,14 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     addPhoto();
-    return Scaffold(
-      appBar: AppBar(),
-      backgroundColor: Colors.black,
+    return CustomScaffoldWidget(
+      title: '',
       body: Center(
         child: _photoList.isNotEmpty?
         PageView(
-          controller: _pageController,
-          scrollDirection: Axis.horizontal,
-          children: _photoWidget
+            controller: _pageController,
+            scrollDirection: Axis.horizontal,
+            children: _photoWidget
         ) :
         PhotoView(
           imageProvider: NetworkImage(BaseUrl.NEWS_FEED_CONTENT_URL+_photoUrl),
@@ -41,5 +41,10 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
         ),
       ),
     );
+    /*return Scaffold(
+      appBar: AppBar(),
+      backgroundColor: Colors.black,
+      body: ,
+    );*/
   }
 }

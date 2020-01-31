@@ -1,12 +1,11 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
-import 'package:dio/dio.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'helper/ServiceHelper.dart';
 import 'Database/UserDb.dart';
@@ -102,95 +101,104 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(),
-      body: ModalProgressHUD(
-        inAsyncCall: _isLoading,
-        progressIndicator: modalProgressIndicator(),
-        child: Container(
-          width: double.maxFinite,
-          color: Colors.black,
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Expanded(child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[CircleAvatar(
-                    backgroundImage: _image==null?
-                    AssetImage('images/placeholder.jpg') :
-                    FileImage(_image),radius: 120.0,)],)),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  //gallery
-                  _image==null?Expanded(
-                    child: Container(
-                      height: 50.0,
-                      child: FlatButton(onPressed: ()async{
-                        gallery();
-                        await _sharepreferenceshelper.initSharePref();
-                        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.GALLERY_CLICK_EVENT,
-                            _sharepreferenceshelper.getUserUniqueKey());
-                        }, child: Text(MyString.txt_gallery, style: TextStyle(color: Colors.white),),
-                        color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),
-                    ),
-                  ):
-                      //uploadphoto
-                  Expanded(
-                    child: Container(
-                      height: 50.0,
-                      child: FlatButton(onPressed: ()async{
-                        await _checkCon();
-                        if(_isCon){
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          await _sharepreferenceshelper.initSharePref();
-                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.PROFILE_PHOTO_UPLOAD_CLICK_EVENT,
-                              _sharepreferenceshelper.getUserUniqueKey());
-                          _uploadPhoto();
-                        }else{
-                          WarningSnackBar(_globalKey, MyString.txt_no_internet);
-                        }
-                      }, child: Text(MyString.txt_upload_photo, style: TextStyle(color: Colors.white),),
-                        color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),
-                    ),
+  Widget _body(){
+    return ModalProgressHUD(
+      inAsyncCall: _isLoading,
+      progressIndicator: modalProgressIndicator(),
+      child: Container(
+        width: double.maxFinite,
+        color: Colors.black,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: <Widget>[
+            Expanded(child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[CircleAvatar(
+                backgroundImage: _image==null?
+                AssetImage('images/placeholder.jpg') :
+                FileImage(_image),radius: 120.0,)],)),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                //gallery
+                _image==null?Expanded(
+                  child: Container(
+                    height: 50.0,
+                    child: FlatButton(onPressed: ()async{
+                      gallery();
+                      await _sharepreferenceshelper.initSharePref();
+                      FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.GALLERY_CLICK_EVENT,
+                          _sharepreferenceshelper.getUserUniqueKey());
+                    }, child: Text(MyString.txt_gallery, style: TextStyle(color: Colors.white),),
+                      color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),
                   ),
-                  //camera
-                  _image==null?Expanded(
-                    child: Container(
-                      height: 50.0,
-                      child: FlatButton(onPressed: ()async{
-                        camera();
-                        await _sharepreferenceshelper.initSharePref();
-                        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.CAMERA_CLICK_EVENT,
-                            _sharepreferenceshelper.getUserUniqueKey());
-                        }, child: Text(MyString.txt_camera, style: TextStyle(color: Colors.white),),
-                        color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),
-                    ),
-                  ):
-                      //choose again photo
-                  Expanded(
-                    child: Container(
-                      height: 50.0,
-                      child: FlatButton(onPressed: ()async{
+                ):
+                //uploadphoto
+                Expanded(
+                  child: Container(
+                    height: 50.0,
+                    child: FlatButton(onPressed: ()async{
+                      await _checkCon();
+                      if(_isCon){
                         setState(() {
-                          _image = null;
+                          _isLoading = true;
                         });
-                      }, child: Text(MyString.txt_choose_photo, style: TextStyle(color: Colors.white),),
-                        color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),
-                    ),
+                        await _sharepreferenceshelper.initSharePref();
+                        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.PROFILE_PHOTO_UPLOAD_CLICK_EVENT,
+                            _sharepreferenceshelper.getUserUniqueKey());
+                        _uploadPhoto();
+                      }else{
+                        WarningSnackBar(_globalKey, MyString.txt_no_internet);
+                      }
+                    }, child: Text(MyString.txt_upload_photo, style: TextStyle(color: Colors.white),),
+                      color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),
                   ),
-                ],
-              )
-            ],
-          ),
+                ),
+                //camera
+                _image==null?Expanded(
+                  child: Container(
+                    height: 50.0,
+                    child: FlatButton(onPressed: ()async{
+                      camera();
+                      await _sharepreferenceshelper.initSharePref();
+                      FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.CAMERA_CLICK_EVENT,
+                          _sharepreferenceshelper.getUserUniqueKey());
+                    }, child: Text(MyString.txt_camera, style: TextStyle(color: Colors.white),),
+                      color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),
+                  ),
+                ):
+                //choose again photo
+                Expanded(
+                  child: Container(
+                    height: 50.0,
+                    child: FlatButton(onPressed: ()async{
+                      setState(() {
+                        _image = null;
+                      });
+                    }, child: Text(MyString.txt_choose_photo, style: TextStyle(color: Colors.white),),
+                      color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),
+                  ),
+                ),
+              ],
+            )
+          ],
         ),
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScaffoldWidget(
+      title: '',
+      body: _body(),
+      globalKey: _globalKey,
+    );
+    /*return Scaffold(
+      key: _globalKey,
+      appBar: AppBar(),
+      body: ,
+    );*/
   }
 }

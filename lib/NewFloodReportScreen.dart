@@ -13,6 +13,7 @@ import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/model/UserModel.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/ModalProgressIndicatorWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'dart:io';
@@ -80,9 +81,6 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
   }
 
   _navigateToGetFloodLevelScreen() async{
-    /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => GetFloodLevelScreen(),
-      settings: RouteSettings(name: ScreenName.GET_FLOOD_LEVEL_SCREEN)
-    ));*/
     Map result = await NavigatorHelper().MyNavigatorPush(context, GetFloodLevelScreen(), ScreenName.GET_FLOOD_LEVEL_SCREEN);
     if(result != null && result.containsKey('FloodLevel')){
       setState(() {
@@ -162,45 +160,39 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
         }, barrierDismissible: false);
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        title: Text(MyString.txt_add_flood_level_record, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ModalProgressHUD(
-        inAsyncCall: _showLoading,
-        progressIndicator: ModalProgressIndicatorWidget(),
-        child: ListView(
-          children: <Widget>[
-            Container(
-              height: 50,
-              margin: EdgeInsets.only(bottom: 20.0, top: 20, left: 20, right: 20),
-              child: RaisedButton(onPressed: ()async{
-                camera().then((image)async{
-                  if(image != null){
-                    await _navigateToGetFloodLevelScreen();
-                    setState(() {
-                      _image = image;
-                    });
-                  }
-                });
-                await _sharepreferenceshelper.initSharePref();
-                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-              },child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                      margin: EdgeInsets.only(right: 30.0),
-                      child: Image.asset('images/camera.png', width: 25.0, height: 25.0,)),
-                  Text(MyString.txt_upload_photo_camera, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
-                ],
-              ),color: Colors.white,elevation: 5.0,
-                shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
-              ),
+  Widget _body(BuildContext context){
+    return ModalProgressHUD(
+      inAsyncCall: _showLoading,
+      progressIndicator: ModalProgressIndicatorWidget(),
+      child: ListView(
+        children: <Widget>[
+          Container(
+            height: 50,
+            margin: EdgeInsets.only(bottom: 20.0, top: 20, left: 20, right: 20),
+            child: RaisedButton(onPressed: ()async{
+              camera().then((image)async{
+                if(image != null){
+                  await _navigateToGetFloodLevelScreen();
+                  setState(() {
+                    _image = image;
+                  });
+                }
+              });
+              await _sharepreferenceshelper.initSharePref();
+              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+            },child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Container(
+                    margin: EdgeInsets.only(right: 30.0),
+                    child: Image.asset('images/camera.png', width: 25.0, height: 25.0,)),
+                Text(MyString.txt_upload_photo_camera, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
+              ],
+            ),color: Colors.white,elevation: 5.0,
+              shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
             ),
-            /*Container(
+          ),
+          /*Container(
               height: 50,
               margin: EdgeInsets.only(bottom: 50.0,left: 20, right: 20),
               child: RaisedButton(onPressed: (){
@@ -217,74 +209,89 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                 shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
               ),
             ),*/
-            Card(
-              margin: EdgeInsets.all(0),
-              color: Colors.white,
-              shape: RoundedRectangleBorder(
+          Card(
+            margin: EdgeInsets.all(0),
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(0)
-              ),
-              child: Container(
-                padding: const EdgeInsets.only(left: 30, right: 30, top: 20),
-                child: Column(
-                  children: <Widget>[
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(5),
-                        child: _image==null?
-                        Image.asset('images/placeholder.jpg', width: double.maxFinite, height: 180, fit: BoxFit.cover,) :
-                            Image.file(_image, width: double.maxFinite, height: 180, fit: BoxFit.cover,)
+            ),
+            child: Container(
+              padding: const EdgeInsets.only(left: 30, right: 30, top: 20),
+              child: Column(
+                children: <Widget>[
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(5),
+                      child: _image==null?
+                      Image.asset('images/placeholder.jpg', width: double.maxFinite, height: 180, fit: BoxFit.cover,) :
+                      Image.file(_image, width: double.maxFinite, height: 180, fit: BoxFit.cover,)
+                  ),
+                  SizedBox(height: 30,),
+                  Container(
+                    padding: const EdgeInsets.all(10.0),
+                    margin: EdgeInsets.only(bottom: 20),
+                    child: Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        Container(
+                            margin: EdgeInsets.only(right: 10),
+                            child: Image.asset('images/flood.png', width: 35, height: 35,)),
+                        Flexible(
+                            flex: 1,
+                            child: Text(MyString.txt_flood_level_inch +' '+ '${_floodLevel!=0?FloodLevelFtInHelper().getFtInFromWaterLevel(_floodLevel) : '၀ ပေ'}',
+                              style: TextStyle(fontSize: FontSize.textSizeExtraSmall),))
+                      ],
                     ),
-                    SizedBox(height: 30,),
-                    Container(
-                      padding: const EdgeInsets.all(10.0),
-                      margin: EdgeInsets.only(bottom: 20),
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Container(
-                              margin: EdgeInsets.only(right: 10),
-                              child: Image.asset('images/flood.png', width: 35, height: 35,)),
-                          Flexible(
-                              flex: 1,
-                              child: Text(MyString.txt_flood_level_inch +' '+ '${_floodLevel!=0?FloodLevelFtInHelper().getFtInFromWaterLevel(_floodLevel) : '၀ ပေ'}',
-                                style: TextStyle(fontSize: FontSize.textSizeExtraSmall),))
-                        ],
-                      ),
-                    ),
-                    Container(
-                      height: 50,
-                      width: double.maxFinite,
-                      margin: EdgeInsets.only(bottom: 40),
-                      child: RaisedButton(onPressed: ()async{
-                        await _checkCon();
-                        if(_isCon){
-                          if(_image != null && _floodLevel != 0){
-                            await _sharepreferenceshelper.initSharePref();
-                            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_FLOOD_LEVEL_REPORT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-                            _reportFloodLevel();
-                          }else if(_image == null){
-                            WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
-                          }else if(_floodLevel == 0){
-                            WarningSnackBar(_globalKey, MyString.txt_need_flood_level);
-                          }
-                        }else{
-                          WarningSnackBar(_globalKey, MyString.txt_no_internet);
+                  ),
+                  Container(
+                    height: 50,
+                    width: double.maxFinite,
+                    margin: EdgeInsets.only(bottom: 40),
+                    child: RaisedButton(onPressed: ()async{
+                      await _checkCon();
+                      if(_isCon){
+                        if(_image != null && _floodLevel != 0){
+                          await _sharepreferenceshelper.initSharePref();
+                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_FLOOD_LEVEL_REPORT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                          _reportFloodLevel();
+                        }else if(_image == null){
+                          WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
+                        }else if(_floodLevel == 0){
+                          WarningSnackBar(_globalKey, MyString.txt_need_flood_level);
                         }
-                      },child: Text(MyString.txt_add_flood_level_record,
-                        style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                        shape: RoundedRectangleBorder(
+                      }else{
+                        WarningSnackBar(_globalKey, MyString.txt_no_internet);
+                      }
+                    },child: Text(MyString.txt_add_flood_level_record,
+                      style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                      shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)
-                        ),
-                        color: MyColor.colorPrimary,elevation: 5.0,
                       ),
+                      color: MyColor.colorPrimary,elevation: 5.0,
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            )
-          ],
-        ),
+            ),
+          )
+        ],
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScaffoldWidget(
+      title: MyString.txt_add_flood_level_record,
+      body: _body(context),
+      globalKey: _globalKey,
+    );
+    /*return Scaffold(
+      key: _globalKey,
+      appBar: AppBar(
+        title: Text(MyString.txt_add_flood_level_record, style: TextStyle(fontSize: FontSize.textSizeNormal),),
+      ),
+      body: ,
+    );*/
   }
 
   @override

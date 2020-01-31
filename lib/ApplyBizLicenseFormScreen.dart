@@ -2,6 +2,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/ApplyBizLicenseFormSnackBarWidget.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/BizLicenseModel.dart';
@@ -10,8 +11,6 @@ import 'Database/LocationDb.dart';
 import 'model/ApplyBizLicenseModel.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'ApplyBizLicensePhotoListScreen.dart';
@@ -205,418 +204,73 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        title: Text(MyString.txt_business_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ModalProgressHUD(
-        inAsyncCall: _isLoading,
-        progressIndicator: modalProgressIndicator(),
-        child: ListView(
-          children: <Widget>[
-            Container(
-              margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
-              child: Row(
-                children: <Widget>[
-                  Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/business_license_nocircle.png', width: 30.0, height: 30.0,)),
-                  Text(MyString.title_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall),)
-                ],
-              ),
+  Widget _body(BuildContext context){
+    return ModalProgressHUD(
+      inAsyncCall: _isLoading,
+      progressIndicator: modalProgressIndicator(),
+      child: ListView(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 15.0, bottom: 15.0,left: 30.0, right: 30.0),
+            child: Row(
+              children: <Widget>[
+                Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/business_license_nocircle.png', width: 30.0, height: 30.0,)),
+                Text(MyString.title_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall),)
+              ],
             ),
-            _isClose==false?Card(
-              margin: EdgeInsets.all(0.0),
-              elevation: 0.0,
-              color: Colors.black.withOpacity(0.7),
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
-              child: Container(
+          ),
+          _isClose==false?Card(
+            margin: EdgeInsets.all(0.0),
+            elevation: 0.0,
+            color: Colors.black.withOpacity(0.7),
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+            child: Container(
                 margin: EdgeInsets.only(left: 30.0),
                 padding: EdgeInsets.all(3.0),
-                  child: Row(
-                    children: <Widget>[
-                      Expanded(
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                margin: EdgeInsets.only(right: 20.0),
-                                child: Image.asset('images/star.png', width: 15.0, height: 15.0,)),
-                                Expanded(
-                                    child: Text(MyString.txt_apply_license_need_to_fill, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),)),
-                          ],
-                        ),
+                child: Row(
+                  children: <Widget>[
+                    Expanded(
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                              margin: EdgeInsets.only(right: 20.0),
+                              child: Image.asset('images/star.png', width: 15.0, height: 15.0,)),
+                          Expanded(
+                              child: Text(MyString.txt_apply_license_need_to_fill, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),)),
+                        ],
                       ),
-                      IconButton(icon: Icon(Icons.clear, color: Colors.white,), onPressed: (){
-                        setState(() {
-                          _isClose = true;
-                        });
-                      })
-                    ],
-                  )),
-            ) : Container(),
-            //biz
-            Container(
-              margin: EdgeInsets.only(bottom: 30.0),
-              child: Card(
-                margin: EdgeInsets.all(0.0),
-                elevation: 0.5,
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
-                //biz information
-                child: Container(
-                  margin: EdgeInsets.only(left: 30.0, right: 20.0, bottom: 30.0, top: 20.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(bottom: 10.0),
-                        child: Text(MyString.txt_biz_license_information,
-                          style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),),
-                      ),
-                      //text biz name
-                      Container(
-                          margin: EdgeInsets.only(bottom: 5.0),
-                          child: Text(MyString.txt_biz_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                      //text field biz name
-                      Container(
-                        margin: EdgeInsets.only(bottom: 10.0),
-                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7.0),
-                            border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
-                        ),
-                        child: TextField(
-                          decoration: InputDecoration(
-                              border: InputBorder.none,
-                          ),
-                          cursorColor: MyColor.colorPrimary,
-                          controller: _bizNameController,
-                          style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
-                        ),
-                      ),
-                      //text biz type
-                      Container(
-                          margin: EdgeInsets.only(bottom: 5.0),
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                  margin: EdgeInsets.only(right: 10.0),
-                                  child: Text(MyString.txt_biz_type, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                              Image.asset('images/star.png', width: 8.0, height: 8.0,)
-                            ],
-                          )),
-                      //text field biz type
-                      Container(
-                        margin: EdgeInsets.only(bottom: 10.0),
-                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7.0),
-                            border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
-                        ),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                          ),
-                          cursorColor: MyColor.colorPrimary,
-                          controller: _bizTypeController,
-                          style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
-                        ),
-                      ),
-                      //text biz area
-                      Container(
-                          margin: EdgeInsets.only(bottom: 5.0),
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                  margin: EdgeInsets.only(right: 10.0),
-                                  child: Text(MyString.txt_area, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                              Image.asset('images/star.png', width: 8.0, height: 8.0,)
-                            ],
-                          )),
-                      //text field biz l & w
-                      Container(
-                        margin: EdgeInsets.only(bottom: 20.0),
-                        child: Row(
-                          children: <Widget>[
-                            Flexible(
-                              flex: 1,
-                              child: Row(
-                                children: <Widget>[
-                                  Flexible(
-                                    flex: 2,
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 10.0),
-                                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(7.0),
-                                          border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
-                                      ),
-                                      child: TextField(
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                        ),
-                                        cursorColor: MyColor.colorPrimary,
-                                        controller: _bizLengthController,
-                                        keyboardType: TextInputType.number,
-                                        style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible(
-                                      flex: 1,
-                                      child: Text(MyString.txt_unit_feet, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
-                                ],
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Row(
-                                children: <Widget>[
-                                  Flexible(
-                                    flex: 2,
-                                    child: Container(
-                                      margin: EdgeInsets.only(right: 10.0),
-                                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                      decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(7.0),
-                                          border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
-                                      ),
-                                      child: TextField(
-                                        decoration: InputDecoration(
-                                          border: InputBorder.none,
-                                        ),
-                                        cursorColor: MyColor.colorPrimary,
-                                        controller: _bizWidthController,
-                                        keyboardType: TextInputType.number,
-                                        style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
-                                      ),
-                                    ),
-                                  ),
-                                  Flexible(
-                                      flex: 1,
-                                      child: Text(MyString.txt_unit_feet, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
-                                ],
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      //biz location
-                      Container(
-                          margin: EdgeInsets.only(bottom: 10.0),
-                          child: Text(MyString.txt_biz_location, style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),)),
-
-                      Container(
-                        margin: EdgeInsets.only(bottom: 10.0),
-                        child: Row(
-                          children: <Widget>[
-                            Flexible(
-                              flex: 1,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  //text biz region no
-                                  Container(
-                                      margin: EdgeInsets.only(bottom: 5.0),
-                                      child: Text(MyString.txt_biz_region_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                  //text field biz region no
-                                  Container(
-                                    margin: EdgeInsets.only(right: 10.0),
-                                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(7.0),
-                                        border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
-                                    ),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                      ),
-                                      cursorColor: MyColor.colorPrimary,
-                                      controller: _bizRegionNoController,
-                                      keyboardType: TextInputType.number,
-                                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                            Flexible(
-                              flex: 1,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  //text biz street
-                                  Container(
-                                      margin: EdgeInsets.only(bottom: 5.0),
-                                      child: Text(MyString.txt_biz_street_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                  //text field biz street
-                                  Container(
-                                    margin: EdgeInsets.only(right: 10.0),
-                                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(7.0),
-                                        border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
-                                    ),
-                                    child: TextField(
-                                      decoration: InputDecoration(
-                                        border: InputBorder.none,
-                                      ),
-                                      cursorColor: MyColor.colorPrimary,
-                                      controller: _bizStreetController,
-                                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
-                                    ),
-                                  ),
-                                ],
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      //text block no
-                      Container(
-                          margin: EdgeInsets.only(bottom: 10.0),
-                          child: Text(MyString.txt_biz_block_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                      //text field block no
-                      Container(
-                        margin: EdgeInsets.only(bottom: 10.0),
-                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7.0),
-                            border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
-                        ),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            border: InputBorder.none,
-                          ),
-                          cursorColor: MyColor.colorPrimary,
-                          controller: _bizBlockNoController,
-                          style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
-                        ),
-                      ),
-                      //text biz state
-                      Container(
-                          margin: EdgeInsets.only(bottom: 5.0),
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                  margin: EdgeInsets.only(right: 10.0),
-                                  child: Text(MyString.txt_state, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                              Image.asset('images/star.png', width: 8.0, height: 8.0,)
-                            ],
-                          )),
-                      //dropdown biz state
-                      Container(
-                        margin: EdgeInsets.only(bottom: 10.0),
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7.0),
-                            border: Border.all(
-                                color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
-                            )
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                            isExpanded: true,
-                            iconEnabledColor: MyColor.colorPrimary,
-                            value: _dropDownBizState,
-                            onChanged: (String value){
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              setState(() {
-                                _dropDownBizState = value;
-                              });
-                              _townshipList.clear();
-                              setState(() {
-                                _dropDownBizTownship = 'နေရပ်ရွေးပါ';
-                              });
-                              _townshipList = [_dropDownBizTownship];
-                              _getTownshipByState(_dropDownBizState);
-                            },
-                            items: _stateList.map<DropdownMenuItem<String>>((String str){
-                              return DropdownMenuItem<String>(
-                                value: str,
-                                child: Text(str),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-                      //text biz township
-                      Container(
-                          margin: EdgeInsets.only(bottom: 5.0),
-                          child: Row(
-                            children: <Widget>[
-                              Container(
-                                  margin: EdgeInsets.only(right: 10.0),
-                                  child: Text(MyString.txt_township, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                              Image.asset('images/star.png', width: 8.0, height: 8.0,)
-                            ],
-                          )),
-                      //dropdown biz township
-                      Container(
-                        margin: EdgeInsets.only(bottom: 10.0),
-                        padding: EdgeInsets.symmetric(horizontal: 10.0),
-                        decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(7.0),
-                            border: Border.all(
-                                color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
-                            )
-                        ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                            isExpanded: true,
-                            iconEnabledColor: MyColor.colorPrimary,
-                            value: _dropDownBizTownship,
-                            onChanged: (String value){
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              setState(() {
-                                _dropDownBizTownship = value;
-                              });
-                            },
-                            items: _townshipList.map<DropdownMenuItem<String>>((String str){
-                              return DropdownMenuItem<String>(
-                                value: str,
-                                child: Text(str),
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ),
-
-                    ],
-                  ),
-                ),
-              ),
-            ),
-            //owner
-            Card(
+                    ),
+                    IconButton(icon: Icon(Icons.clear, color: Colors.white,), onPressed: (){
+                      setState(() {
+                        _isClose = true;
+                      });
+                    })
+                  ],
+                )),
+          ) : Container(),
+          //biz
+          Container(
+            margin: EdgeInsets.only(bottom: 30.0),
+            child: Card(
               margin: EdgeInsets.all(0.0),
               elevation: 0.5,
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+              //biz information
               child: Container(
                 margin: EdgeInsets.only(left: 30.0, right: 20.0, bottom: 30.0, top: 20.0),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    //text owner information
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
-                      child: Text(MyString.txt_owner_information,
+                      child: Text(MyString.txt_biz_license_information,
                         style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),),
                     ),
-                    //text owner name
+                    //text biz name
                     Container(
                         margin: EdgeInsets.only(bottom: 5.0),
-                        child: Row(
-                          children: <Widget>[
-                            Container(
-                                margin: EdgeInsets.only(right: 10.0),
-                                child: Text(MyString.txt_owner_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                            Image.asset('images/star.png', width: 8.0, height: 8.0,)
-                          ],
-                        )),
-                    //text field owner name
+                        child: Text(MyString.txt_biz_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                    //text field biz name
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
                       padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -629,22 +283,22 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                           border: InputBorder.none,
                         ),
                         cursorColor: MyColor.colorPrimary,
-                        controller: _ownerNameController,
+                        controller: _bizNameController,
                         style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                       ),
                     ),
-                    //text owner nrc
+                    //text biz type
                     Container(
                         margin: EdgeInsets.only(bottom: 5.0),
                         child: Row(
                           children: <Widget>[
                             Container(
                                 margin: EdgeInsets.only(right: 10.0),
-                                child: Text(MyString.txt_owner_nrc_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                                child: Text(MyString.txt_biz_type, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
                             Image.asset('images/star.png', width: 8.0, height: 8.0,)
                           ],
                         )),
-                    //text field owner nrc
+                    //text field biz type
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
                       padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -657,43 +311,94 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                           border: InputBorder.none,
                         ),
                         cursorColor: MyColor.colorPrimary,
-                        controller: _ownerNrcController,
+                        controller: _bizTypeController,
                         style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                       ),
                     ),
-                    //text owner ph
+                    //text biz area
                     Container(
                         margin: EdgeInsets.only(bottom: 5.0),
                         child: Row(
                           children: <Widget>[
                             Container(
                                 margin: EdgeInsets.only(right: 10.0),
-                                child: Text(MyString.txt_owner_ph_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                                child: Text(MyString.txt_area, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
                             Image.asset('images/star.png', width: 8.0, height: 8.0,)
                           ],
                         )),
-                    //text field owner ph
+                    //text field biz l & w
                     Container(
-                      margin: EdgeInsets.only(bottom: 10.0),
-                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7.0),
-                          border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                        ),
-                        cursorColor: MyColor.colorPrimary,
-                        controller: _ownerPhoneController,
-                        keyboardType: TextInputType.phone,
-                        style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                      margin: EdgeInsets.only(bottom: 20.0),
+                      child: Row(
+                        children: <Widget>[
+                          Flexible(
+                            flex: 1,
+                            child: Row(
+                              children: <Widget>[
+                                Flexible(
+                                  flex: 2,
+                                  child: Container(
+                                    margin: EdgeInsets.only(right: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(7.0),
+                                        border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
+                                    ),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                      cursorColor: MyColor.colorPrimary,
+                                      controller: _bizLengthController,
+                                      keyboardType: TextInputType.number,
+                                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                                    ),
+                                  ),
+                                ),
+                                Flexible(
+                                    flex: 1,
+                                    child: Text(MyString.txt_unit_feet, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
+                              ],
+                            ),
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: Row(
+                              children: <Widget>[
+                                Flexible(
+                                  flex: 2,
+                                  child: Container(
+                                    margin: EdgeInsets.only(right: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(7.0),
+                                        border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
+                                    ),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                      cursorColor: MyColor.colorPrimary,
+                                      controller: _bizWidthController,
+                                      keyboardType: TextInputType.number,
+                                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                                    ),
+                                  ),
+                                ),
+                                Flexible(
+                                    flex: 1,
+                                    child: Text(MyString.txt_unit_feet, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
+                              ],
+                            ),
+                          )
+                        ],
                       ),
                     ),
-                    //text location
+                    //biz location
                     Container(
                         margin: EdgeInsets.only(bottom: 10.0),
                         child: Text(MyString.txt_biz_location, style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),)),
+
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
                       child: Row(
@@ -703,11 +408,11 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                //text owner region no
+                                //text biz region no
                                 Container(
                                     margin: EdgeInsets.only(bottom: 5.0),
                                     child: Text(MyString.txt_biz_region_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                //text field owner regio no
+                                //text field biz region no
                                 Container(
                                   margin: EdgeInsets.only(right: 10.0),
                                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -720,7 +425,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                                       border: InputBorder.none,
                                     ),
                                     cursorColor: MyColor.colorPrimary,
-                                    controller: _ownerRegionNoController,
+                                    controller: _bizRegionNoController,
                                     keyboardType: TextInputType.number,
                                     style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                                   ),
@@ -733,11 +438,11 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                //text owner street name
+                                //text biz street
                                 Container(
                                     margin: EdgeInsets.only(bottom: 5.0),
                                     child: Text(MyString.txt_biz_street_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                //text field owner street name
+                                //text field biz street
                                 Container(
                                   margin: EdgeInsets.only(right: 10.0),
                                   padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -750,7 +455,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                                       border: InputBorder.none,
                                     ),
                                     cursorColor: MyColor.colorPrimary,
-                                    controller: _ownerStreetController,
+                                    controller: _bizStreetController,
                                     style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                                   ),
                                 ),
@@ -760,11 +465,11 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                         ],
                       ),
                     ),
-                    //text owner block no
+                    //text block no
                     Container(
                         margin: EdgeInsets.only(bottom: 10.0),
                         child: Text(MyString.txt_biz_block_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                    //text field owner block no
+                    //text field block no
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
                       padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -777,11 +482,11 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                           border: InputBorder.none,
                         ),
                         cursorColor: MyColor.colorPrimary,
-                        controller: _ownerBlockNoController,
+                        controller: _bizBlockNoController,
                         style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                       ),
                     ),
-                    //text owner state
+                    //text biz state
                     Container(
                         margin: EdgeInsets.only(bottom: 5.0),
                         child: Row(
@@ -792,7 +497,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                             Image.asset('images/star.png', width: 8.0, height: 8.0,)
                           ],
                         )),
-                    //drop down owner state
+                    //dropdown biz state
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
                       padding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -807,20 +512,20 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                           style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
                           isExpanded: true,
                           iconEnabledColor: MyColor.colorPrimary,
-                          value: _dropDownOwnerState,
+                          value: _dropDownBizState,
                           onChanged: (String value){
                             FocusScope.of(context).requestFocus(FocusNode());
                             setState(() {
-                              _dropDownOwnerState = value;
+                              _dropDownBizState = value;
                             });
-                            _ownerTownshipList.clear();
+                            _townshipList.clear();
                             setState(() {
-                              _dropDownOwnerTownship = 'နေရပ်ရွေးပါ';
+                              _dropDownBizTownship = 'နေရပ်ရွေးပါ';
                             });
-                            _ownerTownshipList = [_dropDownOwnerTownship];
-                            _getOwnerTownshipByState(_dropDownOwnerState);
+                            _townshipList = [_dropDownBizTownship];
+                            _getTownshipByState(_dropDownBizState);
                           },
-                          items: _ownerStateList.map<DropdownMenuItem<String>>((String str){
+                          items: _stateList.map<DropdownMenuItem<String>>((String str){
                             return DropdownMenuItem<String>(
                               value: str,
                               child: Text(str),
@@ -829,7 +534,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                         ),
                       ),
                     ),
-                    //text owner township
+                    //text biz township
                     Container(
                         margin: EdgeInsets.only(bottom: 5.0),
                         child: Row(
@@ -840,7 +545,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                             Image.asset('images/star.png', width: 8.0, height: 8.0,)
                           ],
                         )),
-                    //dropdown owner township
+                    //dropdown biz township
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
                       padding: EdgeInsets.symmetric(horizontal: 10.0),
@@ -855,14 +560,14 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                           style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
                           isExpanded: true,
                           iconEnabledColor: MyColor.colorPrimary,
-                          value: _dropDownOwnerTownship,
+                          value: _dropDownBizTownship,
                           onChanged: (String value){
                             FocusScope.of(context).requestFocus(FocusNode());
                             setState(() {
-                              _dropDownOwnerTownship = value;
+                              _dropDownBizTownship = value;
                             });
                           },
-                          items: _ownerTownshipList.map<DropdownMenuItem<String>>((String str){
+                          items: _townshipList.map<DropdownMenuItem<String>>((String str){
                             return DropdownMenuItem<String>(
                               value: str,
                               child: Text(str),
@@ -871,85 +576,388 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                         ),
                       ),
                     ),
-                    //text remark
-                    Container(
-                        margin: EdgeInsets.only(bottom: 5.0),
-                        child: Text(MyString.txt_remark, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                    //text field remark
-                    Container(
-                      margin: EdgeInsets.only(top: 5.0, bottom: 20.0),
-                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                      height: 160.0,
-                      decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(7.0),
-                          border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
-                      ),
-                      child: TextField(
-                        decoration: InputDecoration(
-                            border: InputBorder.none
-                        ),
-                        controller: _remarkController,
-                        style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
-                      ),
-                    ),
+
                   ],
                 ),
               ),
             ),
-            Container(
-              height: 45.0,
-              width: double.maxFinite,
-              margin: EdgeInsets.all(20.0),
-              child: RaisedButton(onPressed: ()async{
-                await _checkCon();
-                    if(_isCon){
-                      if(_bizTypeController.text!=null && _bizLengthController.text!=null && _bizWidthController.text != null && _dropDownBizState != 'နေရပ်ရွေးပါ'
-                          && _dropDownBizTownship != 'နေရပ်ရွေးပါ' &&_ownerNameController.text !=null && _ownerNrcController.text != null && _ownerPhoneController.text !=null
-                          && _dropDownOwnerState != 'နေရပ်ရွေးပါ' && _dropDownOwnerTownship != 'နေရပ်ရွေးပါ'){
-                        setState(() {
-                          _isLoading = true;
-                        });
+          ),
+          //owner
+          Card(
+            margin: EdgeInsets.all(0.0),
+            elevation: 0.5,
+            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),
+            child: Container(
+              margin: EdgeInsets.only(left: 30.0, right: 20.0, bottom: 30.0, top: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: <Widget>[
+                  //text owner information
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    child: Text(MyString.txt_owner_information,
+                      style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),),
+                  ),
+                  //text owner name
+                  Container(
+                      margin: EdgeInsets.only(bottom: 5.0),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                              margin: EdgeInsets.only(right: 10.0),
+                              child: Text(MyString.txt_owner_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                          Image.asset('images/star.png', width: 8.0, height: 8.0,)
+                        ],
+                      )),
+                  //text field owner name
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7.0),
+                        border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      cursorColor: MyColor.colorPrimary,
+                      controller: _ownerNameController,
+                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                    ),
+                  ),
+                  //text owner nrc
+                  Container(
+                      margin: EdgeInsets.only(bottom: 5.0),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                              margin: EdgeInsets.only(right: 10.0),
+                              child: Text(MyString.txt_owner_nrc_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                          Image.asset('images/star.png', width: 8.0, height: 8.0,)
+                        ],
+                      )),
+                  //text field owner nrc
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7.0),
+                        border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      cursorColor: MyColor.colorPrimary,
+                      controller: _ownerNrcController,
+                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                    ),
+                  ),
+                  //text owner ph
+                  Container(
+                      margin: EdgeInsets.only(bottom: 5.0),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                              margin: EdgeInsets.only(right: 10.0),
+                              child: Text(MyString.txt_owner_ph_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                          Image.asset('images/star.png', width: 8.0, height: 8.0,)
+                        ],
+                      )),
+                  //text field owner ph
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7.0),
+                        border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      cursorColor: MyColor.colorPrimary,
+                      controller: _ownerPhoneController,
+                      keyboardType: TextInputType.phone,
+                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                    ),
+                  ),
+                  //text location
+                  Container(
+                      margin: EdgeInsets.only(bottom: 10.0),
+                      child: Text(MyString.txt_biz_location, style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary),)),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    child: Row(
+                      children: <Widget>[
+                        Flexible(
+                          flex: 1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              //text owner region no
+                              Container(
+                                  margin: EdgeInsets.only(bottom: 5.0),
+                                  child: Text(MyString.txt_biz_region_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                              //text field owner regio no
+                              Container(
+                                margin: EdgeInsets.only(right: 10.0),
+                                padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7.0),
+                                    border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
+                                ),
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                  cursorColor: MyColor.colorPrimary,
+                                  controller: _ownerRegionNoController,
+                                  keyboardType: TextInputType.number,
+                                  style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        Flexible(
+                          flex: 1,
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              //text owner street name
+                              Container(
+                                  margin: EdgeInsets.only(bottom: 5.0),
+                                  child: Text(MyString.txt_biz_street_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                              //text field owner street name
+                              Container(
+                                margin: EdgeInsets.only(right: 10.0),
+                                padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(7.0),
+                                    border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
+                                ),
+                                child: TextField(
+                                  decoration: InputDecoration(
+                                    border: InputBorder.none,
+                                  ),
+                                  cursorColor: MyColor.colorPrimary,
+                                  controller: _ownerStreetController,
+                                  style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                  //text owner block no
+                  Container(
+                      margin: EdgeInsets.only(bottom: 10.0),
+                      child: Text(MyString.txt_biz_block_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                  //text field owner block no
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7.0),
+                        border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                        border: InputBorder.none,
+                      ),
+                      cursorColor: MyColor.colorPrimary,
+                      controller: _ownerBlockNoController,
+                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                    ),
+                  ),
+                  //text owner state
+                  Container(
+                      margin: EdgeInsets.only(bottom: 5.0),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                              margin: EdgeInsets.only(right: 10.0),
+                              child: Text(MyString.txt_state, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                          Image.asset('images/star.png', width: 8.0, height: 8.0,)
+                        ],
+                      )),
+                  //drop down owner state
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7.0),
+                        border: Border.all(
+                            color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
+                        )
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
+                        isExpanded: true,
+                        iconEnabledColor: MyColor.colorPrimary,
+                        value: _dropDownOwnerState,
+                        onChanged: (String value){
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          setState(() {
+                            _dropDownOwnerState = value;
+                          });
+                          _ownerTownshipList.clear();
+                          setState(() {
+                            _dropDownOwnerTownship = 'နေရပ်ရွေးပါ';
+                          });
+                          _ownerTownshipList = [_dropDownOwnerTownship];
+                          _getOwnerTownshipByState(_dropDownOwnerState);
+                        },
+                        items: _ownerStateList.map<DropdownMenuItem<String>>((String str){
+                          return DropdownMenuItem<String>(
+                            value: str,
+                            child: Text(str),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  //text owner township
+                  Container(
+                      margin: EdgeInsets.only(bottom: 5.0),
+                      child: Row(
+                        children: <Widget>[
+                          Container(
+                              margin: EdgeInsets.only(right: 10.0),
+                              child: Text(MyString.txt_township, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                          Image.asset('images/star.png', width: 8.0, height: 8.0,)
+                        ],
+                      )),
+                  //dropdown owner township
+                  Container(
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7.0),
+                        border: Border.all(
+                            color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
+                        )
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<String>(
+                        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
+                        isExpanded: true,
+                        iconEnabledColor: MyColor.colorPrimary,
+                        value: _dropDownOwnerTownship,
+                        onChanged: (String value){
+                          FocusScope.of(context).requestFocus(FocusNode());
+                          setState(() {
+                            _dropDownOwnerTownship = value;
+                          });
+                        },
+                        items: _ownerTownshipList.map<DropdownMenuItem<String>>((String str){
+                          return DropdownMenuItem<String>(
+                            value: str,
+                            child: Text(str),
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ),
+                  //text remark
+                  Container(
+                      margin: EdgeInsets.only(bottom: 5.0),
+                      child: Text(MyString.txt_remark, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                  //text field remark
+                  Container(
+                    margin: EdgeInsets.only(top: 5.0, bottom: 20.0),
+                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                    height: 160.0,
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(7.0),
+                        border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
+                    ),
+                    child: TextField(
+                      decoration: InputDecoration(
+                          border: InputBorder.none
+                      ),
+                      controller: _remarkController,
+                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+          Container(
+            height: 45.0,
+            width: double.maxFinite,
+            margin: EdgeInsets.all(20.0),
+            child: RaisedButton(onPressed: ()async{
+              await _checkCon();
+              if(_isCon){
+                if(_bizTypeController.text!=null && _bizLengthController.text!=null && _bizWidthController.text != null && _dropDownBizState != 'နေရပ်ရွေးပါ'
+                    && _dropDownBizTownship != 'နေရပ်ရွေးပါ' &&_ownerNameController.text !=null && _ownerNrcController.text != null && _ownerPhoneController.text !=null
+                    && _dropDownOwnerState != 'နေရပ်ရွေးပါ' && _dropDownOwnerTownship != 'နေရပ်ရွေးပါ'){
+                  setState(() {
+                    _isLoading = true;
+                  });
 
-                        _applyBizLicenseModel.bizName = _bizNameController.text;
-                        _applyBizLicenseModel.bizType = _bizTypeController.text;
-                        _applyBizLicenseModel.length = double.parse(_bizLengthController.text);
-                        _applyBizLicenseModel.width = double.parse(_bizWidthController.text);
-                        _applyBizLicenseModel.area = _applyBizLicenseModel.length * _applyBizLicenseModel.width;
-                        _applyBizLicenseModel.bizRegionNo = _bizRegionNoController.text;
-                        _applyBizLicenseModel.bizStreetName = _bizStreetController.text;
-                        _applyBizLicenseModel.bizBlockNo = _bizBlockNoController.text;
-                        _applyBizLicenseModel.bizTownship = _dropDownBizTownship;
-                        _applyBizLicenseModel.bizState = _dropDownBizState;
-                        _applyBizLicenseModel.ownerName = _ownerNameController.text;
-                        _applyBizLicenseModel.nrcNo = _ownerNrcController.text;
-                        _applyBizLicenseModel.phoneNo = _ownerPhoneController.text;
-                        _applyBizLicenseModel.regionNo = _ownerRegionNoController.text;
-                        _applyBizLicenseModel.streetName = _ownerStreetController.text;
-                        _applyBizLicenseModel.blockNo = _ownerBlockNoController.text;
-                        _applyBizLicenseModel.township = _dropDownOwnerTownship;
-                        _applyBizLicenseModel.state = _dropDownOwnerState;
-                        _applyBizLicenseModel.remark = _remarkController.text;
-                        _applyBizLicenseModel.uniqueKey = _sharepreferenceshelper.getUserUniqueKey();
-                        _applyBizLicenseModel.regionCode = _sharepreferenceshelper.getRegionCode();
-                        _applyBizLicenseModel.userName = _userModel.name;
-                        _applyBizLicenseModel.licenseType = _bizLicenseModel.licenseType;
-                        _applyBizLicenseModel.licensetypeId = _bizLicenseModel.id;
-                        _applyBizLicenseModel.source = 'app'; //to know apply biz is from mobile app or chat bot
-                        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.APPLY_BIZ_LICENSE_FORM_SCREEN, ClickEvent.BIZ_LICENSE_APPLIED_CLICK_EVENT, _userModel.uniqueKey);
-                        _callWebService(_applyBizLicenseModel);
-                      }else{
-                        ApplyBizLicenseFormSnackBarWidget(_globalKey, MyString.txt_apply_license_need_to_fill);
-                      }
-                    }else{
-                      WarningSnackBar(_globalKey, MyString.txt_check_internet);
-                    }
+                  _applyBizLicenseModel.bizName = _bizNameController.text;
+                  _applyBizLicenseModel.bizType = _bizTypeController.text;
+                  _applyBizLicenseModel.length = double.parse(_bizLengthController.text);
+                  _applyBizLicenseModel.width = double.parse(_bizWidthController.text);
+                  _applyBizLicenseModel.area = _applyBizLicenseModel.length * _applyBizLicenseModel.width;
+                  _applyBizLicenseModel.bizRegionNo = _bizRegionNoController.text;
+                  _applyBizLicenseModel.bizStreetName = _bizStreetController.text;
+                  _applyBizLicenseModel.bizBlockNo = _bizBlockNoController.text;
+                  _applyBizLicenseModel.bizTownship = _dropDownBizTownship;
+                  _applyBizLicenseModel.bizState = _dropDownBizState;
+                  _applyBizLicenseModel.ownerName = _ownerNameController.text;
+                  _applyBizLicenseModel.nrcNo = _ownerNrcController.text;
+                  _applyBizLicenseModel.phoneNo = _ownerPhoneController.text;
+                  _applyBizLicenseModel.regionNo = _ownerRegionNoController.text;
+                  _applyBizLicenseModel.streetName = _ownerStreetController.text;
+                  _applyBizLicenseModel.blockNo = _ownerBlockNoController.text;
+                  _applyBizLicenseModel.township = _dropDownOwnerTownship;
+                  _applyBizLicenseModel.state = _dropDownOwnerState;
+                  _applyBizLicenseModel.remark = _remarkController.text;
+                  _applyBizLicenseModel.uniqueKey = _sharepreferenceshelper.getUserUniqueKey();
+                  _applyBizLicenseModel.regionCode = _sharepreferenceshelper.getRegionCode();
+                  _applyBizLicenseModel.userName = _userModel.name;
+                  _applyBizLicenseModel.licenseType = _bizLicenseModel.licenseType;
+                  _applyBizLicenseModel.licensetypeId = _bizLicenseModel.id;
+                  _applyBizLicenseModel.source = 'app'; //to know apply biz is from mobile app or chat bot
+                  FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.APPLY_BIZ_LICENSE_FORM_SCREEN, ClickEvent.BIZ_LICENSE_APPLIED_CLICK_EVENT, _userModel.uniqueKey);
+                  _callWebService(_applyBizLicenseModel);
+                }else{
+                  ApplyBizLicenseFormSnackBarWidget(_globalKey, MyString.txt_apply_license_need_to_fill);
+                }
+              }else{
+                WarningSnackBar(_globalKey, MyString.txt_check_internet);
+              }
 
-                }, child: Text(MyString.txt_apply_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
-            )
-          ],
-        ),
+            }, child: Text(MyString.txt_apply_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+              color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+          )
+        ],
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScaffoldWidget(
+        title : MyString.txt_business_tax,
+        body : _body(context),
+        globalKey: _globalKey,
+    );
+    /*return Scaffold(
+      key: _globalKey,
+      appBar: AppBar(
+        title: Text(MyString.txt_business_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
+      ),
+      body: ,
+    );*/
   }
 }

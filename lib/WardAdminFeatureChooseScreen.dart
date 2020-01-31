@@ -1,8 +1,10 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/WardAdminContributionListScreen.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/main.dart';
 import 'package:myotaw/model/DashBoardModel.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'FloodReportListScreen.dart';
 import 'helper/NavigatorHelper.dart';
 
@@ -66,10 +68,36 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
       ),
     );
   }
+
+  Widget _body(){
+    return ListView.builder(
+        itemCount: _list.length,
+        itemBuilder: (context, index){
+          return _widget(context, index);
+        }
+    );
+  }
   @override
   Widget build(BuildContext context) {
     _init();
-    return Scaffold(
+    return CustomScaffoldWidget(
+        title: MyString.txt_choose_feature,
+        body: _body());
+    /*return Scaffold(
+      body: CupertinoPageScaffold(
+          navigationBar: CupertinoNavigationBar(
+            backgroundColor: MyColor.colorPrimary,
+            middle: Text(MyString.txt_choose_feature, style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal)),
+          ),
+          child: ListView.builder(
+              itemCount: _list.length,
+              itemBuilder: (context, index){
+                return _widget(context, index);
+              }
+          )
+      ),
+    );*/
+    /*return Scaffold(
       appBar: AppBar(
         title: Center(
             child:
@@ -81,6 +109,6 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             return _widget(context, index);
           }
       )
-    );
+    );*/
   }
 }

@@ -1,24 +1,20 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/NumberFormatterHelper.dart';
 import 'package:myotaw/model/SmartWaterMeterUnitModel.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/SmartWaterMeterUnitModel.dart';
-import 'package:dio/dio.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:async_loader/async_loader.dart';
 import 'helper/ServiceHelper.dart';
-import 'model/PaymentLogModel.dart';
 import 'helper/NumConvertHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
 import 'TopUpRecordListScreen.dart';
-import 'PinCodeSetUpScreen.dart';
-import 'PaymentScreen.dart';
 import 'model/SmartWaterMeterLogModel.dart';
 import 'helper/ShowDateTimeHelper.dart';
 
@@ -316,12 +312,17 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
           ),
         )
     );
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: MyString.txt_smart_water_meter,
+      body: _asyncLoader,
+      globalKey: _globalKey,
+    );
+    /*return Scaffold(
       key: _globalKey,
       appBar: AppBar(
         title: Text(MyString.txt_smart_water_meter, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
       body: _asyncLoader,
-    );
+    );*/
   }
 }

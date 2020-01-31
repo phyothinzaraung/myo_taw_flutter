@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myotaw/WardAdminContributionScreen.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'model/DaoViewModel.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/DaoPhotoModel.dart';
@@ -149,59 +150,67 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(_daoViewModel.daoModel.title, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: Container(
-        color: Colors.white,
-        child: Column(
-          children: <Widget>[
-            Flexible(
-              flex: 2,
-              child: ListView(
-                children: <Widget>[
-                  Column(
-                    children: <Widget>[
-                      _imageView(),
-                      //text body
-                      Container(
-                        color: Colors.white,
-                        padding: EdgeInsets.all(30.0),
-                        child: Html(data: _daoViewModel.daoModel.description,),
-                      )
-                    ],
-                  )
-                ],
-              ),
+  Widget _body(BuildContext context){
+    return Container(
+      color: Colors.white,
+      child: Column(
+        children: <Widget>[
+          Flexible(
+            flex: 2,
+            child: ListView(
+              children: <Widget>[
+                Column(
+                  children: <Widget>[
+                    _imageView(),
+                    //text body
+                    Container(
+                      color: Colors.white,
+                      padding: EdgeInsets.all(30.0),
+                      child: Html(data: _daoViewModel.daoModel.description,),
+                    )
+                  ],
+                )
+              ],
             ),
-            Container(
-              width: double.maxFinite,
-              height: 50.0,
-              child: FlatButton(
-                  onPressed: ()async{
-                    await _sharepreferenceshelper.initSharePref();
-                    /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => _daoViewModel.daoModel.title.contains('လိုင်စင်')?
+          ),
+          Container(
+            width: double.maxFinite,
+            height: 50.0,
+            child: FlatButton(
+              onPressed: ()async{
+                await _sharepreferenceshelper.initSharePref();
+                /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => _daoViewModel.daoModel.title.contains('လိုင်စင်')?
                     BizLicenseScreen() : _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():ContributionScreen(),
                         settings: RouteSettings(name: _daoViewModel.daoModel.title.contains('လိုင်စင်')?ScreenName.BIZ_LICENSE_SCREEN :
                         _sharepreferenceshelper.isWardAdmin()?ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN : ScreenName.CONTRIBUTION_SCREEN)
                     ));*/
-                    NavigatorHelper().MyNavigatorPush(context,
-                      //screen
-                      _daoViewModel.daoModel.title.contains('လိုင်စင်')?
+                NavigatorHelper().MyNavigatorPush(context,
+                    //screen
+                    _daoViewModel.daoModel.title.contains('လိုင်စင်')?
                     BizLicenseScreen() : _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():ContributionScreen(),
-                        //screenName
-                        _daoViewModel.daoModel.title.contains('လိုင်စင်')?ScreenName.BIZ_LICENSE_SCREEN :
-                        _sharepreferenceshelper.isWardAdmin()?ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN : ScreenName.CONTRIBUTION_SCREEN);
-                  },
-                  child: Text(_daoViewModel.daoModel.title.contains('လိုင်စင်')?MyString.txt_biz_license:MyString.txt_suggestion,
-                    style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),color: MyColor.colorPrimary,),
-            )
-          ],
-        ),
-      )
+                    //screenName
+                    _daoViewModel.daoModel.title.contains('လိုင်စင်')?ScreenName.BIZ_LICENSE_SCREEN :
+                    _sharepreferenceshelper.isWardAdmin()?ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN : ScreenName.CONTRIBUTION_SCREEN);
+              },
+              child: Text(_daoViewModel.daoModel.title.contains('လိုင်စင်')?MyString.txt_biz_license:MyString.txt_suggestion,
+                style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),color: MyColor.colorPrimary,),
+          )
+        ],
+      ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScaffoldWidget(
+      title: _daoViewModel.daoModel.title,
+      body: _body(context),
+    );
+    /*return Scaffold(
+      appBar: AppBar(
+        title: Text(_daoViewModel.daoModel.title, style: TextStyle(fontSize: FontSize.textSizeNormal),),
+      ),
+      body:
+    );*/
   }
 }

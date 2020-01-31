@@ -3,6 +3,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
@@ -141,11 +142,15 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
           ),
         )
     );
-    return Scaffold(
+    return CustomScaffoldWidget(
+        title : MyString.txt_apply_biz_license,
+        body: _asyncLoader
+    );
+    /*return Scaffold(
       appBar: AppBar(
         title: Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
       body: _asyncLoader,
-    );
+    );*/
   }
 }

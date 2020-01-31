@@ -1,6 +1,7 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -118,6 +119,17 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
     return null;
   }
 
+  Widget _action(){
+    return GestureDetector(
+      onTap: (){
+        NavigatorHelper().MyNavigatorPush(context, ApplyBizLicenseListScreen(), ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN);
+      },
+      child: Container(
+          margin: EdgeInsets.only(right: 10.0),
+          child: Image.asset('images/history.png', width: 30.0, height: 30.0,)),
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -139,15 +151,20 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
           ),
         )
     );
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: MyString.txt_business_tax,
+      body: _asyncLoader,
+      action: <Widget>[
+        _action()
+      ],
+      trailing: _action(),
+    );
+    /*return Scaffold(
       appBar: AppBar(
         title: Text(MyString.txt_business_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
         actions: <Widget>[
           GestureDetector(
             onTap: (){
-              /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseListScreen(),
-                settings: RouteSettings(name: ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN)
-              ));*/
               NavigatorHelper().MyNavigatorPush(context, ApplyBizLicenseListScreen(), ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN);
             },
             child: Container(
@@ -157,6 +174,6 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
         ],
       ),
       body: _asyncLoader,
-    );
+    );*/
   }
 }

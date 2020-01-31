@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:async_loader/async_loader.dart';
@@ -401,7 +403,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 10),
-                      child: Icon(Icons.arrow_back),
+                      child: Icon(Platform.isAndroid?Icons.arrow_back: CupertinoIcons.back,),
                     ),
                   ) : Container() : Container(),
                   Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
@@ -411,9 +413,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             ),
             GestureDetector(
               onTap: (){
-                /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(),
-                  settings: RouteSettings(name: ScreenName.PROFILE_SCREEN)
-                ));*/
                 NavigatorHelper().MyNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
 
               },

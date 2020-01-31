@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/ServiceHelper.dart';
 import 'helper/MyoTawConstant.dart';
@@ -130,11 +131,15 @@ class _DaoScreenState extends State<DaoScreen> {
           ),
         )
     );
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: display.isEmpty?MyString.txt_municipal:MyString.txt_tax,
+      body: _asyncLoader,
+    );
+    /*return Scaffold(
       appBar: AppBar(
         title: Text(display.isEmpty?MyString.txt_municipal:MyString.txt_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
       body: _asyncLoader,
-    );
+    );*/
   }
 }

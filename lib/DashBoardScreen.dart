@@ -134,76 +134,53 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         onTap: (){
           switch(i.title){
             case MyString.txt_municipal:
-              /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoScreen(''),
-                settings: RouteSettings(name: ScreenName.ABOUT_DAO_SCREEN)
-              ));*/
+
               NavigatorHelper().MyNavigatorPush(context, DaoScreen(''), ScreenName.ABOUT_DAO_SCREEN);
               break;
             case MyString.txt_tax:
-              /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoScreen('Tax'),
-                  settings: RouteSettings(name: ScreenName.ABOUT_TAX_SCREEN)
-              ));*/
+
               NavigatorHelper().MyNavigatorPush(context, DaoScreen('Tax'), ScreenName.ABOUT_TAX_SCREEN);
               break;
             case MyString.txt_suggestion:
-              /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():
-              ContributionScreen(),
-                  settings: RouteSettings(name: _sharepreferenceshelper.isWardAdmin()?ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN : ScreenName.CONTRIBUTION_SCREEN)));*/
               NavigatorHelper().MyNavigatorPush(context, _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():
               ContributionScreen(), _sharepreferenceshelper.isWardAdmin()?ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN : ScreenName.CONTRIBUTION_SCREEN);
               break;
             case MyString.txt_business_tax:
-              /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseScreen(),
-                  settings: RouteSettings(name: ScreenName.BIZ_LICENSE_SCREEN)
-              ));*/
+
               NavigatorHelper().MyNavigatorPush(context, BizLicenseScreen(), ScreenName.BIZ_LICENSE_SCREEN);
               break;
             case MyString.txt_online_tax:
               _regionCode == MyString.TGY_REGIONCODE?
-              /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineTaxChooseScreen(),
-                  settings: RouteSettings(name: ScreenName.ONLINE_TAX_CHOOSE_SCREEN)
-              ))*/
+
               NavigatorHelper().MyNavigatorPush(context, OnlineTaxChooseScreen(), ScreenName.ONLINE_TAX_CHOOSE_SCREEN)
               :
               PrimaryColorSnackBarWidget(_globalKey, MyString.txt_coming_soon);
               break;
             case MyString.txt_tax_use:
-              /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => TaxUserScreen(),
-                  settings: RouteSettings(name: ScreenName.TAX_USE_SCREEN)
-              ));*/
+
               NavigatorHelper().MyNavigatorPush(context, TaxUserScreen(), ScreenName.TAX_USE_SCREEN);
               break;
             case MyString.txt_calculate_tax:
-              /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => CalculateTaxScreen(),
-                  settings: RouteSettings(name: ScreenName.CALCULATE_TAX_SCREEN)
-              ));*/
+
               NavigatorHelper().MyNavigatorPush(context, CalculateTaxScreen(), ScreenName.CALCULATE_TAX_SCREEN);
               break;
             case MyString.txt_faq:
-              /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => FaqScreen(),
-                  settings: RouteSettings(name: ScreenName.FAQ_SCREEN)
-              ));*/
+
               NavigatorHelper().MyNavigatorPush(context, FaqScreen(), ScreenName.FAQ_SCREEN);
               break;
             case MyString.txt_save_newsFeed:
-              /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedScreen(),
-                  settings: RouteSettings(name: ScreenName.SAVED_NEWS_FEED_SCREEN)
-              ));*/
+
               NavigatorHelper().MyNavigatorPush(context, SaveNewsFeedScreen(), ScreenName.SAVED_NEWS_FEED_SCREEN);
               break;
             case MyString.txt_profile:
-              /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen(),
-                  settings: RouteSettings(name: ScreenName.PROFILE_SCREEN)
-              ));*/
+
               NavigatorHelper().MyNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
               break;
             case MyString.txt_referral:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => ReferralScreen(_userModel),));
               break;
             case MyString.txt_flood_level:
-              /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => FloodReportListScreen(),
-                  settings: RouteSettings(name: ScreenName.FLOOD_REPORT_LIST_SCREEN)
-              ));*/
+
               NavigatorHelper().MyNavigatorPush(context, FloodReportListScreen(), ScreenName.FLOOD_REPORT_LIST_SCREEN);
               break;
             default:

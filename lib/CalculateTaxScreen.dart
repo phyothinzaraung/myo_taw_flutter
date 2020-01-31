@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'MlmPropertyTaxCalculatorScreen.dart';
 import 'helper/MyoTawConstant.dart';
@@ -113,11 +114,15 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: MyString.txt_calculate_tax,
+      body: _listView(),
+    );
+    /*return Scaffold(
       appBar: AppBar(
         title: Text(MyString.txt_calculate_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),)
       ),
       body: _listView()
-    );
+    );*/
   }
 }

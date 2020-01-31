@@ -122,7 +122,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
     await PermissionHandler().requestPermissions([PermissionGroup.camera, PermissionGroup.storage,PermissionGroup.photos, PermissionGroup.location]);
   }
 
-  Widget _androidNavigation(){
+  Widget _androidBottomNavigation(){
     return Scaffold(
       body: TabBarView(
         children: [
@@ -154,7 +154,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
     );
   }
 
-  Widget _iosNavigation(){
+  Widget _iosTabBarNavigation(){
     return CupertinoPageScaffold(
         child: CupertinoTabScaffold(
             tabBar: CupertinoTabBar(
@@ -190,7 +190,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
       bottom: true,
       left: false,
       right: false,
-      child: Platform.isAndroid? _androidNavigation() : _iosNavigation(),
+      child: Platform.isAndroid? _androidBottomNavigation() : _iosTabBarNavigation(),
     );
   }
 

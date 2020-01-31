@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:photo_view/photo_view.dart';
 
 class PhotoDetailScreen extends StatelessWidget {
@@ -6,9 +7,8 @@ class PhotoDetailScreen extends StatelessWidget {
   PhotoDetailScreen(this.photoUrl);
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(),
+    return CustomScaffoldWidget(
+      title: '',
       body: Center(
         child: PhotoView(
           imageProvider: NetworkImage(photoUrl),
@@ -17,5 +17,10 @@ class PhotoDetailScreen extends StatelessWidget {
         ),
       ),
     );
+    /*return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(),
+      body: ,
+    );*/
   }
 }

@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:async_loader/async_loader.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/WardAdminContributionDetailScreen.dart';
 import 'package:myotaw/database/UserDb.dart';
@@ -122,7 +125,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 10),
-                      child: Icon(Icons.arrow_back),
+                      child: Icon(Platform.isAndroid?Icons.arrow_back: CupertinoIcons.back,),
                     ),
                   ),
                   Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
@@ -218,9 +221,6 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
           children: <Widget>[
             GestureDetector(
               onTap: (){
-                /*Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => WardAdminContributionDetailScreen(_contributionModelList[i]),
-                    settings: RouteSettings(name: ScreenName.CONTRIBUTION_DETAIL_SCREEN)));*/
                 NavigatorHelper().MyNavigatorPush(context,
                     WardAdminContributionDetailScreen(_contributionModelList[i]), ScreenName.CONTRIBUTION_DETAIL_SCREEN);
               },

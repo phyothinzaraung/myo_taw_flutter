@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -262,12 +263,18 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
           ),
         )
     );
-    return Scaffold(
+
+    return CustomScaffoldWidget(
+        title: MyString.txt_apply_biz_license_photo,
+        body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: _modalProgressIndicator(),child: _asyncLoader),
+        globalKey: _globalKey,
+    );
+    /*return Scaffold(
       key: _globalKey,
       appBar: AppBar(
         title: Text(MyString.txt_apply_biz_license_photo, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
       body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: _modalProgressIndicator(),child: _asyncLoader),
-    );
+    );*/
   }
 }

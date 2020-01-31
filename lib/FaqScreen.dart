@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
@@ -246,11 +247,15 @@ class _FaqScreenState extends State<FaqScreen> {
           ),
         )
     );
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: MyString.title_faq,
+      body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: modalProgressIndicator(),child: _asyncLoader),
+    );
+    /*return Scaffold(
       appBar: AppBar(
         title: Text(MyString.title_faq, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
       body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: modalProgressIndicator(),child: _asyncLoader)
-    );
+    );*/
   }
 }

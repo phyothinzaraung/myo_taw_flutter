@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:location/location.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -60,30 +61,25 @@ class _WardAdminLocationUpdateScreenState extends State<WardAdminLocationUpdateS
     });
   }
 
+  Widget _floatingActionButtion(){
+    return FloatingActionButton.extended(onPressed: ()async{
+      await _sharepreferenceshelper.initSharePref();
+      FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN, ClickEvent.GET_LOCATION_FROM_GOOGLE_MAP, _sharepreferenceshelper.getUserUniqueKey());
+      Navigator.of(context).pop({'latLng' : _latLng});
+
+    }, label: Text(MyString.txt_get_location_update, style: TextStyle(color: Colors.white),),
+      icon: Icon(Icons.pin_drop, color: Colors.white,),
+      backgroundColor: MyColor.colorPrimary,);
+  }
+
   _updatePosition(CameraPosition cameraPosition){
     _latLng = cameraPosition.target;
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: <Widget>[
-            Expanded(child: Text(MyString.txt_location_update, style: TextStyle(fontSize: FontSize.textSizeNormal),)),
-            //Text(MyString.txt_get_location_update, style: TextStyle(fontSize: FontSize.textSizeSmall),),
-          ],
-        ),
-
-      ),
-      floatingActionButton: FloatingActionButton.extended(onPressed: ()async{
-        await _sharepreferenceshelper.initSharePref();
-        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN, ClickEvent.GET_LOCATION_FROM_GOOGLE_MAP, _sharepreferenceshelper.getUserUniqueKey());
-        Navigator.of(context).pop({'latLng' : _latLng});
-
-        }, label: Text(MyString.txt_get_location_update, style: TextStyle(color: Colors.white),),
-            icon: Icon(Icons.pin_drop, color: Colors.white,),
-        backgroundColor: MyColor.colorPrimary,),
+    return CustomScaffoldWidget(
+      title: MyString.txt_location_update,
       body: _cameraPosition!=null?
       Stack(
         alignment: Alignment.center,
@@ -113,15 +109,29 @@ class _WardAdminLocationUpdateScreenState extends State<WardAdminLocationUpdateS
       ) :
       Center(
         child: CircularProgressIndicator(),
-      )
+      ),
+    floatingActionButton: _floatingActionButtion()
     );
+    /*return Scaffold(
+      appBar: AppBar(
+        title: Row(
+          children: <Widget>[
+            Expanded(child: Text(MyString.txt_location_update, style: TextStyle(fontSize: FontSize.textSizeNormal),)),
+            //Text(MyString.txt_get_location_update, style: TextStyle(fontSize: FontSize.textSizeSmall),),
+          ],
+        ),
+
+      ),
+      floatingActionButton:
+      body:
+    );*/
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
     //call before super.dispose for active tickerprovidermixing
-    _streamSubscription.cancel();
+    //_streamSubscription.cancel();
     _animatinController.stop();
     _animatinController.dispose();
     super.dispose();

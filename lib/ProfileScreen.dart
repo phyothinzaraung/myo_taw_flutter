@@ -3,6 +3,7 @@ import 'package:myotaw/LoginScreen.dart';
 import 'package:myotaw/PhotoDetailScreen.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
@@ -296,9 +297,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToProfilePhotoScreen()async{
-    /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfilePhotoUploadScreen(),
-      settings: RouteSettings(name: ScreenName.PROFILE_PHOTO_SCREEN)
-    ));*/
     Map result = await NavigatorHelper().MyNavigatorPush(context, ProfilePhotoUploadScreen(), ScreenName.PROFILE_PHOTO_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       //await _getUser();
@@ -307,9 +305,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToNewTaxRecordScreen()async{
-    /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewTaxRecordScreen(),
-      settings: RouteSettings(name: ScreenName.NEW_TAX_RECORD_SCREEN)
-    ));*/
     Map result = await NavigatorHelper().MyNavigatorPush(context, NewTaxRecordScreen(), ScreenName.NEW_TAX_RECORD_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       await _handleRefresh();
@@ -543,15 +538,20 @@ class _ProfileScreenState extends State<ProfileScreen> {
           ),
         )
     );
-    return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        title: Text(MyString.txt_profile, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
+    return CustomScaffoldWidget(
+      title: MyString.txt_profile,
       body: ModalProgressHUD(
           inAsyncCall: _isLoading,
           progressIndicator: modalProgressIndicator(),
           child: _asyncLoader),
+      globalKey: _globalKey,
     );
+    /*return Scaffold(
+      key: _globalKey,
+      appBar: AppBar(
+        title: Text(MyString.txt_profile, style: TextStyle(fontSize: FontSize.textSizeNormal),),
+      ),
+      body: ,
+    );*/
   }
 }

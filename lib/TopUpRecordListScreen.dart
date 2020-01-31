@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:myotaw/helper/NumConvertHelper.dart';
 import 'package:myotaw/helper/NumberFormatterHelper.dart';
 import 'package:myotaw/model/TopUpLogModel.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
 import 'helper/ServiceHelper.dart';
@@ -198,13 +199,18 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
           ),
         )
     );
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: MyString.txt_top_up_record,
+      body: _asyncLoader,
+      globalKey: _scaffoldState,
+    );
+    /*return Scaffold(
       key: _scaffoldState,
       appBar: AppBar(
         title: Text(MyString.txt_top_up_record, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
       body: _asyncLoader,
-      /*body: ModalProgressHUD(
+      *//*body: ModalProgressHUD(
         inAsyncCall: _isLoading,
         progressIndicator: modalProgressIndicator(),
         child: ListView(
@@ -363,7 +369,7 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
             )
           ],
         ),
-      ),*/
-    );
+      ),*//*
+    );*/
   }
 }

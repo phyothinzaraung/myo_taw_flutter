@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
@@ -41,41 +42,22 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      backgroundColor: Colors.black,
+    return CustomScaffoldWidget(
+      title: '',
       body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Chewie(controller: _chewieController,),
-            /*_videoPlayerController.value.initialized?
-            AspectRatio(aspectRatio: _videoPlayerController.value.aspectRatio,
-              child: VideoPlayer(_videoPlayerController),):Container(child: CircularProgressIndicator(),),
-            Container(
-              margin: EdgeInsets.only(top: 20.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  IconButton(icon: Icon(Icons.skip_previous, color: Colors.white, size: 40.0,),
-                  onPressed: (){
-                    print('position: ${_videoPlayerController.value.position}');
-                  },),
-                  IconButton(icon: Icon(_videoPlayerController.value.isPlaying?_icon=Icons.pause:_icon=Icons.play_arrow,
-                    color: Colors.white, size: 40.0,),
-                    onPressed: (){
-                    setState(() {
-                      _videoPlayerController.value.isPlaying?_videoPlayerController.pause():_videoPlayerController.play();
-                    });
-                    },),
-                  IconButton(icon: Icon(Icons.skip_next,color: Colors.white, size: 40.0,)),
-                ],
-              ),
-            )*/
-          ],
-        )
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+              Chewie(controller: _chewieController,),
+            ],
+          )
       ),
     );
+    /*return Scaffold(
+      appBar: AppBar(),
+      backgroundColor: Colors.black,
+      body: ,
+    );*/
   }
 
   @override

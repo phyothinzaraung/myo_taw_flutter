@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:photo_view/photo_view.dart';
 import 'model/DaoPhotoModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -24,7 +25,17 @@ class DaoPhotoDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     addPhoto();
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: '',
+      body: Center(
+        child: PageView(
+        controller: _pageController,
+        scrollDirection: Axis.horizontal,
+        children: _photoWidget
+        )
+      )
+    );
+    /*return Scaffold(
       appBar: AppBar(),
       backgroundColor: Colors.black,
       body: Center(
@@ -34,6 +45,6 @@ class DaoPhotoDetailScreen extends StatelessWidget {
             children: _photoWidget
         )
       ),
-    );
+    );*/
   }
 }

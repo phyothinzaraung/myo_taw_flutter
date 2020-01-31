@@ -1,6 +1,7 @@
 import 'package:async_loader/async_loader.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -8,7 +9,6 @@ import 'package:pie_chart/pie_chart.dart';
 import 'helper/PieChartColorHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'helper/ServiceHelper.dart';
-import 'package:dio/dio.dart';
 import 'model/TaxUseModel.dart';
 import 'helper/TaxUseBudgetYearHelper.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -149,6 +149,74 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
       ),
     );
   }
+
+  Widget _body(AsyncLoader asyncLoader){
+    return ModalProgressHUD(
+      inAsyncCall: _isLoading,
+      progressIndicator: modalProgressIndicator(),
+      child: Column(
+        children: <Widget>[
+          Container(
+            padding: EdgeInsets.only(left: 30.0, right: 30.0, top: 5.0, bottom: 5.0),
+            color: Colors.white,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: <Widget>[
+                RotatedBox(
+                    quarterTurns: 2,
+                    child: GestureDetector(
+                        onTap: ()async{
+                          setState(() {
+                            _isLoading = true;
+                            _year--;
+                            _taxUserModelList.clear();
+                            _legnedList.clear();
+                            _image = 'images/arrow_green.png';
+                            dataMap.clear();
+                          });
+                          //await _getTaxUse(_year);
+                          asyncLoaderState.currentState.reloadState();
+                          print('year : $_year');
+                          setState(() {
+                            _isLoading = false;
+                          });
+                        },
+                        child: Image.asset('images/arrow_green.png', width: 20.0, height: 20.0,))),
+                Expanded(
+                    child: Text(TaxUseBudgetYearHelper().getBudgetYear(_year),
+                      textAlign: TextAlign.center, style: TextStyle(fontSize: FontSize.textSizeNormal),)),
+                GestureDetector(
+                    onTap: ()async {
+                      if(_year <= DateTime.now().year){
+                        setState(() {
+                          _isLoading = true;
+                          _year++;
+                          _taxUserModelList.clear();
+                          _legnedList.clear();
+                          dataMap.clear();
+                        });
+                        //await _getTaxUse(_year);
+                        asyncLoaderState.currentState.reloadState();
+                        print('year : $_year');
+                        setState(() {
+                          _isLoading = false;
+                        });
+                      }
+                      if(_year > DateTime.now().year){
+                        setState(() {
+                          _image = 'images/arrow.png';
+                        });
+                      }
+                    },
+                    child: Image.asset(_image, width: 20.0, height: 20.0,))
+              ],
+            ),
+          ),
+          Expanded(child: asyncLoader)
+        ],
+      ),
+    );
+  }
   
   @override
   Widget build(BuildContext context) {
@@ -165,75 +233,15 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
           ),
         )
     );
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: MyString.txt_tax_use,
+      body: _body(_asyncLoader),
+    );
+    /*return Scaffold(
       appBar: AppBar(
         title: Text(MyString.txt_tax_use, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
-      body: ModalProgressHUD(
-        inAsyncCall: _isLoading,
-        progressIndicator: modalProgressIndicator(),
-        child: Column(
-          children: <Widget>[
-            Container(
-              padding: EdgeInsets.only(left: 30.0, right: 30.0, top: 5.0, bottom: 5.0),
-              color: Colors.white,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  RotatedBox(
-                      quarterTurns: 2,
-                      child: GestureDetector(
-                          onTap: ()async{
-                            setState(() {
-                              _isLoading = true;
-                              _year--;
-                              _taxUserModelList.clear();
-                              _legnedList.clear();
-                              _image = 'images/arrow_green.png';
-                              dataMap.clear();
-                            });
-                            //await _getTaxUse(_year);
-                            asyncLoaderState.currentState.reloadState();
-                            print('year : $_year');
-                            setState(() {
-                              _isLoading = false;
-                            });
-                          },
-                          child: Image.asset('images/arrow_green.png', width: 20.0, height: 20.0,))),
-                  Expanded(
-                      child: Text(TaxUseBudgetYearHelper().getBudgetYear(_year),
-                        textAlign: TextAlign.center, style: TextStyle(fontSize: FontSize.textSizeNormal),)),
-                  GestureDetector(
-                      onTap: ()async {
-                        if(_year <= DateTime.now().year){
-                          setState(() {
-                            _isLoading = true;
-                            _year++;
-                            _taxUserModelList.clear();
-                            _legnedList.clear();
-                            dataMap.clear();
-                          });
-                          //await _getTaxUse(_year);
-                          asyncLoaderState.currentState.reloadState();
-                          print('year : $_year');
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        }
-                        if(_year > DateTime.now().year){
-                          setState(() {
-                            _image = 'images/arrow.png';
-                          });
-                        }
-                      },
-                      child: Image.asset(_image, width: 20.0, height: 20.0,))
-                ],
-              ),
-            ),
-            Expanded(child: _asyncLoader)
-          ],
-        ),
-      ),
-    );
+      body: ,
+    );*/
   }
 }

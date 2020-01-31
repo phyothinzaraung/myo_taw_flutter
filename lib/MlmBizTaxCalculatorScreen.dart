@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/FireBaseAnalyticsHelper.dart';
@@ -304,134 +305,143 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
     });
   }
 
+  Widget _body(BuildContext context){
+    return ListView(
+      children: <Widget>[
+        Container(
+          child: Column(
+            children: <Widget>[
+              headerTitleWidget(MyString.title_biz_tax_calculate, 'calculate_tax_no_circle'),
+              Card(
+                margin: EdgeInsets.only(left: 0, right: 0),
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                color: Colors.white,
+                child: Container(
+                  width: double.maxFinite,
+                  padding: EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 30),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: Text(MyString.txt_choose_license_type,
+                          style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                        margin: EdgeInsets.only(bottom: 20),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(
+                                color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
+                            )
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
+                            isExpanded: true,
+                            iconEnabledColor: MyColor.colorPrimary,
+                            value: _dropDownBizLicenseType,
+                            onChanged: (String value){
+                              setState(() {
+                                _dropDownBizLicenseType = value;
+                              });
+                              _bizList.clear();
+                              setState(() {
+                                _dropDownBizType = MyString.txt_no_selected;
+                              });
+                              _bizList = [_dropDownBizType];
+                              _getBizByLicenseType();
+                            },
+                            items: _bizLicenseTypeList.map<DropdownMenuItem<String>>((String str){
+                              return DropdownMenuItem<String>(
+                                value: str,
+                                child: Text(str),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: Text(MyString.txt_biz_type,
+                          style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
+                      ),
+                      Container(
+                        padding: EdgeInsets.symmetric(horizontal: 10.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(
+                                color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
+                            )
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
+                            isExpanded: true,
+                            iconEnabledColor: MyColor.colorPrimary,
+                            value: _dropDownBizType,
+                            onChanged: (String value){
+                              setState(() {
+                                _dropDownBizType = value;
+                              });
+                            },
+                            items: _bizList.map<DropdownMenuItem<String>>((String str){
+                              return DropdownMenuItem<String>(
+                                value: str,
+                                child: Text(str),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 40.0),
+                        width: double.maxFinite,
+                        height: 50.0,
+                        child: RaisedButton(
+                          onPressed: ()async{
+                            if(_dropDownBizType != MyString.txt_no_selected && _dropDownBizLicenseType != MyString.txt_no_selected){
+                              _calculateTaxDialog();
+                              await _sharepreferenceshelper.initSharePref();
+                              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.MLM_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
+                                  _sharepreferenceshelper.getUserUniqueKey());
+                            }else if(_dropDownBizLicenseType == MyString.txt_no_selected){
+                              WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
+
+                            }else if(_dropDownBizType == MyString.txt_no_selected){
+                              WarningSnackBar(_globalKey, MyString.txt_choose_story);
+                            }
+                          },color: MyColor.colorPrimary,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8.0)
+                          ),
+                          child: Text(MyString.txt_calculate, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: MyString.txt_calculate_tax,
+      body: _body(context),
+      globalKey: _globalKey,
+    );
+    /*return Scaffold(
       key: _globalKey,
       appBar: AppBar(
           title: Text(MyString.txt_calculate_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),)
       ),
-      body: ListView(
-        children: <Widget>[
-          Container(
-            child: Column(
-              children: <Widget>[
-                headerTitleWidget(MyString.title_biz_tax_calculate, 'calculate_tax_no_circle'),
-                Card(
-                  margin: EdgeInsets.only(left: 0, right: 0),
-                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-                  color: Colors.white,
-                  child: Container(
-                    width: double.maxFinite,
-                    padding: EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 30),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        Container(
-                          margin: EdgeInsets.only(bottom: 10),
-                          child: Text(MyString.txt_choose_license_type,
-                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.0),
-                          margin: EdgeInsets.only(bottom: 20),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7.0),
-                              border: Border.all(
-                                  color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
-                              )
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                              isExpanded: true,
-                              iconEnabledColor: MyColor.colorPrimary,
-                              value: _dropDownBizLicenseType,
-                              onChanged: (String value){
-                                setState(() {
-                                  _dropDownBizLicenseType = value;
-                                });
-                                _bizList.clear();
-                                setState(() {
-                                  _dropDownBizType = MyString.txt_no_selected;
-                                });
-                                _bizList = [_dropDownBizType];
-                                _getBizByLicenseType();
-                              },
-                              items: _bizLicenseTypeList.map<DropdownMenuItem<String>>((String str){
-                                return DropdownMenuItem<String>(
-                                  value: str,
-                                  child: Text(str),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(bottom: 10),
-                          child: Text(MyString.txt_biz_type,
-                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(horizontal: 10.0),
-                          decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(7.0),
-                              border: Border.all(
-                                  color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
-                              )
-                          ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                              isExpanded: true,
-                              iconEnabledColor: MyColor.colorPrimary,
-                              value: _dropDownBizType,
-                              onChanged: (String value){
-                                setState(() {
-                                  _dropDownBizType = value;
-                                });
-                              },
-                              items: _bizList.map<DropdownMenuItem<String>>((String str){
-                                return DropdownMenuItem<String>(
-                                  value: str,
-                                  child: Text(str),
-                                );
-                              }).toList(),
-                            ),
-                          ),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 40.0),
-                          width: double.maxFinite,
-                          height: 50.0,
-                          child: RaisedButton(
-                            onPressed: ()async{
-                              if(_dropDownBizType != MyString.txt_no_selected && _dropDownBizLicenseType != MyString.txt_no_selected){
-                                _calculateTaxDialog();
-                                await _sharepreferenceshelper.initSharePref();
-                                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.MLM_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
-                                    _sharepreferenceshelper.getUserUniqueKey());
-                              }else if(_dropDownBizLicenseType == MyString.txt_no_selected){
-                                WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
-
-                              }else if(_dropDownBizType == MyString.txt_no_selected){
-                                WarningSnackBar(_globalKey, MyString.txt_choose_story);
-                              }
-                            },color: MyColor.colorPrimary,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(8.0)
-                            ),
-                            child: Text(MyString.txt_calculate, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
-                        )
-                      ],
-                    ),
-                  ),
-                )
-              ],
-            ),
-          ),
-        ],
-      )
-    );
+      body:
+    );*/
   }
 }

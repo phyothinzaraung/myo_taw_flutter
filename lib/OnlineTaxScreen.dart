@@ -2,6 +2,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/NumberFormatterHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserBillAmountViewModel.dart';
@@ -108,9 +109,6 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
 
 
   _navigateToPaymentScreen()async{
-    /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => PaymentScreen(),
-      settings: RouteSettings(name: ScreenName.ONLINE_TAX_PAYMENT_SCREEN)
-    ));*/
     Map result = await NavigatorHelper().MyNavigatorPush(context, PaymentScreen(), ScreenName.ONLINE_TAX_PAYMENT_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       _handleRefresh();
@@ -335,12 +333,17 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
           ),
         )
     );
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: MyString.txt_online_tax,
+      body: _asyncLoader,
+      globalKey: _globalKey,
+    );
+    /*return Scaffold(
       key: _globalKey,
       appBar: AppBar(
         title: Text(MyString.txt_online_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
       body: _asyncLoader,
-    );
+    );*/
   }
 }

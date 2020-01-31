@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'helper/NavigatorHelper.dart';
 import 'model/NewsFeedPhotoModel.dart';
 import 'model/NewsFeedModel.dart';
@@ -22,7 +23,7 @@ class NewsFeedDetailScreen extends StatefulWidget {
 
 class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   NewsFeedModel _newsFeedModel;
-  String _title,_photo,_date, _body,_type, _thumbNail, _videoUrl;
+  String _title,_photo,_date, _newsfeedBody,_type, _thumbNail, _videoUrl;
   List _photoList = new List();
   int _currentPhoto = 0;
   List<Widget> _photoWidget = List();
@@ -43,7 +44,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
       _title = _newsFeedModel.title;
       _photo = _newsFeedModel.photoUrl;
       _date = ShowDateTimeHelper().showDateTimeDifference(_newsFeedModel.accesstime);
-      _body = _newsFeedModel.body;
+      _newsfeedBody = _newsFeedModel.body;
       _type = _newsFeedModel.uploadType=='Photo'?'Photo':'Video';
       _thumbNail = _newsFeedModel.thumbNail;
       _videoUrl = _newsFeedModel.videoUrl;
@@ -58,9 +59,6 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         _photoWidget.add(
             GestureDetector(
               onTap: (){
-                /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen(_photoList, null),
-                  settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
-                ));*/
                 NavigatorHelper().MyNavigatorPush(context, NewsFeedPhotoDetailScreen(_photoList, null),
                     ScreenName.PHOTO_DETAIL_SCREEN);
               },
@@ -208,55 +206,63 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
     }
   }
 
+  Widget _body(BuildContext context){
+    return ListView(
+      children: <Widget>[
+        Column(
+          children: <Widget>[
+            _isPhotoOrvideo(),
+            Container(
+              padding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 25.0, right: 25.0),
+              child: Column(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(bottom: 20.0),
+                    child: Row(
+                      children: <Widget>[
+                        Image.asset('images/calendar.png',width: 18.0,height: 15.0,),
+                        Expanded(
+                            child: Container(
+                                margin: EdgeInsets.only(left: 10.0),
+                                child: Text(_date, style: TextStyle(color: MyColor.colorTextGrey, fontSize: FontSize.textSizeSmall),)))
+                      ],
+                    ),
+                  ),
+                  Container(
+                    margin: EdgeInsets.only(bottom: 25.0),
+                    child: Row(mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Flexible(child: Text(_title!=null?_title:'---',style: TextStyle(fontSize: FontSize.textSizeSmall)))
+                      ],),
+                  ),
+                  Container(
+                    child: Row(mainAxisAlignment: MainAxisAlignment.start,
+                      children: <Widget>[
+                        Flexible(child: Html(data: _newsfeedBody!=null?_newsfeedBody:'---', onLinkTap: (url){
+                          _launchURL(url);
+                        },))
+                      ],),
+                  )
+                ],
+              ),
+            )
+          ],
+        )
+      ],
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: _title,
+      body: _body(context),
+    );
+    /*return Scaffold(
       appBar: AppBar(
         title: Text(_title, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
-      body: ListView(
-        children: <Widget>[
-          Column(
-            children: <Widget>[
-              _isPhotoOrvideo(),
-              Container(
-                padding: EdgeInsets.only(top: 15.0, bottom: 15.0, left: 25.0, right: 25.0),
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      child: Row(
-                        children: <Widget>[
-                          Image.asset('images/calendar.png',width: 18.0,height: 15.0,),
-                          Expanded(
-                              child: Container(
-                                  margin: EdgeInsets.only(left: 10.0),
-                                  child: Text(_date, style: TextStyle(color: MyColor.colorTextGrey, fontSize: FontSize.textSizeSmall),)))
-                        ],
-                      ),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 25.0),
-                      child: Row(mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Flexible(child: Text(_title!=null?_title:'---',style: TextStyle(fontSize: FontSize.textSizeSmall)))
-                        ],),
-                    ),
-                    Container(
-                      child: Row(mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget>[
-                          Flexible(child: Html(data: _body!=null?_body:'---', onLinkTap: (url){
-                            _launchURL(url);
-                          },))
-                        ],),
-                    )
-                  ],
-                ),
-              )
-            ],
-          )
-        ],
-      )
-    );
+      body:
+    );*/
   }
 }

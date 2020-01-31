@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/SaveNewsFeedModel.dart';
@@ -164,26 +165,30 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: MyString.title_save_nf,
+      body: Container(
+          child: _saveNewsFeedList.isNotEmpty?_listView():
+          Container(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                headerTitleWidget(MyString.title_save_nf, 'save_file_no_circle'),
+                Expanded(
+                  child: Center(
+                    child: Image.asset('images/empty_box.png', width: 70.0, height: 70.0,),
+                  ),
+                )
+              ],
+            ),
+          )
+      ),
+    );
+    /*return Scaffold(
       appBar: AppBar(
         title: Text(MyString.title_save_nf, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
-      body: Container(
-        child: _saveNewsFeedList.isNotEmpty?_listView():
-        Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: <Widget>[
-              headerTitleWidget(MyString.title_save_nf, 'save_file_no_circle'),
-              Expanded(
-                child: Center(
-                  child: Image.asset('images/empty_box.png', width: 70.0, height: 70.0,),
-                ),
-              )
-            ],
-          ),
-        )
-      ),
-    );
+      body: ,
+    );*/
   }
 }

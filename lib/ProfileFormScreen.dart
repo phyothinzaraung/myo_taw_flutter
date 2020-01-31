@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
@@ -244,199 +245,208 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     });
   }
 
+  Widget _body(){
+    return Center(
+      child: ModalProgressHUD(
+        inAsyncCall: _isLoading,
+        progressIndicator: modalProgressIndicator(),
+        child: ListView(
+          children: <Widget>[
+            Stack(
+              children: <Widget>[
+                Container(
+                  color: MyColor.colorPrimary,
+                  width: double.maxFinite,
+                  height: 250,
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: 40),
+                  child: Column(
+                    children: <Widget>[
+                      Hero(
+                        tag: 'profile',
+                        child: CircleAvatar(backgroundImage: _userModel!=null?_userModel.photoUrl!=null?
+                        CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):
+                        AssetImage('images/profile_placeholder.png') : AssetImage('images/profile_placeholder.png'),
+                          backgroundColor: MyColor.colorGrey, radius: 50.0,),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(top: 20.0, bottom: 15.0,left: 20.0, right: 20.0),
+                        child: Card(
+                          elevation: 5,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
+                          color: Colors.white,
+                          child: Container(
+                            margin: EdgeInsets.only(top: 20, bottom: 40, left: 30, right: 30),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: <Widget>[
+                                Container(margin: EdgeInsets.only(bottom: 10.0),
+                                    child: Text(MyString.txt_user_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+
+                                //textfield name
+                                Container(
+                                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7.0),
+                                      border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                                  ),
+                                  child: TextField(
+                                    maxLines: null,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none
+                                    ),
+                                    controller: _nameController,
+                                    style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),
+                                  ),
+                                ),
+                                Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
+                                    child: Text(MyString.txt_user_address, style: TextStyle(fontSize: FontSize.textSizeSmall ,color: MyColor.colorTextBlack),)),
+
+                                //textfield address
+                                Container(
+                                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7.0),
+                                      border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                                  ),
+                                  child: TextField(
+                                    maxLines: null,
+                                    decoration: InputDecoration(
+                                        border: InputBorder.none
+                                    ),
+                                    controller: _addressController,
+                                    style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),
+                                  ),
+                                ),
+
+                                _isWardAdmin?Container():Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
+                                    child: Text(MyString.txt_user_state, style: TextStyle(fontSize: FontSize.textSizeSmall ,color: MyColor.colorTextBlack),)),
+
+                                //dropdown state
+                                _isWardAdmin?Container():Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7.0),
+                                      border: Border.all(
+                                          color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
+                                      )
+                                  ),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
+                                      isExpanded: true,
+                                      iconEnabledColor: MyColor.colorPrimary,
+                                      value: _dropDownState,
+                                      onChanged: (String value){
+                                        FocusScope.of(context).requestFocus(FocusNode());
+                                        setState(() {
+                                          _dropDownState = value;
+                                        });
+                                        _townshipList.clear();
+                                        setState(() {
+                                          _dropDownTownship = 'နေရပ်ရွေးပါ';
+                                        });
+                                        _townshipList = [_dropDownTownship];
+                                        _getTownshipByState(value);
+                                      },
+                                      items: _stateList.map<DropdownMenuItem<String>>((String str){
+                                        return DropdownMenuItem<String>(
+                                          value: str,
+                                          child: Text(str),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+
+                                //dropdown township
+                                _isWardAdmin?Container():Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
+                                    child: Text(MyString.txt_user_township, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                                _isWardAdmin?Container():Container(
+                                  padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7.0),
+                                      border: Border.all(
+                                          color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
+                                      )
+                                  ),
+                                  child: DropdownButtonHideUnderline(
+                                    child: DropdownButton<String>(
+                                      style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
+                                      isExpanded: true,
+                                      iconEnabledColor: MyColor.colorPrimary,
+                                      value: _dropDownTownship,
+                                      onChanged: (String value){
+                                        FocusScope.of(context).requestFocus(FocusNode());
+                                        setState(() {
+                                          _dropDownTownship = value;
+                                        });
+                                      },
+                                      items: _townshipList.map<DropdownMenuItem<String>>((String str){
+                                        return DropdownMenuItem<String>(
+                                          value: str,
+                                          child: Text(str),
+                                        );
+                                      }).toList(),
+                                    ),
+                                  ),
+                                ),
+
+                                Container(
+                                  margin: EdgeInsets.only(top: 40.0),
+                                  width: double.maxFinite,
+                                  height: 50.0,
+                                  child: RaisedButton(
+                                    onPressed: ()async{
+                                      await _checkCon();
+                                      if(_isCon){
+                                        if(_nameController.text.isNotEmpty && _addressController.text.isNotEmpty && _dropDownState != MyString.txt_choose_state_township &&
+                                            _dropDownTownship != MyString.txt_choose_state_township
+                                        ){
+                                          _updateUser();
+                                        }else{
+                                          WarningSnackBar(_scaffoldState, MyString.txt_need_user_information);
+                                        }
+                                      }else{
+                                        WarningSnackBar(_scaffoldState, MyString.txt_no_internet);
+                                      }
+
+                                    },color: MyColor.colorPrimary,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(8.0)
+                                    ),
+                                    child: Text(MyString.txt_save_user_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
+                                )
+                              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: MyString.title_profile,
+      body: _body(),
+      globalKey: _scaffoldState,
+    );
+    /*return Scaffold(
       key: _scaffoldState,
       appBar: AppBar(
         title: Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
-      body: Center(
-        child: ModalProgressHUD(
-          inAsyncCall: _isLoading,
-          progressIndicator: modalProgressIndicator(),
-          child: ListView(
-            children: <Widget>[
-              Stack(
-                children: <Widget>[
-                  Container(
-                    color: MyColor.colorPrimary,
-                    width: double.maxFinite,
-                    height: 250,
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(top: 40),
-                    child: Column(
-                      children: <Widget>[
-                        Hero(
-                          tag: 'profile',
-                          child: CircleAvatar(backgroundImage: _userModel!=null?_userModel.photoUrl!=null?
-                          CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl):
-                          AssetImage('images/profile_placeholder.png') : AssetImage('images/profile_placeholder.png'),
-                            backgroundColor: MyColor.colorGrey, radius: 50.0,),
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(top: 20.0, bottom: 15.0,left: 20.0, right: 20.0),
-                          child: Card(
-                            elevation: 5,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5)),
-                            color: Colors.white,
-                            child: Container(
-                              margin: EdgeInsets.only(top: 20, bottom: 40, left: 30, right: 30),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: <Widget>[
-                                  Container(margin: EdgeInsets.only(bottom: 10.0),
-                                      child: Text(MyString.txt_user_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-
-                                  //textfield name
-                                  Container(
-                                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(7.0),
-                                        border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
-                                    ),
-                                    child: TextField(
-                                      maxLines: null,
-                                      decoration: InputDecoration(
-                                          border: InputBorder.none
-                                      ),
-                                      controller: _nameController,
-                                      style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),
-                                    ),
-                                  ),
-                                  Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
-                                      child: Text(MyString.txt_user_address, style: TextStyle(fontSize: FontSize.textSizeSmall ,color: MyColor.colorTextBlack),)),
-
-                                  //textfield address
-                                  Container(
-                                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(7.0),
-                                        border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
-                                    ),
-                                    child: TextField(
-                                      maxLines: null,
-                                      decoration: InputDecoration(
-                                          border: InputBorder.none
-                                      ),
-                                      controller: _addressController,
-                                      style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),
-                                    ),
-                                  ),
-
-                                  _isWardAdmin?Container():Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
-                                      child: Text(MyString.txt_user_state, style: TextStyle(fontSize: FontSize.textSizeSmall ,color: MyColor.colorTextBlack),)),
-
-                                  //dropdown state
-                                  _isWardAdmin?Container():Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 10.0),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(7.0),
-                                        border: Border.all(
-                                            color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
-                                        )
-                                    ),
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton<String>(
-                                        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                                        isExpanded: true,
-                                        iconEnabledColor: MyColor.colorPrimary,
-                                        value: _dropDownState,
-                                        onChanged: (String value){
-                                          FocusScope.of(context).requestFocus(FocusNode());
-                                          setState(() {
-                                            _dropDownState = value;
-                                          });
-                                          _townshipList.clear();
-                                          setState(() {
-                                            _dropDownTownship = 'နေရပ်ရွေးပါ';
-                                          });
-                                          _townshipList = [_dropDownTownship];
-                                          _getTownshipByState(value);
-                                        },
-                                        items: _stateList.map<DropdownMenuItem<String>>((String str){
-                                          return DropdownMenuItem<String>(
-                                            value: str,
-                                            child: Text(str),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ),
-                                  ),
-
-                                  //dropdown township
-                                  _isWardAdmin?Container():Container(margin: EdgeInsets.only(top:20.0, bottom: 10.0),
-                                      child: Text(MyString.txt_user_township, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                  _isWardAdmin?Container():Container(
-                                    padding: EdgeInsets.symmetric(horizontal: 10.0),
-                                    decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(7.0),
-                                        border: Border.all(
-                                            color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
-                                        )
-                                    ),
-                                    child: DropdownButtonHideUnderline(
-                                      child: DropdownButton<String>(
-                                        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                                        isExpanded: true,
-                                        iconEnabledColor: MyColor.colorPrimary,
-                                        value: _dropDownTownship,
-                                        onChanged: (String value){
-                                          FocusScope.of(context).requestFocus(FocusNode());
-                                          setState(() {
-                                            _dropDownTownship = value;
-                                          });
-                                        },
-                                        items: _townshipList.map<DropdownMenuItem<String>>((String str){
-                                          return DropdownMenuItem<String>(
-                                            value: str,
-                                            child: Text(str),
-                                          );
-                                        }).toList(),
-                                      ),
-                                    ),
-                                  ),
-
-                                  Container(
-                                    margin: EdgeInsets.only(top: 40.0),
-                                    width: double.maxFinite,
-                                    height: 50.0,
-                                    child: RaisedButton(
-                                      onPressed: ()async{
-                                        await _checkCon();
-                                        if(_isCon){
-                                          if(_nameController.text.isNotEmpty && _addressController.text.isNotEmpty && _dropDownState != MyString.txt_choose_state_township &&
-                                              _dropDownTownship != MyString.txt_choose_state_township
-                                          ){
-                                            _updateUser();
-                                          }else{
-                                            WarningSnackBar(_scaffoldState, MyString.txt_need_user_information);
-                                          }
-                                        }else{
-                                          WarningSnackBar(_scaffoldState, MyString.txt_no_internet);
-                                        }
-
-                                      },color: MyColor.colorPrimary,
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius: BorderRadius.circular(8.0)
-                                      ),
-                                      child: Text(MyString.txt_save_user_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
-                                  )
-                                ],
-                              ),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-        ),
-      ),
-    );
+      body: ,
+    );*/
   }
 }

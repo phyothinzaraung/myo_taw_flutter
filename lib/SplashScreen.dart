@@ -100,26 +100,14 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     if(_sharepreferenceshelper.isLogin()){
       Future.delayed(Duration(seconds: 2), (){
         if(_sharepreferenceshelper.isWardAdmin()){
-          /*Navigator.pushReplacement(context, PageRouteBuilder(
-              transitionDuration: Duration(milliseconds: 1000),
-              pageBuilder: (context,value,ani) => WardAdminFeatureChooseScreen(), settings: RouteSettings(name: ScreenName.WARD_ADMIN_FEATURE_SCREEN)
-          ));*/
           NavigatorHelper().MyNavigatorPushReplacement(context, WardAdminFeatureChooseScreen(), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{
           NavigatorHelper().MyNavigatorPushReplacement(context, MainScreen(), null);
-          /*Navigator.pushReplacement(context, PageRouteBuilder(
-              transitionDuration: Duration(milliseconds: 1000),
-              pageBuilder: (context,value,ani) => MainScreen()
-          ));*/
         }
       });
     }else{
       Future.delayed(Duration(seconds: 2), (){
         NavigatorHelper().MyNavigatorPushReplacement(context, LoginScreen(), ScreenName.LOGIN_SCREEN);
-        /*Navigator.pushReplacement(context, PageRouteBuilder(
-            transitionDuration: Duration(milliseconds: 1000),
-            pageBuilder: (context,value,ani) => LoginScreen(), settings: RouteSettings(name: ScreenName.LOGIN_SCREEN)
-        ));*/
       });
     }
   }

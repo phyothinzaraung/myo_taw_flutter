@@ -7,6 +7,7 @@ import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/model/ContributionModel.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'PhotoDetailScreen.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/ShowDateTimeHelper.dart';
@@ -152,6 +153,18 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
     }
   }
 
+  Widget _floatingActionButton(){
+    return Container(
+      margin: EdgeInsets.only(bottom: 10),
+      child: FloatingActionButton.extended(onPressed: (){
+
+        _navigateToNewFloodReportScreen();
+
+      }, label: Text(MyString.txt_add_flood_level_record, style: TextStyle(color: Colors.white),),
+        icon: Icon(Icons.add_circle_outline, color: Colors.white,), backgroundColor: MyColor.colorPrimary,),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var _asyncLoader = new AsyncLoader(
@@ -166,7 +179,12 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
           ),
         )
     );
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: MyString.txt_flood_level,
+      body: _asyncLoader,
+      floatingActionButton: _floatingActionButton(),
+    );
+    /*return Scaffold(
       appBar: AppBar(
         title: Text(MyString.txt_flood_level, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
@@ -180,6 +198,6 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
           icon: Icon(Icons.add_circle_outline, color: Colors.white,), backgroundColor: MyColor.colorPrimary,),
       ),
       body: _asyncLoader
-    );
+    );*/
   }
 }

@@ -3,6 +3,7 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/NavigatorHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
@@ -340,6 +341,21 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
     );
   }
 
+  Widget _body(BuildContext context, AsyncLoader asyncLoader){
+    return ModalProgressHUD(
+      inAsyncCall: _isLoading,
+      progressIndicator: modalProgressIndicator(),
+      child: Container(
+        child: Column(
+          children: <Widget>[
+            _header(),
+            Expanded(child: asyncLoader),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var _asyncLoader = new AsyncLoader(
@@ -355,23 +371,17 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
           ),
         )
     );
-    return Scaffold(
+    return CustomScaffoldWidget(
+      title: _daoViewModel.daoModel.title,
+      body: _body(context, _asyncLoader),
+      globalKey: _globalKey,
+    );
+    /*return Scaffold(
       key: _globalKey,
       appBar: AppBar(
         title: Text(_daoViewModel.daoModel.title, style: TextStyle(fontSize: FontSize.textSizeNormal),),
       ),
-      body: ModalProgressHUD(
-        inAsyncCall: _isLoading,
-        progressIndicator: modalProgressIndicator(),
-        child: Container(
-          child: Column(
-            children: <Widget>[
-              _header(),
-              Expanded(child: _asyncLoader),
-            ],
-          ),
-        ),
-      ),
-    );
+      body: ,
+    );*/
   }
 }
