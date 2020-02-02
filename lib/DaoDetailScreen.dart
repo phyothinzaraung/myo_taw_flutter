@@ -177,6 +177,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
             width: double.maxFinite,
             height: 50.0,
             child: FlatButton(
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
               onPressed: ()async{
                 await _sharepreferenceshelper.initSharePref();
                 /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => _daoViewModel.daoModel.title.contains('လိုင်စင်')?
@@ -203,7 +204,8 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: _daoViewModel.daoModel.title,
+      title: Text(_daoViewModel.daoModel.title,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
     );
     /*return Scaffold(

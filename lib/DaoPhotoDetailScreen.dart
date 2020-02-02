@@ -26,7 +26,7 @@ class DaoPhotoDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     addPhoto();
     return CustomScaffoldWidget(
-      title: '',
+      title: null,
       body: Center(
         child: PageView(
         controller: _pageController,

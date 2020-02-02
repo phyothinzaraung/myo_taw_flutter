@@ -143,7 +143,8 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
         )
     );
     return CustomScaffoldWidget(
-        title : MyString.txt_apply_biz_license,
+        title : Text(MyString.txt_apply_biz_license,
+          style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
         body: _asyncLoader
     );
     /*return Scaffold(

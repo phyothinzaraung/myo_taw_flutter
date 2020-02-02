@@ -13,11 +13,12 @@ import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/model/UserModel.dart';
+import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
-import 'package:myotaw/myWidget/ModalProgressIndicatorWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'dart:io';
 import 'helper/MyoTawConstant.dart';
+import 'myWidget/CustomButtonWidget.dart';
 
 class NewFloodReportScreen extends StatefulWidget {
   @override
@@ -142,7 +143,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                       Container(
                         width: 200.0,
                         height: 45.0,
-                        child: RaisedButton(onPressed: ()async{
+                        child: CustomButtonWidget(onPress: ()async{
                           await _sharepreferenceshelper.initSharePref();
                           FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                           Navigator.of(context).pop();
@@ -163,13 +164,17 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
   Widget _body(BuildContext context){
     return ModalProgressHUD(
       inAsyncCall: _showLoading,
-      progressIndicator: ModalProgressIndicatorWidget(),
+      progressIndicator: CustomProgressIndicatorWidget(),
       child: ListView(
         children: <Widget>[
           Container(
-            height: 50,
+            decoration: Platform.isAndroid? null :
+            BoxDecoration(
+                border: Border.all(color: MyColor.colorPrimary, width: 1),
+                borderRadius: BorderRadius.circular(10)
+            ),
             margin: EdgeInsets.only(bottom: 20.0, top: 20, left: 20, right: 20),
-            child: RaisedButton(onPressed: ()async{
+            child: CustomButtonWidget(onPress: ()async{
               camera().then((image)async{
                 if(image != null){
                   await _navigateToGetFloodLevelScreen();
@@ -190,12 +195,13 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
               ],
             ),color: Colors.white,elevation: 5.0,
               shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
+              borderRadius: BorderRadius.circular(10),
             ),
           ),
           /*Container(
               height: 50,
               margin: EdgeInsets.only(bottom: 50.0,left: 20, right: 20),
-              child: RaisedButton(onPressed: (){
+              child: CustomButtonWidget(onPressed: (){
                 _navigateToGetFloodLevelScreen();
               },child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
@@ -246,8 +252,8 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                     height: 50,
                     width: double.maxFinite,
                     margin: EdgeInsets.only(bottom: 40),
-                    child: RaisedButton(onPressed: ()async{
-                      await _checkCon();
+                    child: CustomButtonWidget(onPress: ()async{
+                      /*await _checkCon();
                       if(_isCon){
                         if(_image != null && _floodLevel != 0){
                           await _sharepreferenceshelper.initSharePref();
@@ -260,9 +266,11 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                         }
                       }else{
                         WarningSnackBar(_globalKey, MyString.txt_no_internet);
-                      }
+                      }*/
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => GetFloodLevelScreen()));
                     },child: Text(MyString.txt_add_flood_level_record,
                       style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                      borderRadius: BorderRadius.circular(10),
                       shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(10)
                       ),
@@ -281,7 +289,8 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: MyString.txt_add_flood_level_record,
+      title: Text(MyString.txt_add_flood_level_record,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
       globalKey: _globalKey,
     );

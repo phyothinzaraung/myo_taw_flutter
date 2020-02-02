@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -13,6 +14,8 @@ import 'helper/ServiceHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:connectivity/connectivity.dart';
 import 'Database/UserDb.dart';
+import 'myWidget/CustomButtonWidget.dart';
+import 'myWidget/CustomProgressIndicator.dart';
 
 class ProfileFormScreen extends StatefulWidget {
   bool isAdmin;
@@ -99,7 +102,16 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
       print(_userModel.toJson());
     }catch (e){
       print(e);
-      _getFailUserInfoDialogBox();
+      //_getFailUserInfoDialogBox();
+      CustomDialogWidget().CustomSuccessDialog(
+        context: context,
+        content: MyString.txt_no_internet,
+        img: 'warning.png',
+        onPress: (){
+          Navigator.of(context).pop();
+          _init();
+        }
+      );
     }
     setState(() {
       _isLoading = false;
@@ -159,7 +171,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                       Container(
                         width: 200.0,
                         height: 45.0,
-                        child: RaisedButton(onPressed: (){
+                        child: CustomButtonWidget(onPress: (){
                           Navigator.of(context).pop();
                           _init();
 
@@ -198,7 +210,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                       Container(
                         width: 200.0,
                         height: 45.0,
-                        child: RaisedButton(onPressed: ()async{
+                        child: CustomButtonWidget(onPress: ()async{
                           Navigator.of(context).pop();
                           Navigator.of(context).pop({'isNeedRefresh' : true});
 
@@ -232,7 +244,16 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
         await _userDb.insert(UserModel.fromJson(_response.data));
         await _userDb.closeUserDb();
         //_sharepreferenceshelper.setIsWardAdmin(_userModel.isWardAdmin==1? true : false);
-        _finishDialogBox();
+        //_finishDialogBox();
+        CustomDialogWidget().CustomSuccessDialog(
+          context: context,
+          content: MyString.txt_profile_complete,
+          img: 'isvalid.png',
+          onPress: (){
+            Navigator.of(context).pop();
+            Navigator.of(context).pop({'isNeedRefresh' : true});
+          },
+        );
       }else{
         WarningSnackBar(_scaffoldState, MyString.txt_try_again);
       }
@@ -249,7 +270,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     return Center(
       child: ModalProgressHUD(
         inAsyncCall: _isLoading,
-        progressIndicator: modalProgressIndicator(),
+        progressIndicator: CustomProgressIndicatorWidget(),
         child: ListView(
           children: <Widget>[
             Stack(
@@ -396,9 +417,8 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                 Container(
                                   margin: EdgeInsets.only(top: 40.0),
                                   width: double.maxFinite,
-                                  height: 50.0,
-                                  child: RaisedButton(
-                                    onPressed: ()async{
+                                  child: CustomButtonWidget(
+                                    onPress: ()async{
                                       await _checkCon();
                                       if(_isCon){
                                         if(_nameController.text.isNotEmpty && _addressController.text.isNotEmpty && _dropDownState != MyString.txt_choose_state_township &&
@@ -413,6 +433,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                       }
 
                                     },color: MyColor.colorPrimary,
+                                    borderRadius: BorderRadius.circular(10),
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8.0)
                                     ),
@@ -437,7 +458,8 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: MyString.title_profile,
+      title: Text(MyString.title_profile,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(),
       globalKey: _scaffoldState,
     );

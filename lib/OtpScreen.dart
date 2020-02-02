@@ -15,6 +15,7 @@ import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:myotaw/Database/UserDb.dart';
 import 'myWidget/ButtonLoadingIndicatorWidget.dart';
+import 'myWidget/CustomButtonWidget.dart';
 
 class OtpScreen extends StatefulWidget {
   String _phNo, _regionCode;
@@ -260,7 +261,7 @@ class _OtpScreenState extends State<OtpScreen> {
                             width: double.maxFinite,
                             height: 45.0,
                             margin: EdgeInsets.only(bottom: 20),
-                            child: RaisedButton(onPressed: () async{
+                            child: CustomButtonWidget(onPress: () async{
                               //_logIn();
                               await _checkCon();
                               if(_isCon){
@@ -322,16 +323,11 @@ class _OtpScreenState extends State<OtpScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return CustomScaffoldWidget(
-      title: '',
-      body: _body(context),
-      globalKey: _globalKey,
-    );
-    /*return Scaffold(
+    return Scaffold(
       key: _globalKey,
         backgroundColor: Colors.white,
-        body:
-    );*/
+        body: _body(context)
+    );
   }
 
   @override

@@ -5,6 +5,7 @@ import 'helper/MyoTawConstant.dart';
 import 'model/BizLicenseModel.dart';
 import 'package:flutter_html/flutter_html.dart';
 import 'ApplyBizLicenseFormScreen.dart';
+import 'myWidget/CustomButtonWidget.dart';
 
 class BizLicenseDetailScreen extends StatefulWidget {
   BizLicenseModel model;
@@ -43,16 +44,17 @@ class _BizLicenseDetailScreenState extends State<BizLicenseDetailScreen> {
               ),
               _bizLicenseModel.isApplyAllow==true?
               Container(
-                height: 45.0,
                 width: double.maxFinite,
                 margin: EdgeInsets.all(20.0),
-                child: RaisedButton(onPressed: ()async{
+                child: CustomButtonWidget(onPress: ()async{
                   /*Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ApplyBizLicenseFormScreen(_bizLicenseModel),
                       settings: RouteSettings(name: ScreenName.APPLY_BIZ_LICENSE_FORM_SCREEN)
                     ));*/
                   NavigatorHelper().MyNavigatorPushReplacement(context, ApplyBizLicenseFormScreen(_bizLicenseModel), ScreenName.APPLY_BIZ_LICENSE_FORM_SCREEN);
                 }, child: Text(MyString.txt_apply_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                  color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+                  color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ) : Container()
             ],
           ),
@@ -64,7 +66,8 @@ class _BizLicenseDetailScreenState extends State<BizLicenseDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-        title: MyString.txt_business_tax,
+        title: Text(MyString.txt_business_tax,
+          style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
         body: _body(context)
     );
     /*return Scaffold(

@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
+import 'dart:io';
 
-class ModalProgressIndicatorWidget extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+class CustomProgressIndicatorWidget extends StatelessWidget {
+
+  Widget _androidIndicator(){
     return Center(
       child: Card(
         child: Container(
@@ -20,5 +22,21 @@ class ModalProgressIndicatorWidget extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  Widget _iosIndicator(){
+    return Container(
+      color: Colors.black.withOpacity(0.2),
+      width: double.maxFinite,
+      height: double.maxFinite,
+      child: Center(
+        child: CupertinoActivityIndicator(radius: 20,),
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Platform.isAndroid? _androidIndicator() : _iosIndicator();
   }
 }

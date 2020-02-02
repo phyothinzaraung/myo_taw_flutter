@@ -11,6 +11,8 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'model/ReferralModel.dart';
 import 'helper/ServiceHelper.dart';
 import 'model/ReferralResponseModel.dart';
+import 'myWidget/CustomButtonWidget.dart';
+import 'myWidget/CustomProgressIndicator.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
 
 class ReferralScreen extends StatefulWidget {
@@ -121,7 +123,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                     child: Text(mess,
                       style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
                   ),
-                  RaisedButton(onPressed: (){
+                  CustomButtonWidget(onPress: (){
                     Navigator.of(context).pop();
                     setState(() {
                       _webViewController.loadUrl(BaseUrl.REFERRAL_URL+_userModel.phoneNo);
@@ -152,7 +154,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                     child: Text(MyString.txt_referral_wrong_app,
                       style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
                   ),
-                  RaisedButton(onPressed: (){
+                  CustomButtonWidget(onPress: (){
                     Navigator.of(context).pop();
                     setState(() {
                       _webViewController.loadUrl(BaseUrl.REFERRAL_URL+_userModel.phoneNo);
@@ -173,25 +175,6 @@ class _ReferralScreenState extends State<ReferralScreen> {
     }else{
       _isCon = true;
     }
-  }
-
-  Widget modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
   @override
@@ -226,7 +209,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
       ),
       body: ModalProgressHUD(
         inAsyncCall: _isLoad,
-        progressIndicator: modalProgressIndicator(),
+        progressIndicator: CustomProgressIndicatorWidget(),
         child: Column(
           children: <Widget>[
             Row(

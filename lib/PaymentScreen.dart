@@ -12,6 +12,8 @@ import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'model/PaymentLogModel.dart';
 import 'helper/SharePreferencesHelper.dart';
+import 'myWidget/CustomButtonWidget.dart';
+import 'myWidget/CustomProgressIndicator.dart';
 
 class PaymentScreen extends StatefulWidget {
   @override
@@ -123,7 +125,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     child: Text(MyString.txt_pay_tax_success,
                       style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
                   ),
-                  RaisedButton(onPressed: (){
+                  CustomButtonWidget(onPress: (){
                     Navigator.of(context).pop();
                     Navigator.of(context).pop({'isNeedRefresh' : true});
 
@@ -159,7 +161,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       //btn top up
-                      RaisedButton(onPressed: () async{
+                      CustomButtonWidget(onPress: () async{
                         await _sharepreferenceshelper.initSharePref();
                         _paymentLogModel.uniqueKey = _sharepreferenceshelper.getUserUniqueKey();
                         _paymentLogModel.useAmount = _taxAmount;
@@ -172,7 +174,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                         style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
                         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),),
                       //btn out
-                      RaisedButton(onPressed: (){
+                      CustomButtonWidget(onPress: (){
                         Navigator.of(context).pop();
 
                         },child: Text(MyString.txt_log_out,
@@ -183,25 +185,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
               )
             ],), onWillPop: (){});
     }, barrierDismissible: false);
-  }
-
-  Widget modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
-            ],
-          ),
-        ),
-      ),
-    );
   }
 
    _getTaxType(){
@@ -230,7 +213,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   Widget _body(BuildContext context){
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
-      progressIndicator: modalProgressIndicator(),
+      progressIndicator: CustomProgressIndicatorWidget(),
       child: ListView(
         children: <Widget>[
           Column(
@@ -339,7 +322,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                     Container(
                       height: 45.0,
                       width: double.maxFinite,
-                      child: RaisedButton(onPressed: ()async{
+                      child: CustomButtonWidget(onPress: ()async{
                         await _checkCon();
                         if(_isCon){
                           if(_taxAmount == 0){
@@ -381,7 +364,8 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: MyString.txt_online_payment_tax,
+      title: Text(MyString.txt_online_payment_tax,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
     );
     /*return Scaffold(

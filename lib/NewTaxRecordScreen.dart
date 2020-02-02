@@ -11,6 +11,8 @@ import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'helper/ServiceHelper.dart';
+import 'myWidget/CustomButtonWidget.dart';
+import 'myWidget/CustomProgressIndicator.dart';
 
 class NewTaxRecordScreen extends StatefulWidget {
   @override
@@ -48,25 +50,6 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
     });
   }
 
-  Widget modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.black))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   _checkCon()async{
     var conResult = await(Connectivity().checkConnectivity());
     if (conResult == ConnectivityResult.none) {
@@ -98,9 +81,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                           child: Text(MyString.txt_tax_record_upload_success,
                             style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),textAlign: TextAlign.center,)),
                       Container(
-                        width: 200.0,
-                        height: 45.0,
-                        child: RaisedButton(onPressed: ()async{
+                        child: CustomButtonWidget(onPress: ()async{
                           FocusScope.of(context).requestFocus(FocusNode());
                           await _sharepreferenceshelper.initSharePref();
                           FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.NEW_TAX_RECORD_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
@@ -108,7 +89,10 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                           Navigator.of(context).pop({'isNeedRefresh' : true});
 
                         }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                          color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+                          color: MyColor.colorPrimary,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       )
                     ],
                   ),
@@ -145,7 +129,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
   Widget _body(BuildContext context){
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
-      progressIndicator: modalProgressIndicator(),
+      progressIndicator: CustomProgressIndicatorWidget(),
       child: ListView(
         children: <Widget>[
           Card(
@@ -171,11 +155,17 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                       style: TextStyle(fontSize: FontSize.textSizeNormal),
                     ),
                   ),
+
+
                   //camera
                   Container(
-                    height: 50,
-                    margin: EdgeInsets.only(bottom: 15.0),
-                    child: RaisedButton(onPressed: ()async{
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    decoration: Platform.isAndroid? null :
+                    BoxDecoration(
+                        border: Border.all(color: MyColor.colorPrimary, width: 1),
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: CustomButtonWidget(onPress: ()async{
                       camera();
                       await _sharepreferenceshelper.initSharePref();
                       FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
@@ -188,12 +178,21 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                         Text(MyString.txt_upload_photo_camera, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
                       ],
                     ),color: Colors.white,elevation: 5.0,
-                      shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
+                      shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   ),
+
+
                   //gallery
                   Container(
-                    height: 50,
-                    child: RaisedButton(onPressed: ()async{
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    decoration: Platform.isAndroid? null :
+                    BoxDecoration(
+                        border: Border.all(color: MyColor.colorPrimary, width: 1),
+                        borderRadius: BorderRadius.circular(10)
+                    ),
+                    child: CustomButtonWidget(onPress: ()async{
                       gallery();
                       await _sharepreferenceshelper.initSharePref();
                       FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
@@ -206,7 +205,9 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                         Text(MyString.txt_upload_photo_gallery, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
                       ],
                     ),color: Colors.white,elevation: 5.0,
-                      shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
+                      shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
                   )
                 ],
               ),
@@ -218,8 +219,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
           Container(
             padding: EdgeInsets.only(left: 30.0, right: 30.0),
             margin: EdgeInsets.only(top: 20.0, bottom: 20.0),
-            height: 45.0,
-            child: RaisedButton(onPressed: ()async{
+            child: CustomButtonWidget(onPress: ()async{
               await _checkCon();
               if(_isCon){
                 if(_recordNameController.text != '' && _image != null){
@@ -237,7 +237,10 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
               }
 
             }, child: Text(MyString.txt_tax_record_upload, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-              color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+              color: MyColor.colorPrimary,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              borderRadius: BorderRadius.circular(10),
+            ),
           )
         ],
       ),
@@ -247,7 +250,8 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: MyString.txt_tax_record,
+      title: Text(MyString.txt_tax_record,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
       globalKey: _globalKey,
     );

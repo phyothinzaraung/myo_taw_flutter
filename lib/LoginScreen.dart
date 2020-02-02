@@ -12,6 +12,7 @@ import 'helper/ServiceHelper.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'OtpScreen.dart';
+import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -184,7 +185,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               Container(
                                 width: double.maxFinite,
                                 height: 45.0,
-                                child: RaisedButton(onPressed: () async{
+                                child: CustomButtonWidget(onPress: () async{
                                   if(_dropDownCity != 'နေရပ်ရွေးပါ' && _phoneNoController.text.isNotEmpty){
                                     await _checkCon();
                                     if(_isCon){

@@ -8,7 +8,7 @@ class PhotoDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: '',
+      title: null,
       body: Center(
         child: PhotoView(
           imageProvider: NetworkImage(photoUrl),

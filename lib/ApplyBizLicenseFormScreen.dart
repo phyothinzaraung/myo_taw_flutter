@@ -1,4 +1,6 @@
+import 'dart:io';
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/ApplyBizLicenseFormSnackBarWidget.dart';
@@ -14,6 +16,8 @@ import 'model/UserModel.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'ApplyBizLicensePhotoListScreen.dart';
+import 'myWidget/CustomButtonWidget.dart';
+import 'myWidget/CustomProgressIndicator.dart';
 
 class ApplyBizLicenseFormScreen extends StatefulWidget {
   BizLicenseModel model;
@@ -44,13 +48,13 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
 
   List<String> _stateList;
   List<String> _townshipList;
-  String _dropDownBizState = 'နေရပ်ရွေးပါ';
-  String _dropDownBizTownship = 'နေရပ်ရွေးပါ';
+  String _dropDownBizState = MyString.txt_choose_state_township;
+  String _dropDownBizTownship = MyString.txt_choose_state_township;
 
   List<String> _ownerStateList;
   List<String> _ownerTownshipList;
-  String _dropDownOwnerState = 'နေရပ်ရွေးပါ';
-  String _dropDownOwnerTownship = 'နေရပ်ရွေးပါ';
+  String _dropDownOwnerState = MyString.txt_choose_state_township;
+  String _dropDownOwnerTownship = MyString.txt_choose_state_township;
   LocationDb _locationDb = LocationDb();
   bool _isCon, _isLoading = false;
   bool _isClose = false;
@@ -59,6 +63,14 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   UserModel _userModel;
   var _response;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+
+  List<Widget> _bizStateWidgetList = List();
+  List<Widget> _bizTownshipWidgetList = List();
+  List<Widget> _ownerStateWidgetList = List();
+  List<Widget> _ownerTownshipWidgetList = List();
+  int _bizStatePickerIndex, _bizTownshipPickerIndex, _ownerStatePickerIndex, _ownerTownshipPickerIndex;
+
+
   _ApplyBizLicenseFormScreenState(this._bizLicenseModel);
 
   @override
@@ -69,8 +81,41 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
     _townshipList = [_dropDownBizTownship];
     _ownerStateList = [_dropDownOwnerState];
     _ownerTownshipList = [_dropDownOwnerTownship];
+
+    _bizStatePickerIndex = 0;
+    _bizTownshipPickerIndex = 0;
+    _ownerStatePickerIndex = 0;
+    _ownerTownshipPickerIndex = 0;
     _init();
     _getUser();
+  }
+
+  _pickerWidgetStateInit(){
+    for(var i in _stateList){
+      _bizStateWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+
+      _ownerStateWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
+  }
+
+  _pickerWidgetTownshipInit(){
+    for(var i in _townshipList){
+      _bizTownshipWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+
+      _bizTownshipWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
   }
 
   _init()async{
@@ -78,11 +123,10 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
     var state = await _locationDb.getState();
     await _locationDb.closeLocationDb();
     for(var i in state){
-      setState(() {
-        _stateList.add(i);
-        _ownerStateList.add(i);
-      });
+      _stateList.add(i);
+      _ownerStateList.add(i);
     }
+    _pickerWidgetStateInit();
   }
 
   _getTownshipByState(String state)async{
@@ -93,6 +137,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
     for(var i in township){
       setState(() {
         _townshipList.add(i);
+        _pickerWidgetTownshipInit();
       });
     }
   }
@@ -115,7 +160,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
     for(var i in township){
       setState(() {
         _ownerTownshipList.add(i);
-        print(i);
+        _pickerWidgetTownshipInit();
       });
     }
   }
@@ -143,7 +188,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                   Container(
                     height: 40.0,
                     width: 90.0,
-                    child: RaisedButton(onPressed: (){
+                    child: CustomButtonWidget(onPress: (){
                       Navigator.of(context).pop();
                       Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ApplyBizLicensePhotoListScreen(model)));
                       },child: Text(MyString.txt_upload_photo,style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
@@ -173,41 +218,294 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
     setState(() {
       _isLoading = false;
     });
-
-    /*print('apply biz license: '
-        '${_applyBizLicenseModel.bizName} ${_applyBizLicenseModel.bizType} ${_applyBizLicenseModel.length} '
-                    '${_applyBizLicenseModel.width} ${_applyBizLicenseModel.bizRegionNo} '
-        '${_applyBizLicenseModel.bizStreetName} ${_applyBizLicenseModel.bizBlockNo}''${_applyBizLicenseModel.bizState} '
-        '${_applyBizLicenseModel.bizTownship} ${_applyBizLicenseModel.ownerName} ${_applyBizLicenseModel.nrcNo} '
-        '${_applyBizLicenseModel.phoneNo}''${_applyBizLicenseModel.regionNo} ${_applyBizLicenseModel.streetName} '
-        '${_applyBizLicenseModel.blockNo} ${_applyBizLicenseModel.state}''${_applyBizLicenseModel.township} ${_applyBizLicenseModel.remark}'
-        '${_applyBizLicenseModel.userName} ${_applyBizLicenseModel.licensetypeId} ${_applyBizLicenseModel.licenseType}');*/
-
   }
 
-  Widget modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
-            ],
-          ),
-        ),
+  Widget _bizStateDropDown(){
+    return DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
+        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
+        isExpanded: true,
+        iconEnabledColor: MyColor.colorPrimary,
+        value: _dropDownBizState,
+        onChanged: (String value){
+          FocusScope.of(context).requestFocus(FocusNode());
+          setState(() {
+            _dropDownBizState = value;
+          });
+          _townshipList.clear();
+          setState(() {
+            _dropDownBizTownship = MyString.txt_choose_state_township;
+          });
+          _townshipList = [_dropDownBizTownship];
+          _getTownshipByState(_dropDownBizState);
+        },
+        items: _stateList.map<DropdownMenuItem<String>>((String str){
+          return DropdownMenuItem<String>(
+            value: str,
+            child: Text(str),
+          );
+        }).toList(),
       ),
+    );
+  }
+
+  Widget _bizTownshipDropDown(){
+    return DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
+        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
+        isExpanded: true,
+        iconEnabledColor: MyColor.colorPrimary,
+        value: _dropDownBizTownship,
+        onChanged: (String value){
+          FocusScope.of(context).requestFocus(FocusNode());
+          setState(() {
+            _dropDownBizTownship = value;
+          });
+        },
+        items: _townshipList.map<DropdownMenuItem<String>>((String str){
+          return DropdownMenuItem<String>(
+            value: str,
+            child: Text(str),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _ownerStateDropDown(){
+    return DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
+        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
+        isExpanded: true,
+        iconEnabledColor: MyColor.colorPrimary,
+        value: _dropDownOwnerState,
+        onChanged: (String value){
+          FocusScope.of(context).requestFocus(FocusNode());
+          setState(() {
+            _dropDownOwnerState = value;
+          });
+          _ownerTownshipList.clear();
+          setState(() {
+            _dropDownOwnerTownship = MyString.txt_choose_state_township;
+          });
+          _ownerTownshipList = [_dropDownOwnerTownship];
+          _getOwnerTownshipByState(_dropDownOwnerState);
+        },
+        items: _ownerStateList.map<DropdownMenuItem<String>>((String str){
+          return DropdownMenuItem<String>(
+            value: str,
+            child: Text(str),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Widget _ownerTownshipDropDown(){
+    return DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
+        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
+        isExpanded: true,
+        iconEnabledColor: MyColor.colorPrimary,
+        value: _dropDownOwnerTownship,
+        onChanged: (String value){
+          FocusScope.of(context).requestFocus(FocusNode());
+          setState(() {
+            _dropDownOwnerTownship = value;
+          });
+        },
+        items: _ownerTownshipList.map<DropdownMenuItem<String>>((String str){
+          return DropdownMenuItem<String>(
+            value: str,
+            child: Text(str),
+          );
+        }).toList(),
+      ),
+    );
+  }
+
+  Future _bizStateiosPicker(){
+    return showCupertinoModalPopup(
+        context: context,
+        builder: (context){
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    FlatButton(onPressed: (){
+                      Navigator.pop(context);
+                    }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.red),)),
+                    FlatButton(onPressed: (){
+                      _townshipList.clear();
+                      _bizTownshipWidgetList.clear();
+                      setState(() {
+                        _dropDownBizState = _stateList[_bizStatePickerIndex];
+                        _getTownshipByState(_dropDownBizState);
+                      });
+                      Navigator.pop(context);
+                    }, child: Text(MyString.txt_confirm,style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.blue))),
+                  ],
+                ),
+              ),
+              Container(
+                height: 180,
+                child: CupertinoPicker(
+                    backgroundColor: Colors.white,
+                    itemExtent: 35,
+                    magnification: 1.5,
+                    useMagnifier: true,
+                    onSelectedItemChanged: (index){
+                      _bizStatePickerIndex = index;
+                    },
+                    children: _bizStateWidgetList
+                ),
+              ),
+            ],
+          );
+        }
+    );
+  }
+
+  Future _bizTownshipiosPicker(){
+    return showCupertinoModalPopup(
+        context: context,
+        builder: (context){
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    FlatButton(onPressed: (){
+                      Navigator.pop(context);
+                    }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.red),)),
+                    FlatButton(onPressed: (){
+                      setState(() {
+                        _dropDownBizTownship = _townshipList[_bizTownshipPickerIndex];
+                      });
+                      Navigator.pop(context);
+                    }, child: Text(MyString.txt_confirm,style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.blue))),
+                  ],
+                ),
+              ),
+              Container(
+                height: 180,
+                child: CupertinoPicker(
+                    backgroundColor: Colors.white,
+                    itemExtent: 35,
+                    magnification: 1.5,
+                    useMagnifier: true,
+                    onSelectedItemChanged: (index){
+                      _bizTownshipPickerIndex = index;
+                    },
+                    children: _bizTownshipWidgetList
+                ),
+              ),
+            ],
+          );
+        }
+    );
+  }
+
+  Future _ownerStateiosPicker(){
+    return showCupertinoModalPopup(
+        context: context,
+        builder: (context){
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    FlatButton(onPressed: (){
+                      Navigator.pop(context);
+                    }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.red),)),
+                    FlatButton(onPressed: (){
+                      _townshipList.clear();
+                      _ownerTownshipWidgetList.clear();
+                      setState(() {
+                        _dropDownOwnerState = _stateList[_ownerStatePickerIndex];
+                        _getOwnerTownshipByState(_dropDownOwnerState);
+                      });
+                      Navigator.pop(context);
+                    }, child: Text(MyString.txt_confirm,style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.blue))),
+                  ],
+                ),
+              ),
+              Container(
+                height: 180,
+                child: CupertinoPicker(
+                    backgroundColor: Colors.white,
+                    itemExtent: 35,
+                    magnification: 1.5,
+                    useMagnifier: true,
+                    onSelectedItemChanged: (index){
+                      _ownerStatePickerIndex = index;
+                    },
+                    children: _ownerStateWidgetList
+                ),
+              ),
+            ],
+          );
+        }
+    );
+  }
+
+  Future _ownerTownshipiosPicker(){
+    return showCupertinoModalPopup(
+        context: context,
+        builder: (context){
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    FlatButton(onPressed: (){
+                      Navigator.pop(context);
+                    }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.red),)),
+                    FlatButton(onPressed: (){
+                      setState(() {
+                        _dropDownOwnerTownship = _townshipList[_ownerTownshipPickerIndex];
+                      });
+                      Navigator.pop(context);
+                    }, child: Text(MyString.txt_confirm,style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.blue))),
+                  ],
+                ),
+              ),
+              Container(
+                height: 180,
+                child: CupertinoPicker(
+                    backgroundColor: Colors.white,
+                    itemExtent: 35,
+                    magnification: 1.5,
+                    useMagnifier: true,
+                    onSelectedItemChanged: (index){
+                      _ownerTownshipPickerIndex = index;
+                    },
+                    children: _ownerTownshipWidgetList
+                ),
+              ),
+            ],
+          );
+        }
     );
   }
 
   Widget _body(BuildContext context){
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
-      progressIndicator: modalProgressIndicator(),
+      progressIndicator: CustomProgressIndicatorWidget(),
       child: ListView(
         children: <Widget>[
           Container(
@@ -501,38 +799,22 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
                       padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      width: double.maxFinite,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(7.0),
                           border: Border.all(
                               color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
                           )
                       ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                          isExpanded: true,
-                          iconEnabledColor: MyColor.colorPrimary,
-                          value: _dropDownBizState,
-                          onChanged: (String value){
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            setState(() {
-                              _dropDownBizState = value;
-                            });
-                            _townshipList.clear();
-                            setState(() {
-                              _dropDownBizTownship = 'နေရပ်ရွေးပါ';
-                            });
-                            _townshipList = [_dropDownBizTownship];
-                            _getTownshipByState(_dropDownBizState);
+                      child: !Platform.isAndroid? _bizStateDropDown() :
+                      GestureDetector(
+                          onTap: (){
+                            _bizStateiosPicker();
                           },
-                          items: _stateList.map<DropdownMenuItem<String>>((String str){
-                            return DropdownMenuItem<String>(
-                              value: str,
-                              child: Text(str),
-                            );
-                          }).toList(),
-                        ),
-                      ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Text(_dropDownBizState, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),),
+                          )),
                     ),
                     //text biz township
                     Container(
@@ -549,32 +831,22 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
                       padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      width: double.maxFinite,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(7.0),
                           border: Border.all(
                               color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
                           )
                       ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                          isExpanded: true,
-                          iconEnabledColor: MyColor.colorPrimary,
-                          value: _dropDownBizTownship,
-                          onChanged: (String value){
-                            FocusScope.of(context).requestFocus(FocusNode());
-                            setState(() {
-                              _dropDownBizTownship = value;
-                            });
+                      child: !Platform.isAndroid? _bizTownshipDropDown() :
+                      GestureDetector(
+                          onTap: (){
+                            _bizTownshipiosPicker();
                           },
-                          items: _townshipList.map<DropdownMenuItem<String>>((String str){
-                            return DropdownMenuItem<String>(
-                              value: str,
-                              child: Text(str),
-                            );
-                          }).toList(),
-                        ),
-                      ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(5.0),
+                            child: Text(_dropDownBizTownship, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),),
+                          )),
                     ),
 
                   ],
@@ -789,38 +1061,22 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                   Container(
                     margin: EdgeInsets.only(bottom: 10.0),
                     padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    width: double.maxFinite,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(7.0),
                         border: Border.all(
                             color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
                         )
                     ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                        isExpanded: true,
-                        iconEnabledColor: MyColor.colorPrimary,
-                        value: _dropDownOwnerState,
-                        onChanged: (String value){
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          setState(() {
-                            _dropDownOwnerState = value;
-                          });
-                          _ownerTownshipList.clear();
-                          setState(() {
-                            _dropDownOwnerTownship = 'နေရပ်ရွေးပါ';
-                          });
-                          _ownerTownshipList = [_dropDownOwnerTownship];
-                          _getOwnerTownshipByState(_dropDownOwnerState);
+                    child: !Platform.isAndroid? _ownerStateDropDown() :
+                    GestureDetector(
+                        onTap: (){
+                          _ownerStateiosPicker();
                         },
-                        items: _ownerStateList.map<DropdownMenuItem<String>>((String str){
-                          return DropdownMenuItem<String>(
-                            value: str,
-                            child: Text(str),
-                          );
-                        }).toList(),
-                      ),
-                    ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text(_dropDownOwnerState, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),),
+                        )),
                   ),
                   //text owner township
                   Container(
@@ -837,32 +1093,22 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                   Container(
                     margin: EdgeInsets.only(bottom: 10.0),
                     padding: EdgeInsets.symmetric(horizontal: 10.0),
+                    width: double.maxFinite,
                     decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(7.0),
                         border: Border.all(
                             color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
                         )
                     ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                        isExpanded: true,
-                        iconEnabledColor: MyColor.colorPrimary,
-                        value: _dropDownOwnerTownship,
-                        onChanged: (String value){
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          setState(() {
-                            _dropDownOwnerTownship = value;
-                          });
+                    child: !Platform.isAndroid? _ownerTownshipDropDown() :
+                    GestureDetector(
+                        onTap: (){
+                          _ownerTownshipiosPicker();
                         },
-                        items: _ownerTownshipList.map<DropdownMenuItem<String>>((String str){
-                          return DropdownMenuItem<String>(
-                            value: str,
-                            child: Text(str),
-                          );
-                        }).toList(),
-                      ),
-                    ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(5.0),
+                          child: Text(_dropDownOwnerTownship, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),),
+                        )),
                   ),
                   //text remark
                   Container(
@@ -890,15 +1136,14 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
             ),
           ),
           Container(
-            height: 45.0,
             width: double.maxFinite,
             margin: EdgeInsets.all(20.0),
-            child: RaisedButton(onPressed: ()async{
+            child: CustomButtonWidget(onPress: ()async{
               await _checkCon();
               if(_isCon){
-                if(_bizTypeController.text!=null && _bizLengthController.text!=null && _bizWidthController.text != null && _dropDownBizState != 'နေရပ်ရွေးပါ'
-                    && _dropDownBizTownship != 'နေရပ်ရွေးပါ' &&_ownerNameController.text !=null && _ownerNrcController.text != null && _ownerPhoneController.text !=null
-                    && _dropDownOwnerState != 'နေရပ်ရွေးပါ' && _dropDownOwnerTownship != 'နေရပ်ရွေးပါ'){
+                if(_bizTypeController.text!=null && _bizLengthController.text!=null && _bizWidthController.text != null && _dropDownBizState != MyString.txt_choose_state_township
+                    && _dropDownBizTownship != MyString.txt_choose_state_township &&_ownerNameController.text !=null && _ownerNrcController.text != null && _ownerPhoneController.text !=null
+                    && _dropDownOwnerState != MyString.txt_choose_state_township && _dropDownOwnerTownship != MyString.txt_choose_state_township){
                   setState(() {
                     _isLoading = true;
                   });
@@ -938,7 +1183,9 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
               }
 
             }, child: Text(MyString.txt_apply_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-              color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+              color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              borderRadius: BorderRadius.circular(10),
+            ),
           )
         ],
       ),
@@ -948,7 +1195,8 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-        title : MyString.txt_business_tax,
+        title : Text(MyString.txt_business_tax,
+          style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
         body : _body(context),
         globalKey: _globalKey,
     );

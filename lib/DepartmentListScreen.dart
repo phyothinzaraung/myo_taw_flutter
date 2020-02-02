@@ -16,6 +16,8 @@ import 'helper/NumConvertHelper.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'DaoDetailScreen.dart';
+import 'myWidget/CustomButtonWidget.dart';
+import 'myWidget/CustomProgressIndicator.dart';
 import 'myWidget/EmptyViewWidget.dart';
 
 class DepartmentListScreen extends StatefulWidget {
@@ -139,8 +141,8 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
 
-              RaisedButton(
-                  onPressed: ()async{
+              CustomButtonWidget(
+                onPress: ()async{
                     setState(() {
                       _isLoading = true;
                       _isManager = true;
@@ -156,10 +158,11 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
                 color: _isManager?MyColor.colorPrimary:Colors.white,
                 elevation: 1.0,
-                padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 7.0, bottom: 7.0),),
+                //padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 7.0, bottom: 7.0),
+              ),
 
-              RaisedButton(
-                onPressed: ()async{
+              CustomButtonWidget(
+                onPress: ()async{
                   setState(() {
                     _isLoading = true;
                     _isManager = false;
@@ -175,7 +178,8 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
                 color: _isEngineer?MyColor.colorPrimary:Colors.white,
                 elevation: 1.0,
-                padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 7.0, bottom: 7.0),),
+                //padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 7.0, bottom: 7.0),
+              ),
             ],
           )
         ],
@@ -322,29 +326,10 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
     );
   }
 
-  Widget modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.black))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _body(BuildContext context, AsyncLoader asyncLoader){
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
-      progressIndicator: modalProgressIndicator(),
+      progressIndicator: CustomProgressIndicatorWidget(),
       child: Container(
         child: Column(
           children: <Widget>[
@@ -372,7 +357,8 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: _daoViewModel.daoModel.title,
+      title: Text(_daoViewModel.daoModel.title,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context, _asyncLoader),
       globalKey: _globalKey,
     );

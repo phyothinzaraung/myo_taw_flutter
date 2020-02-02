@@ -7,6 +7,7 @@ import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
+import 'myWidget/CustomButtonWidget.dart';
 
 class TgyBizTaxCalculatorScreen extends StatefulWidget {
   @override
@@ -239,7 +240,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                     child: Text(MyString.txt_thanks,
                       style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
                   ),
-                  RaisedButton(onPressed: (){
+                  CustomButtonWidget(onPress: (){
                     Navigator.of(context).pop();
                     clearDropDown();
                     setState(() {
@@ -247,7 +248,9 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                     });
                     },child: Text(MyString.txt_close,
                     style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),)
+                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
+                    borderRadius: BorderRadius.circular(10),
+                  )
                 ],
               )
             ],), onWillPop: (){});
@@ -390,9 +393,8 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                       Container(
                         margin: EdgeInsets.only(top: 40.0),
                         width: double.maxFinite,
-                        height: 50.0,
-                        child: RaisedButton(
-                          onPressed: ()async{
+                        child: CustomButtonWidget(
+                          onPress: ()async{
                             if(_dropDownBizType != MyString.txt_no_selected && _dropDownBizLicenseType != MyString.txt_no_selected){
                               if(_isHotel){
                                 if(_dropDownGrade != MyString.txt_no_selected){
@@ -420,7 +422,9 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(8.0)
                           ),
-                          child: Text(MyString.txt_calculate, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
+                          child: Text(MyString.txt_calculate, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
                       )
                     ],
                   ),
@@ -444,7 +448,8 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: MyString.txt_calculate_tax,
+      title: Text(MyString.txt_calculate_tax,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(),
       globalKey: _globalKey,
     );

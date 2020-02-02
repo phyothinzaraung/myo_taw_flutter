@@ -7,9 +7,18 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
+import 'package:myotaw/myWidget/CustomButtonWidget.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'helper/MyoTawConstant.dart';
+import 'helper/MyoTawConstant.dart';
+import 'helper/MyoTawConstant.dart';
+import 'helper/MyoTawConstant.dart';
+import 'helper/MyoTawConstant.dart';
+import 'helper/MyoTawConstant.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
@@ -17,6 +26,7 @@ import 'helper/ServiceHelper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'WardAdminLocationUpdateScreen.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
+import 'dart:io';
 
 class WardAdminContributionScreen extends StatefulWidget {
   @override
@@ -40,6 +50,8 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   Set<Marker> _markers = Set();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   TextEditingController _messController = TextEditingController();
+  List<Widget> _subjectWidgetList = List();
+  int _pickerIndex = 0;
 
   @override
   void initState() {
@@ -47,6 +59,17 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     super.initState();
     _subjectList = [_dropDownSubject,];
     _subjectList.addAll(MyStringList.suggestion_subject_admin_ward);
+    _locationInit();
+    for(var i in _subjectList){
+      _subjectWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
+    _isLoading = false;
+  }
+
+  void _locationInit(){
     _location.changeSettings(accuracy: LocationAccuracy.HIGH, interval: 3000, distanceFilter: 0);
     _location.serviceEnabled().then((isEnable){
       if(!isEnable){
@@ -55,19 +78,19 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
             _streamSubscription = _location.onLocationChanged().listen((currentLocation){
               _lat = currentLocation.latitude;
               _lng = currentLocation.longitude;
-               if(mounted){
-                 setState(() {
-                   _cameraPosition = CameraPosition(
-                     target: LatLng(currentLocation.latitude, currentLocation.longitude),
-                     zoom: 17,
-                   );
-                   Marker _resultMarker = Marker(
-                       markerId: MarkerId(currentLocation.toString()),
-                       position: LatLng(currentLocation.latitude, currentLocation.longitude),
-                   );
-                   _markers.add(_resultMarker);
-                 });
-               }
+              if(mounted){
+                setState(() {
+                  _cameraPosition = CameraPosition(
+                    target: LatLng(currentLocation.latitude, currentLocation.longitude),
+                    zoom: 17,
+                  );
+                  Marker _resultMarker = Marker(
+                    markerId: MarkerId(currentLocation.toString()),
+                    position: LatLng(currentLocation.latitude, currentLocation.longitude),
+                  );
+                  _markers.add(_resultMarker);
+                });
+              }
             });
             //Navigator.of(context).pop();
           }else{
@@ -94,8 +117,6 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
         });
       }
     });
-
-    _isLoading = false;
   }
 
   _checkCon()async{
@@ -136,7 +157,18 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
           _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, true, _userModel.wardName,0);
       //print('sendsuggest: ${_sharepreferenceshelper.isWardAdmin()} ${_userModel.wardName}');
       if(_response.data != null){
-        _finishDialogBox();
+        CustomDialogWidget().CustomSuccessDialog(
+            context: context,
+            content: MyString.txt_suggestion_finish,
+            img: 'suggestion_no_circle.png',
+            onPress: ()async{
+              FocusScope.of(context).requestFocus(FocusNode());
+              await _sharepreferenceshelper.initSharePref();
+              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+              Navigator.of(context).pop();
+              Navigator.of(context).pop({'isNeedRefresh' : true});
+            }
+        );
       }else{
         WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
@@ -150,76 +182,71 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     });
   }
 
-  _finishDialogBox(){
-    return showDialog(
+   Future _iosPicker(){
+     return showCupertinoModalPopup(
         context: context,
-        builder: (ctxt){
-          return WillPopScope(
-            child: SimpleDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                          margin: EdgeInsets.only(bottom: 20.0),
-                          child: Image.asset('images/suggestion_no_circle.png', width: 50.0, height: 50.0,)),
-                      Container(
-                          margin: EdgeInsets.only(bottom: 10.0),
-                          child: Text(MyString.txt_suggestion_finish, style: TextStyle(fontSize: FontSize.textSizeSmall),textAlign: TextAlign.center,)),
-                      Container(
-                        width: 200.0,
-                        height: 45.0,
-                        child: RaisedButton(onPressed: ()async{
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          await _sharepreferenceshelper.initSharePref();
-                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop({'isNeedRefresh' : true});
-
-                          }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                          color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),onWillPop: (){},
-          );
-        }, barrierDismissible: false);
-  }
-
-  Widget modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
+        builder: (context){
+          return Column(
+            mainAxisSize: MainAxisSize.min,
             children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.black))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
+              Container(
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    FlatButton(onPressed: (){
+                      Navigator.pop(context);
+                    }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.red),)),
+                    FlatButton(onPressed: (){
+                      setState(() {
+                        _dropDownSubject = _subjectList[_pickerIndex];
+                      });
+                      print(_pickerIndex);
+                      Navigator.pop(context);
+                    }, child: Text(MyString.txt_confirm,style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.blue))),
+                  ],
+                ),
+              ),
+              Container(
+                height: 180,
+                child: CupertinoPicker(
+                    backgroundColor: Colors.white,
+                    itemExtent: 35,
+                    magnification: 1.5,
+                    useMagnifier: true,
+                    onSelectedItemChanged: (index){
+                      _pickerIndex = index;
+                    },
+                    children: _subjectWidgetList
+                ),
+              ),
             ],
-          ),
-        ),
-      ),
+          );
+        }
     );
   }
 
-  /*Widget modalProgressIndicator(){
-    return Container(
-      color: MyColor.colorBlackSemiTransparent,
-      width: double.maxFinite,
-      height: double.maxFinite,
-      child: Center(
-        child: CupertinoActivityIndicator(),
+  Widget _androidDropDown(){
+    return DropdownButtonHideUnderline(
+      child: DropdownButton<String>(
+        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.black87),
+        isExpanded: true,
+        iconEnabledColor: MyColor.colorPrimary,
+        value: _dropDownSubject,
+        onChanged: (String value){
+          setState(() {
+            _dropDownSubject = value;
+          });
+        },
+        items: _subjectList.map<DropdownMenuItem<String>>((String str){
+          return DropdownMenuItem<String>(
+            value: str,
+            child: Text(str),
+          );
+        }).toList(),
       ),
     );
-  }*/
+  }
 
   _navigateToAdminLocationUpdateScreen()async{
     /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => WardAdminLocationUpdateScreen(),
@@ -254,7 +281,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   Widget _body(){
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
-      progressIndicator: modalProgressIndicator(),
+      progressIndicator: CustomProgressIndicatorWidget(),
       child: ListView(
         children: <Widget>[
           Container(
@@ -337,9 +364,36 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                       children: <Widget>[
                         //camera
                         Container(
-                          height: 50,
                           margin: EdgeInsets.only(bottom: 10.0),
-                          child: RaisedButton(onPressed: ()async{
+                          decoration: Platform.isAndroid? null :
+                            BoxDecoration(
+                              border: Border.all(color: MyColor.colorPrimary, width: 1),
+                              borderRadius: BorderRadius.circular(10)
+                            ),
+                          child: CustomButtonWidget(
+                            onPress: ()async{
+                              camera();
+                              await _sharepreferenceshelper.initSharePref();
+                              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                            },
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
+                            elevation: 5,
+                            borderRadius: BorderRadius.circular(10),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: <Widget>[
+                                Container(
+                                    margin: EdgeInsets.only(right: 30.0),
+                                    child: Image.asset('images/camera.png', width: 25.0, height: 25.0,)),
+                                Text(MyString.txt_upload_photo_camera, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
+                              ],
+                            ),
+                          )
+                        ),
+                        /*Container(
+                          margin: EdgeInsets.only(bottom: 10.0),
+                          child: CustomButtonWidget(onPressed: ()async{
                             camera();
                             await _sharepreferenceshelper.initSharePref();
                             FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
@@ -351,14 +405,46 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                                   child: Image.asset('images/camera.png', width: 25.0, height: 25.0,)),
                               Text(MyString.txt_upload_photo_camera, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
                             ],
-                          ),color: Colors.white,elevation: 5.0,
-                            shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
-                        ),
-                        //gallery
+                          ),color: Colors.white,
+                            elevation: 5.0,
+                            shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
+                          ),
+                        ),*/
+
                         Container(
+                            margin: EdgeInsets.only(bottom: 20.0),
+                            decoration: Platform.isAndroid? null :
+                            BoxDecoration(
+                                border: Border.all(color: MyColor.colorPrimary, width: 1),
+                                borderRadius: BorderRadius.circular(10)
+                            ),
+                            child: CustomButtonWidget(
+                              onPress: ()async{
+                                gallery();
+                                await _sharepreferenceshelper.initSharePref();
+                                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                              },
+                              color: Colors.white,
+                              shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
+                              elevation: 5,
+                              borderRadius: BorderRadius.circular(10),
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Container(
+                                      margin: EdgeInsets.only(right: 30.0),
+                                      child: Image.asset('images/gallery.png', width: 25.0, height: 25.0,)),
+                                  Text(MyString.txt_upload_photo_gallery, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
+                                ],
+                              ),
+                            )
+                        ),
+
+                        //gallery
+                        /*Container(
                           height: 50,
                           margin: EdgeInsets.only(bottom: 10.0),
-                          child: RaisedButton(onPressed: ()async{
+                          child: CustomButtonWidget(onPressed: ()async{
                             gallery();
                             await _sharepreferenceshelper.initSharePref();
                             FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
@@ -372,38 +458,30 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                             ],
                           ),color: Colors.white,elevation: 5.0,
                             shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
-                        ),
+                        ),*/
+
                         Container(
                             margin: EdgeInsets.only(bottom: 10.0),
                             child: Text(MyString.title_suggestion_subject, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
                         Container(
-                          margin: EdgeInsets.only(bottom: 10.0),
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          width: double.maxFinite,
                           padding: EdgeInsets.symmetric(horizontal: 7.0),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(7.0),
                               border: Border.all(
-                                  color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
+                                  color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.8
                               )
                           ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              style: new TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.black87),
-                              isExpanded: true,
-                              iconEnabledColor: MyColor.colorPrimary,
-                              value: _dropDownSubject,
-                              onChanged: (String value){
-                                setState(() {
-                                  _dropDownSubject = value;
-                                });
+                          child: Platform.isAndroid?  _androidDropDown() :
+                          GestureDetector(
+                              onTap: (){
+                                _iosPicker();
                               },
-                              items: _subjectList.map<DropdownMenuItem<String>>((String str){
-                                return DropdownMenuItem<String>(
-                                  value: str,
-                                  child: Text(str),
-                                );
-                              }).toList(),
-                            ),
-                          ),
+                              child: Padding(
+                                padding: const EdgeInsets.all(5.0),
+                                child: Text(_dropDownSubject, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),),
+                              )),
                         ),
                         Container(
                             margin: EdgeInsets.only(bottom: 10.0),
@@ -425,11 +503,54 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                             style: TextStyle(fontSize: FontSize.textSizeNormal),
                           ),
                         ),
+
                         Container(
+                          width: double.maxFinite,
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          child: CustomButtonWidget(
+                            onPress: () async{
+                              await _checkCon();
+                              if(_isCon){
+                                if(_messController.text.isNotEmpty && _image != null && _dropDownSubject != MyString.txt_choose_subject){
+                                  setState(() {
+                                    _isLoading = true;
+                                  });
+                                  await _sharepreferenceshelper.initSharePref();
+                                  FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT,
+                                      _sharepreferenceshelper.getUserUniqueKey());
+                                  _sendSuggestion();
+                                }else if(_image == null){
+                                  WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
+                                }else if(_dropDownSubject == MyString.txt_choose_subject){
+                                  WarningSnackBar(_globalKey, MyString.txt_need_subject);
+                                }else if(_messController.text.isEmpty){
+                                  WarningSnackBar(_globalKey, MyString.txt_need_suggestion);
+                                }
+                              }else{
+                                WarningSnackBar(_globalKey, MyString.txt_no_internet);
+                              }
+                            },
+                            child: Text(MyString.txt_send_contribution, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                            color: MyColor.colorPrimary,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        )
+
+                        /*Container(
+                          width: double.maxFinite,
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          child: CupertinoButton(
+                              borderRadius: BorderRadius.all(Radius.circular(10)),
+                              color: MyColor.colorPrimary,
+                              child: Text(MyString.txt_send_contribution, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                              onPressed: (){}),
+                        )*/
+                        /*Container(
                           height: 45.0,
                           width: double.maxFinite,
                           margin: EdgeInsets.only(bottom: 20.0),
-                          child: RaisedButton(onPressed: ()async{
+                          child: CustomButtonWidget(onPressed: ()async{
                             await _checkCon();
                             if(_isCon){
                               if(_messController.text.isNotEmpty && _image != null && _dropDownSubject != MyString.txt_choose_subject){
@@ -454,7 +575,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
 
                           }, child: Text(MyString.txt_send_contribution, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
                             color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
-                        )
+                        )*/
                       ],
                     ),
                   )
@@ -470,7 +591,8 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: MyString.txt_suggestion,
+      title: Text(MyString.txt_suggestion,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(),
       globalKey: _globalKey,
     );

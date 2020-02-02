@@ -53,6 +53,8 @@ class _OnlineTaxPinRequestDialogWidgetState extends State<OnlineTaxPinRequestDia
                 pinBoxWidth: 40,
                 defaultBorderColor: MyColor.colorPrimary,
                 hideCharacter: true,
+                wrapAlignment: WrapAlignment.center,
+                pinBoxRadius: 5,
                 maskCharacter: '*',
                 hasTextBorderColor: Colors.white,
                 pinTextStyle: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),

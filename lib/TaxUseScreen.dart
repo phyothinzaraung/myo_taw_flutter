@@ -13,6 +13,8 @@ import 'model/TaxUseModel.dart';
 import 'helper/TaxUseBudgetYearHelper.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
+import 'myWidget/CustomProgressIndicator.dart';
+
 class TaxUserScreen extends StatefulWidget {
   @override
   _TaxUserScreenState createState() => _TaxUserScreenState();
@@ -131,29 +133,10 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
     return null;
   }
 
-  Widget modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _body(AsyncLoader asyncLoader){
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
-      progressIndicator: modalProgressIndicator(),
+      progressIndicator: CustomProgressIndicatorWidget(),
       child: Column(
         children: <Widget>[
           Container(
@@ -234,7 +217,8 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: MyString.txt_tax_use,
+      title: Text(MyString.txt_tax_use,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(_asyncLoader),
     );
     /*return Scaffold(

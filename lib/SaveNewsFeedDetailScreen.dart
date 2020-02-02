@@ -30,8 +30,11 @@ class _SaveNewsFeedDetailScreenState extends State<SaveNewsFeedDetailScreen> {
                 onTap: (){
                   NavigatorHelper().MyNavigatorPush(context, NewsFeedPhotoDetailScreen([], _saveNewsFeedModel.photoUrl), ScreenName.PHOTO_DETAIL_SCREEN);
                 },
-                child: Image.network(BaseUrl.NEWS_FEED_CONTENT_URL+_saveNewsFeedModel.photoUrl,
-                  width: double.maxFinite, height: 180.0, fit: BoxFit.cover,),
+                child: Hero(
+                  tag: _saveNewsFeedModel.id,
+                  child: Image.network(BaseUrl.NEWS_FEED_CONTENT_URL+_saveNewsFeedModel.photoUrl,
+                    width: double.maxFinite, height: 180.0, fit: BoxFit.cover,),
+                ),
               ):
               Image.asset('images/placeholder_newsfeed.jpg', width: double.maxFinite, height: 180.0, fit: BoxFit.cover,):
               _saveNewsFeedModel.thumbNail!=null?GestureDetector(
@@ -91,7 +94,8 @@ class _SaveNewsFeedDetailScreenState extends State<SaveNewsFeedDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: _saveNewsFeedModel.title,
+      title: Text(_saveNewsFeedModel.title,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(),
     );
     /*return Scaffold(

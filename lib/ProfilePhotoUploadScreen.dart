@@ -12,6 +12,8 @@ import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
+import 'myWidget/CustomProgressIndicator.dart';
+
 class ProfilePhotoUploadScreen extends StatefulWidget {
   @override
   _ProfilePhotoUploadScreenState createState() => _ProfilePhotoUploadScreenState();
@@ -82,29 +84,10 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
 
   }
 
-  Widget modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.black))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _body(){
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
-      progressIndicator: modalProgressIndicator(),
+      progressIndicator: CustomProgressIndicatorWidget(),
       child: Container(
         width: double.maxFinite,
         color: Colors.black,
@@ -191,7 +174,7 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: '',
+      title: null,
       body: _body(),
       globalKey: _globalKey,
     );
