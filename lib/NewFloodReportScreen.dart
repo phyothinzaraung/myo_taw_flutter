@@ -13,6 +13,7 @@ import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/model/UserModel.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
@@ -108,7 +109,17 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
       var response = await ServiceHelper().sendSuggestion(_image.path, phNo, subject, '', uniqueKey, _userModel.name,
           _lat, _lng, regionCode, isAdmin, wardName, _floodLevel);
       if(response.data != null){
-        _finishDialogBox();
+        CustomDialogWidget().customSuccessDialog(
+          context: context,
+          content: MyString.txt_flood_report_finish,
+          img: 'flood_level.png',
+          onPress: ()async{
+            await _sharepreferenceshelper.initSharePref();
+            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+            Navigator.of(context).pop();
+            Navigator.of(context).pop({'isNeedRefresh' : true});
+          }
+        );
       }
     }catch(e){
       print(e);
@@ -253,7 +264,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                     width: double.maxFinite,
                     margin: EdgeInsets.only(bottom: 40),
                     child: CustomButtonWidget(onPress: ()async{
-                      /*await _checkCon();
+                      await _checkCon();
                       if(_isCon){
                         if(_image != null && _floodLevel != 0){
                           await _sharepreferenceshelper.initSharePref();
@@ -266,8 +277,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                         }
                       }else{
                         WarningSnackBar(_globalKey, MyString.txt_no_internet);
-                      }*/
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => GetFloodLevelScreen()));
+                      }
                     },child: Text(MyString.txt_add_flood_level_record,
                       style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
                       borderRadius: BorderRadius.circular(10),

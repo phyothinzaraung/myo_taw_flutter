@@ -3,6 +3,7 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -112,7 +113,18 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
     try{
       _response = await ServiceHelper().uploadTaxRecord(_image.path, _recordNameController.text, _userModel.uniqueKey, _userModel.name, _userModel.currentRegionCode);
       if(_response.data != null){
-        _finishDialogBox();
+        CustomDialogWidget().customSuccessDialog(
+          context: context,
+          content: MyString.txt_tax_record_upload_success,
+          img: 'isvalid.png',
+          onPress: ()async{
+            FocusScope.of(context).requestFocus(FocusNode());
+            await _sharepreferenceshelper.initSharePref();
+            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.NEW_TAX_RECORD_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+            Navigator.of(context).pop();
+            Navigator.of(context).pop({'isNeedRefresh' : true});
+          }
+        );
       }else{
         WarningSnackBar(_globalKey, MyString.txt_try_again);
       }

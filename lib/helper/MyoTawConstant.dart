@@ -269,6 +269,7 @@ class MyString{
   static const String txt_choose_state_township = 'နေရပ်ရွေးပါ';
   static const String txt_need_user_information = 'ကိုယ်ရေးအချက်အလက်ဖြည့်ပေးပါ။';
   static const String txt_confirm = 'ရွေးမည်';
+  static const String txt_faq_category_all = 'အားလုံး';
 
 
 

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -157,7 +158,24 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                             ),
                           ),
                           GestureDetector(onTap: (){
-                            _dialogDelete(model.id, i);
+                            //_dialogDelete(model.id, i);
+                            CustomDialogWidget().customConfirmDialog(
+                              context: context,
+                              content: MyString.txt_are_u_sure,
+                              img: 'confirm_icon.png',
+                              textNo: MyString.txt_delete_cancel,
+                              textYes: MyString.txt_delete,
+                              onPress: ()async{
+                                _deleteNewsFeed(model.id);
+                                setState(() {
+                                  _saveNewsFeedList.removeAt(i);
+                                });
+                                Navigator.of(context).pop();
+                                await _sharepreferenceshelper.initSharePref();
+                                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.SAVED_NEWS_FEED_SCREEN, ClickEvent.DELETE_SAVED_NEWS_FEED_CLICK_EVENT,
+                                    _sharepreferenceshelper.getUserUniqueKey());
+                              }
+                            );
                           },child: Icon(Platform.isAndroid? Icons.delete : CupertinoIcons.delete_solid, color: Colors.red,))
                         ],
                       ),

@@ -1,6 +1,8 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
@@ -8,6 +10,8 @@ import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'myWidget/CustomButtonWidget.dart';
+import 'myWidget/DropDownWidget.dart';
+import 'myWidget/IosPickerWidget.dart';
 
 class TgyPropertyTaxCalculatorScreen extends StatefulWidget {
   @override
@@ -28,6 +32,11 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
 
+  List<Widget> _buildingTypeWidgetList = List();
+  List<Widget> _roadTypeWidgetList = List();
+  List<Widget> _blockNoWidgetList = List();
+  int _buildingTypePickerIndex, _roadTypePickerIndex, _blockNoPickerIndex;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -38,6 +47,35 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
     _roadList.addAll(MyStringList.property_tgy_road);
     _blockNoList = [_dropDownRoad];
     _blockNoList.addAll(MyStringList.property_tgy_block_no);
+
+    _buildingTypePickerIndex = 0;
+    _roadTypePickerIndex = 0;
+    _blockNoPickerIndex = 0;
+
+    _initIosPickerWidgetList();
+  }
+
+  _initIosPickerWidgetList(){
+    for(var i in _buildingTypeList){
+      _buildingTypeWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
+
+    for(var i in _roadList){
+      _roadTypeWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
+
+    for(var i in _blockNoList){
+      _blockNoWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
   }
 
   _calculateTaxDialog(){
@@ -214,6 +252,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10.0),
+                        width: double.maxFinite,
                         margin: EdgeInsets.only(bottom: 20),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(7.0),
@@ -221,24 +260,32 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                            isExpanded: true,
-                            iconEnabledColor: MyColor.colorPrimary,
-                            value: _dropDownBuildingType,
-                            onChanged: (String value){
-                              setState(() {
-                                _dropDownBuildingType = value;
-                              });
-                            },
-                            items: _buildingTypeList.map<DropdownMenuItem<String>>((String str){
-                              return DropdownMenuItem<String>(
-                                value: str,
-                                child: Text(str),
-                              );
-                            }).toList(),
-                          ),
+                        child: Platform.isAndroid?
+
+                        DropDownWidget(
+                          value: _dropDownBuildingType,
+                          onChange: (value){
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            setState(() {
+                              _dropDownBuildingType = value;
+                            });
+                          },
+                          list: _buildingTypeList,
+                        )
+                            :
+                        IosPickerWidget(
+                          text: _dropDownBuildingType,
+                          fixedExtentScrollController: FixedExtentScrollController(initialItem: _buildingTypePickerIndex),
+                          onSelectedItemChanged: (index){
+                            _buildingTypePickerIndex = index;
+                          },
+                          onPress: (){
+                            setState(() {
+                              _dropDownBuildingType = _buildingTypeList[_buildingTypePickerIndex];
+                            });
+                            Navigator.pop(context);
+                          },
+                          children: _buildingTypeWidgetList,
                         ),
                       ),
                       Container(
@@ -249,30 +296,39 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10.0),
                         margin: EdgeInsets.only(bottom: 20),
+                        width: double.maxFinite,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(7.0),
                             border: Border.all(
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                            isExpanded: true,
-                            iconEnabledColor: MyColor.colorPrimary,
-                            value: _dropDownRoad,
-                            onChanged: (String value){
-                              setState(() {
-                                _dropDownRoad = value;
-                              });
-                            },
-                            items: _roadList.map<DropdownMenuItem<String>>((String str){
-                              return DropdownMenuItem<String>(
-                                value: str,
-                                child: Text(str),
-                              );
-                            }).toList(),
-                          ),
+                        child: Platform.isAndroid?
+
+                        DropDownWidget(
+                          value: _dropDownRoad,
+                          onChange: (value){
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            setState(() {
+                              _dropDownRoad = value;
+                            });
+                          },
+                          list: _roadList,
+                        )
+                            :
+                        IosPickerWidget(
+                          text: _dropDownRoad,
+                          fixedExtentScrollController: FixedExtentScrollController(initialItem: _roadTypePickerIndex),
+                          onSelectedItemChanged: (index){
+                            _roadTypePickerIndex = index;
+                          },
+                          onPress: (){
+                            setState(() {
+                              _dropDownRoad = _roadList[_roadTypePickerIndex];
+                            });
+                            Navigator.pop(context);
+                          },
+                          children: _roadTypeWidgetList,
                         ),
                       ),
                       Container(
@@ -283,30 +339,39 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10.0),
                         margin: EdgeInsets.only(bottom: 20),
+                        width: double.maxFinite,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(7.0),
                             border: Border.all(
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                            isExpanded: true,
-                            iconEnabledColor: MyColor.colorPrimary,
-                            value: _dropDownBlockNo,
-                            onChanged: (String value){
-                              setState(() {
-                                _dropDownBlockNo = value;
-                              });
-                            },
-                            items: _blockNoList.map<DropdownMenuItem<String>>((String str){
-                              return DropdownMenuItem<String>(
-                                value: str,
-                                child: Text(str),
-                              );
-                            }).toList(),
-                          ),
+                        child: Platform.isAndroid?
+
+                        DropDownWidget(
+                          value: _dropDownBlockNo,
+                          onChange: (value){
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            setState(() {
+                              _dropDownBlockNo = value;
+                            });
+                          },
+                          list: _blockNoList,
+                        )
+                            :
+                        IosPickerWidget(
+                          text: _dropDownBlockNo,
+                          fixedExtentScrollController: FixedExtentScrollController(initialItem: _blockNoPickerIndex),
+                          onSelectedItemChanged: (index){
+                            _blockNoPickerIndex = index;
+                          },
+                          onPress: (){
+                            setState(() {
+                              _dropDownBlockNo = _blockNoList[_blockNoPickerIndex];
+                            });
+                            Navigator.pop(context);
+                          },
+                          children: _blockNoWidgetList,
                         ),
                       ),
                       Container(
@@ -389,7 +454,15 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
 
                             if(_dropDownRoad != MyString.txt_no_selected && _dropDownBuildingType != MyString.txt_no_selected &&
                                 _dropDownBlockNo != MyString.txt_no_selected && _lengthContorller.text.isNotEmpty && _widthContorller.text.isNotEmpty){
-                              _calculateTaxDialog();
+                              CustomDialogWidget().customCalculateTaxDialog(
+                                context: context,
+                                titleTax: MyString.txt_biz_tax_property,
+                                taxValue: _getArv(),
+                                onPress: (){
+                                  Navigator.of(context).pop();
+                                  clearText();
+                                }
+                              );
                               FocusScope.of(context).requestFocus(FocusNode());
                               await _sharepreferenceshelper.initSharePref();
                               FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_PROPERTY_TAX_CLICK_EVENT,

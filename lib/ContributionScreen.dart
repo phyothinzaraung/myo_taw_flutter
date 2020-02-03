@@ -14,7 +14,10 @@ import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
 import 'helper/ServiceHelper.dart';
+import 'myWidget/CustomDialogWidget.dart';
 import 'myWidget/CustomProgressIndicator.dart';
+import 'myWidget/DropDownWidget.dart';
+import 'myWidget/IosPickerWidget.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
 import 'package:flutter/cupertino.dart';
 
@@ -106,7 +109,18 @@ class _ContributionScreenState extends State<ContributionScreen> {
           _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, false, _sharepreferenceshelper.getWardName(),0);
       //print('sendsuggest: ${_mess} ${_dropDownSubject} ${_lat} ${_lng}');
       if(_response.data != null){
-        _finishDialogBox();
+        CustomDialogWidget().customSuccessDialog(
+            context: context,
+            content: MyString.txt_suggestion_finish,
+            img: 'suggestion_no_circle.png',
+            onPress: ()async{
+              FocusScope.of(context).requestFocus(FocusNode());
+              await _sharepreferenceshelper.initSharePref();
+              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+              Navigator.of(context).pop();
+              Navigator.of(context).pop({'isNeedRefresh' : true});
+            }
+        );
       }else{
         WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
@@ -159,72 +173,6 @@ class _ContributionScreenState extends State<ContributionScreen> {
             ),onWillPop: (){},
           );
         }, barrierDismissible: false);
-  }
-
-  _iosPicker(){
-    return showCupertinoModalPopup(
-        context: context,
-        builder: (context){
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(
-                color: Colors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    FlatButton(onPressed: (){
-                      Navigator.pop(context);
-                    }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.red),)),
-                    FlatButton(onPressed: (){
-                      setState(() {
-                        _dropDownSubject = _subjectList[_pickerIndex];
-                      });
-                      print(_pickerIndex);
-                      Navigator.pop(context);
-                    }, child: Text(MyString.txt_confirm,style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.blue))),
-                  ],
-                ),
-              ),
-              Container(
-                height: 180,
-                child: CupertinoPicker(
-                    backgroundColor: Colors.white,
-                    itemExtent: 35,
-                    magnification: 1.5,
-                    useMagnifier: true,
-                    onSelectedItemChanged: (index){
-                      _pickerIndex = index;
-                    },
-                    children: _subjectWidgetList
-                ),
-              ),
-            ],
-          );
-        }
-    );
-  }
-
-  Widget _androidDropDown(){
-    return DropdownButtonHideUnderline(
-      child: DropdownButton<String>(
-        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.black87),
-        isExpanded: true,
-        iconEnabledColor: MyColor.colorPrimary,
-        value: _dropDownSubject,
-        onChanged: (String value){
-          setState(() {
-            _dropDownSubject = value;
-          });
-        },
-        items: _subjectList.map<DropdownMenuItem<String>>((String str){
-          return DropdownMenuItem<String>(
-            value: str,
-            child: Text(str),
-          );
-        }).toList(),
-      ),
-    );
   }
 
   Widget _body(BuildContext context){
@@ -287,15 +235,31 @@ class _ContributionScreenState extends State<ContributionScreen> {
                                   color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.8
                               )
                           ),
-                          child: Platform.isAndroid?  _androidDropDown() :
-                          GestureDetector(
-                              onTap: (){
-                                _iosPicker();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Text(_dropDownSubject, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),),
-                              )),
+                          child: Platform.isAndroid?
+
+                          DropDownWidget(
+                            value: _dropDownSubject,
+                            onChange: (value){
+                              setState(() {
+                                _dropDownSubject = value;
+                              });
+                            },
+                            list: _subjectList,
+                          ) :
+                          IosPickerWidget(
+                            onPress: (){
+                              setState(() {
+                                _dropDownSubject = _subjectList[_pickerIndex];
+                              });
+                              Navigator.pop(context);
+                            },
+                            onSelectedItemChanged: (index){
+                              _pickerIndex = index;
+                            },
+                            fixedExtentScrollController: FixedExtentScrollController(initialItem: _pickerIndex),
+                            text: _dropDownSubject,
+                            children: _subjectWidgetList,
+                          ),
                         ),
 
                         Container(

@@ -118,6 +118,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _logOutClear()async{
+    setState(() {
+      _isLoading = true;
+    });
     await _sharepreferenceshelper.initSharePref();
     _sharepreferenceshelper.logOutSharePref();
     await _userDb.openUserDb();
@@ -129,6 +132,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
     /*Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginScreen(),
       settings: RouteSettings(name: ScreenName.LOGIN_SCREEN)
     ),(Route<dynamic>route) => false);*/
+    setState(() {
+      _isLoading = false;
+    });
     NavigatorHelper().MyNavigatorPushAndRemoveUntil(context, LoginScreen(), ScreenName.LOGIN_SCREEN);
   }
 
@@ -221,7 +227,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               GestureDetector(onTap: (){
                 //_dialogDelete(taxRecordModel.id);
-                CustomDialogWidget().CustomConfirmDialog(
+                CustomDialogWidget().customConfirmDialog(
                   context: context,
                   img: 'confirm_icon.png',
                   content: MyString.txt_are_u_sure,
@@ -363,13 +369,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     GestureDetector(
                       onTap: (){
                         //_dialogLogOut();
-                        CustomDialogWidget().CustomConfirmDialog(
+                        CustomDialogWidget().customConfirmDialog(
                           context: context,
                           content: MyString.txt_are_u_sure,
                           textNo: MyString.txt_log_out_cancel,
                           textYes: MyString.txt_log_out,
                           img: 'logout_icon.png',
                           onPress: ()async{
+                            Navigator.pop(context);
                             await _sharepreferenceshelper.initSharePref();
                             FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.USER_LOG_OUT_CLICK_EVENT,
                                 _sharepreferenceshelper.getUserUniqueKey());

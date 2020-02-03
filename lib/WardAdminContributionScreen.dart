@@ -11,14 +11,10 @@ import 'package:myotaw/myWidget/CustomButtonWidget.dart';
 import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
+import 'package:myotaw/myWidget/DropDownWidget.dart';
+import 'package:myotaw/myWidget/IosPickerWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'helper/MyoTawConstant.dart';
-import 'helper/MyoTawConstant.dart';
-import 'helper/MyoTawConstant.dart';
-import 'helper/MyoTawConstant.dart';
-import 'helper/MyoTawConstant.dart';
-import 'helper/MyoTawConstant.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
@@ -157,7 +153,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
           _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, true, _userModel.wardName,0);
       //print('sendsuggest: ${_sharepreferenceshelper.isWardAdmin()} ${_userModel.wardName}');
       if(_response.data != null){
-        CustomDialogWidget().CustomSuccessDialog(
+        CustomDialogWidget().customSuccessDialog(
             context: context,
             content: MyString.txt_suggestion_finish,
             img: 'suggestion_no_circle.png',
@@ -180,72 +176,6 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     setState(() {
       _isLoading = false;
     });
-  }
-
-   Future _iosPicker(){
-     return showCupertinoModalPopup(
-        context: context,
-        builder: (context){
-          return Column(
-            mainAxisSize: MainAxisSize.min,
-            children: <Widget>[
-              Container(
-                color: Colors.white,
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: <Widget>[
-                    FlatButton(onPressed: (){
-                      Navigator.pop(context);
-                    }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.red),)),
-                    FlatButton(onPressed: (){
-                      setState(() {
-                        _dropDownSubject = _subjectList[_pickerIndex];
-                      });
-                      print(_pickerIndex);
-                      Navigator.pop(context);
-                    }, child: Text(MyString.txt_confirm,style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.blue))),
-                  ],
-                ),
-              ),
-              Container(
-                height: 180,
-                child: CupertinoPicker(
-                    backgroundColor: Colors.white,
-                    itemExtent: 35,
-                    magnification: 1.5,
-                    useMagnifier: true,
-                    onSelectedItemChanged: (index){
-                      _pickerIndex = index;
-                    },
-                    children: _subjectWidgetList
-                ),
-              ),
-            ],
-          );
-        }
-    );
-  }
-
-  Widget _androidDropDown(){
-    return DropdownButtonHideUnderline(
-      child: DropdownButton<String>(
-        style: new TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.black87),
-        isExpanded: true,
-        iconEnabledColor: MyColor.colorPrimary,
-        value: _dropDownSubject,
-        onChanged: (String value){
-          setState(() {
-            _dropDownSubject = value;
-          });
-        },
-        items: _subjectList.map<DropdownMenuItem<String>>((String str){
-          return DropdownMenuItem<String>(
-            value: str,
-            child: Text(str),
-          );
-        }).toList(),
-      ),
-    );
   }
 
   _navigateToAdminLocationUpdateScreen()async{
@@ -473,15 +403,31 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                                   color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.8
                               )
                           ),
-                          child: Platform.isAndroid?  _androidDropDown() :
-                          GestureDetector(
-                              onTap: (){
-                                _iosPicker();
-                              },
-                              child: Padding(
-                                padding: const EdgeInsets.all(5.0),
-                                child: Text(_dropDownSubject, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),),
-                              )),
+                          child: Platform.isAndroid?
+
+                              DropDownWidget(
+                                value: _dropDownSubject,
+                                onChange: (value){
+                                  setState(() {
+                                    _dropDownSubject = value;
+                                  });
+                                },
+                                list: _subjectList,
+                              ) :
+                          IosPickerWidget(
+                            onPress: (){
+                              setState(() {
+                                _dropDownSubject = _subjectList[_pickerIndex];
+                              });
+                              Navigator.pop(context);
+                            },
+                            onSelectedItemChanged: (index){
+                              _pickerIndex = index;
+                            },
+                            fixedExtentScrollController: FixedExtentScrollController(initialItem: _pickerIndex),
+                            text: _dropDownSubject,
+                            children: _subjectWidgetList,
+                          ),
                         ),
                         Container(
                             margin: EdgeInsets.only(bottom: 10.0),

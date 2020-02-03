@@ -59,15 +59,18 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
   _getUserBillAmount()async{
     await _sharepreferenceshelper.initSharePref();
     _response = await ServiceHelper().getUserBillAmount(_sharepreferenceshelper.getUserUniqueKey());
+    print(_sharepreferenceshelper.getUserUniqueKey());
     _amountViewModel = UserBillAmountViewModel.fromJson(_response.data);
     if(_amountViewModel != null){
       _name = _amountViewModel.name;
       _amount = _amountViewModel.totalAmount;
       var list = _response.data['Log'];
-      for(var i in list){
-        setState(() {
-          _paymentLogList.add(PaymentLogModel.fromJson(i));
-        });
+      if(list != null && list.lenght>0){
+        for(var i in list){
+          setState(() {
+            _paymentLogList.add(PaymentLogModel.fromJson(i));
+          });
+        }
       }
     }
   }

@@ -11,8 +11,9 @@ class CustomButtonWidget extends StatelessWidget {
   final ShapeBorder shape;
   final double elevation;
   final BorderRadius borderRadius;
+  final bool isFlatButton;
 
-  CustomButtonWidget({this.onPress, this.child, this.color, this.shape, this.elevation, this.borderRadius}) :
+  CustomButtonWidget({this.onPress, this.child, this.color, this.shape, this.elevation, this.borderRadius, this.isFlatButton:false}) :
         assert(onPress != null), assert(child != null);
 
 
@@ -21,14 +22,22 @@ class CustomButtonWidget extends StatelessWidget {
     return Platform.isAndroid?
 
 
-    RaisedButton(
+    !isFlatButton?RaisedButton(
       onPressed: onPress,
       child: Container(
-          margin: EdgeInsets.all(10),
+          margin: EdgeInsets.all(8),
           child: child),
       color: color,
       shape: shape,
       elevation: elevation,
+    ):
+    FlatButton(
+      onPressed: onPress,
+      child: Container(
+          margin: EdgeInsets.all(5),
+          child: child),
+      color: color,
+      shape: shape,
     )
 
         :

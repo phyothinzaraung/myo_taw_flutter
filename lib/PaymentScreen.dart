@@ -1,14 +1,13 @@
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/model/InvoiceModel.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'model/PaymentLogModel.dart';
 import 'helper/SharePreferencesHelper.dart';
@@ -90,7 +89,15 @@ class _PaymentScreenState extends State<PaymentScreen> {
     try{
       _response = await ServiceHelper().postPayment(_paymentLogModel);
       if(_response.data != null){
-        _dialogPaymentSuccess();
+        CustomDialogWidget().customSuccessDialog(
+          context: context,
+          content: MyString.txt_pay_tax_success,
+          img: 'payment_success.png',
+          onPress: (){
+            Navigator.of(context).pop();
+            Navigator.of(context).pop({'isNeedRefresh' : true});
+          }
+        );
       }else{
         WarningSnackBar(_scaffoldState, MyString.txt_try_again);
       }
@@ -341,7 +348,22 @@ class _PaymentScreenState extends State<PaymentScreen> {
                           }else{
                             await _sharepreferenceshelper.initSharePref();
                             FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.ONLINE_TAX_PAYMENT_SCREEN, ClickEvent.PAY_TAX_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-                            _dialogConfirm();
+                            CustomDialogWidget().customConfirmDialog(
+                              context: context,
+                              content: MyString.txt_are_u_sure,
+                              textNo: MyString.txt_log_out,
+                              textYes: MyString.txt_pay_tax_confirm,
+                              img: 'online_tax_no_circle.png',
+                              onPress: ()async{
+                                await _sharepreferenceshelper.initSharePref();
+                                _paymentLogModel.uniqueKey = _sharepreferenceshelper.getUserUniqueKey();
+                                _paymentLogModel.useAmount = _taxAmount;
+                                _paymentLogModel.taxType = _taxType;
+                                _paymentLogModel.invoiceNo = _invoiceNoController.text;
+                                _payTax();
+                                Navigator.of(context).pop();
+                              }
+                            );
                           }
                         }else{
                           WarningSnackBar(_scaffoldState, MyString.txt_no_internet);

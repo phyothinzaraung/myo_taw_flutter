@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:url_launcher/url_launcher.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/BizLicenseModel.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -17,6 +18,14 @@ class BizLicenseDetailScreen extends StatefulWidget {
 class _BizLicenseDetailScreenState extends State<BizLicenseDetailScreen> {
   BizLicenseModel _bizLicenseModel;
   _BizLicenseDetailScreenState(this._bizLicenseModel);
+
+  _launchURL(String url) async {
+    if (await canLaunch(url)) {
+      await launch(url);
+    } else {
+      throw 'Could not launch $url';
+    }
+  }
 
   Widget _body(BuildContext context){
     return ListView(
@@ -40,7 +49,8 @@ class _BizLicenseDetailScreenState extends State<BizLicenseDetailScreen> {
                 //text requirements
                 child: Container(
                     padding: EdgeInsets.all(30.0),
-                    child: Html(data: _bizLicenseModel.requirements,)),
+                    child: Html(data: _bizLicenseModel.requirements, onLinkTap: (url) => _launchURL(url),linkStyle: TextStyle(color: Colors.redAccent, decoration: TextDecoration.underline),)
+                ),
               ),
               _bizLicenseModel.isApplyAllow==true?
               Container(

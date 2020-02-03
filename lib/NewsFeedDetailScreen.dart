@@ -66,7 +66,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                 alignment: Alignment.bottomLeft,
                 children: <Widget>[
                   CachedNetworkImage(
-                    imageUrl: i.photoUrl!=null?BaseUrl.NEWS_FEED_CONTENT_URL+i.photoUrl:'',
+                    imageUrl: BaseUrl.NEWS_FEED_CONTENT_URL+i.photoUrl,
                     imageBuilder: (context, image){
                       return Container(
                         width: double.maxFinite,
@@ -171,7 +171,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
             alignment: Alignment.bottomLeft,
             children: <Widget>[
               CachedNetworkImage(
-                imageUrl: _thumbNail,
+                imageUrl: _thumbNail??'',
                 imageBuilder: (context, image){
                   return Container(
                     width: double.maxFinite,
@@ -184,7 +184,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                 },
                 placeholder: (context, url) => Center(child: Container(
                   child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 150.0,)),
-                errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
+                errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg', fit: BoxFit.cover,height: 200,),
               ),
               Container(
                   width: double.maxFinite,
@@ -238,9 +238,14 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                   Container(
                     child: Row(mainAxisAlignment: MainAxisAlignment.start,
                       children: <Widget>[
-                        Flexible(child: Html(data: _newsfeedBody!=null?_newsfeedBody:'---', onLinkTap: (url){
-                          _launchURL(url);
-                        },))
+                        Flexible(child:
+                          Html(data: _newsfeedBody!=null?_newsfeedBody:'---',
+                            onLinkTap: (url){
+                                _launchURL(url);
+                              },
+                            linkStyle: TextStyle(color: Colors.redAccent, decoration: TextDecoration.underline),
+                            ),
+                          )
                       ],),
                   )
                 ],

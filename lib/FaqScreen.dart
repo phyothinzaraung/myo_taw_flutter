@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
@@ -14,6 +16,8 @@ import 'package:connectivity/connectivity.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'myWidget/CustomProgressIndicator.dart';
+import 'myWidget/DropDownWidget.dart';
+import 'myWidget/IosPickerWidget.dart';
 
 class FaqScreen extends StatefulWidget {
   @override
@@ -29,15 +33,26 @@ class _FaqScreenState extends State<FaqScreen> {
   List<FaqModel> _faqList = new List<FaqModel>();
   bool _isCon, _isLoading = false;
   List faqModelList = new List();
-  String _dropDownCategory = 'အားလုံး';
+  String _dropDownCategory = MyString.txt_faq_category_all;
   List<String> _categoryList = new List<String>();
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
 
+  List<Widget> _categoryPickerWidgetList = List();
+  int _categoryPickerIndex = 0;
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _categoryList = [_dropDownCategory];
+  }
+
+  _initCategroyPickerWidgetList(){
+    for(var i in _categoryList){
+      _categoryPickerWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
   }
 
   _getAllFaq(String category)async{
@@ -52,14 +67,11 @@ class _FaqScreenState extends State<FaqScreen> {
         var categoryList = _response.data['CategoryList'];
         for(var i in categoryList){
           if(i != null){
-            if(mounted){
-              setState(() {
-                //_categoryList.add(model);
-                _categoryList.add(i);
-              });
-            }
+            _categoryList.add(i);
           }
         }
+
+        _initCategroyPickerWidgetList();
         if(_response.data != null){
           faqModelList = _response.data['FAQwithPaging']['Results'];
           for(var i in faqModelList){
@@ -191,37 +203,51 @@ class _FaqScreenState extends State<FaqScreen> {
                     height: 50.0,width: double.maxFinite,
                     child: Container(
                       padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      width: double.maxFinite,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(7.0),
                           border: Border.all(
                               color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                           )
                       ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<String>(
-                          style: new TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.black87),
-                          isExpanded: true,
-                          iconEnabledColor: MyColor.colorPrimary,
-                          value: _dropDownCategory,
-                          onChanged: (String value){
-                            setState(() {
-                              _dropDownCategory = value;
-                              _isLoading = true;
-                            });
-                            if(_dropDownCategory == 'အားလုံး'){
-                              _getFaqByCategory('');
-                            }else{
-                              _getFaqByCategory(_dropDownCategory);
-                            }
-                            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_BY_CATEGORY_CLICK_EVENT, _userUniqueKey);
-                          },
-                          items: _categoryList.map<DropdownMenuItem<String>>((String str){
-                            return DropdownMenuItem<String>(
-                              value: str,
-                              child: Text(str),
-                            );
-                          }).toList(),
-                        ),
+                      child: Platform.isAndroid?
+
+                      DropDownWidget(
+                        value: _dropDownCategory,
+                        onChange: (value){
+                          setState(() {
+                            _dropDownCategory = value;
+                            _isLoading = true;
+                          });
+                          if(_dropDownCategory == MyString.txt_faq_category_all){
+                            _getFaqByCategory('');
+                          }else{
+                            _getFaqByCategory(_dropDownCategory);
+                          }
+                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_BY_CATEGORY_CLICK_EVENT, _userUniqueKey);
+                        },
+                        list: _categoryList,
+                      ) :
+                      IosPickerWidget(
+                        onPress: (){
+                          setState(() {
+                            _dropDownCategory = _categoryList[_categoryPickerIndex];
+                            _isLoading = true;
+                          });
+                          if(_dropDownCategory == MyString.txt_faq_category_all){
+                            _getFaqByCategory('');
+                          }else{
+                            _getFaqByCategory(_dropDownCategory);
+                          }
+                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_BY_CATEGORY_CLICK_EVENT, _userUniqueKey);
+                          Navigator.pop(context);
+                        },
+                        onSelectedItemChanged: (index){
+                          _categoryPickerIndex = index;
+                        },
+                        fixedExtentScrollController: FixedExtentScrollController(initialItem: _categoryPickerIndex),
+                        text: _dropDownCategory,
+                        children: _categoryPickerWidgetList,
                       ),
                     ),)),
               Expanded(child: !_isLoading?

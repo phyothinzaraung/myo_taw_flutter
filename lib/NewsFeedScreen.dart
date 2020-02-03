@@ -229,7 +229,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     String body = newsFeedModel.body;
     String date = ShowDateTimeHelper().showDateTimeDifference(newsFeedModel.accesstime);
     bool isPhoto = _isPhoto(newsFeedModel.uploadType);
-
     return Card(
       margin: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 10.0),
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
@@ -439,6 +438,15 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    _userModel!=null?_userModel.isWardAdmin==1?GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).pop();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Icon(Platform.isAndroid?Icons.arrow_back: CupertinoIcons.back,),
+                      ),
+                    ) : Container() : Container(),
                     Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
                     Text(MyString.txt_newsfeed, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                   ],

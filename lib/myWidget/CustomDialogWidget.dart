@@ -7,7 +7,7 @@ import 'CustomButtonWidget.dart';
 
 class CustomDialogWidget {
 
-  Future CustomSuccessDialog({
+  Future customSuccessDialog({
     BuildContext context,
     String content,
     String img,
@@ -38,7 +38,7 @@ class CustomDialogWidget {
     );
   }
 
-  Future CustomConfirmDialog({
+  Future customConfirmDialog({
     BuildContext context,
     String content,
     String img,
@@ -76,6 +76,38 @@ class CustomDialogWidget {
   }
 
 
+  Future customCalculateTaxDialog({
+    BuildContext context,
+    String taxValue,
+    VoidCallback onPress,
+    String titleTax
+  }){
+    return Platform.isAndroid?
+    showDialog(
+        context: context,
+        builder: (context){
+          return _androidCalculateTaxDialog(
+            context: context,
+            onPress: onPress,
+            taxValue: taxValue,
+            titleTax: titleTax
+          );
+        }
+    ) :
+    showCupertinoDialog(
+        context: context,
+        builder: (context){
+          return _iosCalculateTaxDialog(
+            context: context,
+            onPress: onPress,
+            taxValue: taxValue,
+            titleTax: titleTax
+          );
+        }
+    );
+  }
+
+
 
 
   Widget _androidSuccessDialog(
@@ -86,7 +118,7 @@ class CustomDialogWidget {
       }){
     return WillPopScope(
       child: SimpleDialog(
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
         children: <Widget>[
           Container(
             padding: EdgeInsets.all(10.0),
@@ -151,33 +183,37 @@ class CustomDialogWidget {
     VoidCallback onPress
   }){
     return SimpleDialog(
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
       children: <Widget>[
-        Column(
-          children: <Widget>[
-            Container(margin: EdgeInsets.only(bottom: 10.0),child: Image.asset('images/$img', width: 50.0, height: 50.0,)),
-            Container(margin: EdgeInsets.only(bottom: 10.0),child: Text(content,
-              style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: <Widget>[
-                Container(
-                  height: 40.0,
-                  width: 90.0,
-                  child: RaisedButton(onPressed: (){
-                    Navigator.of(context).pop();
-                  },child: Text(textNo,style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
-                    color: MyColor.colorGrey,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
-                ),
-                Container(
-                  height: 40.0,
-                  width: 90.0,
-                  child: RaisedButton(onPressed: onPress,child: Text(textYes,style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                    color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
-                ),
+        Container(
+          margin: EdgeInsets.all(10),
+          child: Column(
+            children: <Widget>[
+              Container(margin: EdgeInsets.only(bottom: 10.0),child: Image.asset('images/$img', width: 50.0, height: 50.0,)),
+              Container(margin: EdgeInsets.only(bottom: 10.0),child: Text(content,
+                style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Container(
+                    height: 40.0,
+                    width: 90.0,
+                    child: RaisedButton(onPressed: (){
+                      Navigator.of(context).pop();
+                    },child: Text(textNo,style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
+                      color: MyColor.colorGrey,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
+                  ),
+                  Container(
+                    height: 40.0,
+                    width: 90.0,
+                    child: RaisedButton(onPressed: onPress,child: Text(textYes,style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                      color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
+                  ),
 
-              ],
-            )
-          ],
+                ],
+              )
+            ],
+          ),
         )
       ],
     );
@@ -214,6 +250,105 @@ class CustomDialogWidget {
         ],
       ),
     );
+  }
+
+  Widget _androidCalculateTaxDialog({
+    BuildContext context,
+    String taxValue,
+    VoidCallback onPress,
+    String titleTax
+  }){
+    return WillPopScope(
+        child: SimpleDialog(
+          contentPadding: EdgeInsets.all(20.0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Container(
+                    margin: EdgeInsets.only(bottom: 20.0),
+                    child: Image.asset('images/calculate_tax_no_circle.png', width: 60.0, height: 60.0,)),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Text(titleTax,
+                    style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Text(taxValue,
+                    style: TextStyle(fontSize: FontSize.textSizeLarge, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 0.0),
+                  child: Text(MyString.txt_kyat,
+                    style: TextStyle(fontSize: FontSize.textSizeLarge, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Text('ဖြစ်ပါသည်။',
+                    style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Text(MyString.txt_thanks,
+                    style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
+                ),
+                CustomButtonWidget(onPress: onPress,
+                  child: Text(MyString.txt_close,
+                    style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
+                  borderRadius: BorderRadius.circular(10),
+                )
+              ],
+            )
+          ],), onWillPop: (){});
+  }
+
+  Widget _iosCalculateTaxDialog({
+    BuildContext context,
+    String taxValue,
+    VoidCallback onPress,
+    String titleTax
+  }){
+    return WillPopScope(
+        child: CupertinoAlertDialog(
+          actions: <Widget>[
+            CupertinoDialogAction(child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.red),),
+              onPressed: onPress),
+          ],
+          content: Column(
+            children: <Widget>[
+              Container(
+                  margin: EdgeInsets.only(bottom: 20.0),
+                  child: Image.asset('images/calculate_tax_no_circle.png', width: 60.0, height: 60.0,)),
+              Container(
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: Text(titleTax,
+                  style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: Text(taxValue,
+                  style: TextStyle(fontSize: FontSize.textSizeLarge, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: Text(MyString.txt_kyat,
+                  style: TextStyle(fontSize: FontSize.textSizeLarge, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: Text('ဖြစ်ပါသည်။',
+                  style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: Text(MyString.txt_thanks,
+                  style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
+              ),
+            ],
+          ),
+        ), onWillPop: (){});
   }
 
 

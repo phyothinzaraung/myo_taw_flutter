@@ -5,6 +5,7 @@ import 'package:myotaw/helper/FloodLevelFtInHelper.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/helper/NumConvertHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 
 import 'myWidget/CustomButtonWidget.dart';
@@ -194,7 +195,16 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
                     FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.GET_FLOOD_LEVEL_SCREEN, ClickEvent.GET_FLOOD_LEVEL_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                     Navigator.of(context).pop({'FloodLevel' : _floodLevel});
                   }else{
-                    _floodWarningDialog();
+                    CustomDialogWidget().customSuccessDialog(
+                      content: MyString.txt_need_flood_level,
+                      context: context,
+                      onPress: ()async{
+                        await _sharepreferenceshelper.initSharePref();
+                        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                        Navigator.of(context).pop();
+                      },
+                      img: 'warning.png',
+                    );
                   }
                 },child: Text(MyString.txt_get_flood_level,
                   style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
@@ -218,7 +228,16 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
         if(_floodLevel != 0){
           return Future.value(true);
         }else{
-          _floodWarningDialog();
+          CustomDialogWidget().customSuccessDialog(
+            content: MyString.txt_need_flood_level,
+            context: context,
+            onPress: ()async{
+              await _sharepreferenceshelper.initSharePref();
+              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+              Navigator.of(context).pop();
+            },
+            img: 'warning.png',
+          );
           return Future.value(false);
         }
       },

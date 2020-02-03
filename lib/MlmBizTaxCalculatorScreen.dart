@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
@@ -8,6 +11,8 @@ import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
 import 'myWidget/CustomButtonWidget.dart';
+import 'myWidget/DropDownWidget.dart';
+import 'myWidget/IosPickerWidget.dart';
 
 class MlmBizTaxCalculatorScreen extends StatefulWidget {
   @override
@@ -23,6 +28,10 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
 
+  List<Widget> _bizLicenseTypeWidgetList = List();
+  List<Widget> _bizTypeWidgetList = List();
+  int _bizLicenseTypePickerIndex, _bizTypePickerIndex;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -30,6 +39,29 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
     _bizLicenseTypeList = [_dropDownBizLicenseType];
     _bizLicenseTypeList.addAll(MyStringList.biz_mlm_license);
     _bizList = [_dropDownBizType];
+
+    _bizLicenseTypePickerIndex = 0;
+    _bizTypePickerIndex = 0;
+
+    _initBizLicenseTypeIosPickerWidgetList();
+  }
+
+  _initBizLicenseTypeIosPickerWidgetList(){
+    for(var i in _bizLicenseTypeList){
+      _bizLicenseTypeWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
+  }
+
+  _initBizTypeIosPickerWidgetList(){
+    for(var i in _bizList){
+      _bizTypeWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
   }
 
   _getBizByLicenseType(){
@@ -53,6 +85,8 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
         });
         break;
     }
+
+    _initBizTypeIosPickerWidgetList();
   }
 
   String _getTaxRange(){
@@ -333,36 +367,53 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10.0),
                         margin: EdgeInsets.only(bottom: 20),
+                        width: double.maxFinite,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(7.0),
                             border: Border.all(
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                            isExpanded: true,
-                            iconEnabledColor: MyColor.colorPrimary,
-                            value: _dropDownBizLicenseType,
-                            onChanged: (String value){
-                              setState(() {
-                                _dropDownBizLicenseType = value;
-                              });
-                              _bizList.clear();
-                              setState(() {
-                                _dropDownBizType = MyString.txt_no_selected;
-                              });
-                              _bizList = [_dropDownBizType];
-                              _getBizByLicenseType();
-                            },
-                            items: _bizLicenseTypeList.map<DropdownMenuItem<String>>((String str){
-                              return DropdownMenuItem<String>(
-                                value: str,
-                                child: Text(str),
-                              );
-                            }).toList(),
-                          ),
+                        child: Platform.isAndroid?
+
+                        DropDownWidget(
+                          value: _dropDownBizLicenseType,
+                          onChange: (value){
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            setState(() {
+                              _dropDownBizLicenseType = value;
+                            });
+                            _bizList.clear();
+                            _bizTypeWidgetList.clear();
+                            setState(() {
+                              _dropDownBizType = MyString.txt_no_selected;
+                            });
+                            _bizList = [_dropDownBizType];
+                            _getBizByLicenseType();
+                          },
+                          list: _bizLicenseTypeList,
+                        )
+                            :
+                        IosPickerWidget(
+                          text: _dropDownBizLicenseType,
+                          fixedExtentScrollController: FixedExtentScrollController(initialItem: _bizLicenseTypePickerIndex),
+                          onSelectedItemChanged: (index){
+                            _bizLicenseTypePickerIndex = index;
+                          },
+                          onPress: (){
+                            setState(() {
+                              _dropDownBizLicenseType = _bizLicenseTypeList[_bizLicenseTypePickerIndex];
+                            });
+                            _bizList.clear();
+                            _bizTypeWidgetList.clear();
+                            setState(() {
+                              _dropDownBizType = MyString.txt_no_selected;
+                            });
+                            _bizList = [_dropDownBizType];
+                            _getBizByLicenseType();
+                            Navigator.pop(context);
+                          },
+                          children: _bizLicenseTypeWidgetList,
                         ),
                       ),
                       Container(
@@ -372,30 +423,39 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
                       ),
                       Container(
                         padding: EdgeInsets.symmetric(horizontal: 10.0),
+                        width: double.maxFinite,
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(7.0),
                             border: Border.all(
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: DropdownButtonHideUnderline(
-                          child: DropdownButton<String>(
-                            style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                            isExpanded: true,
-                            iconEnabledColor: MyColor.colorPrimary,
-                            value: _dropDownBizType,
-                            onChanged: (String value){
-                              setState(() {
-                                _dropDownBizType = value;
-                              });
-                            },
-                            items: _bizList.map<DropdownMenuItem<String>>((String str){
-                              return DropdownMenuItem<String>(
-                                value: str,
-                                child: Text(str),
-                              );
-                            }).toList(),
-                          ),
+                        child: Platform.isAndroid?
+
+                        DropDownWidget(
+                          value: _dropDownBizType,
+                          onChange: (value){
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            setState(() {
+                              _dropDownBizType = value;
+                            });
+                          },
+                          list: _bizList,
+                        )
+                            :
+                        IosPickerWidget(
+                          text: _dropDownBizType,
+                          fixedExtentScrollController: FixedExtentScrollController(initialItem: _bizTypePickerIndex),
+                          onSelectedItemChanged: (index){
+                            _bizTypePickerIndex = index;
+                          },
+                          onPress: (){
+                            setState(() {
+                              _dropDownBizType = _bizList[_bizTypePickerIndex];
+                            });
+                            Navigator.pop(context);
+                          },
+                          children: _bizTypeWidgetList,
                         ),
                       ),
                       Container(
@@ -405,7 +465,15 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
                         child: CustomButtonWidget(
                           onPress: ()async{
                             if(_dropDownBizType != MyString.txt_no_selected && _dropDownBizLicenseType != MyString.txt_no_selected){
-                              _calculateTaxDialog();
+                              CustomDialogWidget().customCalculateTaxDialog(
+                                context: context,
+                                titleTax: MyString.txt_biz_tax_range,
+                                taxValue: _getTaxRange(),
+                                onPress: (){
+                                  Navigator.of(context).pop();
+                                  clear();
+                                }
+                              );
                               await _sharepreferenceshelper.initSharePref();
                               FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.MLM_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
                                   _sharepreferenceshelper.getUserUniqueKey());
