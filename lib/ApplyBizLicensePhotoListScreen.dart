@@ -17,6 +17,7 @@ import 'helper/SharePreferencesHelper.dart';
 import 'helper/ServiceHelper.dart';
 import 'PhotoDetailScreen.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'myWidget/CustomProgressIndicator.dart';
 import 'myWidget/NoConnectionWidget.dart';
 
 class ApplyBizLicensePhotoListScreen extends StatefulWidget {
@@ -157,25 +158,6 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
     });
 
   }
-
-  Widget _modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
   
   @override
   Widget build(BuildContext context) {
@@ -265,8 +247,9 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
     );
 
     return CustomScaffoldWidget(
-        title: MyString.txt_apply_biz_license_photo,
-        body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: _modalProgressIndicator(),child: _asyncLoader),
+        title: Text(MyString.txt_apply_biz_license_photo,
+          style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
+        body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: CustomProgressIndicatorWidget(),child: _asyncLoader),
         globalKey: _globalKey,
     );
     /*return Scaffold(

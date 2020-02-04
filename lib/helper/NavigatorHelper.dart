@@ -19,7 +19,7 @@ class NavigatorHelper{
 
   Future<dynamic> MyNavigatorPushAndRemoveUntil(BuildContext context, Widget screen, String screenName){
 
-    _navigator = Navigator.of(context).pushAndRemoveUntil(Platform.isAndroid? MaterialPageRoute(builder: (context) => screen,
+    _navigator = Navigator.of(context).pushAndRemoveUntil( Platform.isAndroid? MaterialPageRoute(builder: (context) => screen,
         settings: RouteSettings(name: screenName)
     ) :
     CupertinoPageRoute(builder: (context) => screen,

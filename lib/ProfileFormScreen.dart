@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -13,6 +16,10 @@ import 'helper/ServiceHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:connectivity/connectivity.dart';
 import 'Database/UserDb.dart';
+import 'myWidget/CustomButtonWidget.dart';
+import 'myWidget/CustomProgressIndicator.dart';
+import 'myWidget/DropDownWidget.dart';
+import 'myWidget/IosPickerWidget.dart';
 
 class ProfileFormScreen extends StatefulWidget {
   bool isAdmin;
@@ -37,6 +44,10 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   GlobalKey<ScaffoldState> _scaffoldState = new GlobalKey<ScaffoldState>();
   UserDb _userDb = UserDb();
 
+  List<Widget> _stateWidgetList = List();
+  List<Widget> _townshipWidgetList = List();
+  int _statePickerIndex, _townshipPickerIndex;
+
   _ProfileFormScreenState(this._isWardAdmin);
 
   @override
@@ -47,6 +58,27 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     _stateList = [_dropDownState];
     _townshipList = [_dropDownTownship];
     _init();
+
+    _statePickerIndex = 0;
+    _townshipPickerIndex = 0;
+  }
+
+  _initStateIosPickerWidgetList(){
+    for(var i in _stateList){
+      _stateWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
+  }
+
+  _initTownshipIosPickerWidgetList(){
+    for(var i in _townshipList){
+      _townshipWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
   }
 
   _getUser()async{
@@ -87,6 +119,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
         _stateList.add(i);
         print('stateList: ${i}');
       }
+      _initStateIosPickerWidgetList();
 
       //bind user data
       if(_userModel.name != null){
@@ -95,11 +128,22 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
         _dropDownState = _userModel.state;
         _dropDownTownship = _userModel.township;
         await _getTownshipByState(_userModel.state);
+        _statePickerIndex = _stateList.indexOf(_userModel.state);
+        _townshipPickerIndex = _townshipList.indexOf(_userModel.township);
       }
       print(_userModel.toJson());
     }catch (e){
       print(e);
-      _getFailUserInfoDialogBox();
+      //_getFailUserInfoDialogBox();
+      CustomDialogWidget().customSuccessDialog(
+        context: context,
+        content: MyString.txt_no_internet,
+        img: 'warning.png',
+        onPress: (){
+          Navigator.of(context).pop();
+          _init();
+        }
+      );
     }
     setState(() {
       _isLoading = false;
@@ -112,9 +156,15 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     await _locationDb.closeLocationDb();
 
     for(var i in township){
-      _townshipList.add(i);
-      print('townshipList: ${i}');
+      setState(() {
+        _townshipList.add(i);
+        print('townshipList: ${i}');
+      });
     }
+    setState(() {
+
+      _initTownshipIosPickerWidgetList();
+    });
   }
 
   Widget modalProgressIndicator(){
@@ -159,7 +209,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                       Container(
                         width: 200.0,
                         height: 45.0,
-                        child: RaisedButton(onPressed: (){
+                        child: CustomButtonWidget(onPress: (){
                           Navigator.of(context).pop();
                           _init();
 
@@ -198,7 +248,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                       Container(
                         width: 200.0,
                         height: 45.0,
-                        child: RaisedButton(onPressed: ()async{
+                        child: CustomButtonWidget(onPress: ()async{
                           Navigator.of(context).pop();
                           Navigator.of(context).pop({'isNeedRefresh' : true});
 
@@ -232,7 +282,15 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
         await _userDb.insert(UserModel.fromJson(_response.data));
         await _userDb.closeUserDb();
         //_sharepreferenceshelper.setIsWardAdmin(_userModel.isWardAdmin==1? true : false);
-        _finishDialogBox();
+        CustomDialogWidget().customSuccessDialog(
+          context: context,
+          content: MyString.txt_profile_complete,
+          img: 'isvalid.png',
+          onPress: (){
+            Navigator.of(context).pop();
+            Navigator.of(context).pop({'isNeedRefresh' : true});
+          },
+        );
       }else{
         WarningSnackBar(_scaffoldState, MyString.txt_try_again);
       }
@@ -249,7 +307,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     return Center(
       child: ModalProgressHUD(
         inAsyncCall: _isLoading,
-        progressIndicator: modalProgressIndicator(),
+        progressIndicator: CustomProgressIndicatorWidget(),
         child: ListView(
           children: <Widget>[
             Stack(
@@ -326,37 +384,51 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                 //dropdown state
                                 _isWardAdmin?Container():Container(
                                   padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                  width: double.maxFinite,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(7.0),
                                       border: Border.all(
                                           color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                                       )
                                   ),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                                      isExpanded: true,
-                                      iconEnabledColor: MyColor.colorPrimary,
-                                      value: _dropDownState,
-                                      onChanged: (String value){
-                                        FocusScope.of(context).requestFocus(FocusNode());
-                                        setState(() {
-                                          _dropDownState = value;
-                                        });
-                                        _townshipList.clear();
-                                        setState(() {
-                                          _dropDownTownship = 'နေရပ်ရွေးပါ';
-                                        });
-                                        _townshipList = [_dropDownTownship];
-                                        _getTownshipByState(value);
-                                      },
-                                      items: _stateList.map<DropdownMenuItem<String>>((String str){
-                                        return DropdownMenuItem<String>(
-                                          value: str,
-                                          child: Text(str),
-                                        );
-                                      }).toList(),
-                                    ),
+                                  child: Platform.isAndroid?
+
+                                  DropDownWidget(
+                                    value: _dropDownState,
+                                    onChange: (value){
+                                      FocusScope.of(context).requestFocus(FocusNode());
+                                      setState(() {
+                                        _dropDownState = value;
+                                      });
+                                      _townshipList.clear();
+                                      setState(() {
+                                        _dropDownTownship = MyString.txt_choose_state_township;
+                                      });
+                                      _townshipList = [_dropDownTownship];
+                                      _getTownshipByState(value);
+                                    },
+                                    list: _stateList,
+                                  ) :
+                                  IosPickerWidget(
+                                    onPress: (){
+                                      setState(() {
+                                        _dropDownState = _stateList[_statePickerIndex];
+                                      });
+                                      _townshipList.clear();
+                                      _townshipWidgetList.clear();
+                                      setState(() {
+                                        _dropDownTownship = MyString.txt_choose_state_township;
+                                      });
+                                      _townshipList = [_dropDownTownship];
+                                      _getTownshipByState(_dropDownState);
+                                      Navigator.pop(context);
+                                    },
+                                    onSelectedItemChanged: (index){
+                                      _statePickerIndex = index;
+                                    },
+                                    fixedExtentScrollController: FixedExtentScrollController(initialItem: _statePickerIndex),
+                                    text: _dropDownState,
+                                    children: _stateWidgetList,
                                   ),
                                 ),
 
@@ -365,40 +437,46 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                     child: Text(MyString.txt_user_township, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
                                 _isWardAdmin?Container():Container(
                                   padding: EdgeInsets.symmetric(horizontal: 10.0),
+                                  width: double.maxFinite,
                                   decoration: BoxDecoration(
                                       borderRadius: BorderRadius.circular(7.0),
                                       border: Border.all(
                                           color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                                       )
                                   ),
-                                  child: DropdownButtonHideUnderline(
-                                    child: DropdownButton<String>(
-                                      style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                                      isExpanded: true,
-                                      iconEnabledColor: MyColor.colorPrimary,
-                                      value: _dropDownTownship,
-                                      onChanged: (String value){
-                                        FocusScope.of(context).requestFocus(FocusNode());
-                                        setState(() {
-                                          _dropDownTownship = value;
-                                        });
-                                      },
-                                      items: _townshipList.map<DropdownMenuItem<String>>((String str){
-                                        return DropdownMenuItem<String>(
-                                          value: str,
-                                          child: Text(str),
-                                        );
-                                      }).toList(),
-                                    ),
+                                  child: Platform.isAndroid?
+
+                                  DropDownWidget(
+                                    value: _dropDownTownship,
+                                    onChange: (value){
+                                      FocusScope.of(context).requestFocus(FocusNode());
+                                      setState(() {
+                                        _dropDownTownship = value;
+                                      });
+                                    },
+                                    list: _townshipList,
+                                  ) :
+                                  IosPickerWidget(
+                                    onPress: (){
+                                      setState(() {
+                                        _dropDownTownship = _townshipList[_townshipPickerIndex];
+                                      });
+                                      Navigator.pop(context);
+                                    },
+                                    onSelectedItemChanged: (index){
+                                      _townshipPickerIndex = index;
+                                    },
+                                    fixedExtentScrollController: FixedExtentScrollController(initialItem: _townshipPickerIndex),
+                                    text: _dropDownTownship,
+                                    children: _townshipWidgetList,
                                   ),
                                 ),
 
                                 Container(
                                   margin: EdgeInsets.only(top: 40.0),
                                   width: double.maxFinite,
-                                  height: 50.0,
-                                  child: RaisedButton(
-                                    onPressed: ()async{
+                                  child: CustomButtonWidget(
+                                    onPress: ()async{
                                       await _checkCon();
                                       if(_isCon){
                                         if(_nameController.text.isNotEmpty && _addressController.text.isNotEmpty && _dropDownState != MyString.txt_choose_state_township &&
@@ -413,6 +491,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                       }
 
                                     },color: MyColor.colorPrimary,
+                                    borderRadius: BorderRadius.circular(10),
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8.0)
                                     ),
@@ -437,7 +516,8 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: MyString.title_profile,
+      title: Text(MyString.title_profile,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(),
       globalKey: _scaffoldState,
     );

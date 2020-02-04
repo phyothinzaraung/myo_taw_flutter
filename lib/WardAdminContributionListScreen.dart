@@ -361,6 +361,15 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
+                    _userModel!=null?_userModel.isWardAdmin==1?GestureDetector(
+                      onTap: (){
+                        Navigator.of(context).pop();
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Icon(Platform.isAndroid?Icons.arrow_back: CupertinoIcons.back,),
+                      ),
+                    ) : Container() : Container(),
                     Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
                     Text(MyString.txt_contributions, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                   ],

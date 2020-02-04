@@ -132,7 +132,8 @@ class _DaoScreenState extends State<DaoScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: display.isEmpty?MyString.txt_municipal:MyString.txt_tax,
+      title: Text(display.isEmpty?MyString.txt_municipal:MyString.txt_tax,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _asyncLoader,
     );
     /*return Scaffold(

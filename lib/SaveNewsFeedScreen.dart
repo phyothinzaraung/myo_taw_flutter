@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -9,6 +13,7 @@ import 'model/SaveNewsFeedModel.dart';
 import 'Database/SaveNewsFeedDb.dart';
 import 'helper/ShowDateTimeHelper.dart';
 import 'SaveNewsFeedDetailScreen.dart';
+import 'myWidget/CustomButtonWidget.dart';
 
 class SaveNewsFeedScreen extends StatefulWidget {
   @override
@@ -62,7 +67,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: <Widget>[
-                        RaisedButton(onPressed: ()async{
+                        CustomButtonWidget(onPress: ()async{
                             _deleteNewsFeed(id);
                             setState(() {
                               _saveNewsFeedList.removeAt(i);
@@ -78,7 +83,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                             borderRadius: BorderRadius.all(Radius.circular(5))
                           ),
                         ),
-                        RaisedButton(onPressed: (){
+                        CustomButtonWidget(onPress: (){
                             Navigator.of(context).pop();
                         },child: Text(MyString.txt_delete_cancel, style: TextStyle(fontSize: FontSize.textSizeSmall),),color: MyColor.colorGrey,)
                       ],
@@ -114,11 +119,15 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                       margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
                       child: Row(
                         children: <Widget>[
-                          model.contentType==MyString.NEWS_FEED_CONTENT_TYPE_PHOTO?ClipRRect(
-                            child: model.photoUrl!=null?
-                            Image.network(BaseUrl.NEWS_FEED_CONTENT_URL+model.photoUrl, width: 75.0, height: 70.0, fit: BoxFit.cover,):
-                            Image.asset('images/placeholder_newsfeed.jpg', width: 75.0, height: 70.0, fit: BoxFit.cover,),
-                            borderRadius: BorderRadius.circular(7.0),
+                          model.contentType==MyString.NEWS_FEED_CONTENT_TYPE_PHOTO?
+                          Hero(
+                            tag: model.id,
+                            child: ClipRRect(
+                              child: model.photoUrl!=null?
+                              Image.network(BaseUrl.NEWS_FEED_CONTENT_URL+model.photoUrl, width: 75.0, height: 70.0, fit: BoxFit.cover,):
+                              Image.asset('images/placeholder_newsfeed.jpg', width: 75.0, height: 70.0, fit: BoxFit.cover,),
+                              borderRadius: BorderRadius.circular(7.0),
+                            ),
                           ):
                           ClipRRect(
                             child: Stack(
@@ -149,8 +158,25 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                             ),
                           ),
                           GestureDetector(onTap: (){
-                            _dialogDelete(model.id, i);
-                          },child: Icon(Icons.delete, color: MyColor.colorPrimary,))
+                            //_dialogDelete(model.id, i);
+                            CustomDialogWidget().customConfirmDialog(
+                              context: context,
+                              content: MyString.txt_are_u_sure,
+                              img: 'confirm_icon.png',
+                              textNo: MyString.txt_delete_cancel,
+                              textYes: MyString.txt_delete,
+                              onPress: ()async{
+                                _deleteNewsFeed(model.id);
+                                setState(() {
+                                  _saveNewsFeedList.removeAt(i);
+                                });
+                                Navigator.of(context).pop();
+                                await _sharepreferenceshelper.initSharePref();
+                                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.SAVED_NEWS_FEED_SCREEN, ClickEvent.DELETE_SAVED_NEWS_FEED_CLICK_EVENT,
+                                    _sharepreferenceshelper.getUserUniqueKey());
+                              }
+                            );
+                          },child: Icon(Platform.isAndroid? Icons.delete : CupertinoIcons.delete_solid, color: Colors.red,))
                         ],
                       ),
                     ),
@@ -166,7 +192,8 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: MyString.title_save_nf,
+      title: Text(MyString.title_save_nf,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: Container(
           child: _saveNewsFeedList.isNotEmpty?_listView():
           Container(

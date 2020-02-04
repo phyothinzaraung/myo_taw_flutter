@@ -17,6 +17,7 @@ import 'model/UserModel.dart';
 import 'TopUpRecordListScreen.dart';
 import 'model/SmartWaterMeterLogModel.dart';
 import 'helper/ShowDateTimeHelper.dart';
+import 'myWidget/CustomButtonWidget.dart';
 
 class SmartWaterMeterScreen extends StatefulWidget {
   UserModel _userModel;
@@ -185,7 +186,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
                       margin: EdgeInsets.only(right: 2.5),
                       height: 45.0,
                       width: double.maxFinite,
-                      child: RaisedButton(onPressed: ()async{
+                      child: CustomButtonWidget(onPress: ()async{
 
                         /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpRecordListScreen(_userModel),
                           settings: RouteSettings(name: ScreenName.TOP_UP_RECORD_LIST_SCREEN)
@@ -313,7 +314,8 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: MyString.txt_smart_water_meter,
+      title: Text(MyString.txt_smart_water_meter,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _asyncLoader,
       globalKey: _globalKey,
     );

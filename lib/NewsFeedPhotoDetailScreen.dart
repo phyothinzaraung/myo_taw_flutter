@@ -26,7 +26,7 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     addPhoto();
     return CustomScaffoldWidget(
-      title: '',
+      title: null,
       body: Center(
         child: _photoList.isNotEmpty?
         PageView(

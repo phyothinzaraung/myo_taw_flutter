@@ -1,8 +1,12 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/LoginScreen.dart';
 import 'package:myotaw/PhotoDetailScreen.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
@@ -28,6 +32,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'ProfilePhotoUploadScreen.dart';
 import 'NewTaxRecordScreen.dart';
 import 'ApplyBizLicenseListScreen.dart';
+import 'myWidget/CustomButtonWidget.dart';
+import 'myWidget/CustomProgressIndicator.dart';
 
 class ProfileScreen extends StatefulWidget {
   @override
@@ -112,6 +118,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _logOutClear()async{
+    setState(() {
+      _isLoading = true;
+    });
     await _sharepreferenceshelper.initSharePref();
     _sharepreferenceshelper.logOutSharePref();
     await _userDb.openUserDb();
@@ -123,10 +132,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
     /*Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginScreen(),
       settings: RouteSettings(name: ScreenName.LOGIN_SCREEN)
     ),(Route<dynamic>route) => false);*/
+    setState(() {
+      _isLoading = false;
+    });
     NavigatorHelper().MyNavigatorPushAndRemoveUntil(context, LoginScreen(), ScreenName.LOGIN_SCREEN);
   }
 
-  _dialogLogOut(){
+  /*_dialogLogOut(){
     showDialog(context: (context),
         builder: (context){
           return SimpleDialog(
@@ -142,7 +154,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         height: 40.0,
                         width: 90.0,
-                        child: RaisedButton(onPressed: ()async{
+                        child: CustomButtonWidget(onPressed: ()async{
                           await _sharepreferenceshelper.initSharePref();
                           FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.USER_LOG_OUT_CLICK_EVENT,
                               _sharepreferenceshelper.getUserUniqueKey());
@@ -153,7 +165,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       Container(
                         height: 40.0,
                         width: 90.0,
-                        child: RaisedButton(onPressed: (){
+                        child: CustomButtonWidget(onPressed: (){
                           Navigator.of(context).pop();
                         },child: Text(MyString.txt_log_out_cancel,style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                           color: MyColor.colorGrey,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
@@ -167,26 +179,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         }
     );
-  }
-
-  Widget modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
+  }*/
 
   void _deleteTaxRecord(int id)async{
     try{
@@ -199,47 +192,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _isLoading = false;
     });
-  }
-
-  _dialogDelete(int id){
-    showDialog(
-        context: context,
-        builder: (ctxt){
-          return Dialog(
-            child: Container(
-              margin: EdgeInsets.all(10.0),
-              height: 160.0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(margin: EdgeInsets.only(bottom: 10.0),child: Image.asset('images/confirm_icon.png', width: 60.0, height: 60.0,)),
-                  Text(MyString.txt_are_u_sure, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
-                  Container(
-                    margin: EdgeInsets.only(top: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        RaisedButton(onPressed: ()async{
-                          Navigator.of(context).pop();
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          _deleteTaxRecord(id);
-                          await _sharepreferenceshelper.initSharePref();
-                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.TAX_RECORD_DELETE_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-                        },child: Text(MyString.txt_delete,
-                          style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,),
-                        RaisedButton(onPressed: (){
-                          Navigator.of(context).pop();
-                        },child: Text(MyString.txt_delete_cancel, style: TextStyle(fontSize: FontSize.textSizeSmall),),color: MyColor.colorGrey,)
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        });
   }
 
   Widget _taxRecordList(int i){
@@ -274,8 +226,24 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 ),
               ),
               GestureDetector(onTap: (){
-                _dialogDelete(taxRecordModel.id);
-              },child: Icon(Icons.delete, color: MyColor.colorPrimary,))
+                //_dialogDelete(taxRecordModel.id);
+                CustomDialogWidget().customConfirmDialog(
+                  context: context,
+                  img: 'confirm_icon.png',
+                  content: MyString.txt_are_u_sure,
+                  textYes: MyString.txt_delete,
+                  textNo: MyString.txt_delete_cancel,
+                  onPress: ()async{
+                    Navigator.of(context).pop();
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    _deleteTaxRecord(taxRecordModel.id);
+                    await _sharepreferenceshelper.initSharePref();
+                    FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.TAX_RECORD_DELETE_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                  }
+                );
+              },child: Icon(Platform.isAndroid?Icons.delete :CupertinoIcons.delete_solid, color: Colors.red,))
             ],
           ),
         ),
@@ -400,7 +368,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Divider(color: MyColor.colorPrimary,),
                     GestureDetector(
                       onTap: (){
-                        _dialogLogOut();
+                        //_dialogLogOut();
+                        CustomDialogWidget().customConfirmDialog(
+                          context: context,
+                          content: MyString.txt_are_u_sure,
+                          textNo: MyString.txt_log_out_cancel,
+                          textYes: MyString.txt_log_out,
+                          img: 'logout_icon.png',
+                          onPress: ()async{
+                            Navigator.pop(context);
+                            await _sharepreferenceshelper.initSharePref();
+                            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.USER_LOG_OUT_CLICK_EVENT,
+                                _sharepreferenceshelper.getUserUniqueKey());
+                            _logOutClear();
+                          }
+                        );
                       },
                       child: Container(
                         child: Row(
@@ -428,10 +410,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Container(
                 margin: EdgeInsets.only(bottom: 20.0),
-                height: 50.0,
-                width: 300.0,
                 //new tax record
-                child: RaisedButton(onPressed: (){
+                child: CustomButtonWidget(onPress: (){
                   _navigateToNewTaxRecordScreen();
                 },child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
@@ -439,7 +419,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container(margin: EdgeInsets.only(right: 10.0),child: Text(MyString.txt_tax_new_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
                     Icon(Icons.add, color: Colors.white,)
                   ],
-                ),color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
+                ),color: MyColor.colorPrimary,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+                  borderRadius: BorderRadius.circular(8),
+                ),
               )
             ],
           ),
@@ -539,10 +522,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: MyString.txt_profile,
+      title: Text(MyString.txt_profile,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: ModalProgressHUD(
           inAsyncCall: _isLoading,
-          progressIndicator: modalProgressIndicator(),
+          progressIndicator: CustomProgressIndicatorWidget(),
           child: _asyncLoader),
       globalKey: _globalKey,
     );

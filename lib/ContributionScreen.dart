@@ -3,8 +3,8 @@ import 'dart:io';
 import 'package:location/location.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:myotaw/myWidget/CustomButtonWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'helper/FireBaseAnalyticsHelper.dart';
@@ -13,9 +13,13 @@ import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
-import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
+import 'myWidget/CustomDialogWidget.dart';
+import 'myWidget/CustomProgressIndicator.dart';
+import 'myWidget/DropDownWidget.dart';
+import 'myWidget/IosPickerWidget.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
+import 'package:flutter/cupertino.dart';
 
 class ContributionScreen extends StatefulWidget {
   @override
@@ -36,6 +40,8 @@ class _ContributionScreenState extends State<ContributionScreen> {
   StreamSubscription<LocationData> _streamSubscription;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   TextEditingController _messController = TextEditingController();
+  List<Widget> _subjectWidgetList = List();
+  int _pickerIndex = 0;
 
   @override
   void initState() {
@@ -43,6 +49,17 @@ class _ContributionScreenState extends State<ContributionScreen> {
     super.initState();
     _subjectList = [_dropDownSubject,];
     _subjectList.addAll(MyStringList.suggestion_subject);
+    _locationInit();
+    for(var i in _subjectList){
+      _subjectWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
+    _isLoading = false;
+  }
+
+  void _locationInit(){
     _location.changeSettings(accuracy: LocationAccuracy.HIGH, interval: 3000, distanceFilter: 0);
     _location.serviceEnabled().then((isEnable){
       if(!isEnable){
@@ -63,8 +80,6 @@ class _ContributionScreenState extends State<ContributionScreen> {
         });
       }
     });
-
-    _isLoading = false;
   }
 
   _checkCon()async{
@@ -94,7 +109,18 @@ class _ContributionScreenState extends State<ContributionScreen> {
           _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, false, _sharepreferenceshelper.getWardName(),0);
       //print('sendsuggest: ${_mess} ${_dropDownSubject} ${_lat} ${_lng}');
       if(_response.data != null){
-        _finishDialogBox();
+        CustomDialogWidget().customSuccessDialog(
+            context: context,
+            content: MyString.txt_suggestion_finish,
+            img: 'suggestion_no_circle.png',
+            onPress: ()async{
+              FocusScope.of(context).requestFocus(FocusNode());
+              await _sharepreferenceshelper.initSharePref();
+              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+              Navigator.of(context).pop();
+              Navigator.of(context).pop({'isNeedRefresh' : true});
+            }
+        );
       }else{
         WarningSnackBar(_globalKey, MyString.txt_try_again);
       }
@@ -132,7 +158,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
                       Container(
                         width: 200.0,
                         height: 45.0,
-                        child: RaisedButton(onPressed: ()async{
+                        child: CustomButtonWidget(onPress: ()async{
                           FocusScope.of(context).requestFocus(FocusNode());
                           Navigator.of(context).pop();
                           Navigator.of(context).pop();
@@ -149,29 +175,10 @@ class _ContributionScreenState extends State<ContributionScreen> {
         }, barrierDismissible: false);
   }
 
-  Widget modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.black))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _body(BuildContext context){
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
-      progressIndicator: modalProgressIndicator(),
+      progressIndicator: CustomProgressIndicatorWidget(),
       child: ListView(
         children: <Widget>[
           headerTitleWidget(MyString.title_suggestion, 'suggestion_no_circle'),
@@ -188,10 +195,15 @@ class _ContributionScreenState extends State<ContributionScreen> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
+
                         Container(
-                          height: 50,
                           margin: EdgeInsets.only(bottom: 10.0),
-                          child: RaisedButton(onPressed: ()async{
+                          decoration: Platform.isAndroid? null :
+                          BoxDecoration(
+                              border: Border.all(color: MyColor.colorPrimary, width: 1),
+                              borderRadius: BorderRadius.circular(10)
+                          ),
+                          child: CustomButtonWidget(onPress: ()async{
                             camera();
                             await _sharepreferenceshelper.initSharePref();
                             FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.CONTRIBUTION_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
@@ -205,44 +217,56 @@ class _ContributionScreenState extends State<ContributionScreen> {
                               Text(MyString.txt_upload_photo_camera, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
                             ],
                           ),color: Colors.white,elevation: 5.0,
+                            borderRadius: BorderRadius.circular(10),
                             shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
                         ),
+
                         Container(
                             margin: EdgeInsets.only(bottom: 10.0),
                             child: Text(MyString.title_suggestion_subject, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+
                         Container(
-                          margin: EdgeInsets.only(bottom: 10.0),
+                          margin: EdgeInsets.only(bottom: 20.0),
+                          width: double.maxFinite,
                           padding: EdgeInsets.symmetric(horizontal: 7.0),
                           decoration: BoxDecoration(
                               borderRadius: BorderRadius.circular(7.0),
                               border: Border.all(
-                                  color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
+                                  color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.8
                               )
                           ),
-                          child: DropdownButtonHideUnderline(
-                            child: DropdownButton<String>(
-                              style: new TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),
-                              isExpanded: true,
-                              iconEnabledColor: MyColor.colorPrimary,
-                              value: _dropDownSubject,
-                              onChanged: (String value){
-                                setState(() {
-                                  _dropDownSubject = value;
-                                });
-                              },
-                              items: _subjectList.map<DropdownMenuItem<String>>((String str){
-                                return DropdownMenuItem<String>(
-                                  value: str,
-                                  child: Text(str),
-                                );
-                              }).toList(),
-                            ),
+                          child: Platform.isAndroid?
+
+                          DropDownWidget(
+                            value: _dropDownSubject,
+                            onChange: (value){
+                              setState(() {
+                                _dropDownSubject = value;
+                              });
+                            },
+                            list: _subjectList,
+                          ) :
+                          IosPickerWidget(
+                            onPress: (){
+                              setState(() {
+                                _dropDownSubject = _subjectList[_pickerIndex];
+                              });
+                              Navigator.pop(context);
+                            },
+                            onSelectedItemChanged: (index){
+                              _pickerIndex = index;
+                            },
+                            fixedExtentScrollController: FixedExtentScrollController(initialItem: _pickerIndex),
+                            text: _dropDownSubject,
+                            children: _subjectWidgetList,
                           ),
                         ),
+
                         Container(
                             margin: EdgeInsets.only(bottom: 10.0),
                             child: Text(MyString.title_suggestion_mess,
                               style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+
                         Container(
                           margin: EdgeInsets.only(top: 5.0, bottom: 20.0),
                           padding: EdgeInsets.only(left: 10.0, right: 10.0),
@@ -260,11 +284,11 @@ class _ContributionScreenState extends State<ContributionScreen> {
                             style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                           ),
                         ),
+
                         Container(
-                          height: 45.0,
                           width: double.maxFinite,
                           margin: EdgeInsets.only(bottom: 20.0),
-                          child: RaisedButton(onPressed: ()async{
+                          child: CustomButtonWidget(onPress: ()async{
 
                             await _checkCon();
                             if(_isCon){
@@ -291,8 +315,12 @@ class _ContributionScreenState extends State<ContributionScreen> {
                             }
 
                           }, child: Text(MyString.txt_save_user_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                            color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+                            color: MyColor.colorPrimary,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                         )
+
                       ],
                     ),
                   )
@@ -308,7 +336,8 @@ class _ContributionScreenState extends State<ContributionScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: MyString.txt_suggestion,
+      title: Text(MyString.txt_suggestion,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
       globalKey: _globalKey,
     );
@@ -339,7 +368,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
                           Container(
                             height: 50,
                             margin: EdgeInsets.only(bottom: 10.0),
-                            child: RaisedButton(onPressed: ()async{
+                            child: CustomButtonWidget(onPressed: ()async{
                               camera();
                               await _sharepreferenceshelper.initSharePref();
                               FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.CONTRIBUTION_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
@@ -412,7 +441,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
                             height: 45.0,
                             width: double.maxFinite,
                             margin: EdgeInsets.only(bottom: 20.0),
-                            child: RaisedButton(onPressed: ()async{
+                            child: CustomButtonWidget(onPressed: ()async{
 
                               await _checkCon();
                               if(_isCon){

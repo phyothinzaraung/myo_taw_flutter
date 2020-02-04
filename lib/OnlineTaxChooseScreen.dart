@@ -162,7 +162,8 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: MyString.txt_online_payment_tax,
+      title: Text(MyString.txt_online_payment_tax,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _asyncLoader,
       globalKey: _globalKey,
     );

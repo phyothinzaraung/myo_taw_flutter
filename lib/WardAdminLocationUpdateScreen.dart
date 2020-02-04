@@ -79,7 +79,8 @@ class _WardAdminLocationUpdateScreenState extends State<WardAdminLocationUpdateS
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: MyString.txt_location_update,
+      title: Text(MyString.txt_location_update,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _cameraPosition!=null?
       Stack(
         alignment: Alignment.center,

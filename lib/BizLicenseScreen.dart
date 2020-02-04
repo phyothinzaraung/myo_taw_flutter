@@ -126,7 +126,7 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
       },
       child: Container(
           margin: EdgeInsets.only(right: 10.0),
-          child: Image.asset('images/history.png', width: 30.0, height: 30.0,)),
+          child: Image.asset('images/history.png', width: 25, height: 25,)),
     );
   }
 
@@ -152,7 +152,8 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: MyString.txt_business_tax,
+      title: Text(MyString.txt_business_tax,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _asyncLoader,
       action: <Widget>[
         _action()

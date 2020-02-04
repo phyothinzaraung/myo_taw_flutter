@@ -224,7 +224,7 @@ class MyString{
   static const String txt_choose_blockNo= "ရပ်ကွက် အမျိုးအစားရွေးပေးပါ။";
   static const String txt_type_length= "အလျား လိုအပ်သည်။";
   static const String txt_type_width= "အနံ လိုအပ်သည်။";
-  static const String txt_wrong_pin_code = "ပင်ကုဒ် မှားပါသည်။";
+  static const String txt_wrong_pin_code = "ပင်ကုဒ် မှားနေပါသည်။";
   static const String txt_need_prepaid_code = "ငွေဖြည့်ကုဒ် ရိုက်ပေးပါ။";
   static const String txt_need_pin_code = "ပင်ကုဒ် ရိုက်ပေးပါ။";
   static const String txt_choose_grade = "အတန်းအစား ရွေး‌ပေးပါ။";
@@ -268,6 +268,8 @@ class MyString{
   static const String txt_saved_news_feed = 'သိမ်းဆည်းထားပြီး';
   static const String txt_choose_state_township = 'နေရပ်ရွေးပါ';
   static const String txt_need_user_information = 'ကိုယ်ရေးအချက်အလက်ဖြည့်ပေးပါ။';
+  static const String txt_confirm = 'ရွေးမည်';
+  static const String txt_faq_category_all = 'အားလုံး';
 
 
 

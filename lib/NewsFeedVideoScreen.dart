@@ -43,7 +43,7 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: '',
+      title: null,
       body: Center(
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,

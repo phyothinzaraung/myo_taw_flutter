@@ -65,7 +65,8 @@ class WardAdminContributionDetailScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-        title: _contributionModel.subject,
+        title: Text(_contributionModel.subject,
+          style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
         body: _body(context)
     );
     /*return Scaffold(

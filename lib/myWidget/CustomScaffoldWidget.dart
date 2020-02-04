@@ -5,23 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 
 class CustomScaffoldWidget extends StatelessWidget {
-  @required String title;
-  @required Widget body;
-  List<Widget> action;
-  Widget trailing;
-  Widget floatingActionButton;
-  GlobalKey globalKey = GlobalKey();
+  @required final Widget title;
+  @required final Widget body;
+  final List<Widget> action;
+  final Widget trailing;
+  final Widget floatingActionButton;
+  final GlobalKey globalKey;
 
-  CustomScaffoldWidget({this.title, this.body, this.action, this.trailing, this.floatingActionButton, this.globalKey});
+  CustomScaffoldWidget({this.title, this.body, this.action, this.trailing, this.floatingActionButton, this.globalKey}) :
+  assert(body != null);
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         key: globalKey,
         appBar: Platform.isAndroid?AppBar(
           actions: action,
-          title: Center(
-              child:
-              Text(title, style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), )),
+          title: title,
         ) : null,
         body: Platform.isAndroid?body :
             CupertinoTheme(
@@ -35,7 +34,7 @@ class CustomScaffoldWidget extends StatelessWidget {
                     trailing: trailing,
                     transitionBetweenRoutes: true,
                     backgroundColor: MyColor.colorPrimary,
-                    middle: Text(title, style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal)),
+                    middle: title,
                   ),
                   child: body
               ),

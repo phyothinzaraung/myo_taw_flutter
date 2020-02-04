@@ -81,7 +81,10 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _init();
     return CustomScaffoldWidget(
-        title: MyString.txt_choose_feature,
+        title: Center(
+          child: Text(MyString.txt_choose_feature,
+            style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
+        ),
         body: _body());
     /*return Scaffold(
       body: CupertinoPageScaffold(

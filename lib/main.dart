@@ -17,6 +17,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/UserModel.dart';
 import 'ProfileFormScreen.dart';
+import 'myWidget/CustomButtonWidget.dart';
 
 void main() {
   /*SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
@@ -106,7 +107,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
                     child: Text(MyString.txt_profile_set_up_need,
                       style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
                   ),
-                  RaisedButton(onPressed: (){
+                  CustomButtonWidget(onPress: (){
                     _navigateToProfileFormScreen();
 
                   },child: Text(MyString.txt_profile_set_up,

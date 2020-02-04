@@ -145,7 +145,7 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
                     mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                     children: <Widget>[
                       //btn top up
-                    RaisedButton(onPressed: (){
+                    CustomButtonWidget(onPressed: (){
                       Navigator.of(context).pop();
                       _callWebService();
 
@@ -153,7 +153,7 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
                       style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
                       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),),
                     //btn out
-                    RaisedButton(onPressed: (){
+                    CustomButtonWidget(onPressed: (){
                       Navigator.pop(context);
 
                       },child: Text(MyString.txt_log_out,
@@ -200,7 +200,8 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: MyString.txt_top_up_record,
+      title: Text(MyString.txt_top_up_record,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _asyncLoader,
       globalKey: _scaffoldState,
     );
@@ -319,7 +320,7 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
                               child: Container(
                                 margin: EdgeInsets.only(right: 10.0),
                                 height: 45.0,
-                                child: RaisedButton(onPressed: ()async{
+                                child: CustomButtonWidget(onPressed: ()async{
                                   Navigator.of(context).pop();
                                   }, child: Text(MyString.txt_top_up_cancel, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                                   color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
@@ -330,7 +331,7 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
                               child: Container(
                                 margin: EdgeInsets.only(left: 10.0),
                                 height: 45.0,
-                                child: RaisedButton(onPressed: ()async{
+                                child: CustomButtonWidget(onPressed: ()async{
                                   if(_prepaidCodeController.text.isNotEmpty && _pinCodeController.text.isNotEmpty){
                                     if(_hasError == false){
                                       await _checkCon();

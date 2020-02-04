@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/NumberFormatterHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserBillAmountViewModel.dart';
@@ -17,6 +18,8 @@ import 'TopUpRecordListScreen.dart';
 import 'PinCodeSetUpScreen.dart';
 import 'PaymentScreen.dart';
 import 'package:flutter_money_formatter/flutter_money_formatter.dart';
+
+import 'myWidget/CustomButtonWidget.dart';
 
 class OnlineTaxScreen extends StatefulWidget {
   @override
@@ -56,15 +59,18 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
   _getUserBillAmount()async{
     await _sharepreferenceshelper.initSharePref();
     _response = await ServiceHelper().getUserBillAmount(_sharepreferenceshelper.getUserUniqueKey());
+    print(_sharepreferenceshelper.getUserUniqueKey());
     _amountViewModel = UserBillAmountViewModel.fromJson(_response.data);
     if(_amountViewModel != null){
       _name = _amountViewModel.name;
       _amount = _amountViewModel.totalAmount;
       var list = _response.data['Log'];
-      for(var i in list){
-        setState(() {
-          _paymentLogList.add(PaymentLogModel.fromJson(i));
-        });
+      if(list != null && list.lenght>0){
+        for(var i in list){
+          setState(() {
+            _paymentLogList.add(PaymentLogModel.fromJson(i));
+          });
+        }
       }
     }
   }
@@ -181,7 +187,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                             child: Container(
                               margin: EdgeInsets.only(right: 2.5),
                               height: 45.0,
-                              child: RaisedButton(onPressed: ()async{
+                              child: CustomButtonWidget(onPress: ()async{
 
                                 /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpRecordListScreen(_userModel),
                                   settings: RouteSettings(name: ScreenName.TOP_UP_RECORD_LIST_SCREEN)
@@ -196,7 +202,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                             child: Container(
                               margin: EdgeInsets.only(left: 2.5),
                               height: 45.0,
-                              child: RaisedButton(onPressed: ()async{
+                              child: CustomButtonWidget(onPress: ()async{
                                 _navigateToPaymentScreen();
 
                                 }, child: Text(MyString.txt_pay_tax, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
@@ -260,31 +266,6 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
         });
   }
 
-  Widget getNoConnectionWidget(){
-    return Container(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('No Internet Connection'),
-                  FlatButton(onPressed: (){
-                    asyncLoaderState.currentState.reloadState();
-                    _checkCon();
-                  }
-                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
   Widget _renderLoad(){
     return Container(
       margin: EdgeInsets.only(top: 10.0),
@@ -319,7 +300,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
         key: asyncLoaderState,
         initState: () async => await _getUser(),
         renderLoad: () => _renderLoad(),
-        renderError: ([error]) => getNoConnectionWidget(),
+        renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => Container(
           child: RefreshIndicator(
               onRefresh: _handleRefresh,
@@ -334,7 +315,8 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: MyString.txt_online_tax,
+      title: Text(MyString.txt_online_tax,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _asyncLoader,
       globalKey: _globalKey,
     );

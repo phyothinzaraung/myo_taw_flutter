@@ -1,9 +1,13 @@
+import 'dart:io';
+
 import 'package:async_loader/async_loader.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:connectivity/connectivity.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/NavigatorHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
@@ -16,6 +20,8 @@ import 'helper/NumConvertHelper.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'DaoDetailScreen.dart';
+import 'myWidget/CustomButtonWidget.dart';
+import 'myWidget/CustomProgressIndicator.dart';
 import 'myWidget/EmptyViewWidget.dart';
 
 class DepartmentListScreen extends StatefulWidget {
@@ -41,6 +47,14 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
   List<DaoViewModel> _daoViewModelList = new List<DaoViewModel>();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+
+  final Map<int, Widget> children = const <int, Widget>{
+    0: Text(MyString.txt_dept_manager, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+    1: Text(MyString.txt_dept_engineer, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),)
+  };
+
+  int _currentSegment = 0;
+
   _DepartmentListScreenState(this._daoViewModel);
 
   @override
@@ -129,18 +143,45 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
     });
   }
 
+  Widget _cupertinoSliderControl(){
+    return Container(
+      width: double.maxFinite,
+      margin: EdgeInsets.only(left: 20, right: 20),
+      child: CupertinoSlidingSegmentedControl(
+        children: children,
+        thumbColor: Colors.white,
+        padding: EdgeInsets.all(3),
+        onValueChanged: (i)async{
+          setState(() {
+            _currentSegment = i;
+            _isLoading = true;
+            _isManager = i==0?true:false;
+            _isEngineer = i==0?false:true;
+            deptType = i==0?'Manager':'Engineer';
+            _daoViewModelList.clear();
+            _getDaoByDeptType(page);
+          });
+          await _sharepreferenceshelper.initSharePref();
+          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.DEPARTMENT_LIST_SCREEN, ClickEvent.MANAGEMENT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+        },
+        groupValue: _currentSegment,
+      ),
+    );
+  }
+
   Widget _header(){
     return Container(
       margin: EdgeInsets.only(bottom: 20.0),
       child: Column(
         children: <Widget>[
           _imageView(),
+          Platform.isIOS?_cupertinoSliderControl() :
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
 
-              RaisedButton(
-                  onPressed: ()async{
+              CustomButtonWidget(
+                onPress: ()async{
                     setState(() {
                       _isLoading = true;
                       _isManager = true;
@@ -156,10 +197,11 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
                 color: _isManager?MyColor.colorPrimary:Colors.white,
                 elevation: 1.0,
-                padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 7.0, bottom: 7.0),),
+                //padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 7.0, bottom: 7.0),
+              ),
 
-              RaisedButton(
-                onPressed: ()async{
+              CustomButtonWidget(
+                onPress: ()async{
                   setState(() {
                     _isLoading = true;
                     _isManager = false;
@@ -175,7 +217,8 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
                 color: _isEngineer?MyColor.colorPrimary:Colors.white,
                 elevation: 1.0,
-                padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 7.0, bottom: 7.0),),
+                //padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 7.0, bottom: 7.0),
+              ),
             ],
           )
         ],
@@ -209,30 +252,6 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
             ),
           );
         }
-    );
-  }
-
-  Widget getNoConnectionWidget(){
-    return Container(
-      child: Column(
-        children: <Widget>[
-          Expanded(
-            child: Center(
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text('No Internet Connection'),
-                  FlatButton(onPressed: (){
-                    asyncLoaderState.currentState.reloadState();
-                    _checkCon();
-                  }
-                    , child: Text('Retry', style: TextStyle(color: Colors.white),),color: MyColor.colorPrimary,)
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
     );
   }
 
@@ -322,29 +341,10 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
     );
   }
 
-  Widget modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: Colors.black))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
   Widget _body(BuildContext context, AsyncLoader asyncLoader){
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
-      progressIndicator: modalProgressIndicator(),
+      progressIndicator: CustomProgressIndicatorWidget(),
       child: Container(
         child: Column(
           children: <Widget>[
@@ -362,17 +362,15 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
         key: asyncLoaderState,
         initState: () async => await _getDaoByDeptType(page),
         renderLoad: () => _renderLoad(),
-        renderError: ([error]) => getNoConnectionWidget(),
+        renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => Container(
-          child: RefreshIndicator(
-            onRefresh: _handleRefresh,
-            child: _daoViewModelList.isNotEmpty? _listView() :
-            !_isLoading?emptyView(asyncLoaderState, MyString.txt_no_data) : Container(),
-          ),
+          child: _daoViewModelList.isNotEmpty? _listView() :
+          !_isLoading?emptyView(asyncLoaderState, MyString.txt_no_data) : Container(),
         )
     );
     return CustomScaffoldWidget(
-      title: _daoViewModel.daoModel.title,
+      title: Text(_daoViewModel.daoModel.title,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context, _asyncLoader),
       globalKey: _globalKey,
     );

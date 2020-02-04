@@ -115,7 +115,8 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: MyString.txt_calculate_tax,
+      title: Text(MyString.txt_calculate_tax,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _listView(),
     );
     /*return Scaffold(
