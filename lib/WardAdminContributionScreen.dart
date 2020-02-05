@@ -144,7 +144,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
     setState(() {
       _userModel = model;
     });
@@ -537,7 +537,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_suggestion,
+      title: Text(MyString.txt_suggestion,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(),
       globalKey: _globalKey,

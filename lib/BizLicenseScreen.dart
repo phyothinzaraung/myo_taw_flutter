@@ -152,7 +152,7 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_business_tax,
+      title: Text(MyString.txt_business_tax,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _asyncLoader,
       action: <Widget>[

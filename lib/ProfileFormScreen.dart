@@ -113,7 +113,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
 
       await _locationDb.openLocationDb();
       var state = await _locationDb.getState();
-      await _locationDb.closeLocationDb();
+      _locationDb.closeLocationDb();
       print(state);
       for(var i in state){
         _stateList.add(i);
@@ -153,7 +153,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   _getTownshipByState(String state)async{
     await _locationDb.openLocationDb();
     var township = await _locationDb.getTownshipByState(state);
-    await _locationDb.closeLocationDb();
+    _locationDb.closeLocationDb();
 
     for(var i in township){
       setState(() {
@@ -280,7 +280,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
       if(_response.data != null){
         await _userDb.openUserDb();
         await _userDb.insert(UserModel.fromJson(_response.data));
-        await _userDb.closeUserDb();
+        _userDb.closeUserDb();
         //_sharepreferenceshelper.setIsWardAdmin(_userModel.isWardAdmin==1? true : false);
         CustomDialogWidget().customSuccessDialog(
           context: context,
@@ -516,7 +516,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: Text(MyString.title_profile,
+      title: Text(MyString.title_profile,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(),
       globalKey: _scaffoldState,

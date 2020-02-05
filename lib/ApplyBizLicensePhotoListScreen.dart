@@ -247,7 +247,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
     );
 
     return CustomScaffoldWidget(
-        title: Text(MyString.txt_apply_biz_license_photo,
+        title: Text(MyString.txt_apply_biz_license_photo,maxLines: 1, overflow: TextOverflow.ellipsis,
           style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
         body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: CustomProgressIndicatorWidget(),child: _asyncLoader),
         globalKey: _globalKey,

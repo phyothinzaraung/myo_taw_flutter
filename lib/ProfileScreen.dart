@@ -99,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
     setState(() {
       _userModel = model;
     });
@@ -125,10 +125,10 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _sharepreferenceshelper.logOutSharePref();
     await _userDb.openUserDb();
     await _userDb.deleteUser();
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
     await _saveNewsFeedDb.openSaveNfDb();
     await _saveNewsFeedDb.deleteSavedNewsFeed();
-    await _saveNewsFeedDb.closeSaveNfDb();
+     _saveNewsFeedDb.closeSaveNfDb();
     /*Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginScreen(),
       settings: RouteSettings(name: ScreenName.LOGIN_SCREEN)
     ),(Route<dynamic>route) => false);*/
@@ -522,7 +522,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_profile,
+      title: Text(MyString.txt_profile,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: ModalProgressHUD(
           inAsyncCall: _isLoading,

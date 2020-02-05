@@ -51,7 +51,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       });
     }
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
     if(mounted){
       setState(() {
         _userModel = model;
@@ -238,5 +238,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         ),
       )
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    if(_userDb.isUserDbOpen()){
+      _userDb.closeUserDb();
+    }
   }
 }

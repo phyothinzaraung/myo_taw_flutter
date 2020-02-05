@@ -180,7 +180,7 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_flood_level,
+      title: Text(MyString.txt_flood_level,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _asyncLoader,
       floatingActionButton: _floatingActionButton(),

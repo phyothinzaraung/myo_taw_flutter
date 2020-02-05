@@ -217,7 +217,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_tax_use,
+      title: Text(MyString.txt_tax_use,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(_asyncLoader),
     );

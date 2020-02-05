@@ -386,7 +386,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_online_payment_tax,
+      title: Text(MyString.txt_online_payment_tax,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
     );

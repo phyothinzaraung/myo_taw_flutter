@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/WardAdminContributionListScreen.dart';
@@ -10,8 +11,9 @@ import 'helper/NavigatorHelper.dart';
 
 class WardAdminFeatureChooseScreen extends StatelessWidget {
   List<DashBoardModel> _list = List();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
-  _init(){
+  _init(BuildContext context){
     DashBoardModel model1 = new DashBoardModel();
     model1.image = 'images/suggestion.png';
     model1.title = MyString.txt_ward_admin_feature;
@@ -25,6 +27,28 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
     model3.title = MyString.txt_flood_level;
 
     _list = [model1,model3, model2];
+
+    _firebaseMessaging.configure(
+        onMessage: (Map<String, dynamic> message) async {
+          print('on message $message');
+        },
+        onResume: (Map<String, dynamic> message) async {
+          print('on resume ${message['data']['noti']}');
+          if(message['data']['noti'] == 'yes'){
+            NavigatorHelper().MyNavigatorPush(context, MainScreen(true), null);
+          }
+        },
+        onLaunch: (Map<String, dynamic> message) async {
+          print('on launch ${message['data']['noti']}');
+          if(message['data']['noti'] == 'yes'){
+            NavigatorHelper().MyNavigatorPush(context, MainScreen(true), null);
+          }
+        }
+    );
+
+    _firebaseMessaging.onTokenRefresh.listen((refreshToken){
+      print('on Token refresh : ' + refreshToken);
+    });
   }
 
   _widget(BuildContext context, int i){
@@ -37,7 +61,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
                 settings: RouteSettings(name: ScreenName.WARD_ADMIN_CONTRIBUTION_LIST_SCREEN)));*/
             break;
           case MyString.txt_myotaw_feature:
-            NavigatorHelper().MyNavigatorPush(context, MainScreen(), null);
+            NavigatorHelper().MyNavigatorPush(context, MainScreen(false), null);
             //Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
             break;
           case MyString.txt_flood_level:
@@ -79,10 +103,10 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
   }
   @override
   Widget build(BuildContext context) {
-    _init();
+    _init(context);
     return CustomScaffoldWidget(
         title: Center(
-          child: Text(MyString.txt_choose_feature,
+          child: Text(MyString.txt_choose_feature,maxLines: 1, overflow: TextOverflow.ellipsis,
             style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
         ),
         body: _body());

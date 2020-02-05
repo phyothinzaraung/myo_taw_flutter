@@ -102,7 +102,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
     _userModel = model;
     try{
       _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
@@ -336,7 +336,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_suggestion,
+      title: Text(MyString.txt_suggestion,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
       globalKey: _globalKey,

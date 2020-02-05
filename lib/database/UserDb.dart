@@ -17,6 +17,10 @@ class UserDb {
       );
   }
 
+  bool isUserDbOpen(){
+    return _database.isOpen;
+  }
+
   closeUserDb(){
     _database.close();
   }

@@ -242,7 +242,7 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
         }
       },
       child: CustomScaffoldWidget(
-        title: Text(MyString.txt_get_flood_level,
+        title: Text(MyString.txt_get_flood_level,maxLines: 1, overflow: TextOverflow.ellipsis,
           style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
         body: _body(context),
       )

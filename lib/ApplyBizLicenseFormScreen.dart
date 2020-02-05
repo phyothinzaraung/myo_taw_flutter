@@ -129,7 +129,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   _init()async{
     await _locationDb.openLocationDb();
     var state = await _locationDb.getState();
-    await _locationDb.closeLocationDb();
+    _locationDb.closeLocationDb();
     for(var i in state){
       _stateList.add(i);
       _ownerStateList.add(i);
@@ -141,7 +141,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
     setState(() {
       _userModel = model;
     });
@@ -150,7 +150,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   _getTownshipByState(String state)async{
     await _locationDb.openLocationDb();
     var township = await _locationDb.getTownshipByState(state);
-    await _locationDb.closeLocationDb();
+    _locationDb.closeLocationDb();
 
     for(var i in township){
       setState(() {
@@ -164,7 +164,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   _getOwnerTownshipByState(String state)async{
     await _locationDb.openLocationDb();
     var township = await _locationDb.getTownshipByState(state);
-    await _locationDb.closeLocationDb();
+    _locationDb.closeLocationDb();
 
     for(var i in township){
       setState(() {
@@ -1014,7 +1014,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-        title : Text(MyString.txt_business_tax,
+        title : Text(MyString.txt_business_tax,maxLines: 1, overflow: TextOverflow.ellipsis,
           style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
         body : _body(context),
         globalKey: _globalKey,

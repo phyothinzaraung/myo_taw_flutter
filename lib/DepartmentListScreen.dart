@@ -369,7 +369,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: Text(_daoViewModel.daoModel.title,
+      title: Text(_daoViewModel.daoModel.title,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context, _asyncLoader),
       globalKey: _globalKey,

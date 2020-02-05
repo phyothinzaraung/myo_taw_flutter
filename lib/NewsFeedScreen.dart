@@ -131,7 +131,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       await _saveNewsFeedDb.insert(_saveNewsFeedModel);
       //PrimaryColorSnackBarWidget(_globalKey, MyString.txt_save_newsFeed_success);
     }
-    await _saveNewsFeedDb.closeSaveNfDb();
+    _saveNewsFeedDb.closeSaveNfDb();
   }
 
   _getUser() async{
@@ -139,7 +139,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     _userUniqueKey = _sharepreferenceshelper.getUserUniqueKey();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
     if(mounted){
       setState(() {
         _userModel = model;
@@ -159,7 +159,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
         NewsFeedReactModel _newsFeedReactModel = NewsFeedReactModel.fromJson(i);
         await _saveNewsFeedDb.openSaveNfDb();
         bool isSaved = await _saveNewsFeedDb.isNewsFeedSaved(_newsFeedReactModel.newsFeedModel.uniqueKey);
-        await _saveNewsFeedDb.closeSaveNfDb();
+        _saveNewsFeedDb.closeSaveNfDb();
         _newsFeedReactModel.newsFeedModel.isSaved = isSaved;
         _newsFeedReactModelList.add(_newsFeedReactModel);
       }
@@ -570,5 +570,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     // TODO: implement dispose
     super.dispose();
     _scrollController.dispose();
+    if(_userDb.isUserDbOpen()){
+      _userDb.closeUserDb();
+    }
   }
 }

@@ -94,7 +94,7 @@ class _SaveNewsFeedDetailScreenState extends State<SaveNewsFeedDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: Text(_saveNewsFeedModel.title,
+      title: Text(_saveNewsFeedModel.title,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(),
     );

@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
@@ -26,6 +27,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   String _logo, _title;
   bool _isDbSetup = true;
   String _appVersion = '';
+  FirebaseMessaging _firebaseMesssaging = FirebaseMessaging();
+  bool _isNoti = false;
 
   @override
   void initState() {
@@ -33,6 +36,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     super.initState();
     _init();
     _updateUserActiveTime();
+    _firebaseMesssaging.subscribeToTopic('all');
   }
   _init()async{
     await _sharepreferenceshelper.initSharePref();
@@ -80,17 +84,15 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   _locationInit()async{
     await _locationDb.openLocationDb();
     bool isSetup = await _locationDb.isLocationDbSetup();
-    await _locationDb.closeLocationDb();
-    setState(() {
-      _isDbSetup = isSetup;
-    });
+    _locationDb.closeLocationDb();
+    _isDbSetup = isSetup;
     if(!isSetup){
       var stringJson = await rootBundle.loadString('assets/location.json');
       var list = jsonDecode(stringJson);
       for(var i in list){
         await _locationDb.openLocationDb();
         await _locationDb.insert(LocationModel.fromJson(i));
-        await _locationDb.closeLocationDb();
+        _locationDb.closeLocationDb();
       }
       print('locationDbsetup');
     }
@@ -102,7 +104,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         if(_sharepreferenceshelper.isWardAdmin()){
           NavigatorHelper().MyNavigatorPushReplacement(context, WardAdminFeatureChooseScreen(), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{
-          NavigatorHelper().MyNavigatorPushReplacement(context, MainScreen(), null);
+          NavigatorHelper().MyNavigatorPushReplacement(context, MainScreen(false), null);
         }
       });
     }else{

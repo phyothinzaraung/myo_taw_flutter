@@ -46,7 +46,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
   _deleteNewsFeed(String id)async{
     await _saveNewsFeedDb.openSaveNfDb();
     await _saveNewsFeedDb.deleteSavedNewsFeedById(id);
-    await _saveNewsFeedDb.closeSaveNfDb();
+    _saveNewsFeedDb.closeSaveNfDb();
   }
 
   _dialogDelete(String id, int i){
@@ -192,7 +192,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: Text(MyString.title_save_nf,
+      title: Text(MyString.title_save_nf,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: Container(
           child: _saveNewsFeedList.isNotEmpty?_listView():

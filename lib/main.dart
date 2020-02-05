@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/cupertino.dart';
@@ -7,13 +6,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:myotaw/customIcons/MyoTawCustomIcon.dart';
+import 'package:myotaw/database/NotificationDb.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
+import 'package:myotaw/model/NotificationModel.dart';
 import 'Database/UserDb.dart';
 import 'SplashScreen.dart';
 import 'NewsFeedScreen.dart';
 import 'DashBoardScreen.dart';
 import 'NotificationScreen.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'helper/NavigatorHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/UserModel.dart';
 import 'ProfileFormScreen.dart';
@@ -49,9 +51,13 @@ void main() {
       ),
     ));
   });
+
+
 }
 
 class MainScreen extends StatefulWidget {
+  bool _isNoti;
+  MainScreen(this._isNoti);
 
   @override
   _mainState createState() => _mainState();
@@ -62,6 +68,8 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   UserModel _userModel;
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   UserDb _userDb = UserDb();
+  FirebaseMessaging _firebaseMesssaging = FirebaseMessaging();
+  //NotificationDb _notificationDb = NotificationDb();
 
   @override
   void initState() {
@@ -71,18 +79,51 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
     _requestPermission();
     _sharepreferenceshelper.initSharePref();
     getUserData();
+    if(widget._isNoti){
+      Future.delayed(Duration(milliseconds: 500)).whenComplete((){
+        _tabController.animateTo(2,duration: Duration(milliseconds: 1000),curve: Curves.easeIn);
+      });
+    }
   }
 
   getUserData() async{
     await _userDb.openUserDb();
     final model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     _userModel = model;
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
      Future.delayed(Duration(milliseconds: 100)).whenComplete((){
        if(_userModel.name == null){
          _dialogProfileSetup();
        }
      });
+
+     if(_userModel.isWardAdmin == 0){
+       _firebaseMesssaging.configure(
+           onMessage: (Map<String, dynamic> message) async {
+             print('on message $message');
+           },
+           onResume: (Map<String, dynamic> message) async {
+             print('on resume ${message['data']['noti']}');
+             if(message['data']['noti'] == 'yes'){
+               Future.delayed(Duration(milliseconds: 500)).whenComplete((){
+                 _tabController.animateTo(2,duration: Duration(milliseconds: 1000),curve: Curves.easeIn);
+               });
+             }
+           },
+           onLaunch: (Map<String, dynamic> message) async {
+             print('on launch ${message['data']['noti']}');
+             if(message['data']['noti'] == 'yes'){
+               Future.delayed(Duration(milliseconds: 1000)).whenComplete((){
+                 _tabController.animateTo(2,duration: Duration(milliseconds: 1000),curve: Curves.easeIn);
+               });
+             }
+           }
+       );
+
+       _firebaseMesssaging.onTokenRefresh.listen((refreshToken){
+         print('on Token refresh : ' + refreshToken);
+       });
+     }
   }
 
   _navigateToProfileFormScreen()async{

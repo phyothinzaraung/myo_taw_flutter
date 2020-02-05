@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/database/NotificationDb.dart';
+import 'package:myotaw/model/NotificationModel.dart';
 import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
@@ -15,6 +17,8 @@ class _NotificationScreenState extends State<NotificationScreen> {
   String _city;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
+  //NotificationDb _notificationDb = NotificationDb();
+  List<NotificationModel> _notiModelList = List();
 
   @override
   void initState() {
@@ -28,12 +32,19 @@ class _NotificationScreenState extends State<NotificationScreen> {
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
     setState(() {
       _userModel = model;
     });
     _initHeaderTitle();
   }
+
+  /*_getSavedNotification()async{
+    await _notificationDb.openNotiDb();
+    _notiModelList = await _notificationDb.getNotification();
+    _notificationDb.closeNotiDb();
+
+  }*/
 
   _initHeaderTitle(){
     switch(_userModel.currentRegionCode){
@@ -75,5 +86,14 @@ class _NotificationScreenState extends State<NotificationScreen> {
           ),
         )
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    if(_userDb.isUserDbOpen()){
+      _userDb.closeUserDb();
+    }
   }
 }

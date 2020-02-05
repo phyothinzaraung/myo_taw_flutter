@@ -67,7 +67,7 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
         _userModel = UserModel.fromJson(_response.data);
         await _userDb.openUserDb();
         await _userDb.insert(_userModel);
-        await _userDb.closeUserDb();
+        _userDb.closeUserDb();
         Navigator.of(context).pop({'isNeedRefresh' : true});
         print('uploadprofile: ${_response.data}');
       }else{

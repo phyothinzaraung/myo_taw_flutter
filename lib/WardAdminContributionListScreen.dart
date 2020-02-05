@@ -64,7 +64,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
     print(_sharepreferenceshelper.getUserUniqueKey());
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
     if(mounted){
       setState(() {
         _userModel = model;

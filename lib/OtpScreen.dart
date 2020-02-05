@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
@@ -38,6 +39,7 @@ class _OtpScreenState extends State<OtpScreen> {
   int _sec = 59;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   String _appVersion = '';
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   _OtpScreenState(this._phNo, this._regionCode);
   @override
@@ -72,15 +74,15 @@ class _OtpScreenState extends State<OtpScreen> {
     setState(() {
       _showLoading = true;
     });
-    String fcmtoken = 'doRMZhpJvpY:APA91bG4XW1tHVIxf_jbUAT8WekmgAlDd4JZAKQm9o3DUDYqVCoWmmmaznHTgbyMxXXNZZ9FwFewZz5DcSE7ooxdLZAPdUDXeD7iD16IUP1P0DwGzzWlsRxovB1zq16FHKUcdgDGud4t';
+    String fcmToken = await _firebaseMessaging.getToken();
     if(Platform.isAndroid){
       _platForm = 'Android';
     }else{
       _platForm = 'Ios';
     }
     try{
-      print('$_phNo $_regionCode $fcmtoken $_platForm' );
-      response = await ServiceHelper().userLogin(_phNo, _regionCode, fcmtoken, _platForm);
+      print('$_phNo $_regionCode $fcmToken $_platForm' );
+      response = await ServiceHelper().userLogin(_phNo, _regionCode, fcmToken, _platForm);
       var result = response.data;
       print('user : $result');
       if(result != null){
@@ -88,7 +90,7 @@ class _OtpScreenState extends State<OtpScreen> {
         _sharePrefHelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, _regionCode, _userModel.isWardAdmin==1?true:false, _userModel.wardName);
         await _userDb.openUserDb();
         await _userDb.insert(_userModel);
-        await _userDb.closeUserDb();
+        _userDb.closeUserDb();
         if(_userModel.isWardAdmin==1){
           /*Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WardAdminFeatureChooseScreen(),
             settings: RouteSettings(name: ScreenName.WARD_ADMIN_FEATURE_SCREEN)
@@ -97,7 +99,7 @@ class _OtpScreenState extends State<OtpScreen> {
         }else{
           /*Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(),
           ));*/
-          NavigatorHelper().MyNavigatorPushReplacement(context, MainScreen(), null);
+          NavigatorHelper().MyNavigatorPushReplacement(context, MainScreen(false), null);
         }
 
       }else{

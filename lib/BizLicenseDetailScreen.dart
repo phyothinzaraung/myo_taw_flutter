@@ -76,7 +76,7 @@ class _BizLicenseDetailScreenState extends State<BizLicenseDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-        title: Text(MyString.txt_business_tax,
+        title: Text(MyString.txt_business_tax,maxLines: 1, overflow: TextOverflow.ellipsis,
           style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
         body: _body(context)
     );

@@ -59,7 +59,7 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
       _userModel = UserModel.fromJson(response.data);
       await _userDb.openUserDb();
       await _userDb.insert(_userModel);
-      await _userDb.closeUserDb();
+      _userDb.closeUserDb();
       if(mounted){
         setState(() {
           _initOnlineTaxChooseWidget();
@@ -162,7 +162,7 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_online_payment_tax,
+      title: Text(MyString.txt_online_payment_tax,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _asyncLoader,
       globalKey: _globalKey,

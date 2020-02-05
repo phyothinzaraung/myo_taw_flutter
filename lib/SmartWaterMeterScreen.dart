@@ -79,7 +79,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
     setState(() {
       _userModel = model;
     });
@@ -314,7 +314,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_smart_water_meter,
+      title: Text(MyString.txt_smart_water_meter,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _asyncLoader,
       globalKey: _globalKey,

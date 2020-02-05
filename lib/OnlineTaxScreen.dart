@@ -103,7 +103,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
     setState(() {
       _userModel = model;
     });
@@ -315,7 +315,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_online_tax,
+      title: Text(MyString.txt_online_tax,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _asyncLoader,
       globalKey: _globalKey,

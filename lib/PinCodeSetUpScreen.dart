@@ -95,7 +95,7 @@ class _PinCodeSetUpScreenState extends State<PinCodeSetUpScreen> {
         if(_response.data != null){
           await _userDb.openUserDb();
           await _userDb.insert(UserModel.fromJson(_response.data));
-          await _userDb.closeUserDb();
+          _userDb.closeUserDb();
           _finishDialogBox();
         }else{
           WarningSnackBar(_scaffoldState, MyString.txt_try_again);
@@ -208,7 +208,7 @@ class _PinCodeSetUpScreenState extends State<PinCodeSetUpScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_online_tax,
+      title: Text(MyString.txt_online_tax,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(),
       globalKey: _scaffoldState,

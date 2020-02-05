@@ -104,7 +104,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
     var wardName = _sharepreferenceshelper.getWardName();
     await _userDb.openUserDb();
     UserModel _userModel = await _userDb.getUserById(uniqueKey);
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
     try{
       var response = await ServiceHelper().sendSuggestion(_image.path, phNo, subject, '', uniqueKey, _userModel.name,
           _lat, _lng, regionCode, isAdmin, wardName, _floodLevel);
@@ -299,7 +299,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_add_flood_level_record,
+      title: Text(MyString.txt_add_flood_level_record,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
       globalKey: _globalKey,

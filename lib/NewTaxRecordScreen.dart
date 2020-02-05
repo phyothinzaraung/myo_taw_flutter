@@ -108,22 +108,22 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    await _userDb.closeUserDb();
+    _userDb.closeUserDb();
     _userModel = model;
     try{
       _response = await ServiceHelper().uploadTaxRecord(_image.path, _recordNameController.text, _userModel.uniqueKey, _userModel.name, _userModel.currentRegionCode);
       if(_response.data != null){
         CustomDialogWidget().customSuccessDialog(
-          context: context,
-          content: MyString.txt_tax_record_upload_success,
-          img: 'isvalid.png',
-          onPress: ()async{
-            FocusScope.of(context).requestFocus(FocusNode());
-            await _sharepreferenceshelper.initSharePref();
-            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.NEW_TAX_RECORD_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-            Navigator.of(context).pop();
-            Navigator.of(context).pop({'isNeedRefresh' : true});
-          }
+            context: context,
+            content: MyString.txt_tax_record_upload_success,
+            img: 'isvalid.png',
+            onPress: ()async{
+              FocusScope.of(context).requestFocus(FocusNode());
+              await _sharepreferenceshelper.initSharePref();
+              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.NEW_TAX_RECORD_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+              Navigator.of(context).pop();
+              Navigator.of(context).pop({'isNeedRefresh' : true});
+            }
         );
       }else{
         WarningSnackBar(_globalKey, MyString.txt_try_again);
@@ -262,7 +262,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_tax_record,
+      title: Text(MyString.txt_tax_record,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
       globalKey: _globalKey,

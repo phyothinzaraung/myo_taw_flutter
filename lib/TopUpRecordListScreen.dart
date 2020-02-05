@@ -200,7 +200,7 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: Text(MyString.txt_top_up_record,
+      title: Text(MyString.txt_top_up_record,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _asyncLoader,
       globalKey: _scaffoldState,

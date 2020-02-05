@@ -260,7 +260,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: Text(_title,
+      title: Text(_title,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
     );
