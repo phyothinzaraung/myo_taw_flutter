@@ -1,17 +1,18 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:libphonenumber/libphonenumber.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/ButtonLoadingIndicatorWidget.dart';
+import 'package:myotaw/myWidget/DropDownWidget.dart';
+import 'package:myotaw/myWidget/IosPickerWidget.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'OtpScreen.dart';
 import 'helper/MyoTawConstant.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
-import 'OtpScreen.dart';
 import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
 
@@ -31,6 +32,9 @@ class _LoginScreenState extends State<LoginScreen> {
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   String _appVersion = '';
 
+  List<Widget> _loginLocationWidgetList = List();
+  int _locationPickerIndex = 0;
+
   @override
   void initState() {
     // TODO: implement initState
@@ -42,6 +46,17 @@ class _LoginScreenState extends State<LoginScreen> {
         _appVersion = info.version;
       });
     });
+
+    _initLocationPickerWidget();
+  }
+
+  _initLocationPickerWidget(){
+    for(var i in _cityList){
+      _loginLocationWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
   }
 
   void _getOtp()async{
@@ -136,32 +151,37 @@ class _LoginScreenState extends State<LoginScreen> {
                                   margin: EdgeInsets.only(bottom: 30),
                                   child: Text(MyString.txt_welcome, style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary), textAlign: TextAlign.center,)),
                               Container(
+                                width: double.maxFinite,
                                 decoration: BoxDecoration(
                                     border: Border.all(color: MyColor.colorPrimary, width: 1.0),
                                     borderRadius: BorderRadius.all(Radius.circular(10.0))
                                 ),
                                 margin: EdgeInsets.only(bottom: 20),
                                 padding: EdgeInsets.only(left: 15, right: 15),
-                                child: DropdownButtonHideUnderline(
-                                  child: DropdownButton<String>(
-                                    style: new TextStyle(fontSize: 13.0, color: Colors.black87),
-                                    isExpanded: true,
-                                    icon: Icon(Icons.location_city),
-                                    iconEnabledColor: MyColor.colorPrimary,
-                                    value: _dropDownCity,
-                                    onChanged: (String value){
-                                      setState(() {
-                                        _dropDownCity = value;
-                                      });
-                                    },
-                                    items: _cityList.map<DropdownMenuItem<String>>((String str){
-                                      return DropdownMenuItem<String>(
-                                        value: str,
-                                        child: Text(str),
-                                      );
-                                    }).toList(),
-                                  ),
-                                ),
+                                child: Platform.isAndroid?
+                                    DropDownWidget(
+                                     list: _cityList,
+                                     value: _dropDownCity,
+                                     onChange: (value){
+                                       setState(() {
+                                         _dropDownCity = value;
+                                       });
+                                     },
+                                    ) :
+                                    IosPickerWidget(
+                                      children: _loginLocationWidgetList,
+                                      text: _dropDownCity,
+                                      fixedExtentScrollController: FixedExtentScrollController(initialItem: _locationPickerIndex),
+                                      onPress: (){
+                                        Navigator.of(context).pop();
+                                        setState(() {
+                                          _dropDownCity = _cityList[_locationPickerIndex];
+                                        });
+                                      },
+                                      onSelectedItemChanged: (i){
+                                        _locationPickerIndex = i;
+                                      },
+                                    ),
                               ),
                               Container(
                                 margin: EdgeInsets.only(bottom: 30.0),
