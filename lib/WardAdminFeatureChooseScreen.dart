@@ -41,15 +41,15 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
         },
         onResume: (Map<String, dynamic> message) async {
           print('on resume ${message['data']['noti']}');
-          /*if(message['data']['noti'] == 'yes'){
+          if(message['data']['noti'] == 'yes'){
             NavigatorHelper().MyNavigatorPush(context, MainScreen(true), null);
-          }*/
+          }
         },
         onLaunch: (Map<String, dynamic> message) async {
           print('on launch ${message['data']['noti']}');
-          /*if(message['data']['noti'] == 'yes'){
+          if(message['data']['noti'] == 'yes'){
             NavigatorHelper().MyNavigatorPush(context, MainScreen(true), null);
-          }*/
+          }
         }
     );
 
