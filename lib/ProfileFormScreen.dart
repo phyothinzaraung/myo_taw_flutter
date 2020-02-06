@@ -141,7 +141,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
         img: 'warning.png',
         onPress: (){
           Navigator.of(context).pop();
-          _init();
+          //_init();
         }
       );
     }
@@ -165,103 +165,6 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
 
       _initTownshipIosPickerWidgetList();
     });
-  }
-
-  Widget modalProgressIndicator(){
-    return Center(
-      child: Card(
-        child: Container(
-          width: 220.0,
-          height: 80.0,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Container(margin: EdgeInsets.only(right: 30.0),
-                  child: Text('Loading......',style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack))),
-              CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary))
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  _getFailUserInfoDialogBox(){
-    return showDialog(
-        context: context,
-        builder: (ctxt){
-          return WillPopScope(
-            child: SimpleDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                          margin: EdgeInsets.only(bottom: 20.0),
-                          child: Image.asset('images/warning.png', width: 50.0, height: 50.0,)),
-                      Container(
-                          margin: EdgeInsets.only(bottom: 10.0),
-                          child: Text(MyString.txt_no_internet,
-                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),textAlign: TextAlign.center,)),
-                      Container(
-                        width: 200.0,
-                        height: 45.0,
-                        child: CustomButtonWidget(onPress: (){
-                          Navigator.of(context).pop();
-                          _init();
-
-                        }, child: Text(MyString.txt_try_again, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                          color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ), onWillPop: (){},
-          );
-        }, barrierDismissible: false);
-  }
-
-  _finishDialogBox(){
-    return showDialog(
-        context: context,
-        builder: (ctxt){
-          return WillPopScope(
-            child: SimpleDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                          margin: EdgeInsets.only(bottom: 20.0),
-                          child: Image.asset('images/isvalid.png', width: 50.0, height: 50.0,)),
-                      Container(
-                          margin: EdgeInsets.only(bottom: 10.0),
-                          child: Text(MyString.txt_profile_complete,
-                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),textAlign: TextAlign.center,)),
-                      Container(
-                        width: 200.0,
-                        height: 45.0,
-                        child: CustomButtonWidget(onPress: ()async{
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop({'isNeedRefresh' : true});
-
-                        }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                          color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ), onWillPop: (){},
-          );
-        }, barrierDismissible: false);
   }
 
   void _updateUser()async{
@@ -478,24 +381,31 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                   child: CustomButtonWidget(
                                     onPress: ()async{
                                       await _checkCon();
-                                      if(_isCon){
-                                        if(_nameController.text.isNotEmpty && _addressController.text.isNotEmpty && _dropDownState != MyString.txt_choose_state_township &&
-                                            _dropDownTownship != MyString.txt_choose_state_township
-                                        ){
-                                          _updateUser();
+                                      if(_userModel != null){
+                                        if(_isCon){
+                                          if(_nameController.text.isNotEmpty && _addressController.text.isNotEmpty && _dropDownState != MyString.txt_choose_state_township &&
+                                              _dropDownTownship != MyString.txt_choose_state_township
+                                          ){
+                                            _updateUser();
+                                          }else{
+                                            WarningSnackBar(_scaffoldState, MyString.txt_need_user_information);
+                                          }
                                         }else{
-                                          WarningSnackBar(_scaffoldState, MyString.txt_need_user_information);
+                                          WarningSnackBar(_scaffoldState, MyString.txt_no_internet);
                                         }
                                       }else{
-                                        WarningSnackBar(_scaffoldState, MyString.txt_no_internet);
+                                        _init();
                                       }
+
 
                                     },color: MyColor.colorPrimary,
                                     borderRadius: BorderRadius.circular(10),
                                     shape: RoundedRectangleBorder(
                                         borderRadius: BorderRadius.circular(8.0)
                                     ),
-                                    child: Text(MyString.txt_save_user_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
+                                    child: Text(_userModel!=null?
+                                    MyString.txt_save_user_profile :
+                                      MyString.txt_try_again, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),),
                                 )
                               ],
                             ),
