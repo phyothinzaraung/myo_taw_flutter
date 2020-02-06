@@ -517,7 +517,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 delegate: DefaultLoadMoreDelegate(),
                 textBuilder: DefaultLoadMoreTextBuilder.english,
                 child: _listView()
-            ) : Column(children: <Widget>[_headerProfile(), emptyView(asyncLoaderState, MyString.txt_no_data)],)
+            ) : ListView(children: <Widget>[_headerProfile(), emptyView(asyncLoaderState, MyString.txt_no_data)],)
           ),
         )
     );
