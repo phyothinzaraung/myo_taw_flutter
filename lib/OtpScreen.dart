@@ -87,7 +87,8 @@ class _OtpScreenState extends State<OtpScreen> {
       print('user : $result');
       if(result != null){
         _userModel = UserModel.fromJson(result);
-        _sharePrefHelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, _regionCode, _userModel.isWardAdmin==1?true:false, _userModel.wardName);
+        _sharePrefHelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo,
+            _regionCode, _userModel.isWardAdmin==1?true:false, _userModel.wardName, fcmToken);
         await _userDb.openUserDb();
         await _userDb.insert(_userModel);
         _userDb.closeUserDb();

@@ -6,16 +6,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:myotaw/customIcons/MyoTawCustomIcon.dart';
-import 'package:myotaw/database/NotificationDb.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
-import 'package:myotaw/model/NotificationModel.dart';
 import 'Database/UserDb.dart';
 import 'SplashScreen.dart';
 import 'NewsFeedScreen.dart';
 import 'DashBoardScreen.dart';
 import 'NotificationScreen.dart';
 import 'package:permission_handler/permission_handler.dart';
-import 'helper/NavigatorHelper.dart';
+import 'helper/ServiceHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/UserModel.dart';
 import 'ProfileFormScreen.dart';
@@ -69,7 +67,6 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   UserDb _userDb = UserDb();
   FirebaseMessaging _firebaseMesssaging = FirebaseMessaging();
-  //NotificationDb _notificationDb = NotificationDb();
 
   @override
   void initState() {
@@ -120,7 +117,20 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
            }
        );
 
-       _firebaseMesssaging.onTokenRefresh.listen((refreshToken){
+       _firebaseMesssaging.onTokenRefresh.listen((refreshToken)async{
+         await _sharepreferenceshelper.initSharePref();
+         if(_sharepreferenceshelper.getToken() != refreshToken){
+           try{
+             var response = await ServiceHelper().updateUserToken(_sharepreferenceshelper.getUserUniqueKey(), refreshToken, Platform.isAndroid?'Android' : 'Ios');
+             await _userDb.openUserDb();
+             await _userDb.insert(UserModel.fromJson(response.data));
+             _userDb.closeUserDb();
+             _sharepreferenceshelper.setUserToken(refreshToken);
+           }catch(e){
+             print(e);
+           }
+           print('update user token');
+         }
          print('on Token refresh : ' + refreshToken);
        });
      }

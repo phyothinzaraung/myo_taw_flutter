@@ -6,19 +6,26 @@ class Sharepreferenceshelper{
   static String USER_REGION_CODE_KEY = 'user_region_code';
   static String USER_IS_WARD_ADMIN = 'user_is_ward_admin';
   static String USER_WARD_NAME = 'user_ward_name';
+  static String USER_FCM_TOKEN = 'user_fcm_token';
   SharedPreferences sharedPreferences;
 
   Future initSharePref() async{
     sharedPreferences = await SharedPreferences.getInstance();
   }
 
-  void setLoginSharePreference(String uniqueKey, String phone, String regionCode, bool isWardAdmin, String wardName){
+  void setLoginSharePreference(String uniqueKey, String phone, String regionCode, bool isWardAdmin, String wardName, String token){
     sharedPreferences
         ..setString(USER_UNIQUE_KEY, uniqueKey)
         ..setString(USER_PHONE_KEY, phone)
         ..setString(USER_REGION_CODE_KEY, regionCode)
         ..setBool(USER_IS_WARD_ADMIN, isWardAdmin)
+        ..setString(USER_FCM_TOKEN, token)
         ..setString(USER_WARD_NAME, wardName);
+  }
+
+  void setUserToken(String token){
+    sharedPreferences
+      ..setString(USER_FCM_TOKEN, token);
   }
 
   void setIsWardAdmin(bool isWardAdmin){
@@ -40,6 +47,10 @@ class Sharepreferenceshelper{
 
   String getWardName(){
     return sharedPreferences.get(USER_WARD_NAME);
+  }
+
+  String getToken(){
+    return sharedPreferences.get(USER_FCM_TOKEN);
   }
 
   void logOutSharePref(){

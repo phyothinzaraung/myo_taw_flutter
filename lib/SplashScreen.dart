@@ -85,7 +85,9 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     await _locationDb.openLocationDb();
     bool isSetup = await _locationDb.isLocationDbSetup();
     _locationDb.closeLocationDb();
-    _isDbSetup = isSetup;
+    setState(() {
+      _isDbSetup = isSetup;
+    });
     if(!isSetup){
       var stringJson = await rootBundle.loadString('assets/location.json');
       var list = jsonDecode(stringJson);

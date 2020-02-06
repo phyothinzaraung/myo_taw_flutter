@@ -2,16 +2,23 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/WardAdminContributionListScreen.dart';
+import 'package:myotaw/database/UserDb.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
+import 'package:myotaw/helper/ServiceHelper.dart';
+import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/main.dart';
 import 'package:myotaw/model/DashBoardModel.dart';
+import 'package:myotaw/model/UserModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'FloodReportListScreen.dart';
 import 'helper/NavigatorHelper.dart';
+import 'dart:io';
 
 class WardAdminFeatureChooseScreen extends StatelessWidget {
   List<DashBoardModel> _list = List();
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
+  UserDb _userDb = UserDb();
 
   _init(BuildContext context){
     DashBoardModel model1 = new DashBoardModel();
@@ -34,19 +41,32 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
         },
         onResume: (Map<String, dynamic> message) async {
           print('on resume ${message['data']['noti']}');
-          if(message['data']['noti'] == 'yes'){
+          /*if(message['data']['noti'] == 'yes'){
             NavigatorHelper().MyNavigatorPush(context, MainScreen(true), null);
-          }
+          }*/
         },
         onLaunch: (Map<String, dynamic> message) async {
           print('on launch ${message['data']['noti']}');
-          if(message['data']['noti'] == 'yes'){
+          /*if(message['data']['noti'] == 'yes'){
             NavigatorHelper().MyNavigatorPush(context, MainScreen(true), null);
-          }
+          }*/
         }
     );
 
-    _firebaseMessaging.onTokenRefresh.listen((refreshToken){
+    _firebaseMessaging.onTokenRefresh.listen((refreshToken)async{
+      await _sharepreferenceshelper.initSharePref();
+      if(_sharepreferenceshelper.getToken() != refreshToken){
+        try{
+          var response = await ServiceHelper().updateUserToken(_sharepreferenceshelper.getUserUniqueKey(), refreshToken, Platform.isAndroid?'Android' : 'Ios');
+          await _userDb.openUserDb();
+          await _userDb.insert(UserModel.fromJson(response.data));
+          _userDb.closeUserDb();
+          _sharepreferenceshelper.setUserToken(refreshToken);
+        }catch(e){
+          print(e);
+        }
+        print('update user token');
+      }
       print('on Token refresh : ' + refreshToken);
     });
   }

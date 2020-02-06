@@ -309,6 +309,14 @@ class ServiceHelper{
   return response;
  }
 
+ updateUserToken<Response>(String uniqueKey, String token, String type) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/UserTokenUpdate",
+      queryParameters: {"UniqueKey": uniqueKey ,"Token": token ,"Type": type});
+  return response;
+ }
+
 }
 
 

@@ -61,15 +61,5 @@ class DbHelper{
   static final COLUMN_TOWNSHIP_CODE = 'township_code';
 
   //--------------------------------------------------------------------------------------------------------------------------//
-
-  /*//Notification Table
-
-  static final TABLE_NAME_NOTIFICATION = 'NotificationTable';
-
-  static final NOTIFICATION_DATABASE_NAME = 'Notification.db';
-  static final NOTIFICATION_DATABASE_VERSION = 1;
-
-  static final COLUMN_NOTIFICATION_TITLE = 'title';
-  static final COLUMN_NOTIFICATION_BODY = 'body';*/
 }
 
