@@ -161,8 +161,11 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               NavigatorHelper().MyNavigatorPush(context, TaxUserScreen(), ScreenName.TAX_USE_SCREEN);
               break;
             case MyString.txt_calculate_tax:
-
-              NavigatorHelper().MyNavigatorPush(context, CalculateTaxScreen(), ScreenName.CALCULATE_TAX_SCREEN);
+              if(_sharepreferenceshelper.getRegionCode() == 'LKW'){
+                PrimaryColorSnackBarWidget(_globalKey, MyString.txt_coming_soon);
+              }else{
+                NavigatorHelper().MyNavigatorPush(context, CalculateTaxScreen(), ScreenName.CALCULATE_TAX_SCREEN);
+              }
               break;
             case MyString.txt_faq:
 
@@ -189,6 +192,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         child: Container(
           child: Column(children: <Widget>[
             Flexible(flex: 3,child: Image.asset(i.image,)),
+            SizedBox(height: 5,),
             Flexible(flex: 1,child: Text(i.title,style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))],),),
       ));
     }

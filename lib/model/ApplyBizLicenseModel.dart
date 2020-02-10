@@ -284,7 +284,7 @@ class ApplyBizLicenseModel{
      json['RegionCode'] = _regionCode;
      json['Accesstime'] = _accessTime;
      json['IsDeleted'] = _isDeleted;
-     json['IsValid'] = _isValid;
+     json['IsValid'] = _isValid??false;
      json['Source'] = _source;
 
     return json;

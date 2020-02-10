@@ -202,7 +202,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                 Container(
                     margin: EdgeInsets.only(right: 30.0),
                     child: Image.asset('images/camera.png', width: 25.0, height: 25.0,)),
-                Text(MyString.txt_upload_photo_camera, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
+                Text(MyString.txt_get_flood_level_photo, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
               ],
             ),color: Colors.white,elevation: 5.0,
               shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),

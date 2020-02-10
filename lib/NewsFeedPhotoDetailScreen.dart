@@ -27,17 +27,20 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
     addPhoto();
     return CustomScaffoldWidget(
       title: null,
-      body: Center(
-        child: _photoList.isNotEmpty?
-        PageView(
-            controller: _pageController,
-            scrollDirection: Axis.horizontal,
-            children: _photoWidget
-        ) :
-        PhotoView(
-          imageProvider: NetworkImage(BaseUrl.NEWS_FEED_CONTENT_URL+_photoUrl),
-          loadingChild: Center(child: CircularProgressIndicator(),),
-          loadFailedChild: Image.asset('images/placeholder.jpg'),
+      body: Container(
+        color: Colors.black,
+        child: Center(
+          child: _photoList.isNotEmpty?
+          PageView(
+              controller: _pageController,
+              scrollDirection: Axis.horizontal,
+              children: _photoWidget
+          ) :
+          PhotoView(
+            imageProvider: NetworkImage(BaseUrl.NEWS_FEED_CONTENT_URL+_photoUrl),
+            loadingChild: Center(child: CircularProgressIndicator(),),
+            loadFailedChild: Image.asset('images/placeholder.jpg'),
+          ),
         ),
       ),
     );

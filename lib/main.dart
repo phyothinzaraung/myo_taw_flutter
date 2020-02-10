@@ -78,7 +78,8 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
     getUserData();
     if(widget._isNoti){
       Future.delayed(Duration(milliseconds: 500)).whenComplete((){
-        _tabController.animateTo(2,duration: Duration(milliseconds: 1000),curve: Curves.easeIn);
+        _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
+        _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
       });
     }
   }
@@ -103,15 +104,17 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
              print('on resume ${message['data']['noti']}');
              if(message['data']['noti'] == 'yes'){
                Future.delayed(Duration(milliseconds: 500)).whenComplete((){
-                 _tabController.animateTo(2,duration: Duration(milliseconds: 1000),curve: Curves.easeIn);
+                 _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
+                 _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
                });
              }
            },
            onLaunch: (Map<String, dynamic> message) async {
              print('on launch ${message['data']['noti']}');
              if(message['data']['noti'] == 'yes'){
-               Future.delayed(Duration(milliseconds: 1000)).whenComplete((){
-                 _tabController.animateTo(2,duration: Duration(milliseconds: 1000),curve: Curves.easeIn);
+               Future.delayed(Duration(milliseconds: 500)).whenComplete((){
+                 _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
+                 _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
                });
              }
            }
@@ -200,7 +203,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
             tabs: [
               Tab(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,)),
               Tab(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
-              Tab(icon: Icon(Icons.notifications_none, size: 30,))
+              Tab(icon: Icon(MyoTawCustomIcon.Notification_icon, size: 25,))
             ],
           ),
         ),

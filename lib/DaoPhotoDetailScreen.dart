@@ -27,12 +27,15 @@ class DaoPhotoDetailScreen extends StatelessWidget {
     addPhoto();
     return CustomScaffoldWidget(
       title: null,
-      body: Center(
-        child: PageView(
-        controller: _pageController,
-        scrollDirection: Axis.horizontal,
-        children: _photoWidget
-        )
+      body: Container(
+        color: Colors.black,
+        child: Center(
+          child: PageView(
+          controller: _pageController,
+          scrollDirection: Axis.horizontal,
+          children: _photoWidget
+          )
+        ),
       )
     );
     /*return Scaffold(

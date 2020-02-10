@@ -67,22 +67,13 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
   _getBizByLicenseType(){
     switch (_dropDownBizLicenseType){
       case 'စားသောက်ဆိုင်လုပ်ငန်းလိုင်စင်':
-        setState(() {
-          _bizList = [_dropDownBizType];
-          _bizList.addAll(MyStringList.biz_mlm_food);
-        });
+        _bizList.addAll(MyStringList.biz_mlm_food);
         break;
       case 'ဘေးအန္တရာယ်လုပ်ငန်းလိုင်စင်':
-        setState(() {
-          _bizList = [_dropDownBizType];
-          _bizList.addAll(MyStringList.biz_mlm_danger);
-        });
+        _bizList.addAll(MyStringList.biz_mlm_danger);
         break;
       case 'ပုဂ္ဂလိကအိမ်ဆိုင်လုပ်ငန်းလိုင်စင်':
-        setState(() {
-          _bizList = [_dropDownBizType,];
-          _bizList.addAll(MyStringList.biz_mlm_store);
-        });
+        _bizList.addAll(MyStringList.biz_mlm_store);
         break;
     }
 
@@ -284,57 +275,6 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
     return '${NumConvertHelper.getMyanNumString(_taxRange)}';
   }
 
-  _calculateTaxDialog(){
-    return showDialog(context: context, builder: (context){
-      return WillPopScope(
-          child: SimpleDialog(
-            contentPadding: EdgeInsets.all(20.0),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      child: Image.asset('images/calculate_tax_no_circle.png', width: 60.0, height: 60.0,)),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(MyString.txt_biz_tax_range,
-                      style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(_getTaxRange(),
-                      style: TextStyle(fontSize: FontSize.textSizeLarge, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 0.0),
-                    child: Text(MyString.txt_kyat,
-                      style: TextStyle(fontSize: FontSize.textSizeLarge, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text('ဖြစ်ပါသည်။',
-                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(MyString.txt_thanks,
-                      style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
-                  ),
-                  CustomButtonWidget(onPress: (){
-                    Navigator.of(context).pop();
-                    clear();
-                    },child: Text(MyString.txt_close,
-                    style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-                    borderRadius: BorderRadius.circular(10),
-                  )
-                ],
-              )
-            ],), onWillPop: (){});
-    }, barrierDismissible: false);
-  }
-
   clear(){
     setState(() {
       _dropDownBizLicenseType = MyString.txt_no_selected;
@@ -361,7 +301,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
                     children: <Widget>[
                       Container(
                         margin: EdgeInsets.only(bottom: 10),
-                        child: Text(MyString.txt_choose_license_type,
+                        child: Text(MyString.txt_license_type,
                           style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                       ),
                       Container(

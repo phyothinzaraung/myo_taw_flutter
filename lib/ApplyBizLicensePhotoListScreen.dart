@@ -1,5 +1,6 @@
 import 'dart:io';
 import 'package:async_loader/async_loader.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
 import 'package:flutter/material.dart';
@@ -96,8 +97,9 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                     },
                     child: Padding(
                       padding: EdgeInsets.all(10.0),
-                      child: Image.network(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl
-                      , width: 160.0, height: 160.0, fit: BoxFit.cover, loadingBuilder: (context, child, loadingProgress){
+                      child: /*_applyBizLicensePhotoModelList[index].photoUrl!=null?
+                      Image.network(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl,
+                        width: 160.0, height: 160.0, fit: BoxFit.cover, loadingBuilder: (context, child, loadingProgress){
                           if (loadingProgress == null) return child;
                           return Center(
                             child: CircularProgressIndicator(
@@ -106,7 +108,25 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                                   : null,
                             ),
                           );
-                        },),
+                        },) : Image.asset('images/placeholder.jpg',width: 160.0, height: 160.0, fit: BoxFit.cover),*/
+                      CachedNetworkImage(
+                        imageUrl: BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl,
+                        imageBuilder: (context, image){
+                          return Container(
+                            width: 160,
+                            height: 160,
+                            decoration: BoxDecoration(
+                              image: DecorationImage(
+                                  image: image,
+                                  fit: BoxFit.cover),
+                            ),);
+                        },
+                        placeholder: (context, url) => Center(child: Container(
+                          child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 130.0,)),
+                        errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg', width: 160,
+                          height: 160, fit: BoxFit.cover,
+                        ),
+                      ),
                     ),
                   );
                 },childCount: _applyBizLicensePhotoModelList.length),

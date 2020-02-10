@@ -241,7 +241,13 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                 children: <Widget>[
                   Flexible(
                       flex: 1,
-                      child: Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[i].daoModel.icon, width: 50.0, height: 50.0,)),
+                      child: _daoViewModelList[i].daoModel.icon!=null?
+                      Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[i].daoModel.icon, width: 50.0, height: 50.0,) :
+                          CircleAvatar(
+                            backgroundImage: AssetImage('images/placeholder.jpg'),
+                            radius: 25,
+                          )
+                  ),
                   Flexible(
                       flex: 4,
                       child: Container(
@@ -265,20 +271,6 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
         ],
       ),
     );
-  }
-
-  Future<Null> _handleRefresh() async {
-    await _checkCon();
-    if(_isCon){
-      setState(() {
-        _daoViewModelList.clear();
-      });
-      await _getDaoByDeptType(page);
-    }else{
-      //Fluttertoast.showToast(msg: MyString.txt_no_internet, backgroundColor: Colors.black.withOpacity(0.7), fontSize: FontSize.textSizeSmall);
-      WarningSnackBar(_globalKey, MyString.txt_no_internet);
-    }
-    return null;
   }
 
 

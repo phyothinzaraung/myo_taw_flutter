@@ -80,9 +80,7 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
                     key: _globalKey,
                     child: Stack(
                       children: <Widget>[
-                        Align(
-                            alignment: Alignment.center,
-                            child: Image.asset('images/myotaw_man.png')),
+                        Image.asset('images/myotaw_man.png',fit: BoxFit.fill,),
                         Align(
                             alignment: Alignment.bottomLeft,
                             child: AnimatedContainer(
@@ -140,7 +138,7 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
                                   )
                               ),
                               hatchMark: FlutterSliderHatchMark(
-                                distanceFromTrackBar: 25,
+                                distanceFromTrackBar: 30,
                                 smallLine: FlutterSliderSizedBox(height: 10, width: 10, ),
                                 density: 1, // means 50 lines, from 0 to 100 percent
                                 labels: [

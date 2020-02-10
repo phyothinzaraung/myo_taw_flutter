@@ -58,13 +58,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     // TODO: implement initState
     super.initState();
     _scrollController.addListener((){
-      if(_scrollController.offset == 0){
+      if(_scrollController.offset > 500){
         setState(() {
-          _isTop = true;
+          _isTop = false;
         });
       }else{
         setState(() {
-          _isTop = false;
+          _isTop = true;
         });
       }
     });

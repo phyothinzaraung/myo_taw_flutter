@@ -195,7 +195,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
           img: 'camera.png',
           onPress: (){
             Navigator.of(context).pop();
-            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ApplyBizLicensePhotoListScreen(model)));
+            Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => ApplyBizLicensePhotoListScreen(ApplyBizLicenseModel.fromJson(_response.data))));
           }
         );
       }else{
@@ -966,7 +966,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                   setState(() {
                     _isLoading = true;
                   });
-
+                  _applyBizLicenseModel.id = 0;//int id cannot be null for post object
                   _applyBizLicenseModel.bizName = _bizNameController.text;
                   _applyBizLicenseModel.bizType = _bizTypeController.text;
                   _applyBizLicenseModel.length = double.parse(_bizLengthController.text);

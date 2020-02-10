@@ -78,57 +78,6 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
     }
   }
 
-  _calculateTaxDialog(){
-    return showDialog(context: context, builder: (context){
-      return WillPopScope(
-          child: SimpleDialog(
-            contentPadding: EdgeInsets.all(20.0),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      child: Image.asset('images/calculate_tax_no_circle.png', width: 60.0, height: 60.0,)),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(MyString.txt_biz_tax_property,
-                      style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(_getArv(),
-                      style: TextStyle(fontSize: FontSize.textSizeLarge, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 0.0),
-                    child: Text(MyString.txt_kyat,
-                      style: TextStyle(fontSize: FontSize.textSizeLarge, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text('ဖြစ်ပါသည်။',
-                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
-                  ),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(MyString.txt_thanks,
-                      style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
-                  ),
-                  CustomButtonWidget(onPress: (){
-                    Navigator.of(context).pop();
-                    clearText();
-                    },child: Text(MyString.txt_close,
-                    style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-                    borderRadius: BorderRadius.circular(10),
-                  )
-                ],
-              )
-            ],), onWillPop: (){});
-    }, barrierDismissible: false);
-  }
-
   clearText(){
     setState(() {
       _dropDownBuildingType = MyString.txt_no_selected;

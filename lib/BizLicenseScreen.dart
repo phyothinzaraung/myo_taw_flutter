@@ -80,7 +80,7 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
                   child: Container(
                     padding: EdgeInsets.only(left: 30.0, right: 30.0, top: 15.0, bottom: 15.0),
                     child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      //crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget>[
                         //text license type
                         Expanded(

@@ -143,7 +143,9 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModel.daoModel.icon, width: 100.0, height: 100.0,)
+            _daoViewModel.daoModel.icon!=null?
+            Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModel.daoModel.icon, width: 100.0, height: 100.0,) :
+                Image.asset('images/placeholder.jpg', height: 180, width: double.maxFinite, fit: BoxFit.cover,)
           ],
         ),
       ),

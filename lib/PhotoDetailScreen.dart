@@ -9,11 +9,14 @@ class PhotoDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
       title: null,
-      body: Center(
-        child: PhotoView(
-          imageProvider: NetworkImage(photoUrl),
-          loadingChild: Center(child: CircularProgressIndicator(),),
-          loadFailedChild: Image.asset('images/placeholder.jpg'),
+      body: Container(
+        color: Colors.black,
+        child: Center(
+          child: PhotoView(
+            imageProvider: NetworkImage(photoUrl),
+            loadingChild: Center(child: CircularProgressIndicator(),),
+            loadFailedChild: Image.asset('images/placeholder.jpg'),
+          ),
         ),
       ),
     );

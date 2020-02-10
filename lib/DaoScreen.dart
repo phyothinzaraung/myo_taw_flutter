@@ -85,10 +85,19 @@ class _DaoScreenState extends State<DaoScreen> {
                       child: Column(
                         children: <Widget>[
                           //image dao
-                          Flexible(flex: 2,child: Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[index].daoModel.icon,)),
+                          Flexible(flex: 3,child: _daoViewModelList[index].daoModel.icon!=null?
+                          Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[index].daoModel.icon,) :
+                              CircleAvatar(
+                                backgroundImage: AssetImage('images/placeholder.jpg'),
+                                radius: 60,
+                                backgroundColor: Colors.transparent,
+                              )
+                          ),
+                          //text title
+                          SizedBox(height: 5,),
                           //text title
                           Flexible(flex: 1,child: Text(_daoViewModelList[index].daoModel.title,textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))],),),
+                            style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),))],),),
                   );
                 },childCount: _daoViewModelList.length),
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
