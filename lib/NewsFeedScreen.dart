@@ -570,8 +570,5 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     // TODO: implement dispose
     super.dispose();
     _scrollController.dispose();
-    if(_userDb.isUserDbOpen()){
-      _userDb.closeUserDb();
-    }
   }
 }

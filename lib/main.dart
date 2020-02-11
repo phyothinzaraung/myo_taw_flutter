@@ -77,10 +77,8 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
     _sharepreferenceshelper.initSharePref();
     getUserData();
     if(widget._isNoti){
-      Future.delayed(Duration(milliseconds: 500)).whenComplete((){
-        _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
-        _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
-      });
+      _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
+      _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
     }
   }
 
@@ -103,19 +101,15 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
            onResume: (Map<String, dynamic> message) async {
              print('on resume ${message['data']['noti']}');
              if(message['data']['noti'] == 'yes'){
-               Future.delayed(Duration(milliseconds: 500)).whenComplete((){
-                 _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
-                 _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
-               });
+               _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
+               _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
              }
            },
            onLaunch: (Map<String, dynamic> message) async {
              print('on launch ${message['data']['noti']}');
              if(message['data']['noti'] == 'yes'){
-               Future.delayed(Duration(milliseconds: 500)).whenComplete((){
-                 _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
-                 _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
-               });
+               _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
+               _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
              }
            }
        );
@@ -221,7 +215,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
               items: [
                 BottomNavigationBarItem(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,)),
                 BottomNavigationBarItem(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
-                BottomNavigationBarItem(icon: Icon(Icons.notifications_none, size: 30,)),
+                BottomNavigationBarItem(icon: Icon(Icons.notifications_none, size: 25,)),
               ],
             ),
             tabBuilder: (context, index){

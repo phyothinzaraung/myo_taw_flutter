@@ -25,7 +25,7 @@ class CustomButtonWidget extends StatelessWidget {
     !isFlatButton?RaisedButton(
       onPressed: onPress,
       child: Container(
-          margin: EdgeInsets.all(8),
+          margin: EdgeInsets.all(10),
           child: child),
       color: color,
       shape: shape,

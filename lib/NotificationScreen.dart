@@ -82,8 +82,5 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    if(_userDb.isUserDbOpen()){
-      _userDb.closeUserDb();
-    }
   }
 }

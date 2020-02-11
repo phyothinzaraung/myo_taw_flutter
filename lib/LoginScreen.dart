@@ -185,7 +185,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               Container(
                                 width: double.maxFinite,
-                                height: 45.0,
                                 child: CustomButtonWidget(onPress: () async{
                                   if(_dropDownCity != 'နေရပ်ရွေးပါ' && _phoneNoController.text.isNotEmpty){
                                     await _checkCon();

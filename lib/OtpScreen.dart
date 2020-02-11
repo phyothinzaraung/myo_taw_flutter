@@ -243,7 +243,6 @@ class _OtpScreenState extends State<OtpScreen> {
                           ),
                           Container(
                             width: double.maxFinite,
-                            height: 45.0,
                             margin: EdgeInsets.only(bottom: 20),
                             child: CustomButtonWidget(onPress: () async{
                               //_logIn();

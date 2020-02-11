@@ -248,8 +248,5 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    if(_userDb.isUserDbOpen()){
-      _userDb.closeUserDb();
-    }
   }
 }
