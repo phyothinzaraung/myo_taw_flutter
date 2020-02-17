@@ -34,20 +34,20 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
     model3.title = MyString.txt_flood_level;
 
     _list = [model1,model3, model2];
-
+    _firebaseMessaging.subscribeToTopic('all');
     _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
           print('on message $message');
         },
         onResume: (Map<String, dynamic> message) async {
-          print('on resume ${message['data']['noti']}');
-          if(message['data']['noti'] == 'yes'){
+          print('on resume ${message['data']['screen']}');
+          if(message['data']['screen'] == MyString.NOTIFICATION_TAB){
             NavigatorHelper().MyNavigatorPush(context, MainScreen(true), null);
           }
         },
         onLaunch: (Map<String, dynamic> message) async {
-          print('on launch ${message['data']['noti']}');
-          if(message['data']['noti'] == 'yes'){
+          print('on launch ${message['data']['screen']}');
+          if(message['data']['screen'] == MyString.NOTIFICATION_TAB){
             NavigatorHelper().MyNavigatorPush(context, MainScreen(true), null);
           }
         }
@@ -67,7 +67,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
         }
         print('update user token');
       }
-      print('on Token refresh : ' + refreshToken);
+      print('Token refresh : ' + refreshToken);
     });
   }
 

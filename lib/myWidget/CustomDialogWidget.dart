@@ -11,6 +11,7 @@ class CustomDialogWidget {
     BuildContext context,
     String content,
     String img,
+    String buttonText,
     VoidCallback onPress,
   }){
     return Platform.isAndroid?
@@ -21,6 +22,7 @@ class CustomDialogWidget {
             context: context,
             content: content,
             img: img,
+            buttonText: buttonText,
             onPress: onPress,
           );
         }
@@ -114,6 +116,7 @@ class CustomDialogWidget {
       {BuildContext context,
         String content,
         String img,
+        String buttonText,
         VoidCallback onPress,
       }){
     return WillPopScope(
@@ -121,7 +124,7 @@ class CustomDialogWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
         children: <Widget>[
           Container(
-            padding: EdgeInsets.all(10.0),
+            padding: EdgeInsets.all(20.0),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: <Widget>[
@@ -133,8 +136,7 @@ class CustomDialogWidget {
                     child: Text(content, style: TextStyle(fontSize: FontSize.textSizeSmall),textAlign: TextAlign.center,)),
                 Container(
                   width: 200.0,
-                  height: 45.0,
-                  child: CustomButtonWidget(onPress: onPress, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                  child: CustomButtonWidget(onPress: onPress, child: Text(buttonText==null?MyString.txt_close:buttonText, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
                     color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
                 )
               ],

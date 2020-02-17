@@ -311,6 +311,9 @@ class MyString{
 
   static const double PHOTO_MAX_WIDTH= 1024;
   static const double PHOTO_MAX_HEIGHT= 720;
+
+
+  static const String NOTIFICATION_TAB = "Notification Tab";
 }
 
 class MyStringList{

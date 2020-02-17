@@ -7,6 +7,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:myotaw/customIcons/MyoTawCustomIcon.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'Database/UserDb.dart';
 import 'SplashScreen.dart';
 import 'NewsFeedScreen.dart';
@@ -89,25 +90,34 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
     _userDb.closeUserDb();
      Future.delayed(Duration(milliseconds: 100)).whenComplete((){
        if(_userModel.name == null){
-         _dialogProfileSetup();
+         CustomDialogWidget().customSuccessDialog(
+           context: context,
+           content: MyString.txt_profile_set_up_need,
+           img: 'logout_icon.png',
+           buttonText: MyString.txt_profile_set_up,
+           onPress: (){
+             _navigateToProfileFormScreen();
+           }
+         );
        }
      });
 
      if(_userModel.isWardAdmin == 0){
+       _firebaseMesssaging.subscribeToTopic('all');
        _firebaseMesssaging.configure(
            onMessage: (Map<String, dynamic> message) async {
              print('on message $message');
            },
            onResume: (Map<String, dynamic> message) async {
-             print('on resume ${message['data']['noti']}');
-             if(message['data']['noti'] == 'yes'){
+             print('on resume ${message['data']['screen']}');
+             if(message['data']['screen'] == MyString.NOTIFICATION_TAB){
                _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
                _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
              }
            },
            onLaunch: (Map<String, dynamic> message) async {
-             print('on launch ${message['data']['noti']}');
-             if(message['data']['noti'] == 'yes'){
+             print('on launch ${message['data']['screen']}');
+             if(message['data']['screen'] == MyString.NOTIFICATION_TAB){
                _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
                _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
              }
@@ -128,7 +138,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
            }
            print('update user token');
          }
-         print('on Token refresh : ' + refreshToken);
+         print('Token refresh : ' + refreshToken);
        });
      }
   }
@@ -138,35 +148,6 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
     if(result != null && result.containsKey('isNeedRefresh') == true){
       Navigator.of(context).pop();
     }
-  }
-
-  _dialogProfileSetup(){
-    return showDialog(context: context, builder: (context){
-      return WillPopScope(
-          child: SimpleDialog(
-            contentPadding: EdgeInsets.all(20.0),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      child: Image.asset('images/logout_icon.png', width: 60.0, height: 60.0,)),
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(MyString.txt_profile_set_up_need,
-                      style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
-                  ),
-                  CustomButtonWidget(onPress: (){
-                    _navigateToProfileFormScreen();
-
-                  },child: Text(MyString.txt_profile_set_up,
-                    style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),)
-                ],
-              )
-            ],), onWillPop: (){});
-    }, barrierDismissible: false);
   }
 
   _requestPermission()async{
@@ -197,7 +178,21 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
             tabs: [
               Tab(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,)),
               Tab(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
-              Tab(icon: Icon(MyoTawCustomIcon.Notification_icon, size: 25,))
+              Tab(icon: Stack(
+                alignment: Alignment.topRight,
+                children: <Widget>[
+                  Icon(MyoTawCustomIcon.Notification_icon, size: 25,),
+                  /*Container(
+                    width: 8,
+                    height: 8,
+                    margin: EdgeInsets.only(top: 2),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.red,
+                    ),
+                  )*/
+                ],
+              ))
             ],
           ),
         ),
@@ -215,7 +210,21 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
               items: [
                 BottomNavigationBarItem(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,)),
                 BottomNavigationBarItem(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
-                BottomNavigationBarItem(icon: Icon(Icons.notifications_none, size: 25,)),
+                BottomNavigationBarItem(icon: Stack(
+                  alignment: Alignment.topRight,
+                  children: <Widget>[
+                    Icon(MyoTawCustomIcon.Notification_icon, size: 25,),
+                    /*Container(
+                    width: 8,
+                    height: 8,
+                    margin: EdgeInsets.only(top: 2),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(Radius.circular(10)),
+                      color: Colors.red,
+                    ),
+                  )*/
+                  ],
+                )),
               ],
             ),
             tabBuilder: (context, index){
