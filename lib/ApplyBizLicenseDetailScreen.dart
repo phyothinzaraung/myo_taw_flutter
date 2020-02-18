@@ -34,31 +34,6 @@ class ApplyBizLicenseDetailScreen extends StatelessWidget {
     );
   }
 
-  /*Widget _applyBizLicensePhotoListWidget(BuildContext context){
-    return Container(
-      height: 45.0,
-      width: double.maxFinite,
-      margin: EdgeInsets.all(20.0),
-      decoration: BoxDecoration(borderRadius: BorderRadius.circular(7.0),
-          color: Colors.white,
-          boxShadow: [
-            BoxShadow(
-                color: Colors.black.withOpacity(0.3),
-                blurRadius: 10.0,
-                spreadRadius: 1.0,
-                offset: Offset(0.0, 2.0)
-            )
-          ]),
-      child: OutlineButton(onPressed: (){
-        *//*Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicensePhotoListScreen(_applyBizLicenseModel),
-          settings: RouteSettings(name: ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN)
-        ));*//*
-        NavigatorHelper().MyNavigatorPush(context, ApplyBizLicensePhotoListScreen(_applyBizLicenseModel), ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN);
-
-      }, child: Text(MyString.txt_need_paper_work, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)), borderSide: BorderSide(color: MyColor.colorPrimary),),
-    );
-  }*/
 
   Widget _body(BuildContext context){
     return ListView(
@@ -287,11 +262,5 @@ class ApplyBizLicenseDetailScreen extends StatelessWidget {
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
     );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text(_applyBizLicenseModel.bizName.isNotEmpty?_applyBizLicenseModel.bizName:'---', style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ,
-    );*/
   }
 }

@@ -35,10 +35,10 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
   DaoViewModel _daoViewModel;
   List<DaoPhotoModel> _daoPhotoModelList = new List();
   int index = 0;
-  List<Widget> _photoWidget = List();
+  List<Widget> _photoWidgetList = List();
+  List<Widget> _indicatorWidgetList = List();
   int _currentPhoto = 0;
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
-  bool _isCon;
   var _response;
   int page = 1;
   int pageSize = 100;
@@ -73,14 +73,12 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
     }
     for(var i in _daoPhotoModelList){
       index++;
-      _photoWidget.add(
+      _photoWidgetList.add(
           GestureDetector(
             onTap: (){
               if(_daoPhotoModelList.isNotEmpty){
-                /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoPhotoDetailScreen(_daoPhotoModelList),
-                  settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
-                ));*/
-                NavigatorHelper().MyNavigatorPush(context, DaoPhotoDetailScreen(_daoPhotoModelList), ScreenName.PHOTO_DETAIL_SCREEN);
+
+                NavigatorHelper().MyNavigatorPush(context, DaoPhotoDetailScreen(_daoPhotoModelList, _currentPhoto), ScreenName.PHOTO_DETAIL_SCREEN);
               }
             },
             child: Stack(
@@ -115,16 +113,6 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
               ],
             ),));
     }
-  }
-
-  _checkCon()async{
-    var conResult = await(Connectivity().checkConnectivity());
-    if (conResult == ConnectivityResult.none) {
-      _isCon = false;
-    }else{
-      _isCon = true;
-    }
-    print('isCon : ${_isCon}');
   }
 
   _getDaoByDeptType(int p) async{
@@ -273,8 +261,24 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
     );
   }
 
+  _indicatorList(){
+    for(int i=0; i<index;i++){
+      _indicatorWidgetList.add(Container(
+        width: _currentPhoto==i?10.0:8.0,
+        height: _currentPhoto==i?10.0:8.0,
+        margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _currentPhoto==i?MyColor.colorPrimaryDark:Colors.grey
+        ),
+      ));
+    }
+  }
+
 
   Widget _imageView(){
+    _indicatorWidgetList.clear();
+    _indicatorList();
     return _daoViewModel.photoList.isNotEmpty?
     Container(
         width: double.maxFinite,
@@ -282,7 +286,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
         child: Column(
           children: <Widget>[
             CarouselSlider(
-              items: _photoWidget,
+              items: _photoWidgetList,
               height: 170.0,
               initialPage: 0,
               autoPlay: true,
@@ -301,18 +305,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
             Container(
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  for(int i=0; i<index;i++)
-                    Container(
-                      width: _currentPhoto==i?10.0:8.0,
-                      height: _currentPhoto==i?10.0:8.0,
-                      margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                      decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: _currentPhoto==i?MyColor.colorPrimaryDark:Colors.grey
-                      ),
-                    )
-                ],
+                children: _indicatorWidgetList,
               ),
             )
           ],
@@ -366,12 +359,5 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
       body: _body(context, _asyncLoader),
       globalKey: _globalKey,
     );
-    /*return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        title: Text(_daoViewModel.daoModel.title, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ,
-    );*/
   }
 }

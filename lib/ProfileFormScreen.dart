@@ -112,13 +112,10 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
       await _getUser();
 
       await _locationDb.openLocationDb();
-      var state = await _locationDb.getState();
+      var stateList = await _locationDb.getState();
       _locationDb.closeLocationDb();
-      print(state);
-      for(var i in state){
-        _stateList.add(i);
-        print('stateList: ${i}');
-      }
+      print(stateList);
+      _stateList.addAll(stateList);
       _initStateIosPickerWidgetList();
 
       //bind user data
@@ -134,14 +131,12 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
       print(_userModel.toJson());
     }catch (e){
       print(e);
-      //_getFailUserInfoDialogBox();
       CustomDialogWidget().customSuccessDialog(
         context: context,
         content: MyString.txt_no_internet,
         img: 'warning.png',
         onPress: (){
           Navigator.of(context).pop();
-          //_init();
         }
       );
     }
@@ -152,17 +147,10 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
 
   _getTownshipByState(String state)async{
     await _locationDb.openLocationDb();
-    var township = await _locationDb.getTownshipByState(state);
+    var townshipList = await _locationDb.getTownshipByState(state);
     _locationDb.closeLocationDb();
-
-    for(var i in township){
-      setState(() {
-        _townshipList.add(i);
-        print('townshipList: ${i}');
-      });
-    }
     setState(() {
-
+      _townshipList.addAll(townshipList);
       _initTownshipIosPickerWidgetList();
     });
   }
@@ -431,12 +419,5 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
       body: _body(),
       globalKey: _scaffoldState,
     );
-    /*return Scaffold(
-      key: _scaffoldState,
-      appBar: AppBar(
-        title: Text(MyString.title_profile, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ,
-    );*/
   }
 }

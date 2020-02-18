@@ -61,48 +61,6 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
     //print('isCon : ${_isCon}');
   }
 
-  _finishDialogBox(){
-    return showDialog(
-        context: context,
-        builder: (context){
-          return WillPopScope(
-            child: SimpleDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                          margin: EdgeInsets.only(bottom: 20.0),
-                          child: Image.asset('images/isvalid.png', width: 50.0, height: 50.0,)),
-                      Container(
-                          margin: EdgeInsets.only(bottom: 10.0),
-                          child: Text(MyString.txt_tax_record_upload_success,
-                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),textAlign: TextAlign.center,)),
-                      Container(
-                        child: CustomButtonWidget(onPress: ()async{
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          await _sharepreferenceshelper.initSharePref();
-                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.NEW_TAX_RECORD_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop({'isNeedRefresh' : true});
-
-                        }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                          color: MyColor.colorPrimary,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ), onWillPop: (){},
-          );
-        }, barrierDismissible: false);
-  }
 
   _uploadTaxRecord() async{
     await _sharepreferenceshelper.initSharePref();
@@ -267,12 +225,5 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
       body: _body(context),
       globalKey: _globalKey,
     );
-    /*return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        title: Text(MyString.txt_tax_record, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ,
-    );*/
   }
 }

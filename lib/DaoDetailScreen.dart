@@ -25,7 +25,8 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
   DaoViewModel _daoViewModel;
   List<DaoPhotoModel> _daoPhotoModelList = new List();
   int index = 0;
-  List<Widget> _photoWidget = List();
+  List<Widget> _photoWidgetList = List();
+  List<Widget> _indicatorWidgetList = List();
   int _currentPhoto = 0;
   _DaoDetailScreenState(this._daoViewModel);
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
@@ -43,14 +44,12 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
     }
     for(var i in _daoPhotoModelList){
       index++;
-      _photoWidget.add(
+      _photoWidgetList.add(
           GestureDetector(
             onTap: (){
               if(_daoPhotoModelList.isNotEmpty){
-                /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoPhotoDetailScreen(_daoPhotoModelList),
-                  settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
-                ));*/
-                NavigatorHelper().MyNavigatorPush(context, DaoPhotoDetailScreen(_daoPhotoModelList), ScreenName.PHOTO_DETAIL_SCREEN);
+
+                NavigatorHelper().MyNavigatorPush(context, DaoPhotoDetailScreen(_daoPhotoModelList, _currentPhoto), ScreenName.PHOTO_DETAIL_SCREEN);
               }
             },
             child: Stack(
@@ -87,8 +86,24 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
     }
   }
 
+  _indicatorList(){
+    for(int i=0; i<index;i++){
+      _indicatorWidgetList.add(Container(
+        width: _currentPhoto==i?10.0:8.0,
+        height: _currentPhoto==i?10.0:8.0,
+        margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _currentPhoto==i?MyColor.colorPrimaryDark:Colors.grey
+        ),
+      ));
+    }
+  }
+
 
   Widget _imageView(){
+    _indicatorWidgetList.clear();
+    _indicatorList();
     return _daoViewModel.photoList.isNotEmpty?
     Container(
       width: double.maxFinite,
@@ -96,7 +111,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
       child: Column(
         children: <Widget>[
           CarouselSlider(
-            items: _photoWidget,
+            items: _photoWidgetList,
             height: 200.0,
             initialPage: 0,
             autoPlay: true,
@@ -116,18 +131,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
             //slide indicator
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                for(int i=0; i<index;i++)
-                  Container(
-                    width: _currentPhoto==i?10.0:8.0,
-                    height: _currentPhoto==i?10.0:8.0,
-                    margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: _currentPhoto==i?MyColor.colorPrimaryDark:Colors.grey
-                    ),
-                  )
-              ],
+              children: _indicatorWidgetList,
             ),
           )
         ],
@@ -182,11 +186,6 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
               onPressed: ()async{
                 await _sharepreferenceshelper.initSharePref();
-                /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => _daoViewModel.daoModel.title.contains('လိုင်စင်')?
-                    BizLicenseScreen() : _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():ContributionScreen(),
-                        settings: RouteSettings(name: _daoViewModel.daoModel.title.contains('လိုင်စင်')?ScreenName.BIZ_LICENSE_SCREEN :
-                        _sharepreferenceshelper.isWardAdmin()?ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN : ScreenName.CONTRIBUTION_SCREEN)
-                    ));*/
                 NavigatorHelper().MyNavigatorPush(context,
                     //screen
                     _daoViewModel.daoModel.title.contains('လိုင်စင်')?
@@ -210,11 +209,5 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
     );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text(_daoViewModel.daoModel.title, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body:
-    );*/
   }
 }

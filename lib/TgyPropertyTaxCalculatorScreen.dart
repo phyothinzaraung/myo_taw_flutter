@@ -456,12 +456,5 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
       body: _body(),
       globalKey: _globalKey,
     );
-    /*return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-          title: Text(MyString.txt_calculate_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),)
-      ),
-      body:
-    );*/
   }
 }

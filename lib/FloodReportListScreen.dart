@@ -144,9 +144,6 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
   }
 
   _navigateToNewFloodReportScreen()async{
-    /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewFloodReportScreen(),
-      settings: RouteSettings(name: ScreenName.NEWS_FLOOD_REPORT_SCREEN)
-    ));*/
     Map result = await NavigatorHelper().MyNavigatorPush(context, NewFloodReportScreen(), ScreenName.NEWS_FLOOD_REPORT_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh')){
       _handleRefresh();
@@ -185,20 +182,5 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
       body: _asyncLoader,
       floatingActionButton: _floatingActionButton(),
     );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text(MyString.txt_flood_level, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      floatingActionButton: Container(
-        margin: EdgeInsets.only(bottom: 10),
-        child: FloatingActionButton.extended(onPressed: (){
-
-          _navigateToNewFloodReportScreen();
-
-        }, label: Text(MyString.txt_add_flood_level_record, style: TextStyle(color: Colors.white),),
-          icon: Icon(Icons.add_circle_outline, color: Colors.white,), backgroundColor: MyColor.colorPrimary,),
-      ),
-      body: _asyncLoader
-    );*/
   }
 }

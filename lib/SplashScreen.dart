@@ -28,7 +28,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   bool _isDbSetup = true;
   String _appVersion = '';
   FirebaseMessaging _firebaseMesssaging = FirebaseMessaging();
-  bool _isNoti = false;
 
   @override
   void initState() {
@@ -144,12 +143,6 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                       child: Hero(
                           tag: 'myotaw',
                           child: Image.asset('images/myo_taw_logo_eng.png', width: 100.0, height: 100.0,)))),
-              /*Flexible(
-                flex: 1,
-                child: Container(
-                    margin: EdgeInsets.only(bottom: 20),
-                    child: Text('Myo Taw', style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: Colors.white),)),
-              ),*/
               !_isDbSetup?Flexible(
                 flex: 1,
                 child: Container(

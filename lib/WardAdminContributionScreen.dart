@@ -22,7 +22,6 @@ import 'helper/ServiceHelper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'WardAdminLocationUpdateScreen.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
-import 'dart:io';
 
 class WardAdminContributionScreen extends StatefulWidget {
   @override
@@ -321,25 +320,6 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                             ),
                           )
                         ),
-                        /*Container(
-                          margin: EdgeInsets.only(bottom: 10.0),
-                          child: CustomButtonWidget(onPressed: ()async{
-                            camera();
-                            await _sharepreferenceshelper.initSharePref();
-                            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-                          },child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                  margin: EdgeInsets.only(right: 30.0),
-                                  child: Image.asset('images/camera.png', width: 25.0, height: 25.0,)),
-                              Text(MyString.txt_upload_photo_camera, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
-                            ],
-                          ),color: Colors.white,
-                            elevation: 5.0,
-                            shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
-                          ),
-                        ),*/
 
                         Container(
                             margin: EdgeInsets.only(bottom: 20.0),
@@ -369,26 +349,6 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                               ),
                             )
                         ),
-
-                        //gallery
-                        /*Container(
-                          height: 50,
-                          margin: EdgeInsets.only(bottom: 10.0),
-                          child: CustomButtonWidget(onPressed: ()async{
-                            gallery();
-                            await _sharepreferenceshelper.initSharePref();
-                            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-                          },child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Container(
-                                  margin: EdgeInsets.only(right: 30.0),
-                                  child: Image.asset('images/gallery.png', width: 25.0, height: 25.0,)),
-                              Text(MyString.txt_upload_photo_gallery, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
-                            ],
-                          ),color: Colors.white,elevation: 5.0,
-                            shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),),
-                        ),*/
 
                         Container(
                             margin: EdgeInsets.only(bottom: 10.0),
@@ -482,46 +442,6 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                             borderRadius: BorderRadius.circular(10),
                           ),
                         )
-
-                        /*Container(
-                          width: double.maxFinite,
-                          margin: EdgeInsets.only(bottom: 20.0),
-                          child: CupertinoButton(
-                              borderRadius: BorderRadius.all(Radius.circular(10)),
-                              color: MyColor.colorPrimary,
-                              child: Text(MyString.txt_send_contribution, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                              onPressed: (){}),
-                        )*/
-                        /*Container(
-                          height: 45.0,
-                          width: double.maxFinite,
-                          margin: EdgeInsets.only(bottom: 20.0),
-                          child: CustomButtonWidget(onPressed: ()async{
-                            await _checkCon();
-                            if(_isCon){
-                              if(_messController.text.isNotEmpty && _image != null && _dropDownSubject != MyString.txt_choose_subject){
-                                setState(() {
-                                  _isLoading = true;
-                                });
-                                await _sharepreferenceshelper.initSharePref();
-                                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT,
-                                    _sharepreferenceshelper.getUserUniqueKey());
-                                _sendSuggestion();
-                              }else if(_image == null){
-                                WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
-                              }else if(_dropDownSubject == MyString.txt_choose_subject){
-                                WarningSnackBar(_globalKey, MyString.txt_need_subject);
-                              }else if(_messController.text.isEmpty){
-                                WarningSnackBar(_globalKey, MyString.txt_need_suggestion);
-                              }
-                            }else{
-                              WarningSnackBar(_globalKey, MyString.txt_no_internet);
-                            }
-
-
-                          }, child: Text(MyString.txt_send_contribution, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                            color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
-                        )*/
                       ],
                     ),
                   )
@@ -542,13 +462,6 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
       body: _body(),
       globalKey: _globalKey,
     );
-    /*return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        title: Text(MyString.txt_suggestion, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ,
-    );*/
   }
 
   @override

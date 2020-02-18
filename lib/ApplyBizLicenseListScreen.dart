@@ -1,7 +1,6 @@
 import 'package:async_loader/async_loader.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
@@ -9,7 +8,6 @@ import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/SharePreferencesHelper.dart';
-import 'package:dio/dio.dart';
 import 'model/ApplyBizLicenseModel.dart';
 import 'helper/ServiceHelper.dart';
 import 'ApplyBizLicenseDetailScreen.dart';
@@ -31,16 +29,6 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-  }
-
-  _checkCon()async{
-    var conResult = await(Connectivity().checkConnectivity());
-    if (conResult == ConnectivityResult.none) {
-      _isCon = false;
-    }else{
-      _isCon = true;
-    }
-    print('isCon : ${_isCon}');
   }
 
   _getAllApplyBizLicense()async{
@@ -147,11 +135,5 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
           style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
         body: _asyncLoader
     );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text(MyString.txt_apply_biz_license, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: _asyncLoader,
-    );*/
   }
 }

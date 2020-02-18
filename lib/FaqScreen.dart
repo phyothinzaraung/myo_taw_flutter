@@ -7,7 +7,6 @@ import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
-import 'package:dio/dio.dart';
 import 'helper/ServiceHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/FaqModel.dart';
@@ -31,7 +30,7 @@ class _FaqScreenState extends State<FaqScreen> {
   int page = 1;
   int pageSize = 100;
   List<FaqModel> _faqList = new List<FaqModel>();
-  bool _isCon, _isLoading = false;
+  bool _isLoading = false;
   List faqModelList = new List();
   String _dropDownCategory = MyString.txt_faq_category_all;
   List<String> _categoryList = new List<String>();
@@ -62,7 +61,6 @@ class _FaqScreenState extends State<FaqScreen> {
     try{
       _response = await ServiceHelper().getAllFaq(_regionCode, page, pageSize, category);
       faqModelList = _response.data['FAQwithPaging']['Results'];
-      //faqModelList = [];
       if(faqModelList != null && faqModelList.length > 0){
         var categoryList = _response.data['CategoryList'];
         for(var i in categoryList){
@@ -161,15 +159,6 @@ class _FaqScreenState extends State<FaqScreen> {
         });
   }
 
-  _checkCon()async{
-    var conResult = await(Connectivity().checkConnectivity());
-    if (conResult == ConnectivityResult.none) {
-      _isCon = false;
-    }else{
-      _isCon = true;
-    }
-    print('isCon : ${_isCon}');
-  }
 
   Widget _renderLoad(){
     return Container(
@@ -261,11 +250,5 @@ class _FaqScreenState extends State<FaqScreen> {
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: CustomProgressIndicatorWidget(),child: _asyncLoader),
     );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text(MyString.title_faq, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: modalProgressIndicator(),child: _asyncLoader)
-    );*/
   }
 }

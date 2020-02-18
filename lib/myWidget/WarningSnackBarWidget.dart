@@ -11,7 +11,7 @@ Widget WarningSnackBar(GlobalKey<ScaffoldState> globalKey, String string){
               Expanded(child: Text(string, style: TextStyle(fontSize: FontSize.textSizeExtraSmall), textAlign: TextAlign.center,))
             ],
           ),
-        duration: Duration(milliseconds: 1500),
+        duration: Duration(milliseconds: 500),
         backgroundColor: Colors.redAccent,
       )
   );

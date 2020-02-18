@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:libphonenumber/libphonenumber.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
@@ -205,8 +204,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                       if(_isValid){
                                         FocusScope.of(context).requestFocus(FocusNode());
                                         _getOtp();
-                                        //Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
-                                        //print(await SmsAutoFill().getAppSignature);
                                       }else{
                                         WarningSnackBar(_globalKey, MyString.txt_wrong_phNo);
                                       }

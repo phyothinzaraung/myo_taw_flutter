@@ -237,10 +237,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
           children: <Widget>[
             GestureDetector(
               onTap: (){
-                /*Navigator.of(context).push(MaterialPageRoute(
-                    builder: (context) => NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModelList[i].photoList),
-                  settings: RouteSettings(name: ScreenName.NEWS_FEED_DETAIL_SCREEN)
-                ));*/
+
                 NavigatorHelper().MyNavigatorPush(context, NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModelList[i].photoList), ScreenName.NEWS_FEED_DETAIL_SCREEN);
               },
               child: Container(

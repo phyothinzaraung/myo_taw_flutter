@@ -182,15 +182,6 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
                 alignment: Alignment.topRight,
                 children: <Widget>[
                   Icon(MyoTawCustomIcon.Notification_icon, size: 25,),
-                  /*Container(
-                    width: 8,
-                    height: 8,
-                    margin: EdgeInsets.only(top: 2),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.red,
-                    ),
-                  )*/
                 ],
               ))
             ],
@@ -214,15 +205,6 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
                   alignment: Alignment.topRight,
                   children: <Widget>[
                     Icon(MyoTawCustomIcon.Notification_icon, size: 25,),
-                    /*Container(
-                    width: 8,
-                    height: 8,
-                    margin: EdgeInsets.only(top: 2),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.red,
-                    ),
-                  )*/
                   ],
                 )),
               ],

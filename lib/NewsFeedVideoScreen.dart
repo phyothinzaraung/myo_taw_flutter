@@ -53,11 +53,6 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
           )
       ),
     );
-    /*return Scaffold(
-      appBar: AppBar(),
-      backgroundColor: Colors.black,
-      body: ,
-    );*/
   }
 
   @override

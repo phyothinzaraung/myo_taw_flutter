@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:myotaw/model/NotificationModel.dart';
 import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';

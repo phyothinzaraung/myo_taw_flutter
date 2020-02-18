@@ -26,7 +26,8 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   String _title,_photo,_date, _newsfeedBody,_type, _thumbNail, _videoUrl;
   List _photoList = new List();
   int _currentPhoto = 0;
-  List<Widget> _photoWidget = List();
+  List<Widget> _photoWidgetList = List();
+  List<Widget> _indicatorWidgetList = List();
   int index = 0;
 
   _NewsFeedDetailScreenState(this._newsFeedModel, this._photoList);
@@ -56,10 +57,10 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
       var photoModelList = _photoList.map((i) => NewsFeedPhotoModel.fromJson(i));
       for(var i in photoModelList){
         index++;
-        _photoWidget.add(
+        _photoWidgetList.add(
             GestureDetector(
               onTap: (){
-                NavigatorHelper().MyNavigatorPush(context, NewsFeedPhotoDetailScreen(_photoList, null),
+                NavigatorHelper().MyNavigatorPush(context, NewsFeedPhotoDetailScreen(_photoList, null, _currentPhoto),
                     ScreenName.PHOTO_DETAIL_SCREEN);
               },
               child: Stack(
@@ -95,13 +96,29 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
     }
   }
 
+  _indicatorList(){
+    for(int i=0; i<index;i++){
+      _indicatorWidgetList.add(Container(
+        width: _currentPhoto==i?10.0:8.0,
+        height: _currentPhoto==i?10.0:8.0,
+        margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            color: _currentPhoto==i?MyColor.colorPrimaryDark:Colors.grey
+        ),
+      ));
+    }
+  }
+
   Widget _isPhotoOrvideo(){
+    _indicatorWidgetList.clear();
+    _indicatorList();
     if(_type == 'Photo'){
       return _photoList.isNotEmpty?
       Column(
         children: <Widget>[
           CarouselSlider(
-            items: _photoWidget,
+            items: _photoWidgetList,
             height: 200.0,
             initialPage: 0,
             autoPlay: true,
@@ -119,25 +136,14 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
             },),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              for(int i=0; i<index;i++)
-                Container(
-                  width: _currentPhoto==i?10.0:8.0,
-                  height: _currentPhoto==i?10.0:8.0,
-                  margin: EdgeInsets.symmetric(vertical: 10.0, horizontal: 2.0),
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      color: _currentPhoto==i?MyColor.colorPrimaryDark:Colors.grey
-                  ),
-                )
-            ],
+            children: _indicatorWidgetList,
           )
         ],
       )
           :
       GestureDetector(
         onTap: (){
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen([], _photo)));
+          Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen([], _photo,_currentPhoto)));
         },
         child: CachedNetworkImage(
           width: double.maxFinite,
@@ -264,11 +270,5 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
     );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text(_title, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body:
-    );*/
   }
 }

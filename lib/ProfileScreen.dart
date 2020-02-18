@@ -475,12 +475,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: _asyncLoader),
       globalKey: _globalKey,
     );
-    /*return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        title: Text(MyString.txt_profile, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ,
-    );*/
   }
 }

@@ -77,8 +77,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
         switch(_list[i].title){
           case MyString.txt_ward_admin_feature:
             NavigatorHelper().MyNavigatorPush(context, WardAdminContributionListScreen(), ScreenName.WARD_ADMIN_CONTRIBUTION_LIST_SCREEN);
-            /*Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionListScreen(),
-                settings: RouteSettings(name: ScreenName.WARD_ADMIN_CONTRIBUTION_LIST_SCREEN)));*/
+
             break;
           case MyString.txt_myotaw_feature:
             NavigatorHelper().MyNavigatorPush(context, MainScreen(false), null);
@@ -86,8 +85,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             break;
           case MyString.txt_flood_level:
             NavigatorHelper().MyNavigatorPush(context, FloodReportListScreen(), ScreenName.FLOOD_REPORT_LIST_SCREEN);
-            /*Navigator.push(context, MaterialPageRoute(builder: (context) => FloodReportListScreen(),
-                settings: RouteSettings(name: ScreenName.FLOOD_REPORT_LIST_SCREEN)));*/
+
             break;
         }
       },
@@ -130,32 +128,5 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
         ),
         body: _body());
-    /*return Scaffold(
-      body: CupertinoPageScaffold(
-          navigationBar: CupertinoNavigationBar(
-            backgroundColor: MyColor.colorPrimary,
-            middle: Text(MyString.txt_choose_feature, style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal)),
-          ),
-          child: ListView.builder(
-              itemCount: _list.length,
-              itemBuilder: (context, index){
-                return _widget(context, index);
-              }
-          )
-      ),
-    );*/
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Center(
-            child:
-            Text(MyString.txt_choose_feature, style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), )),
-      ),
-      body: ListView.builder(
-          itemCount: _list.length,
-          itemBuilder: (context, index){
-            return _widget(context, index);
-          }
-      )
-    );*/
   }
 }

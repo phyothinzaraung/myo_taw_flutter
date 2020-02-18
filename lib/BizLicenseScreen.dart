@@ -21,7 +21,6 @@ class BizLicenseScreen extends StatefulWidget {
 
 class _BizLicenseScreenState extends State<BizLicenseScreen> {
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
-  bool _isCon;
   var _response;
   String display;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
@@ -33,21 +32,10 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
     super.initState();
   }
 
-  _checkCon()async{
-    var conResult = await(Connectivity().checkConnectivity());
-    if (conResult == ConnectivityResult.none) {
-      _isCon = false;
-    }else{
-      _isCon = true;
-    }
-    print('isCon : ${_isCon}');
-  }
-
   _getAllBizLicense()async{
     await _sharepreferenceshelper.initSharePref();
     _response = await ServiceHelper().getBizLicense(_sharepreferenceshelper.getRegionCode());
     List bizLicenseList = _response.data;
-    //var bizLicenseList = [];
     if(bizLicenseList != null && bizLicenseList.length > 0){
       for(var i in bizLicenseList){
         if(mounted){
@@ -69,9 +57,6 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
               i==0? headerTitleWidget(MyString.title_biz_license, 'business_license_nocircle') : Container(),
               GestureDetector(
                 onTap: (){
-                  /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => BizLicenseDetailScreen(_bizLicenseModelList[i]),
-                    settings: RouteSettings(name: ScreenName.BIZ_LICENSE_DETAIL_SCREEN)
-                  ));*/
                   NavigatorHelper().MyNavigatorPush(context, BizLicenseDetailScreen(_bizLicenseModelList[i]), ScreenName.BIZ_LICENSE_DETAIL_SCREEN);
                 },
                 child: Card(
@@ -160,21 +145,5 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
       ],
       trailing: _action(),
     );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text(MyString.txt_business_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-        actions: <Widget>[
-          GestureDetector(
-            onTap: (){
-              NavigatorHelper().MyNavigatorPush(context, ApplyBizLicenseListScreen(), ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN);
-            },
-            child: Container(
-                margin: EdgeInsets.only(right: 10.0),
-                child: Image.asset('images/history.png', width: 30.0, height: 30.0,)),
-          )
-        ],
-      ),
-      body: _asyncLoader,
-    );*/
   }
 }

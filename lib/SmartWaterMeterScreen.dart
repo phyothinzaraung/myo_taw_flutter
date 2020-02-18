@@ -33,7 +33,6 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
   int _amount,_finalUnit = 0;
   String _name, _meterNo;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
-  SmartWaterMeterUnitModel _smartWaterMeterUnitModel;
   UserDb _userDb = UserDb();
   UserModel _userModel;
   List<SmartWaterMeterLogModel> _smartWaterMeterLogList = new List<SmartWaterMeterLogModel>();
@@ -319,12 +318,5 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
       body: _asyncLoader,
       globalKey: _globalKey,
     );
-    /*return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        title: Text(MyString.txt_smart_water_meter, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: _asyncLoader,
-    );*/
   }
 }
