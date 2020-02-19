@@ -317,6 +317,14 @@ class ServiceHelper{
   return response;
  }
 
+ getNotification<Response>(String regionCode) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Notification/GetNotificationListForAndroid",
+      queryParameters: {"RegionCode":regionCode});
+  return response;
+ }
+
 }
 
 
