@@ -21,7 +21,6 @@ class PaymentScreen extends StatefulWidget {
 
 class _PaymentScreenState extends State<PaymentScreen> {
   TextEditingController _invoiceNoController = TextEditingController();
-  TextEditingController _taxAmountController = TextEditingController();
   String _dropDownTaxType = 'သတ်မှတ်ထားခြင်းမရှိ';
   List<String> _taxTypeList = List<String>();
   bool _isLoading = false;
@@ -113,86 +112,6 @@ class _PaymentScreenState extends State<PaymentScreen> {
 
   }
 
-  _dialogPaymentSuccess(){
-    return showDialog(context: context, builder: (context){
-      return WillPopScope(
-          child: SimpleDialog(
-            contentPadding: EdgeInsets.all(20.0),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  //image
-                  Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      child: Image.asset('images/payment_success.png', width: 60.0, height: 60.0,)),
-                  //text are u sure
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(MyString.txt_pay_tax_success,
-                      style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
-                  ),
-                  CustomButtonWidget(onPress: (){
-                    Navigator.of(context).pop();
-                    Navigator.of(context).pop({'isNeedRefresh' : true});
-
-                    },child: Text(MyString.txt_close,
-                    style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),)
-                ],
-              )
-            ],), onWillPop: (){});
-    }, barrierDismissible: false);
-  }
-
-  _dialogConfirm(){
-    return showDialog(context: context, builder: (context){
-      return WillPopScope(
-          child: SimpleDialog(
-            contentPadding: EdgeInsets.all(20.0),
-            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  //image
-                  Container(
-                      margin: EdgeInsets.only(bottom: 20.0),
-                      child: Image.asset('images/online_tax_no_circle.png', width: 60.0, height: 60.0,)),
-                  //text are u sure
-                  Container(
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: Text(MyString.txt_are_u_sure,
-                      style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      //btn top up
-                      CustomButtonWidget(onPress: () async{
-                        await _sharepreferenceshelper.initSharePref();
-                        _paymentLogModel.uniqueKey = _sharepreferenceshelper.getUserUniqueKey();
-                        _paymentLogModel.useAmount = _taxAmount;
-                        _paymentLogModel.taxType = _taxType;
-                        _paymentLogModel.invoiceNo = _invoiceNoController.text;
-                        _payTax();
-                        Navigator.of(context).pop();
-
-                        },child: Text(MyString.txt_pay_tax_confirm,
-                        style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),),
-                      //btn out
-                      CustomButtonWidget(onPress: (){
-                        Navigator.of(context).pop();
-
-                        },child: Text(MyString.txt_log_out,
-                        style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),color: MyColor.colorGrey,
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),)
-                    ],)
-                ],
-              )
-            ],), onWillPop: (){});
-    }, barrierDismissible: false);
-  }
 
    _getTaxType(){
     switch(_dropDownTaxType){
@@ -390,12 +309,5 @@ class _PaymentScreenState extends State<PaymentScreen> {
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
     );
-    /*return Scaffold(
-      key: _scaffoldState,
-      appBar: AppBar(
-        title: Text(MyString.txt_online_payment_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body:
-    );*/
   }
 }

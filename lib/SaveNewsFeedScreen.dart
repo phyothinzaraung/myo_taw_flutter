@@ -49,52 +49,6 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
     _saveNewsFeedDb.closeSaveNfDb();
   }
 
-  _dialogDelete(String id, int i){
-    showDialog(
-        context: context,
-        builder: (context){
-          return Dialog(
-            child: Container(
-              margin: EdgeInsets.all(10.0),
-              height: 160.0,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: <Widget>[
-                  Container(margin: EdgeInsets.only(bottom: 10.0),child: Image.asset('images/confirm_icon.png', width: 60.0, height: 60.0,)),
-                  Text(MyString.txt_are_u_sure, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
-                  Container(
-                    margin: EdgeInsets.only(top: 10.0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: <Widget>[
-                        CustomButtonWidget(onPress: ()async{
-                            _deleteNewsFeed(id);
-                            setState(() {
-                              _saveNewsFeedList.removeAt(i);
-                            });
-                            Navigator.of(context).pop();
-                            await _sharepreferenceshelper.initSharePref();
-                            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.SAVED_NEWS_FEED_SCREEN, ClickEvent.DELETE_SAVED_NEWS_FEED_CLICK_EVENT,
-                                _sharepreferenceshelper.getUserUniqueKey());
-                        },child: Text(MyString.txt_delete,
-                          style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                          color: MyColor.colorPrimary,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.all(Radius.circular(5))
-                          ),
-                        ),
-                        CustomButtonWidget(onPress: (){
-                            Navigator.of(context).pop();
-                        },child: Text(MyString.txt_delete_cancel, style: TextStyle(fontSize: FontSize.textSizeSmall),),color: MyColor.colorGrey,)
-                      ],
-                    ),
-                  )
-                ],
-              ),
-            ),
-          );
-        });
-  }
 
   Widget _listView(){
     return ListView.builder(
@@ -211,11 +165,5 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
           )
       ),
     );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text(MyString.title_save_nf, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ,
-    );*/
   }
 }

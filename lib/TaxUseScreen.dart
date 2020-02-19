@@ -22,7 +22,7 @@ class TaxUserScreen extends StatefulWidget {
 
 class _TaxUserScreenState extends State<TaxUserScreen> {
   Map<String, double> dataMap;
-  bool _isCon, _isLoading = false;
+  bool _isLoading = false;
   var _response;
   List<TaxUserModel> _taxUserModelList = new List<TaxUserModel>();
   List<Widget> _legnedList = new List<Widget>();
@@ -40,15 +40,6 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
     _image = 'images/arrow_green.png';
   }
 
-  _checkCon()async{
-    var conResult = await(Connectivity().checkConnectivity());
-    if (conResult == ConnectivityResult.none) {
-      _isCon = false;
-    }else{
-      _isCon = true;
-    }
-    print('isCon : ${_isCon}');
-  }
 
   _getTaxUse(int year)async{
     await _sharepreferenceshelper.initSharePref();
@@ -221,11 +212,5 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(_asyncLoader),
     );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text(MyString.txt_tax_use, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ,
-    );*/
   }
 }

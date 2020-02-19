@@ -217,11 +217,11 @@ class MyString{
   static const String txt_fill_phno = "ဖုန်းနံပါတ်ရိုက်ထည့်ပါ။";
   static const String txt_choose_city = "မြို့ရွေးချယ်ပေးပါ။";
   static const String txt_wrong_phNo= "ဖုန်းနံပါတ် မှားယွင်းနေပါသည်။";
-  static const String txt_save_newsFeed_success= "သိမ်းဆည်းပြီး။";
+  static const String txt_save_newsFeed_success = "သိမ်းဆည်းပြီး။";
   static const String txt_check_internet= "ကွန်နက်ရှင်ကိုစစ်ဆေးပါ။";
   static const String txt_need_apply_biz_photo_name= "ဓာတ်ပုံအမည် ရေးပေးပါ။";
   static const String txt_choose_building_type= "အဆောက်အဦး အမျိုးအစားရွေးပေးပါ။";
-  static const String txt_choose_story= "အထပ် အမျိုးအစားရွေးပေးပါ။";
+  static const String txt_choose_story= "အထပ် အရေအတွက်ရွေးပေးပါ။";
   static const String txt_choose_blockNo= "ရပ်ကွက် အမျိုးအစားရွေးပေးပါ။";
   static const String txt_type_length= "အလျား လိုအပ်သည်။";
   static const String txt_type_width= "အနံ လိုအပ်သည်။";
@@ -275,6 +275,10 @@ class MyString{
   static const String txt_square_feet = 'စတုန်းပေ';
   static const String txt_choose_square_feet = 'စတုန်းပေရွေးပေးပါ';
 
+  static const String txt_first_grade = 'ပထမတန်းစား';
+  static const String txt_second_grade = 'ဒုတိယတန်းစား';
+  static const String txt_third_grade = 'တတိယတန်းစား';
+
 
 
 
@@ -311,6 +315,9 @@ class MyString{
 
   static const double PHOTO_MAX_WIDTH= 1024;
   static const double PHOTO_MAX_HEIGHT= 720;
+
+
+  static const String NOTIFICATION_TAB = "Notification Tab";
 }
 
 class MyStringList{
@@ -526,6 +533,14 @@ class MyStringList{
     'ပျဉ်ထောင်ဖက်မိုး',
     'ထရံကာသွပ်မိုး',
     'ထရံကာဖက်မိုး'];
+
+  static const List<String> property_lkw_building = [
+    'RC',
+    'အုတ်တိုက်',
+    'အုတ်ညှပ်',
+    'တိုက်ခံ',
+    'ပျဉ်ထောင်',
+    'တဲအိမ်'];
 }
 
 class OrganizationId{
@@ -583,6 +598,8 @@ class ScreenName{
   static const String TGY_BIZ_TAX_CALCULATOR_SCREEN = 'Tgy biz tax calculator screen';
   static const String MLM_PROPERTY_TAX_CALCULATOR_SCREEN = 'Mlm property tax calculator screen';
   static const String MLM_BIZ_TAX_CALCULATOR_SCREEN = 'Mlm biz tax calculator screen';
+  static const String LKW_PROPERTY_TAX_CALCULATOR_SCREEN = 'Lkw property tax calculator screen';
+  static const String LKW_BIZ_TAX_CALCULATOR_SCREEN = 'Lkw biz tax calculator screen';
   static const String SAVED_NEWS_FEED_DETAIL_SCREEN = 'Saved news feed detail screen';
   static const String PROFILE_PHOTO_SCREEN = 'Profile photo screen';
   static const String PROFILE_FORM_SCREEN = 'Profile form screen';

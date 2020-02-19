@@ -128,12 +128,10 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
 
   _init()async{
     await _locationDb.openLocationDb();
-    var state = await _locationDb.getState();
+    var stateList = await _locationDb.getState();
     _locationDb.closeLocationDb();
-    for(var i in state){
-      _stateList.add(i);
-      _ownerStateList.add(i);
-    }
+    _stateList.addAll(stateList);
+    _ownerStateList.addAll(stateList);
     _pickerWidgetStateInit();
   }
 
@@ -149,28 +147,24 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
 
   _getTownshipByState(String state)async{
     await _locationDb.openLocationDb();
-    var township = await _locationDb.getTownshipByState(state);
+    var townshipList = await _locationDb.getTownshipByState(state);
     _locationDb.closeLocationDb();
 
-    for(var i in township){
-      setState(() {
-        _townshipList.add(i);
-      });
-    }
+    setState(() {
+      _townshipList.addAll(townshipList);
+    });
 
     _pickerWidgetBizTownshipInit();
   }
 
   _getOwnerTownshipByState(String state)async{
     await _locationDb.openLocationDb();
-    var township = await _locationDb.getTownshipByState(state);
+    var townshipList = await _locationDb.getTownshipByState(state);
     _locationDb.closeLocationDb();
 
-    for(var i in township){
-      setState(() {
-        _ownerTownshipList.add(i);
-      });
-    }
+    setState(() {
+      _ownerTownshipList.addAll(townshipList);
+    });
 
     _pickerWidgetOwnerTownshipInit();
   }
@@ -1019,12 +1013,5 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
         body : _body(context),
         globalKey: _globalKey,
     );
-    /*return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        title: Text(MyString.txt_business_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ,
-    );*/
   }
 }

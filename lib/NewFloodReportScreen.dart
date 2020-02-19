@@ -131,46 +131,6 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
     });
   }
 
-  _finishDialogBox(){
-    return showDialog(
-        context: context,
-        builder: (ctxt){
-          return WillPopScope(
-            child: SimpleDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                          margin: EdgeInsets.only(bottom: 20.0),
-                          child: Image.asset('images/flood_level.png', width: 50.0, height: 50.0,)),
-                      Container(
-                          margin: EdgeInsets.only(bottom: 10.0),
-                          child: Text(MyString.txt_flood_report_finish,
-                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),textAlign: TextAlign.center,)),
-                      Container(
-                        width: 200.0,
-                        height: 45.0,
-                        child: CustomButtonWidget(onPress: ()async{
-                          await _sharepreferenceshelper.initSharePref();
-                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-                          Navigator.of(context).pop();
-                          Navigator.of(context).pop({'isNeedRefresh' : true});
-
-                        }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                          color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),onWillPop: (){},
-          );
-        }, barrierDismissible: false);
-  }
 
   Widget _body(BuildContext context){
     return ModalProgressHUD(
@@ -209,23 +169,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
               borderRadius: BorderRadius.circular(10),
             ),
           ),
-          /*Container(
-              height: 50,
-              margin: EdgeInsets.only(bottom: 50.0,left: 20, right: 20),
-              child: CustomButtonWidget(onPressed: (){
-                _navigateToGetFloodLevelScreen();
-              },child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Container(
-                      margin: EdgeInsets.only(right: 30.0),
-                      child: Image.asset('images/flood_level.png', width: 25.0, height: 25.0,)),
-                  Text(MyString.txt_flood_level_height, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),)
-                ],
-              ),color: Colors.white,elevation: 5.0,
-                shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
-              ),
-            ),*/
+
           Card(
             margin: EdgeInsets.all(0),
             color: Colors.white,
@@ -304,13 +248,6 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
       body: _body(context),
       globalKey: _globalKey,
     );
-    /*return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        title: Text(MyString.txt_add_flood_level_record, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ,
-    );*/
   }
 
   @override

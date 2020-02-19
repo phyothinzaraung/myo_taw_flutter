@@ -21,7 +21,6 @@ class DaoScreen extends StatefulWidget {
 
 class _DaoScreenState extends State<DaoScreen> {
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
-  bool _isCon;
   var _response;
   int page = 1;
   int pageSize = 100;
@@ -34,16 +33,6 @@ class _DaoScreenState extends State<DaoScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-  }
-
-  _checkCon()async{
-    var conResult = await(Connectivity().checkConnectivity());
-    if (conResult == ConnectivityResult.none) {
-      _isCon = false;
-    }else{
-      _isCon = true;
-    }
-    print('isCon : ${_isCon}');
   }
 
   _getAllDao()async{
@@ -68,14 +57,8 @@ class _DaoScreenState extends State<DaoScreen> {
                   return GestureDetector(
                     onTap: (){
                       if(_daoViewModelList[index].daoModel.title.contains('ဌာနများ')){
-                        /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => DepartmentListScreen(_daoViewModelList[index]),
-                          settings: RouteSettings(name: ScreenName.DEPARTMENT_LIST_SCREEN)
-                        ));*/
                         NavigatorHelper().MyNavigatorPush(context, DepartmentListScreen(_daoViewModelList[index]), ScreenName.DEPARTMENT_LIST_SCREEN);
                       }else{
-                        /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => DaoDetailScreen(_daoViewModelList[index]),
-                            settings: RouteSettings(name: display.isEmpty?ScreenName.ABOUT_DAO_DETAIL_SCREEN : ScreenName.ABOUT_TAX_DETAIL_SCREEN)
-                        ));*/
                         NavigatorHelper().MyNavigatorPush(context, DaoDetailScreen(_daoViewModelList[index]),
                             display.isEmpty?ScreenName.ABOUT_DAO_DETAIL_SCREEN : ScreenName.ABOUT_TAX_DETAIL_SCREEN);
                       }

@@ -104,7 +104,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       _userModel = model;
     });
     await _getAllTaxRecord(page);
-    //print('userphoto; ${_userModel.photoUrl}');
   }
 
   _checkCon()async{
@@ -129,57 +128,11 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await _saveNewsFeedDb.openSaveNfDb();
     await _saveNewsFeedDb.deleteSavedNewsFeed();
      _saveNewsFeedDb.closeSaveNfDb();
-    /*Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => LoginScreen(),
-      settings: RouteSettings(name: ScreenName.LOGIN_SCREEN)
-    ),(Route<dynamic>route) => false);*/
     setState(() {
       _isLoading = false;
     });
     NavigatorHelper().MyNavigatorPushAndRemoveUntil(context, LoginScreen(), ScreenName.LOGIN_SCREEN);
   }
-
-  /*_dialogLogOut(){
-    showDialog(context: (context),
-        builder: (context){
-          return SimpleDialog(
-            children: <Widget>[
-              Column(
-                children: <Widget>[
-                  Container(margin: EdgeInsets.only(bottom: 10.0),child: Image.asset('images/logout_icon.png', width: 50.0, height: 50.0,)),
-                  Container(margin: EdgeInsets.only(bottom: 10.0),child: Text(MyString.txt_are_u_sure,
-                    style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: <Widget>[
-                      Container(
-                        height: 40.0,
-                        width: 90.0,
-                        child: CustomButtonWidget(onPressed: ()async{
-                          await _sharepreferenceshelper.initSharePref();
-                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.USER_LOG_OUT_CLICK_EVENT,
-                              _sharepreferenceshelper.getUserUniqueKey());
-                          _logOutClear();
-                        },child: Text(MyString.txt_log_out,style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                          color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
-                      ),
-                      Container(
-                        height: 40.0,
-                        width: 90.0,
-                        child: CustomButtonWidget(onPressed: (){
-                          Navigator.of(context).pop();
-                        },child: Text(MyString.txt_log_out_cancel,style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
-                          color: MyColor.colorGrey,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
-                      )
-
-                    ],
-                  )
-                ],
-              )
-            ],
-          );
-        }
-    );
-  }*/
 
   void _deleteTaxRecord(int id)async{
     try{
@@ -198,9 +151,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     TaxRecordModel taxRecordModel = _taxRecordModelList[i];
     return GestureDetector(
       onTap: (){
-        /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => PhotoDetailScreen(BaseUrl.TAX_RECORD_PHOTO_URL+taxRecordModel.photoUrl),
-          settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
-        ));*/
         NavigatorHelper().MyNavigatorPush(context, PhotoDetailScreen(BaseUrl.TAX_RECORD_PHOTO_URL+taxRecordModel.photoUrl),
             ScreenName.PHOTO_DETAIL_SCREEN);
       },
@@ -253,13 +203,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToProfileScreen()async{
-    /*Map result = await Navigator.of(context).push(MaterialPageRoute(
-        builder: (context) => ProfileFormScreen(_sharepreferenceshelper.isWardAdmin()),
-      settings: RouteSettings(name: ScreenName.PROFILE_FORM_SCREEN)
-    ));*/
     Map result = await NavigatorHelper().MyNavigatorPush(context, ProfileFormScreen(_sharepreferenceshelper.isWardAdmin()), ScreenName.PROFILE_FORM_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
-      //await _getUser();
       await _handleRefresh();
     }
   }
@@ -530,12 +475,5 @@ class _ProfileScreenState extends State<ProfileScreen> {
           child: _asyncLoader),
       globalKey: _globalKey,
     );
-    /*return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        title: Text(MyString.txt_profile, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ,
-    );*/
   }
 }

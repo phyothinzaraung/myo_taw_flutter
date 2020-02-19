@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/LkwPropertyTaxCalculatorScreen.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
@@ -69,6 +70,9 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
                           case MyString.MLM_REGIONCODE:
                             NavigatorHelper().MyNavigatorPush(context, MlmPropertyTaxCalculatorScreen(), ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN);
                             break;
+                          case MyString.LKW_REGIONCODE:
+                            NavigatorHelper().MyNavigatorPush(context, LkwPropertyTaxCalculatorScreen(), ScreenName.LKW_PROPERTY_TAX_CALCULATOR_SCREEN);
+                            break;
                         }
                       }else{
                         switch (_sharepreferenceshelper.getRegionCode()){
@@ -107,11 +111,5 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _listView(),
     );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text(MyString.txt_calculate_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),)
-      ),
-      body: _listView()
-    );*/
   }
 }

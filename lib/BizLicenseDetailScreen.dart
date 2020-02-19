@@ -80,11 +80,5 @@ class _BizLicenseDetailScreenState extends State<BizLicenseDetailScreen> {
           style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
         body: _body(context)
     );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text(MyString.txt_business_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body:
-    );*/
   }
 }

@@ -88,28 +88,12 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                 delegate: SliverChildBuilderDelegate((context, index){
                   return GestureDetector(
                     onTap: (){
-                      /*Navigator.of(context).push(MaterialPageRoute(
-                          builder: (context) => PhotoDetailScreen(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl),
-                        settings: RouteSettings(name: ScreenName.PHOTO_DETAIL_SCREEN)
-                      ));*/
                       NavigatorHelper().MyNavigatorPush(context, PhotoDetailScreen(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl),
                           ScreenName.PHOTO_DETAIL_SCREEN);
                     },
                     child: Padding(
                       padding: EdgeInsets.all(10.0),
-                      child: /*_applyBizLicensePhotoModelList[index].photoUrl!=null?
-                      Image.network(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl,
-                        width: 160.0, height: 160.0, fit: BoxFit.cover, loadingBuilder: (context, child, loadingProgress){
-                          if (loadingProgress == null) return child;
-                          return Center(
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null ?
-                              loadingProgress.cumulativeBytesLoaded / loadingProgress.expectedTotalBytes
-                                  : null,
-                            ),
-                          );
-                        },) : Image.asset('images/placeholder.jpg',width: 160.0, height: 160.0, fit: BoxFit.cover),*/
-                      CachedNetworkImage(
+                      child: CachedNetworkImage(
                         imageUrl: BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl,
                         imageBuilder: (context, image){
                           return Container(
@@ -272,12 +256,5 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
         body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: CustomProgressIndicatorWidget(),child: _asyncLoader),
         globalKey: _globalKey,
     );
-    /*return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        title: Text(MyString.txt_apply_biz_license_photo, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: _modalProgressIndicator(),child: _asyncLoader),
-    );*/
   }
 }

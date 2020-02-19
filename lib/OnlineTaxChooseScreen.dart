@@ -1,23 +1,18 @@
 import 'package:async_loader/async_loader.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:myotaw/OnlineTaxScreen.dart';
 import 'package:myotaw/database/UserDb.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/model/DashBoardModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/OnlineTaxPinRequestDialogWidget.dart';
-import 'package:pin_code_text_field/pin_code_text_field.dart';
 import 'PinCodeSetUpScreen.dart';
 import 'helper/MyoTawConstant.dart';
-import 'SmartWaterMeterScreen.dart';
 import 'helper/ServiceHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/UserModel.dart';
 import 'myWidget/NoConnectionWidget.dart';
 import 'myWidget/PrimaryColorSnackBarWidget.dart';
-import 'myWidget/WarningSnackBarWidget.dart';
 
 class OnlineTaxChooseScreen extends StatefulWidget {
   @override
@@ -167,13 +162,6 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
       body: _asyncLoader,
       globalKey: _globalKey,
     );
-    /*return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-          title: Text(MyString.txt_online_payment_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),)
-      ),
-      body: _asyncLoader,
-    );*/
   }
 }
 

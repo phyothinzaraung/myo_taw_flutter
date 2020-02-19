@@ -20,10 +20,5 @@ class PhotoDetailScreen extends StatelessWidget {
         ),
       ),
     );
-    /*return Scaffold(
-      backgroundColor: Colors.black,
-      appBar: AppBar(),
-      body: ,
-    );*/
   }
 }

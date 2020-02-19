@@ -178,10 +178,5 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
       body: _body(),
       globalKey: _globalKey,
     );
-    /*return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(),
-      body: ,
-    );*/
   }
 }

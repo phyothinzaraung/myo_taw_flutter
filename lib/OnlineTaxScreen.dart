@@ -15,9 +15,7 @@ import 'helper/NumConvertHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
 import 'TopUpRecordListScreen.dart';
-import 'PinCodeSetUpScreen.dart';
 import 'PaymentScreen.dart';
-import 'package:flutter_money_formatter/flutter_money_formatter.dart';
 
 import 'myWidget/CustomButtonWidget.dart';
 
@@ -320,12 +318,5 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
       body: _asyncLoader,
       globalKey: _globalKey,
     );
-    /*return Scaffold(
-      key: _globalKey,
-      appBar: AppBar(
-        title: Text(MyString.txt_online_tax, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: _asyncLoader,
-    );*/
   }
 }

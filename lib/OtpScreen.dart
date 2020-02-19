@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
-import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sms_autofill/sms_autofill.dart';
@@ -93,13 +92,10 @@ class _OtpScreenState extends State<OtpScreen> {
         await _userDb.insert(_userModel);
         _userDb.closeUserDb();
         if(_userModel.isWardAdmin==1){
-          /*Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => WardAdminFeatureChooseScreen(),
-            settings: RouteSettings(name: ScreenName.WARD_ADMIN_FEATURE_SCREEN)
-          ));*/
+
           NavigatorHelper().MyNavigatorPushReplacement(context, WardAdminFeatureChooseScreen(), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{
-          /*Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MainScreen(),
-          ));*/
+
           NavigatorHelper().MyNavigatorPushReplacement(context, MainScreen(false), null);
         }
 
@@ -243,7 +239,6 @@ class _OtpScreenState extends State<OtpScreen> {
                           ),
                           Container(
                             width: double.maxFinite,
-                            height: 45.0,
                             margin: EdgeInsets.only(bottom: 20),
                             child: CustomButtonWidget(onPress: () async{
                               //_logIn();
@@ -318,8 +313,6 @@ class _OtpScreenState extends State<OtpScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    //SmsRetriever.stopListening();
-    //SmsAutoFill().unregisterListener();
     _timer.cancel();
   }
 }

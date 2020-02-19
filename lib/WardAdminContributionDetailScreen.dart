@@ -69,11 +69,5 @@ class WardAdminContributionDetailScreen extends StatelessWidget {
           style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
         body: _body(context)
     );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Text(_contributionModel.subject, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-      ),
-      body: ,
-    );*/
   }
 }

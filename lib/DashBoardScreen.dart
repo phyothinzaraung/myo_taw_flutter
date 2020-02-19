@@ -161,11 +161,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
               NavigatorHelper().MyNavigatorPush(context, TaxUserScreen(), ScreenName.TAX_USE_SCREEN);
               break;
             case MyString.txt_calculate_tax:
-              if(_sharepreferenceshelper.getRegionCode() == 'LKW'){
-                PrimaryColorSnackBarWidget(_globalKey, MyString.txt_coming_soon);
-              }else{
-                NavigatorHelper().MyNavigatorPush(context, CalculateTaxScreen(), ScreenName.CALCULATE_TAX_SCREEN);
-              }
+              NavigatorHelper().MyNavigatorPush(context, CalculateTaxScreen(), ScreenName.CALCULATE_TAX_SCREEN);
               break;
             case MyString.txt_faq:
 
@@ -248,8 +244,5 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    if(_userDb.isUserDbOpen()){
-      _userDb.closeUserDb();
-    }
   }
 }

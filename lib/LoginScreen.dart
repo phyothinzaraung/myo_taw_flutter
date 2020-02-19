@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/material.dart';
 import 'package:libphonenumber/libphonenumber.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
@@ -185,7 +184,6 @@ class _LoginScreenState extends State<LoginScreen> {
                               ),
                               Container(
                                 width: double.maxFinite,
-                                height: 45.0,
                                 child: CustomButtonWidget(onPress: () async{
                                   if(_dropDownCity != 'နေရပ်ရွေးပါ' && _phoneNoController.text.isNotEmpty){
                                     await _checkCon();
@@ -206,8 +204,6 @@ class _LoginScreenState extends State<LoginScreen> {
                                       if(_isValid){
                                         FocusScope.of(context).requestFocus(FocusNode());
                                         _getOtp();
-                                        //Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
-                                        //print(await SmsAutoFill().getAppSignature);
                                       }else{
                                         WarningSnackBar(_globalKey, MyString.txt_wrong_phNo);
                                       }

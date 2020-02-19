@@ -3,7 +3,6 @@ import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/FloodLevelFtInHelper.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
-import 'package:myotaw/helper/NumConvertHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
@@ -28,50 +27,10 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
     super.initState();
   }
 
-  _floodWarningDialog(){
-    return showDialog(
-        context: context,
-        builder: (ctxt){
-          return WillPopScope(
-            child: SimpleDialog(
-              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
-              children: <Widget>[
-                Container(
-                  padding: EdgeInsets.all(10.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                          margin: EdgeInsets.only(bottom: 20.0),
-                          child: Image.asset('images/warning.png', width: 50.0, height: 50.0,)),
-                      Container(
-                          margin: EdgeInsets.only(bottom: 10.0),
-                          child: Text(MyString.txt_need_flood_level,
-                            style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),textAlign: TextAlign.center,)),
-                      Container(
-                        width: 200.0,
-                        height: 45.0,
-                        child: CustomButtonWidget(onPress: ()async{
-                          await _sharepreferenceshelper.initSharePref();
-                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-                          Navigator.of(context).pop();
-
-                        }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                          color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),onWillPop: (){},
-          );
-        }, barrierDismissible: false);
-  }
-
   Widget _body(BuildContext context){
     return Center(
         child: Container(
-          margin: EdgeInsets.only(top: 30),
+          margin: EdgeInsets.only(top: 40),
           child: Column(
             children: <Widget>[
               Flexible(
@@ -80,7 +39,9 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
                     key: _globalKey,
                     child: Stack(
                       children: <Widget>[
-                        Image.asset('images/myotaw_man.png',fit: BoxFit.fill,),
+                        Align(
+                            alignment: Alignment.centerLeft,
+                            child: Image.asset('images/myotaw_man.png', fit: BoxFit.fitHeight, height: double.maxFinite,)),
                         Align(
                             alignment: Alignment.bottomLeft,
                             child: AnimatedContainer(
@@ -93,7 +54,7 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
                         Align(
                           alignment: Alignment.centerRight,
                           child: Container(
-                            margin: EdgeInsets.only(right: 35, top: 30, bottom: 30),
+                            margin: EdgeInsets.only(right: 20, top: 30, bottom: 30),
                             child: FlutterSlider(
                               handler: FlutterSliderHandler(
                                   decoration: BoxDecoration(
@@ -138,17 +99,17 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
                                   )
                               ),
                               hatchMark: FlutterSliderHatchMark(
-                                distanceFromTrackBar: 30,
+                                distanceFromTrackBar: 20,
                                 smallLine: FlutterSliderSizedBox(height: 10, width: 10, ),
                                 density: 1, // means 50 lines, from 0 to 100 percent
                                 labels: [
-                                  FlutterSliderHatchMarkLabel(percent: 0, label: Text('၀ ${MyString.txt_feet}')),
-                                  FlutterSliderHatchMarkLabel(percent: 17, label: Text('၁ ${MyString.txt_feet}')),
-                                  FlutterSliderHatchMarkLabel(percent: 33, label: Text('၂ ${MyString.txt_feet}')),
-                                  FlutterSliderHatchMarkLabel(percent: 50, label: Text('၃ ${MyString.txt_feet}')),
-                                  FlutterSliderHatchMarkLabel(percent: 67, label: Text('၄ ${MyString.txt_feet}')),
-                                  FlutterSliderHatchMarkLabel(percent: 83, label: Text('၅ ${MyString.txt_feet}')),
-                                  FlutterSliderHatchMarkLabel(percent: 100, label: Text('၆ ${MyString.txt_feet}')),
+                                  FlutterSliderHatchMarkLabel(percent: 0, label: Text('၀ ${MyString.txt_feet}', style: TextStyle(fontSize: FontSize.textSizeSmall))),
+                                  FlutterSliderHatchMarkLabel(percent: 17, label: Text('၁ ${MyString.txt_feet}', style: TextStyle(fontSize: FontSize.textSizeSmall))),
+                                  FlutterSliderHatchMarkLabel(percent: 33, label: Text('၂ ${MyString.txt_feet}', style: TextStyle(fontSize: FontSize.textSizeSmall))),
+                                  FlutterSliderHatchMarkLabel(percent: 50, label: Text('၃ ${MyString.txt_feet}', style: TextStyle(fontSize: FontSize.textSizeSmall))),
+                                  FlutterSliderHatchMarkLabel(percent: 67, label: Text('၄ ${MyString.txt_feet}', style: TextStyle(fontSize: FontSize.textSizeSmall))),
+                                  FlutterSliderHatchMarkLabel(percent: 83, label: Text('၅ ${MyString.txt_feet}', style: TextStyle(fontSize: FontSize.textSizeSmall))),
+                                  FlutterSliderHatchMarkLabel(percent: 100, label: Text('၆ ${MyString.txt_feet}', style: TextStyle(fontSize: FontSize.textSizeSmall))),
                                 ],
                               ),
                               selectByTap: false,
@@ -197,8 +158,6 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
                       content: MyString.txt_need_flood_level,
                       context: context,
                       onPress: ()async{
-                        await _sharepreferenceshelper.initSharePref();
-                        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                         Navigator.of(context).pop();
                       },
                       img: 'warning.png',
@@ -223,21 +182,15 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: (){
-        if(_floodLevel != 0){
-          return Future.value(true);
-        }else{
-          CustomDialogWidget().customSuccessDialog(
-            content: MyString.txt_need_flood_level,
-            context: context,
-            onPress: ()async{
-              await _sharepreferenceshelper.initSharePref();
-              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-              Navigator.of(context).pop();
-            },
-            img: 'warning.png',
-          );
-          return Future.value(false);
-        }
+        CustomDialogWidget().customSuccessDialog(
+          content: MyString.txt_need_flood_level,
+          context: context,
+          onPress: ()async{
+            Navigator.of(context).pop();
+          },
+          img: 'warning.png',
+        );
+        return Future.value(false);
       },
       child: CustomScaffoldWidget(
         title: Text(MyString.txt_get_flood_level,maxLines: 1, overflow: TextOverflow.ellipsis,
