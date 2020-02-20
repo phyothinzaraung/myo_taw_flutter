@@ -272,8 +272,9 @@ class MyString{
   static const String txt_confirm = 'ရွေးမည်';
   static const String txt_faq_category_all = 'အားလုံး';
   static const String txt_get_flood_level_photo = 'ဓာတ်ပုံနှင့် ရေအမြင့်ယူရန်';
-  static const String txt_square_feet = 'စတုန်းပေ';
-  static const String txt_choose_square_feet = 'စတုန်းပေရွေးပေးပါ';
+  static const String txt_square_feet = 'စတုရန်းပေ';
+  static const String txt_choose_square_feet = 'စတုရန်းပေရွေးပေးပါ';
+  static const String txt_no_notification = 'စတုရန်းပေရွေးပေးပါ';
 
   static const String txt_first_grade = 'ပထမတန်းစား';
   static const String txt_second_grade = 'ဒုတိယတန်းစား';

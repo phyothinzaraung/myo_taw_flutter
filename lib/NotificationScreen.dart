@@ -18,7 +18,7 @@ class NotificationScreen extends StatefulWidget {
   _NotificationScreenState createState() => _NotificationScreenState();
 }
 
-class _NotificationScreenState extends State<NotificationScreen> {
+class _NotificationScreenState extends State<NotificationScreen> with AutomaticKeepAliveClientMixin<NotificationScreen> {
   UserModel _userModel;
   UserDb _userDb = UserDb();
 
@@ -38,9 +38,12 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _getUser();
     FireBaseAnalyticsHelper().TrackCurrentScreen(ScreenName.NOTIFICATION_SCREEN);
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 
   _getUser()async{
     await _sharepreferenceshelper.initSharePref();
@@ -51,6 +54,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       _userModel = model;
     });
     _initHeaderTitle();
+    await _getNotifications();
   }
 
   _initHeaderTitle(){
@@ -71,7 +75,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
     await _sharepreferenceshelper.initSharePref();
     _regionCode = _sharepreferenceshelper.getRegionCode();
     try{
-      response = await ServiceHelper().getNotification(_regionCode);
+      response = await ServiceHelper().getNotification(_sharepreferenceshelper.getRegionCode());
       if(response.data != null) {
         _notificationModelList = response.data;
         for(var i in _notificationModelList){
@@ -88,7 +92,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
 
   }
 
-  Widget _headerNotificaton(){
+  Widget _headerNotification(){
     return Container(
         margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
         child: Column(
@@ -145,14 +149,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
       itemBuilder: (BuildContext context, int i){
         return Column(
           children: <Widget>[
-            i==0? Container(
-              margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
-              child: Column(
-                children: <Widget>[
-                  _headerNotificaton()
-                ],
-              ),
-            ):Container(width: 0.0, height: 0.0,),
+            i==0? _headerNotification():Container(),
             _notificationListWidget(i)
           ],
         );
@@ -160,32 +157,24 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
+  Future<Null> _handleRefresh() async {
+    _notificationList.clear();
+    asyncLoaderState.currentState.reloadState();
+    return null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     print(_notificationList);
     var _asyncLoader = new AsyncLoader(
         key: asyncLoaderState,
-        initState: () async => await _getNotifications(),
+        initState: () async => await _getUser(),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
-        renderSuccess: ({data}) => Container(
-          child: Column(
-            children: <Widget>[
-              _headerNotificaton(),
-              Expanded(child: _notificationList.isNotEmpty? _listView() : emptyView(asyncLoaderState, MyString.txt_no_data))
-            ],
-          ),
-        )
+        renderSuccess: ({data}) => RefreshIndicator(child: _listView(), onRefresh: _handleRefresh)
     );
-//    return CustomScaffoldWidget(
-//      title: Text(MyString.title_faq,maxLines: 1, overflow: TextOverflow.ellipsis,
-//        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
-//      body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: CustomProgressIndicatorWidget(),child: _asyncLoader),
-//    );
     return Scaffold(
-//      appBar: AppBar(
-//        title: Text(MyString.txt_title_notification, style: TextStyle(fontSize: FontSize.textSizeNormal),),
-//      ),
       body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: CustomProgressIndicatorWidget(),child: _asyncLoader)
     );
   }
@@ -195,7 +184,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            _headerNotificaton(),
+            _headerNotification(),
             Container(margin: EdgeInsets.only(top: 10.0),child: CircularProgressIndicator())
           ],
         )
@@ -206,8 +195,5 @@ class _NotificationScreenState extends State<NotificationScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    if(_userDb.isUserDbOpen()){
-      _userDb.closeUserDb();
-    }
   }
 }

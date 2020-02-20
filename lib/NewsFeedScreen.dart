@@ -479,7 +479,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     _headerNewsFeed(),
                   ],
                 ),
-              ):Container(width: 0.0,height: 0.0,),
+              ):Container(),
               _newsFeedListWidget(i)
             ],
           );

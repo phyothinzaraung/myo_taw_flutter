@@ -1,32 +1,11 @@
-import 'package:myotaw/helper/DbHelper.dart';
+
 class NotificationModel{
-//  String _title;
-//  String _body;
-//
-//  NotificationModel();
-//
-//
-//  String get title => _title;
-//
-//  set title(String value) {
-//    _title = value;
-//  }
-//
-//  NotificationModel.fromMap(Map<String, dynamic> map):
-//        _title = map[DbHelper.COLUMN_SAVE_NF_TITLE],
-//        _body = map[DbHelper.COLUMN_SAVE_NF_BODY];
-//
-//  String get body => _body;
-//
-//  set body(String value) {
-//    _body = value;
-//  }
 
     int _id;
     String _message;
     String _regionCode;
     String _postedDate;
-    String _adminID;
+    int _adminID;
     String _adminName;
     String _accessTime;
     bool _isDeleted;
@@ -56,9 +35,9 @@ class NotificationModel{
       _postedDate = value;
     }
 
-    String get adminID => _adminID;
+    int get adminID => _adminID;
 
-    set adminID(String value) {
+    set adminID(int value) {
       _adminID = value;
     }
 
