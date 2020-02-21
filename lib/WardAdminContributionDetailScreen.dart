@@ -53,7 +53,7 @@ class WardAdminContributionDetailScreen extends StatelessWidget {
                     style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),)) : Container(),
               _contributionModel.floodLevel!=0?Container(
                   margin: EdgeInsets.only(left: 20),
-                  child: Text(MyString.txt_flood_level_inch+FloodLevelFtInHelper().getFtInFromWaterLevel(_contributionModel.floodLevel),
+                  child: Text(MyString.txt_flood_level_inch+FloodLevelFtInHelper.getFtInFromWaterLevel(_contributionModel.floodLevel),
                     style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),)) : Container(),
 
             ],

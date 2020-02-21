@@ -2,7 +2,7 @@ import 'NumConvertHelper.dart';
 
 class TaxUseBudgetYearHelper{
 
-    String getBudgetYear(int year){
+    static String getBudgetYear(int year){
      if(year == 2018)
      {
        return NumConvertHelper.getMyanNumInt(year) + " - " + NumConvertHelper.getMyanNumInt(year);

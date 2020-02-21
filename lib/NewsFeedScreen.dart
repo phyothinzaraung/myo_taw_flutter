@@ -68,7 +68,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
         });
       }
     });
-    FireBaseAnalyticsHelper().TrackCurrentScreen(ScreenName.NEWS_FEED_SCREEN);
+    FireBaseAnalyticsHelper.TrackCurrentScreen(ScreenName.NEWS_FEED_SCREEN);
   }
 
 
@@ -227,7 +227,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     String newsFeedThumbNail = newsFeedModel.thumbNail;
     String title = newsFeedModel.title;
     String body = newsFeedModel.body;
-    String date = ShowDateTimeHelper().showDateTimeDifference(newsFeedModel.accesstime);
+    String date = ShowDateTimeHelper.showDateTimeDifference(newsFeedModel.accesstime);
     bool isPhoto = _isPhoto(newsFeedModel.uploadType);
     return Card(
       margin: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 10.0),
@@ -238,7 +238,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             GestureDetector(
               onTap: (){
 
-                NavigatorHelper().MyNavigatorPush(context, NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModelList[i].photoList), ScreenName.NEWS_FEED_DETAIL_SCREEN);
+                NavigatorHelper.MyNavigatorPush(context, NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModelList[i].photoList), ScreenName.NEWS_FEED_DETAIL_SCREEN);
               },
               child: Container(
                 child: Column(
@@ -337,7 +337,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                             newsFeedModel.likeCount--;
                           }
                         }
-                        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_LIKE_CLICK_EVENT, _userUniqueKey);
+                        FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_LIKE_CLICK_EVENT, _userUniqueKey);
                         _callLikeWebService(newsFeedModel.uniqueKey);
                       });
                     },
@@ -353,7 +353,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   ),
                   //save newsfeed button
                   Expanded(child: GestureDetector(onTap: (){
-                    FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_SAVE_CLICK_EVENT, _userUniqueKey);
+                    FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_SAVE_CLICK_EVENT, _userUniqueKey);
                     _saveNewsFeed(newsFeedModel);
                     if(!newsFeedModel.isSaved){
                       setState(() {
@@ -409,7 +409,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             ),
             GestureDetector(
               onTap: (){
-                NavigatorHelper().MyNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
+                NavigatorHelper.MyNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
 
               },
               child: Hero(
@@ -517,7 +517,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     if(!_isTop){
       return FloatingActionButton(
         onPressed: (){
-          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.GO_TO_TOP_CLICK_EVENT, _userUniqueKey);
+          FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.GO_TO_TOP_CLICK_EVENT, _userUniqueKey);
           _topToScreen();
         },
         child: Icon(Icons.arrow_upward, color: Colors.white, size: 20,),

@@ -2,7 +2,7 @@ import 'MyoTawConstant.dart';
 import 'NumConvertHelper.dart';
 
 class FloodLevelFtInHelper{
-  String getFtInFromWaterLevel(double value){
+  static String getFtInFromWaterLevel(double value){
     String _feetStr = (value/12).toString();
     String _inchStr = (value%12.toInt()).toString();
     List _listFeet = _feetStr.split('.');

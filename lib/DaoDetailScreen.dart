@@ -49,7 +49,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
             onTap: (){
               if(_daoPhotoModelList.isNotEmpty){
 
-                NavigatorHelper().MyNavigatorPush(context, DaoPhotoDetailScreen(_daoPhotoModelList, _currentPhoto), ScreenName.PHOTO_DETAIL_SCREEN);
+                NavigatorHelper.MyNavigatorPush(context, DaoPhotoDetailScreen(_daoPhotoModelList, _currentPhoto), ScreenName.PHOTO_DETAIL_SCREEN);
               }
             },
             child: Stack(
@@ -186,7 +186,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
               shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
               onPressed: ()async{
                 await _sharepreferenceshelper.initSharePref();
-                NavigatorHelper().MyNavigatorPush(context,
+                NavigatorHelper.MyNavigatorPush(context,
                     //screen
                     _daoViewModel.daoModel.title.contains('လိုင်စင်')?
                     BizLicenseScreen() : _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():ContributionScreen(),

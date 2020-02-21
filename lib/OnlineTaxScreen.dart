@@ -113,7 +113,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
 
 
   _navigateToPaymentScreen()async{
-    Map result = await NavigatorHelper().MyNavigatorPush(context, PaymentScreen(), ScreenName.ONLINE_TAX_PAYMENT_SCREEN);
+    Map result = await NavigatorHelper.MyNavigatorPush(context, PaymentScreen(), ScreenName.ONLINE_TAX_PAYMENT_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       _handleRefresh();
     }
@@ -187,10 +187,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                               height: 45.0,
                               child: CustomButtonWidget(onPress: ()async{
 
-                                /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpRecordListScreen(_userModel),
-                                  settings: RouteSettings(name: ScreenName.TOP_UP_RECORD_LIST_SCREEN)
-                                ));*/
-                                NavigatorHelper().MyNavigatorPush(context, TopUpRecordListScreen(_userModel), ScreenName.TOP_UP_RECORD_LIST_SCREEN);
+                                NavigatorHelper.MyNavigatorPush(context, TopUpRecordListScreen(_userModel), ScreenName.TOP_UP_RECORD_LIST_SCREEN);
 
                                 }, child: Text(MyString.txt_top_up_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                                 color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
@@ -199,7 +196,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                           Expanded(
                             child: Container(
                               margin: EdgeInsets.only(left: 2.5),
-                              height: 45.0,
+                              width: double.maxFinite,
                               child: CustomButtonWidget(onPress: ()async{
                                 _navigateToPaymentScreen();
 

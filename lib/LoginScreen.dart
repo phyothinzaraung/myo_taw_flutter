@@ -67,7 +67,7 @@ class _LoginScreenState extends State<LoginScreen> {
     var result = response.data;
     if(result != null){
       if(result['code'] == '002'){
-        NavigatorHelper().MyNavigatorPushReplacement(context, OtpScreen(_normalizedPhNo, _regionCode), ScreenName.OTP_SCREEN);
+        NavigatorHelper.MyNavigatorPushReplacement(context, OtpScreen(_normalizedPhNo, _regionCode), ScreenName.OTP_SCREEN);
       }
     }else{
       WarningSnackBar(_globalKey, MyString.txt_try_again);

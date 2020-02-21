@@ -135,9 +135,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
             ),
             GestureDetector(
               onTap: (){
-                /*Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => ProfileScreen(), settings: RouteSettings(name: ScreenName.PROFILE_SCREEN)));*/
-                NavigatorHelper().MyNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
+                NavigatorHelper.MyNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
 
               },
               child: Hero(
@@ -221,7 +219,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
           children: <Widget>[
             GestureDetector(
               onTap: (){
-                NavigatorHelper().MyNavigatorPush(context,
+                NavigatorHelper.MyNavigatorPush(context,
                     WardAdminContributionDetailScreen(_contributionModelList[i]), ScreenName.CONTRIBUTION_DETAIL_SCREEN);
               },
               child: Container(
@@ -237,7 +235,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                               margin: EdgeInsets.only(right: 10),
                               child: Image.asset("images/calendar.png", width: 15, height: 15,)),
                           //calendar date
-                          Expanded(child: Text(ShowDateTimeHelper().showDateTimeDifference(_contributionModelList[i].accesstime), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
+                          Expanded(child: Text(ShowDateTimeHelper.showDateTimeDifference(_contributionModelList[i].accesstime), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)),
                         ],
                       ),
                     ),
@@ -394,7 +392,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
     /*Map result = await Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionScreen(),
       settings: RouteSettings(name: ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN)
     ));*/
-    Map result = await NavigatorHelper().MyNavigatorPush(context, WardAdminContributionScreen(), ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN);
+    Map result = await NavigatorHelper.MyNavigatorPush(context, WardAdminContributionScreen(), ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       await _handleRefresh();
     }

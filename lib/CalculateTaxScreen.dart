@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/LkwBizTaxCalculatorScreen.dart';
 import 'package:myotaw/LkwPropertyTaxCalculatorScreen.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
@@ -65,22 +66,25 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
                       if(index == 0){
                         switch (_sharepreferenceshelper.getRegionCode()){
                           case MyString.TGY_REGIONCODE:
-                            NavigatorHelper().MyNavigatorPush(context, TgyPropertyTaxCalculatorScreen(), ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN);
+                            NavigatorHelper.MyNavigatorPush(context, TgyPropertyTaxCalculatorScreen(), ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN);
                             break;
                           case MyString.MLM_REGIONCODE:
-                            NavigatorHelper().MyNavigatorPush(context, MlmPropertyTaxCalculatorScreen(), ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN);
+                            NavigatorHelper.MyNavigatorPush(context, MlmPropertyTaxCalculatorScreen(), ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN);
                             break;
                           case MyString.LKW_REGIONCODE:
-                            NavigatorHelper().MyNavigatorPush(context, LkwPropertyTaxCalculatorScreen(), ScreenName.LKW_PROPERTY_TAX_CALCULATOR_SCREEN);
+                            NavigatorHelper.MyNavigatorPush(context, LkwPropertyTaxCalculatorScreen(), ScreenName.LKW_PROPERTY_TAX_CALCULATOR_SCREEN);
                             break;
                         }
                       }else{
                         switch (_sharepreferenceshelper.getRegionCode()){
                           case MyString.TGY_REGIONCODE:
-                            NavigatorHelper().MyNavigatorPush(context, TgyBizTaxCalculatorScreen(), ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN);
+                            NavigatorHelper.MyNavigatorPush(context, TgyBizTaxCalculatorScreen(), ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN);
                             break;
                           case MyString.MLM_REGIONCODE:
-                            NavigatorHelper().MyNavigatorPush(context, MlmBizTaxCalculatorScreen(), ScreenName.MLM_BIZ_TAX_CALCULATOR_SCREEN);
+                            NavigatorHelper.MyNavigatorPush(context, MlmBizTaxCalculatorScreen(), ScreenName.MLM_BIZ_TAX_CALCULATOR_SCREEN);
+                            break;
+                          case MyString.LKW_REGIONCODE:
+                            NavigatorHelper.MyNavigatorPush(context, LkwBizTaxCalculatorScreen(), ScreenName.LKW_PROPERTY_TAX_CALCULATOR_SCREEN);
                             break;
                         }
                       }

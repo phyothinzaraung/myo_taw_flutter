@@ -80,13 +80,13 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
                                 children: <Widget>[
                                   Container(
                                       margin: EdgeInsets.only(bottom: 10, right: 10),
-                                      child: Text(MyString.txt_flood_level_inch + ' '+FloodLevelFtInHelper().getFtInFromWaterLevel(_floodLevelReportModelList[index].floodLevel), style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeSmall),)),
+                                      child: Text(MyString.txt_flood_level_inch + ' '+FloodLevelFtInHelper.getFtInFromWaterLevel(_floodLevelReportModelList[index].floodLevel), style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeSmall),)),
                                   Row(
                                     children: <Widget>[
                                       Container(
                                           margin: EdgeInsets.only(right: 10),
                                           child: Image.asset('images/calendar.png', width: 15, height: 15, color: MyColor.colorPrimary,)),
-                                      Text(ShowDateTimeHelper().showDateTimeFromServer(_floodLevelReportModelList[index].accesstime), style: TextStyle(fontSize: FontSize.textSizeSmall),)
+                                      Text(ShowDateTimeHelper.showDateTimeFromServer(_floodLevelReportModelList[index].accesstime), style: TextStyle(fontSize: FontSize.textSizeSmall),)
                                     ],
                                   )
                                 ],
@@ -144,7 +144,7 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
   }
 
   _navigateToNewFloodReportScreen()async{
-    Map result = await NavigatorHelper().MyNavigatorPush(context, NewFloodReportScreen(), ScreenName.NEWS_FLOOD_REPORT_SCREEN);
+    Map result = await NavigatorHelper.MyNavigatorPush(context, NewFloodReportScreen(), ScreenName.NEWS_FLOOD_REPORT_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh')){
       _handleRefresh();
     }

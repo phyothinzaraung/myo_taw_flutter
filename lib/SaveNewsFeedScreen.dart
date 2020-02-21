@@ -13,7 +13,6 @@ import 'model/SaveNewsFeedModel.dart';
 import 'Database/SaveNewsFeedDb.dart';
 import 'helper/ShowDateTimeHelper.dart';
 import 'SaveNewsFeedDetailScreen.dart';
-import 'myWidget/CustomButtonWidget.dart';
 
 class SaveNewsFeedScreen extends StatefulWidget {
   @override
@@ -64,7 +63,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                     /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedDetailScreen(model),
                       settings: RouteSettings(name: ScreenName.SAVED_NEWS_FEED_DETAIL_SCREEN)
                     ));*/
-                    NavigatorHelper().MyNavigatorPush(context, SaveNewsFeedDetailScreen(model), ScreenName.SAVED_NEWS_FEED_DETAIL_SCREEN);
+                    NavigatorHelper.MyNavigatorPush(context, SaveNewsFeedDetailScreen(model), ScreenName.SAVED_NEWS_FEED_DETAIL_SCREEN);
                   },
                   child: Card(
                     margin: EdgeInsets.only(bottom: 1.0),
@@ -106,7 +105,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: <Widget>[
                                   Container(margin: EdgeInsets.only(bottom: 5.0),child: Text(model.title,style: TextStyle(fontSize: FontSize.textSizeSmall),overflow: TextOverflow.ellipsis,maxLines: 1,)),
-                                  Text(ShowDateTimeHelper().showDateTimeDifference(model.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)
+                                  Text(ShowDateTimeHelper.showDateTimeDifference(model.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)
                                 ],
                               ),
                             ),
@@ -126,7 +125,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                                 });
                                 Navigator.of(context).pop();
                                 await _sharepreferenceshelper.initSharePref();
-                                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.SAVED_NEWS_FEED_SCREEN, ClickEvent.DELETE_SAVED_NEWS_FEED_CLICK_EVENT,
+                                FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.SAVED_NEWS_FEED_SCREEN, ClickEvent.DELETE_SAVED_NEWS_FEED_CLICK_EVENT,
                                     _sharepreferenceshelper.getUserUniqueKey());
                               }
                             );

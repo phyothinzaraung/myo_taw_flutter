@@ -159,7 +159,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
             onPress: ()async{
               FocusScope.of(context).requestFocus(FocusNode());
               await _sharepreferenceshelper.initSharePref();
-              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+              FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
               Navigator.of(context).pop();
               Navigator.of(context).pop({'isNeedRefresh' : true});
             }
@@ -181,7 +181,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => WardAdminLocationUpdateScreen(),
       settings: RouteSettings(name: ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN)
     ));*/
-    Map result = await NavigatorHelper().MyNavigatorPush(context, WardAdminLocationUpdateScreen(), ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN);
+    Map result = await NavigatorHelper.MyNavigatorPush(context, WardAdminLocationUpdateScreen(), ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN);
     if(result != null && result.containsKey('latLng') != null){
       setState(() {
         LatLng latLng = result['latLng'];
@@ -303,7 +303,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                             onPress: ()async{
                               camera();
                               await _sharepreferenceshelper.initSharePref();
-                              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                              FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                             },
                             color: Colors.white,
                             shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
@@ -332,7 +332,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                               onPress: ()async{
                                 gallery();
                                 await _sharepreferenceshelper.initSharePref();
-                                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                                FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                               },
                               color: Colors.white,
                               shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),
@@ -422,7 +422,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                                     _isLoading = true;
                                   });
                                   await _sharepreferenceshelper.initSharePref();
-                                  FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT,
+                                  FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT,
                                       _sharepreferenceshelper.getUserUniqueKey());
                                   _sendSuggestion();
                                 }else if(_image == null){

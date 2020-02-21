@@ -42,13 +42,13 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
         onResume: (Map<String, dynamic> message) async {
           print('on resume ${message['data']['screen']}');
           if(message['data']['screen'] == MyString.NOTIFICATION_TAB){
-            NavigatorHelper().MyNavigatorPush(context, MainScreen(true), null);
+            NavigatorHelper.MyNavigatorPush(context, MainScreen(true), null);
           }
         },
         onLaunch: (Map<String, dynamic> message) async {
           print('on launch ${message['data']['screen']}');
           if(message['data']['screen'] == MyString.NOTIFICATION_TAB){
-            NavigatorHelper().MyNavigatorPush(context, MainScreen(true), null);
+            NavigatorHelper.MyNavigatorPush(context, MainScreen(true), null);
           }
         }
     );
@@ -76,15 +76,15 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
       onTap: (){
         switch(_list[i].title){
           case MyString.txt_ward_admin_feature:
-            NavigatorHelper().MyNavigatorPush(context, WardAdminContributionListScreen(), ScreenName.WARD_ADMIN_CONTRIBUTION_LIST_SCREEN);
+            NavigatorHelper.MyNavigatorPush(context, WardAdminContributionListScreen(), ScreenName.WARD_ADMIN_CONTRIBUTION_LIST_SCREEN);
 
             break;
           case MyString.txt_myotaw_feature:
-            NavigatorHelper().MyNavigatorPush(context, MainScreen(false), null);
+            NavigatorHelper.MyNavigatorPush(context, MainScreen(false), null);
             //Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
             break;
           case MyString.txt_flood_level:
-            NavigatorHelper().MyNavigatorPush(context, FloodReportListScreen(), ScreenName.FLOOD_REPORT_LIST_SCREEN);
+            NavigatorHelper.MyNavigatorPush(context, FloodReportListScreen(), ScreenName.FLOOD_REPORT_LIST_SCREEN);
 
             break;
         }

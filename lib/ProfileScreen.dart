@@ -16,13 +16,10 @@ import 'model/UserModel.dart';
 import 'helper/NumConvertHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:myotaw/Database/UserDb.dart';
-import 'SplashScreen.dart';
 import 'Database/SaveNewsFeedDb.dart';
-import 'package:dio/dio.dart';
 import 'package:async_loader/async_loader.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:connectivity/connectivity.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'helper/MyLoadMore.dart';
 import 'model/TaxRecordModel.dart';
 import 'helper/ShowDateTimeHelper.dart';
@@ -131,7 +128,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _isLoading = false;
     });
-    NavigatorHelper().MyNavigatorPushAndRemoveUntil(context, LoginScreen(), ScreenName.LOGIN_SCREEN);
+    NavigatorHelper.MyNavigatorPushAndRemoveUntil(context, LoginScreen(), ScreenName.LOGIN_SCREEN);
   }
 
   void _deleteTaxRecord(int id)async{
@@ -151,7 +148,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     TaxRecordModel taxRecordModel = _taxRecordModelList[i];
     return GestureDetector(
       onTap: (){
-        NavigatorHelper().MyNavigatorPush(context, PhotoDetailScreen(BaseUrl.TAX_RECORD_PHOTO_URL+taxRecordModel.photoUrl),
+        NavigatorHelper.MyNavigatorPush(context, PhotoDetailScreen(BaseUrl.TAX_RECORD_PHOTO_URL+taxRecordModel.photoUrl),
             ScreenName.PHOTO_DETAIL_SCREEN);
       },
       child: Card(
@@ -170,7 +167,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     children: <Widget>[
                       Container(margin: EdgeInsets.only(bottom: 5.0),
                           child: Text(taxRecordModel.subject,style: TextStyle(fontSize: FontSize.textSizeNormal,color: MyColor.colorTextBlack),overflow: TextOverflow.ellipsis,maxLines: 1,)),
-                      Text(ShowDateTimeHelper().showDateTimeDifference(taxRecordModel.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)
+                      Text(ShowDateTimeHelper.showDateTimeDifference(taxRecordModel.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)
                     ],
                   ),
                 ),
@@ -190,7 +187,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     });
                     _deleteTaxRecord(taxRecordModel.id);
                     await _sharepreferenceshelper.initSharePref();
-                    FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.TAX_RECORD_DELETE_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                    FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.TAX_RECORD_DELETE_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                   }
                 );
               },child: Icon(Platform.isAndroid?Icons.delete :CupertinoIcons.delete_solid, color: Colors.red,))
@@ -203,14 +200,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToProfileScreen()async{
-    Map result = await NavigatorHelper().MyNavigatorPush(context, ProfileFormScreen(_sharepreferenceshelper.isWardAdmin()), ScreenName.PROFILE_FORM_SCREEN);
+    Map result = await NavigatorHelper.MyNavigatorPush(context, ProfileFormScreen(_sharepreferenceshelper.isWardAdmin()), ScreenName.PROFILE_FORM_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       await _handleRefresh();
     }
   }
 
   _navigateToProfilePhotoScreen()async{
-    Map result = await NavigatorHelper().MyNavigatorPush(context, ProfilePhotoUploadScreen(), ScreenName.PROFILE_PHOTO_SCREEN);
+    Map result = await NavigatorHelper.MyNavigatorPush(context, ProfilePhotoUploadScreen(), ScreenName.PROFILE_PHOTO_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       //await _getUser();
       await _handleRefresh();
@@ -218,7 +215,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToNewTaxRecordScreen()async{
-    Map result = await NavigatorHelper().MyNavigatorPush(context, NewTaxRecordScreen(), ScreenName.NEW_TAX_RECORD_SCREEN);
+    Map result = await NavigatorHelper.MyNavigatorPush(context, NewTaxRecordScreen(), ScreenName.NEW_TAX_RECORD_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       await _handleRefresh();
     }
@@ -296,10 +293,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Divider(color: MyColor.colorPrimary,),
                     GestureDetector(
                       onTap: (){
-                        /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => ApplyBizLicenseListScreen(),
-                          settings: RouteSettings(name: ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN)
-                        ));*/
-                        NavigatorHelper().MyNavigatorPush(context, ApplyBizLicenseListScreen(), ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN);
+
+                        NavigatorHelper.MyNavigatorPush(context, ApplyBizLicenseListScreen(), ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN);
                       },
                       child: Container(
                         child: Row(
@@ -323,7 +318,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onPress: ()async{
                             Navigator.pop(context);
                             await _sharepreferenceshelper.initSharePref();
-                            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.USER_LOG_OUT_CLICK_EVENT,
+                            FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.USER_LOG_OUT_CLICK_EVENT,
                                 _sharepreferenceshelper.getUserUniqueKey());
                             _logOutClear();
                           }
@@ -355,6 +350,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               ),
               Container(
                 margin: EdgeInsets.only(bottom: 20.0),
+                width: double.maxFinite,
                 //new tax record
                 child: CustomButtonWidget(onPress: (){
                   _navigateToNewTaxRecordScreen();

@@ -43,7 +43,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
 
   _getTaxUse(int year)async{
     await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().getTaxUser(_sharepreferenceshelper.getRegionCode(), TaxUseBudgetYearHelper().getBudgetYear(year));
+    _response = await ServiceHelper().getTaxUser(_sharepreferenceshelper.getRegionCode(), TaxUseBudgetYearHelper.getBudgetYear(year));
     List list = _response.data;
     //List list = [];
     if(list != null && list.length > 0){
@@ -62,7 +62,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
               Container(
                 width: 20.0,
                 height: 20.0,
-                color: PieChartColorHelper().defaultColorList[i],
+                color: PieChartColorHelper.defaultColorList[i],
               ),
               Container(margin: EdgeInsets.only(left: 10.0),
                 child: Text(_taxUserModelList[i].taxTitle, style: TextStyle(fontSize: FontSize.textSizeSmall),),),
@@ -91,7 +91,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
               showChartValuesOutside: true,
               chartValuesColor: Colors.blueGrey[900].withOpacity(0.9),
               showLegends: false,
-              colorList: PieChartColorHelper().defaultColorList,
+              colorList: PieChartColorHelper.defaultColorList,
             ),
           ),
           Container(
@@ -157,7 +157,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
                         },
                         child: Image.asset('images/arrow_green.png', width: 20.0, height: 20.0,))),
                 Expanded(
-                    child: Text(TaxUseBudgetYearHelper().getBudgetYear(_year),
+                    child: Text(TaxUseBudgetYearHelper.getBudgetYear(_year),
                       textAlign: TextAlign.center, style: TextStyle(fontSize: FontSize.textSizeNormal),)),
                 GestureDetector(
                     onTap: ()async {

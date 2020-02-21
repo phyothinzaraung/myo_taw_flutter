@@ -93,10 +93,10 @@ class _OtpScreenState extends State<OtpScreen> {
         _userDb.closeUserDb();
         if(_userModel.isWardAdmin==1){
 
-          NavigatorHelper().MyNavigatorPushReplacement(context, WardAdminFeatureChooseScreen(), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
+          NavigatorHelper.MyNavigatorPushReplacement(context, WardAdminFeatureChooseScreen(), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{
 
-          NavigatorHelper().MyNavigatorPushReplacement(context, MainScreen(false), null);
+          NavigatorHelper.MyNavigatorPushReplacement(context, MainScreen(false), null);
         }
 
       }else{

@@ -4,9 +4,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NavigatorHelper{
-  var _navigator;
+  static var _navigator;
 
-  Future<dynamic> MyNavigatorPush(BuildContext context, Widget screen, String screenName){
+  static Future<dynamic> MyNavigatorPush(BuildContext context, Widget screen, String screenName){
     _navigator = Navigator.push(context, Platform.isAndroid? MaterialPageRoute(builder: (context) => screen,
         settings: RouteSettings(name: screenName)) :
 
@@ -17,7 +17,7 @@ class NavigatorHelper{
 
   }
 
-  Future<dynamic> MyNavigatorPushAndRemoveUntil(BuildContext context, Widget screen, String screenName){
+  static Future<dynamic> MyNavigatorPushAndRemoveUntil(BuildContext context, Widget screen, String screenName){
 
     _navigator = Navigator.of(context).pushAndRemoveUntil( Platform.isAndroid? MaterialPageRoute(builder: (context) => screen,
         settings: RouteSettings(name: screenName)
@@ -31,7 +31,7 @@ class NavigatorHelper{
 
   }
 
-  Future<dynamic> MyNavigatorPushReplacement(BuildContext context, Widget screen, String screenName){
+  static Future<dynamic> MyNavigatorPushReplacement(BuildContext context, Widget screen, String screenName){
 
 
     _navigator = Navigator.pushReplacement(context, Platform.isAndroid? MaterialPageRoute(builder: (context) => screen,

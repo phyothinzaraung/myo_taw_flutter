@@ -38,7 +38,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
   void initState() {
     // TODO: implement initState
     super.initState();
-    FireBaseAnalyticsHelper().TrackCurrentScreen(ScreenName.NOTIFICATION_SCREEN);
+    FireBaseAnalyticsHelper.TrackCurrentScreen(ScreenName.NOTIFICATION_SCREEN);
   }
 
   @override
@@ -75,14 +75,11 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
     await _sharepreferenceshelper.initSharePref();
     _regionCode = _sharepreferenceshelper.getRegionCode();
     try{
-      response = await ServiceHelper().getNotification(_sharepreferenceshelper.getRegionCode());
+      response = await ServiceHelper().getNotification(_regionCode);
       if(response.data != null) {
         _notificationModelList = response.data;
         for(var i in _notificationModelList){
-          setState(() {
-            _notificationList.add(NotificationModel.fromJson(i));
-          });
-
+          _notificationList.add(NotificationModel.fromJson(i));
         }
       }
 
@@ -169,7 +166,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
     print(_notificationList);
     var _asyncLoader = new AsyncLoader(
         key: asyncLoaderState,
-        initState: () async => await _getUser(),
+        initState: () async => _getUser(),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => RefreshIndicator(child: _listView(), onRefresh: _handleRefresh)

@@ -116,7 +116,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
             onPress: ()async{
               FocusScope.of(context).requestFocus(FocusNode());
               await _sharepreferenceshelper.initSharePref();
-              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+              FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
               Navigator.of(context).pop();
               Navigator.of(context).pop({'isNeedRefresh' : true});
             }
@@ -167,7 +167,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
                           child: CustomButtonWidget(onPress: ()async{
                             camera();
                             await _sharepreferenceshelper.initSharePref();
-                            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.CONTRIBUTION_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                            FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.CONTRIBUTION_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
 
                           },child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -259,7 +259,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
                                 });
                                 _sendSuggestion();
                                 await _sharepreferenceshelper.initSharePref();
-                                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_CLICK_EVENT,
+                                FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_CLICK_EVENT,
                                     _sharepreferenceshelper.getUserUniqueKey());
                                 print('latlng: ${_lat} ${_lng}');
                               }else if(_image == null){

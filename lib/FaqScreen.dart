@@ -11,7 +11,6 @@ import 'helper/ServiceHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/FaqModel.dart';
 import 'package:async_loader/async_loader.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 
 import 'myWidget/CustomProgressIndicator.dart';
@@ -117,7 +116,7 @@ class _FaqScreenState extends State<FaqScreen> {
                 }else{
                   _faqList[i].isVisible = true;
                 }
-                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_ANSWER_CLICK_EVENT, _userUniqueKey);
+                FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_ANSWER_CLICK_EVENT, _userUniqueKey);
               });
             },
             child: Container(
@@ -213,7 +212,7 @@ class _FaqScreenState extends State<FaqScreen> {
                           }else{
                             _getFaqByCategory(_dropDownCategory);
                           }
-                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_BY_CATEGORY_CLICK_EVENT, _userUniqueKey);
+                          FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_BY_CATEGORY_CLICK_EVENT, _userUniqueKey);
                         },
                         list: _categoryList,
                       ) :
@@ -228,7 +227,7 @@ class _FaqScreenState extends State<FaqScreen> {
                           }else{
                             _getFaqByCategory(_dropDownCategory);
                           }
-                          FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_BY_CATEGORY_CLICK_EVENT, _userUniqueKey);
+                          FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_BY_CATEGORY_CLICK_EVENT, _userUniqueKey);
                           Navigator.pop(context);
                         },
                         onSelectedItemChanged: (index){

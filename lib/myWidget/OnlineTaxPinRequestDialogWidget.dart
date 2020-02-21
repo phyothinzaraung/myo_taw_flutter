@@ -65,15 +65,11 @@ class _OnlineTaxPinRequestDialogWidgetState extends State<OnlineTaxPinRequestDia
                   if(widget._userModel.pinCode.toString() == str){
                     Navigator.of(context).pop();
                     if(widget._type == 'OnlineTax'){
-                      /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => OnlineTaxScreen(),
-                        settings: RouteSettings(name: ScreenName.ONLINE_TAX_SCREEN)
-                      ));*/
-                      NavigatorHelper().MyNavigatorPush(context, OnlineTaxScreen(), ScreenName.ONLINE_TAX_SCREEN);
+
+                      NavigatorHelper.MyNavigatorPush(context, OnlineTaxScreen(), ScreenName.ONLINE_TAX_SCREEN);
                     }else{
-                      /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => SmartWaterMeterScreen(widget._userModel),
-                          settings: RouteSettings(name: ScreenName.SMART_WATER_METER_SCREEN)
-                      ));*/
-                      NavigatorHelper().MyNavigatorPush(context, SmartWaterMeterScreen(widget._userModel), ScreenName.SMART_WATER_METER_SCREEN);
+
+                      NavigatorHelper.MyNavigatorPush(context, SmartWaterMeterScreen(widget._userModel), ScreenName.SMART_WATER_METER_SCREEN);
                     }
 
                     setState(() {

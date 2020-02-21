@@ -64,7 +64,7 @@ class _WardAdminLocationUpdateScreenState extends State<WardAdminLocationUpdateS
   Widget _floatingActionButtion(){
     return FloatingActionButton.extended(onPressed: ()async{
       await _sharepreferenceshelper.initSharePref();
-      FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN, ClickEvent.GET_LOCATION_FROM_GOOGLE_MAP, _sharepreferenceshelper.getUserUniqueKey());
+      FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN, ClickEvent.GET_LOCATION_FROM_GOOGLE_MAP, _sharepreferenceshelper.getUserUniqueKey());
       Navigator.of(context).pop({'latLng' : _latLng});
 
     }, label: Text(MyString.txt_get_location_update, style: TextStyle(color: Colors.white),),

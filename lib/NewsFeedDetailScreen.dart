@@ -44,7 +44,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
     setState(() {
       _title = _newsFeedModel.title;
       _photo = _newsFeedModel.photoUrl;
-      _date = ShowDateTimeHelper().showDateTimeDifference(_newsFeedModel.accesstime);
+      _date = ShowDateTimeHelper.showDateTimeDifference(_newsFeedModel.accesstime);
       _newsfeedBody = _newsFeedModel.body;
       _type = _newsFeedModel.uploadType=='Photo'?'Photo':'Video';
       _thumbNail = _newsFeedModel.thumbNail;
@@ -60,7 +60,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         _photoWidgetList.add(
             GestureDetector(
               onTap: (){
-                NavigatorHelper().MyNavigatorPush(context, NewsFeedPhotoDetailScreen(_photoList, null, _currentPhoto),
+                NavigatorHelper.MyNavigatorPush(context, NewsFeedPhotoDetailScreen(_photoList, null, _currentPhoto),
                     ScreenName.PHOTO_DETAIL_SCREEN);
               },
               child: Stack(

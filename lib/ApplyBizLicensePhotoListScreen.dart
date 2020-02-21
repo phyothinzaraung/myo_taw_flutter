@@ -88,7 +88,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                 delegate: SliverChildBuilderDelegate((context, index){
                   return GestureDetector(
                     onTap: (){
-                      NavigatorHelper().MyNavigatorPush(context, PhotoDetailScreen(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl),
+                      NavigatorHelper.MyNavigatorPush(context, PhotoDetailScreen(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl),
                           ScreenName.PHOTO_DETAIL_SCREEN);
                     },
                     child: Padding(
@@ -184,7 +184,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                             onTap: ()async{
                               gallery();
                               await _sharepreferenceshelper.initSharePref();
-                              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                              FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                             },
                             child: _image==null?Image.asset('images/add_image_placeholder.png', width: double.maxFinite, height: 50.0,):
                             Image.file(_image, width: double.maxFinite, height: 50.0, fit: BoxFit.cover,),
@@ -225,7 +225,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                                   _isLoading = true;
                                 });
                                 await _sharepreferenceshelper.initSharePref();
-                                FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN, ClickEvent.APPLY_BIZ_LICENSE_PHOTO_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                                FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN, ClickEvent.APPLY_BIZ_LICENSE_PHOTO_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                                 _uploadPhoto();
                               }
                             }else{

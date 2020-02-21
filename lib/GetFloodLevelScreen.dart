@@ -128,7 +128,7 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
                                 setState(() {
                                   _floodLevel = lowerValue;
                                   _waterLevel = _globalKey.currentContext.size.height * _floodLevel / 72;
-                                  _convertFloodLevel = FloodLevelFtInHelper().getFtInFromWaterLevel(lowerValue);
+                                  _convertFloodLevel = FloodLevelFtInHelper.getFtInFromWaterLevel(lowerValue);
                                 });
                                 print(_convertFloodLevel);
                               },
@@ -151,7 +151,7 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
                 child: CustomButtonWidget(onPress: ()async{
                   if(_waterLevel != 0){
                     await _sharepreferenceshelper.initSharePref();
-                    FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.GET_FLOOD_LEVEL_SCREEN, ClickEvent.GET_FLOOD_LEVEL_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                    FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.GET_FLOOD_LEVEL_SCREEN, ClickEvent.GET_FLOOD_LEVEL_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                     Navigator.of(context).pop({'FloodLevel' : _floodLevel});
                   }else{
                     CustomDialogWidget().customSuccessDialog(

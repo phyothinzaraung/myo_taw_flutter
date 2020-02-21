@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:myotaw/TaxCalculator/LkwPropertyTax.dart';
 import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
@@ -28,7 +29,6 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
   String _dropDownGrade = MyString.txt_no_selected;
   List<String> _gradeList;
 
-  String _taxRange = '';
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
 
@@ -56,6 +56,7 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
     _isStoryVisible = true;
 
     _initBuildingTypeIosPickerWidgetList();
+    _initGradeIosPickerWidgetList();
   }
 
   _initBuildingTypeIosPickerWidgetList(){
@@ -70,6 +71,15 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
   _initStoryIosPickerWidgetList(){
     for(var i in _storyList){
       _storyTypeWidgetList.add(Padding(
+        padding: const EdgeInsets.only(left: 5),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+      ));
+    }
+  }
+
+  _initGradeIosPickerWidgetList(){
+    for(var i in _gradeList){
+      _gradeWidgetList.add(Padding(
         padding: const EdgeInsets.only(left: 5),
         child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
       ));
@@ -123,168 +133,24 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
     _initStoryIosPickerWidgetList();
   }
 
-  String _getTaxRange(){
-    switch(_dropDownBuildingType){
-      case 'RC':
-        switch(_dropDownStory){
-          case '(၁) ထပ်':
-            switch(_dropDownGrade){
-              case MyString.txt_first_grade:
-                _taxRange = '240,000';
-                break;
-              case MyString.txt_second_grade:
-                _taxRange = '192,000';
-                break;
-              case MyString.txt_third_grade:
-                _taxRange = '144,000';
-                break;
-            }
-            break;
-          case '(၂) ထပ်':
-            switch(_dropDownGrade){
-              case MyString.txt_first_grade:
-                _taxRange = '360,000';
-                break;
-              case MyString.txt_second_grade:
-                _taxRange = '288,000';
-                break;
-              case MyString.txt_third_grade:
-                _taxRange = '240,000';
-                break;
-            }
-            break;
-          case '(၃) ထပ်':
-            switch(_dropDownGrade){
-              case MyString.txt_first_grade:
-                _taxRange = '528,000';
-                break;
-              case MyString.txt_second_grade:
-                _taxRange = '432,000';
-                break;
-              case MyString.txt_third_grade:
-                _taxRange = '360,000';
-                break;
-            }
-            break;
-        }
-        break;
-      case 'အုတ်တိုက်':
-        switch (_dropDownStory){
-          case '(၁) ထပ်':
-            switch(_dropDownGrade){
-              case MyString.txt_first_grade:
-                _taxRange = '120,000';
-                break;
-              case MyString.txt_second_grade:
-                _taxRange = '96,000';
-                break;
-              case MyString.txt_third_grade:
-                _taxRange = '72,000';
-                break;
-            }
-            break;
-          case '(၂) ထပ်':
-            switch(_dropDownGrade){
-              case MyString.txt_first_grade:
-                _taxRange = '144,000';
-                break;
-              case MyString.txt_second_grade:
-                _taxRange = '132,000';
-                break;
-              case MyString.txt_third_grade:
-                _taxRange = '120,000';
-                break;
-            }
-            break;
-        }
-        break;
-      case 'အုတ်ညှပ်':
-        switch (_dropDownStory){
-          case '(၁) ထပ်':
-            switch(_dropDownGrade){
-              case MyString.txt_first_grade:
-                _taxRange = '60,000';
-                break;
-              case MyString.txt_second_grade:
-                _taxRange = '55,200';
-                break;
-              case MyString.txt_third_grade:
-                _taxRange = '48,000';
-                break;
-            }
-            break;
-          case '(၂) ထပ်':
-            switch(_dropDownGrade){
-              case MyString.txt_first_grade:
-                _taxRange = '72,000';
-                break;
-              case MyString.txt_second_grade:
-                _taxRange = '67,200';
-                break;
-              case MyString.txt_third_grade:
-                _taxRange = '60,000';
-                break;
-            }
-            break;
-        }
-        break;
-      case 'တိုက်ခံ':
-        switch(_dropDownGrade){
-          case MyString.txt_first_grade:
-            _taxRange = '48,000';
-            break;
-          case MyString.txt_second_grade:
-            _taxRange = '43,200';
-            break;
-          case MyString.txt_third_grade:
-            _taxRange = '36,000';
-            break;
-        }
-        break;
-      case 'ပျဉ်ထောင်':
-        switch (_dropDownStory){
-          case '(၁) ထပ်':
-            switch(_dropDownGrade){
-              case MyString.txt_first_grade:
-                _taxRange = '19,200';
-                break;
-              case MyString.txt_second_grade:
-                _taxRange = '12,000';
-                break;
-              case MyString.txt_third_grade:
-                _taxRange = '9,600';
-                break;
-            }
-            break;
-          case '(၂) ထပ်':
-            switch(_dropDownGrade){
-              case MyString.txt_first_grade:
-                _taxRange = '36,000';
-                break;
-              case MyString.txt_second_grade:
-                _taxRange = '28,800';
-                break;
-              case MyString.txt_third_grade:
-                _taxRange = '21,600';
-                break;
-            }
-            break;
-        }
-        break;
-      case 'တဲအိမ်':
-        _taxRange = '4,800';
-        break;
-
-    }
-    return '${NumConvertHelper.getMyanNumString(_taxRange)}';
-  }
-
 
   clear(){
     setState(() {
       _dropDownBuildingType = MyString.txt_no_selected;
+
+      _storyList.clear();
+      _storyTypeWidgetList.clear();
+      _storyList = [MyString.txt_no_selected];
+
       _dropDownStory = MyString.txt_no_selected;
       _dropDownGrade = MyString.txt_no_selected;
+
+      _initStoryIosPickerWidgetList();
+
+      _buildingTypePickerIndex = 0;
+      _storyTypePickerIndex = 0;
+      _gradePickerIndex = 0;
+
       _isGradeVisible = true;
       _isStoryVisible = true;
     });
@@ -301,7 +167,7 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
     }
   }
 
-  Widget _waringSnackBar(){
+  Widget _warningSnackBar(){
     if(_isStoryVisible && _isGradeVisible){
       if(_dropDownBuildingType == MyString.txt_no_selected){
         WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
@@ -495,18 +361,22 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
                             CustomDialogWidget().customCalculateTaxDialog(
                               context: context,
                               titleTax: MyString.txt_biz_tax_range,
-                              taxValue: _getTaxRange(),
+                              taxValue: LkwPropertyTax.getTax(
+                                buildingType: _dropDownBuildingType,
+                                story: _dropDownStory,
+                                grade: _dropDownGrade,
+                              ),
                               onPress: (){
                                 Navigator.of(context).pop();
                                 clear();
                               }
                             );
                             await _sharepreferenceshelper.initSharePref();
-                            FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_PROPERTY_TAX_CLICK_EVENT,
+                            FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_PROPERTY_TAX_CLICK_EVENT,
                                 _sharepreferenceshelper.getUserUniqueKey());
 
                           }else {
-                            _waringSnackBar();
+                            _warningSnackBar();
                           }
                         },color: MyColor.colorPrimary,
                         shape: RoundedRectangleBorder(

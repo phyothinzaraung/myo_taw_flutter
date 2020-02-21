@@ -5,7 +5,6 @@ import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/ServiceHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:async_loader/async_loader.dart';
-import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/DaoViewModel.dart';
 import 'DaoDetailScreen.dart';
@@ -57,9 +56,9 @@ class _DaoScreenState extends State<DaoScreen> {
                   return GestureDetector(
                     onTap: (){
                       if(_daoViewModelList[index].daoModel.title.contains('ဌာနများ')){
-                        NavigatorHelper().MyNavigatorPush(context, DepartmentListScreen(_daoViewModelList[index]), ScreenName.DEPARTMENT_LIST_SCREEN);
+                        NavigatorHelper.MyNavigatorPush(context, DepartmentListScreen(_daoViewModelList[index]), ScreenName.DEPARTMENT_LIST_SCREEN);
                       }else{
-                        NavigatorHelper().MyNavigatorPush(context, DaoDetailScreen(_daoViewModelList[index]),
+                        NavigatorHelper.MyNavigatorPush(context, DaoDetailScreen(_daoViewModelList[index]),
                             display.isEmpty?ScreenName.ABOUT_DAO_DETAIL_SCREEN : ScreenName.ABOUT_TAX_DETAIL_SCREEN);
                       }
                     },

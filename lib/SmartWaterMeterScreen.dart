@@ -2,12 +2,10 @@ import 'package:connectivity/connectivity.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/NumberFormatterHelper.dart';
-import 'package:myotaw/model/SmartWaterMeterUnitModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
-import 'model/SmartWaterMeterUnitModel.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'package:async_loader/async_loader.dart';
 import 'helper/ServiceHelper.dart';
@@ -187,10 +185,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
                       width: double.maxFinite,
                       child: CustomButtonWidget(onPress: ()async{
 
-                        /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => TopUpRecordListScreen(_userModel),
-                          settings: RouteSettings(name: ScreenName.TOP_UP_RECORD_LIST_SCREEN)
-                        ));*/
-                        NavigatorHelper().MyNavigatorPush(context, TopUpRecordListScreen(_userModel), ScreenName.TOP_UP_RECORD_LIST_SCREEN);
+                        NavigatorHelper.MyNavigatorPush(context, TopUpRecordListScreen(_userModel), ScreenName.TOP_UP_RECORD_LIST_SCREEN);
 
                         }, child: Text(MyString.txt_top_up_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                         color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
@@ -228,7 +223,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
                             Row(
                               children: <Widget>[
                                 Expanded(child: Text(MyString.txt_smart_wm_date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                Expanded(child: Text(ShowDateTimeHelper().showDateTimeFromServer(_smartWaterMeterLogList[index].date), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
+                                Expanded(child: Text(ShowDateTimeHelper.showDateTimeFromServer(_smartWaterMeterLogList[index].date), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
                               ],
                             ),
                             Row(

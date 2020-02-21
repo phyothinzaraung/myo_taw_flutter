@@ -111,7 +111,7 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
                     child: FlatButton(onPressed: ()async{
                       gallery();
                       await _sharepreferenceshelper.initSharePref();
-                      FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.GALLERY_CLICK_EVENT,
+                      FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.GALLERY_CLICK_EVENT,
                           _sharepreferenceshelper.getUserUniqueKey());
                     }, child: Text(MyString.txt_gallery, style: TextStyle(color: Colors.white),),
                       color: MyColor.colorPrimary,shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),
@@ -128,7 +128,7 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
                           _isLoading = true;
                         });
                         await _sharepreferenceshelper.initSharePref();
-                        FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.PROFILE_PHOTO_UPLOAD_CLICK_EVENT,
+                        FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.PROFILE_PHOTO_UPLOAD_CLICK_EVENT,
                             _sharepreferenceshelper.getUserUniqueKey());
                         _uploadPhoto();
                       }else{
@@ -145,7 +145,7 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
                     child: FlatButton(onPressed: ()async{
                       camera();
                       await _sharepreferenceshelper.initSharePref();
-                      FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.CAMERA_CLICK_EVENT,
+                      FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.PROFILE_PHOTO_SCREEN, ClickEvent.CAMERA_CLICK_EVENT,
                           _sharepreferenceshelper.getUserUniqueKey());
                     }, child: Text(MyString.txt_camera, style: TextStyle(color: Colors.white),),
                       color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0.0)),),

@@ -2,7 +2,7 @@
 import 'dart:ui';
 
 class PieChartColorHelper{
-  List<Color> defaultColorList = [
+  static List<Color> defaultColorList = [
     Color.fromRGBO(255, 247, 137, 0.8),
     Color.fromRGBO(189, 255, 154, 0.8),
     Color.fromRGBO(170, 255, 220, 0.8),

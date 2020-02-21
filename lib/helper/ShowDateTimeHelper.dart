@@ -2,7 +2,7 @@ import 'package:intl/intl.dart';
 
 class ShowDateTimeHelper{
   //created by YYW
-  String showDateTimeDifference(String date){
+  static String showDateTimeDifference(String date){
     var list = date.split('.');
     var dateTime = DateTime.parse(list[0]);
     var timeDiff = DateTime.now().difference(dateTime);
@@ -32,7 +32,7 @@ class ShowDateTimeHelper{
     return dateFormat.toString();
   }
 
-  String showDateTimeFromServer(String date){
+  static String showDateTimeFromServer(String date){
     var list = date.split('.');
     var dateTime = DateTime.parse(list[0]);
     var timeDiff = DateTime.now().difference(dateTime);

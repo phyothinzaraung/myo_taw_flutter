@@ -414,7 +414,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                               );
                               FocusScope.of(context).requestFocus(FocusNode());
                               await _sharepreferenceshelper.initSharePref();
-                              FireBaseAnalyticsHelper().TrackClickEvent(ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_PROPERTY_TAX_CLICK_EVENT,
+                              FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_PROPERTY_TAX_CLICK_EVENT,
                                   _sharepreferenceshelper.getUserUniqueKey());
 
                             }else if(_dropDownBuildingType == MyString.txt_no_selected){
