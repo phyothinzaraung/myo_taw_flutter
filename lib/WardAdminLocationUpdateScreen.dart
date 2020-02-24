@@ -61,7 +61,7 @@ class _WardAdminLocationUpdateScreenState extends State<WardAdminLocationUpdateS
     });
   }
 
-  Widget _floatingActionButtion(){
+  Widget _floatingActionButton(){
     return FloatingActionButton.extended(onPressed: ()async{
       await _sharepreferenceshelper.initSharePref();
       FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN, ClickEvent.GET_LOCATION_FROM_GOOGLE_MAP, _sharepreferenceshelper.getUserUniqueKey());
@@ -111,21 +111,8 @@ class _WardAdminLocationUpdateScreenState extends State<WardAdminLocationUpdateS
       Center(
         child: CircularProgressIndicator(),
       ),
-    floatingActionButton: _floatingActionButtion()
+    floatingActionButton: _floatingActionButton()
     );
-    /*return Scaffold(
-      appBar: AppBar(
-        title: Row(
-          children: <Widget>[
-            Expanded(child: Text(MyString.txt_location_update, style: TextStyle(fontSize: FontSize.textSizeNormal),)),
-            //Text(MyString.txt_get_location_update, style: TextStyle(fontSize: FontSize.textSizeSmall),),
-          ],
-        ),
-
-      ),
-      floatingActionButton:
-      body:
-    );*/
   }
 
   @override

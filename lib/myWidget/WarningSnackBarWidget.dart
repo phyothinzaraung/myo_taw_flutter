@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 
-Widget WarningSnackBar(GlobalKey<ScaffoldState> globalKey, String string){
+void WarningSnackBar(GlobalKey<ScaffoldState> globalKey, String string){
   globalKey.currentState.showSnackBar(
       SnackBar(
           content: Row(
