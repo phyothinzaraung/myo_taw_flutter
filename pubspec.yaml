@@ -176,6 +176,7 @@ flutter:
     - images/dashboard_grey.png
     - images/noti_grey.png
     - images/done.png
+    - images/noti.png
 
   # To add assets to your application, add an assets section, like this:
   # assets:

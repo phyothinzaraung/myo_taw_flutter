@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
+import 'package:myotaw/helper/ShowDateTimeHelper.dart';
 import 'package:myotaw/model/NotificationModel.dart';
 import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
 import 'helper/FireBaseAnalyticsHelper.dart';
@@ -12,6 +14,7 @@ import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/NotificationDetailScreen.dart';
 
 class NotificationScreen extends StatefulWidget {
   @override
@@ -112,36 +115,29 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
   }
 
   Widget _notificationListWidget(int i){
-    return Card(
-      margin: EdgeInsets.only(left: 15.0, right: 15.0, bottom: 10.0),
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
-      child: Container(
-        child: Column(
-          children: <Widget>[
-            GestureDetector(
-              onTap: () {
-                //go to detail screen
-              },
-              child: Container(
-                child: Column(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(right: 10.0),
-                      child: Image.asset("images/notification.png", width: 20.0, height: 20.0,),
-                    ),
-                    Text(_notificationList[i].message, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)
-                  ],
-                ),
-              ),
-            )
-          ],
-        ),
+    String datetime = _notificationList[i].postedDate;
+    String date = ShowDateTimeHelper.showDateTimeDifference(datetime);
+    
+    return ListTile(
+      leading: Image.asset("images/noti.png", width: 30.0, height: 30.0,),
+      title: Text(_notificationList[i].message, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorBlackSemiTransparent), maxLines: 2,),
+      subtitle: Row(
+        children: <Widget>[
+          Text(""),
+          Text(date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),),
+        ],
       ),
+      onTap: (){
+        NavigatorHelper.MyNavigatorPush(context, NotificationDetailScreen(_notificationList[i]), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+      },
     );
   }
 
   _listView(){
-    return ListView.builder(
+    return ListView.separated(
+      separatorBuilder: (context, index) => Divider(
+        color: MyColor.colorTextGrey,
+      ),
       itemCount: _notificationList.length,
       itemBuilder: (BuildContext context, int i){
         return Column(
