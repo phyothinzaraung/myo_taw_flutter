@@ -7,6 +7,7 @@ import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
+import 'helper/PlatformHelper.dart';
 import 'helper/ServiceHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/FaqModel.dart';
@@ -198,7 +199,7 @@ class _FaqScreenState extends State<FaqScreen> {
                               color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                           )
                       ),
-                      child: Platform.isAndroid?
+                      child: PlatformHelper.isAndroid()?
 
                       DropDownWidget(
                         value: _dropDownCategory,

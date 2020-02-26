@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myotaw/helper/PlatformHelper.dart';
 import 'dart:io';
 
 import '../helper/MyoTawConstant.dart';
@@ -19,7 +20,7 @@ class CustomButtonWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Platform.isAndroid?
+    return PlatformHelper.isAndroid()?
 
 
     !isFlatButton?RaisedButton(

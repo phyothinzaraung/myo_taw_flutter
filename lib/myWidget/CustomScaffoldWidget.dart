@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
+import 'package:myotaw/helper/PlatformHelper.dart';
 
 class CustomScaffoldWidget extends StatelessWidget {
   @required final Widget title;
@@ -18,11 +19,11 @@ class CustomScaffoldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         key: globalKey,
-        appBar: Platform.isAndroid?AppBar(
+        appBar: PlatformHelper.isAndroid()?AppBar(
           actions: action,
           title: title,
         ) : null,
-        body: Platform.isAndroid?body :
+        body: PlatformHelper.isAndroid()?body :
             CupertinoTheme(
               data: CupertinoThemeData(
                 brightness: Brightness.light,

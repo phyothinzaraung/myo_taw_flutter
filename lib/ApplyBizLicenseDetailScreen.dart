@@ -5,6 +5,7 @@ import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/CustomButtonWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'helper/MyoTawConstant.dart';
+import 'helper/PlatformHelper.dart';
 import 'model/ApplyBizLicenseModel.dart';
 import 'helper/NumConvertHelper.dart';
 import 'ApplyBizLicensePhotoListScreen.dart';
@@ -16,7 +17,7 @@ class ApplyBizLicenseDetailScreen extends StatelessWidget {
   Widget _applyBizLicensePhotoListWidget(BuildContext context){
     return Container(
         margin: EdgeInsets.all(10.0),
-        decoration: Platform.isAndroid? null :
+        decoration: PlatformHelper.isAndroid()? null :
         BoxDecoration(
             border: Border.all(color: MyColor.colorPrimary, width: 1),
             borderRadius: BorderRadius.circular(10)

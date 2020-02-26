@@ -8,6 +8,7 @@ import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
+import 'helper/PlatformHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/DropDownWidget.dart';
@@ -209,7 +210,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: Platform.isAndroid?
+                        child: PlatformHelper.isAndroid()?
 
                         DropDownWidget(
                           value: _dropDownBuildingType,
@@ -252,7 +253,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: Platform.isAndroid?
+                        child: PlatformHelper.isAndroid()?
 
                         DropDownWidget(
                           value: _dropDownRoad,
@@ -295,7 +296,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: Platform.isAndroid?
+                        child: PlatformHelper.isAndroid()?
 
                         DropDownWidget(
                           value: _dropDownBlockNo,

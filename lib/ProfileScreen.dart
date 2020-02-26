@@ -12,6 +12,7 @@ import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
+import 'helper/PlatformHelper.dart';
 import 'model/UserModel.dart';
 import 'helper/NumConvertHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
@@ -190,7 +191,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.TAX_RECORD_DELETE_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                   }
                 );
-              },child: Icon(Platform.isAndroid?Icons.delete :CupertinoIcons.delete_solid, color: Colors.red,))
+              },child: Icon(PlatformHelper.isAndroid()?Icons.delete :CupertinoIcons.delete_solid, color: Colors.red,))
             ],
           ),
         ),

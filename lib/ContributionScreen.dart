@@ -10,6 +10,7 @@ import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'helper/PlatformHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
@@ -159,7 +160,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
 
                         Container(
                           margin: EdgeInsets.only(bottom: 10.0),
-                          decoration: Platform.isAndroid? null :
+                          decoration: PlatformHelper.isAndroid()? null :
                           BoxDecoration(
                               border: Border.all(color: MyColor.colorPrimary, width: 1),
                               borderRadius: BorderRadius.circular(10)
@@ -196,7 +197,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
                                   color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.8
                               )
                           ),
-                          child: Platform.isAndroid?
+                          child: PlatformHelper.isAndroid()?
 
                           DropDownWidget(
                             value: _dropDownSubject,

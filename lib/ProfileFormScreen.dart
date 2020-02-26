@@ -7,6 +7,7 @@ import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
+import 'helper/PlatformHelper.dart';
 import 'model/UserModel.dart';
 import 'model/LocationModel.dart';
 import 'Database/LocationDb.dart';
@@ -282,7 +283,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                           color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                                       )
                                   ),
-                                  child: Platform.isAndroid?
+                                  child: PlatformHelper.isAndroid()?
 
                                   DropDownWidget(
                                     value: _dropDownState,
@@ -335,7 +336,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                           color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                                       )
                                   ),
-                                  child: Platform.isAndroid?
+                                  child: PlatformHelper.isAndroid()?
 
                                   DropDownWidget(
                                     value: _dropDownTownship,

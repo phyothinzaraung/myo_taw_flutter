@@ -9,6 +9,7 @@ import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'helper/MyoTawConstant.dart';
+import 'helper/PlatformHelper.dart';
 import 'model/SaveNewsFeedModel.dart';
 import 'Database/SaveNewsFeedDb.dart';
 import 'helper/ShowDateTimeHelper.dart';
@@ -129,7 +130,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                                     _sharepreferenceshelper.getUserUniqueKey());
                               }
                             );
-                          },child: Icon(Platform.isAndroid? Icons.delete : CupertinoIcons.delete_solid, color: Colors.red,))
+                          },child: Icon(PlatformHelper.isAndroid()? Icons.delete : CupertinoIcons.delete_solid, color: Colors.red,))
                         ],
                       ),
                     ),

@@ -9,6 +9,7 @@ import 'package:package_info/package_info.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'OtpScreen.dart';
 import 'helper/MyoTawConstant.dart';
+import 'helper/PlatformHelper.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
@@ -138,7 +139,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                 ),
                                 margin: EdgeInsets.only(bottom: 20),
                                 padding: EdgeInsets.only(left: 15, right: 15),
-                                child: Platform.isAndroid?
+                                child: PlatformHelper.isAndroid()?
                                     DropDownWidget(
                                      list: _cityList,
                                      value: _dropDownCity,

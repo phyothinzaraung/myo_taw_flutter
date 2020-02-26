@@ -19,6 +19,7 @@ import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'dart:io';
 import 'helper/MyoTawConstant.dart';
+import 'helper/PlatformHelper.dart';
 import 'myWidget/CustomButtonWidget.dart';
 
 class NewFloodReportScreen extends StatefulWidget {
@@ -139,7 +140,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
       child: ListView(
         children: <Widget>[
           Container(
-            decoration: Platform.isAndroid? null :
+            decoration: PlatformHelper.isAndroid()? null :
             BoxDecoration(
                 border: Border.all(color: MyColor.colorPrimary, width: 1),
                 borderRadius: BorderRadius.circular(10)

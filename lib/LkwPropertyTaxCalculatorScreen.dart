@@ -8,6 +8,7 @@ import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
+import 'helper/PlatformHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/DropDownWidget.dart';
@@ -220,7 +221,7 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
                               color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                           )
                       ),
-                      child: Platform.isAndroid?
+                      child: PlatformHelper.isAndroid()?
 
                       DropDownWidget(
                         value: _dropDownBuildingType,
@@ -278,7 +279,7 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
                               color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                           )
                       ),
-                      child: Platform.isAndroid?
+                      child: PlatformHelper.isAndroid()?
 
                       DropDownWidget(
                         value: _dropDownStory,
@@ -321,7 +322,7 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
                               color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                           )
                       ),
-                      child: Platform.isAndroid?
+                      child: PlatformHelper.isAndroid()?
 
                       DropDownWidget(
                         value: _dropDownGrade,

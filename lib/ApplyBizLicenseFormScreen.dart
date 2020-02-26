@@ -10,6 +10,7 @@ import 'package:myotaw/myWidget/DropDownWidget.dart';
 import 'package:myotaw/myWidget/IosPickerWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
+import 'helper/PlatformHelper.dart';
 import 'model/BizLicenseModel.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/LocationDb.dart';
@@ -509,7 +510,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                               color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
                           )
                       ),
-                      child: Platform.isAndroid?
+                      child: PlatformHelper.isAndroid()?
 
                           DropDownWidget(
                             value: _dropDownBizState,
@@ -575,7 +576,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                               color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
                           )
                       ),
-                      child: Platform.isAndroid?
+                      child: PlatformHelper.isAndroid()?
 
                       DropDownWidget(
                         value: _dropDownBizTownship,
@@ -826,7 +827,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                             color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
                         )
                     ),
-                    child: Platform.isAndroid?
+                    child: PlatformHelper.isAndroid()?
 
                     DropDownWidget(
                       value: _dropDownOwnerState,
@@ -894,7 +895,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                             color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
                         )
                     ),
-                    child: Platform.isAndroid?
+                    child: PlatformHelper.isAndroid()?
 
                     DropDownWidget(
                       value: _dropDownOwnerTownship,

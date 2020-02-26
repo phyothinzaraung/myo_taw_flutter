@@ -8,6 +8,7 @@ import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'helper/MyoTawConstant.dart';
+import 'helper/PlatformHelper.dart';
 import 'main.dart';
 import 'helper/ServiceHelper.dart';
 import 'model/UserModel.dart';
@@ -74,7 +75,7 @@ class _OtpScreenState extends State<OtpScreen> {
       _showLoading = true;
     });
     String fcmToken = await _firebaseMessaging.getToken();
-    if(Platform.isAndroid){
+    if(PlatformHelper.isAndroid()){
       _platForm = 'Android';
     }else{
       _platForm = 'Ios';

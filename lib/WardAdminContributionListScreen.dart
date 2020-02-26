@@ -16,6 +16,7 @@ import 'package:permission_handler/permission_handler.dart';
 import 'ProfileScreen.dart';
 import 'helper/MyLoadMore.dart';
 import 'helper/MyoTawConstant.dart';
+import 'helper/PlatformHelper.dart';
 import 'helper/ShowDateTimeHelper.dart';
 import 'myWidget/EmptyViewWidget.dart';
 import 'myWidget/NoConnectionWidget.dart';
@@ -125,7 +126,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 10),
-                      child: Icon(Platform.isAndroid?Icons.arrow_back: CupertinoIcons.back,),
+                      child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,),
                     ),
                   ),
                   Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
@@ -365,7 +366,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child: Icon(Platform.isAndroid?Icons.arrow_back: CupertinoIcons.back,),
+                        child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,),
                       ),
                     ) : Container() : Container(),
                     Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),

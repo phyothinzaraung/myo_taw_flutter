@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'dart:io';
 
+import 'package:myotaw/helper/PlatformHelper.dart';
+
 class CustomProgressIndicatorWidget extends StatelessWidget {
 
   Widget _androidIndicator(){
@@ -25,18 +27,23 @@ class CustomProgressIndicatorWidget extends StatelessWidget {
   }
 
   Widget _iosIndicator(){
-    return Container(
-      color: Colors.black.withOpacity(0.2),
-      width: double.maxFinite,
-      height: double.maxFinite,
-      child: Center(
-        child: CupertinoActivityIndicator(radius: 20,),
+    return CupertinoTheme(
+      data: CupertinoThemeData(
+          brightness: Brightness.dark
+      ),
+      child: Container(
+        color: Colors.black.withOpacity(0.5),
+        width: double.maxFinite,
+        height: double.maxFinite,
+        child: Center(
+          child: CupertinoActivityIndicator(radius: 13,),
+        ),
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Platform.isAndroid? _androidIndicator() : _iosIndicator();
+    return PlatformHelper.isAndroid()? _androidIndicator() : _iosIndicator();
   }
 }

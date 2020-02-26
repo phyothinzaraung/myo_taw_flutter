@@ -14,6 +14,7 @@ import 'NewsFeedScreen.dart';
 import 'DashBoardScreen.dart';
 import 'NotificationScreen.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'helper/PlatformHelper.dart';
 import 'helper/ServiceHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/UserModel.dart';
@@ -128,7 +129,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
          await _sharepreferenceshelper.initSharePref();
          if(_sharepreferenceshelper.getToken() != refreshToken){
            try{
-             var response = await ServiceHelper().updateUserToken(_sharepreferenceshelper.getUserUniqueKey(), refreshToken, Platform.isAndroid?'Android' : 'Ios');
+             var response = await ServiceHelper().updateUserToken(_sharepreferenceshelper.getUserUniqueKey(), refreshToken, PlatformHelper.isAndroid()?'Android' : 'Ios');
              await _userDb.openUserDb();
              await _userDb.insert(UserModel.fromJson(response.data));
              _userDb.closeUserDb();
@@ -232,7 +233,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
       bottom: true,
       left: false,
       right: false,
-      child: Platform.isAndroid? _androidBottomNavigation() : _iosTabBarNavigation(),
+      child: PlatformHelper.isAndroid()? _androidBottomNavigation() : _iosTabBarNavigation(),
     );
   }
 

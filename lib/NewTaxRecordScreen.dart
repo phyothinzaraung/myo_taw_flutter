@@ -7,6 +7,7 @@ import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
+import 'helper/PlatformHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
 import 'model/UserModel.dart';
@@ -130,7 +131,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                   //camera
                   Container(
                     margin: EdgeInsets.only(bottom: 10.0),
-                    decoration: Platform.isAndroid? null :
+                    decoration: PlatformHelper.isAndroid()? null :
                     BoxDecoration(
                         border: Border.all(color: MyColor.colorPrimary, width: 1),
                         borderRadius: BorderRadius.circular(10)
@@ -157,7 +158,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                   //gallery
                   Container(
                     margin: EdgeInsets.only(bottom: 10.0),
-                    decoration: Platform.isAndroid? null :
+                    decoration: PlatformHelper.isAndroid()? null :
                     BoxDecoration(
                         border: Border.all(color: MyColor.colorPrimary, width: 1),
                         borderRadius: BorderRadius.circular(10)

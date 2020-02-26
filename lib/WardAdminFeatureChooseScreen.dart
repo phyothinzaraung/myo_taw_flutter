@@ -14,6 +14,8 @@ import 'FloodReportListScreen.dart';
 import 'helper/NavigatorHelper.dart';
 import 'dart:io';
 
+import 'helper/PlatformHelper.dart';
+
 class WardAdminFeatureChooseScreen extends StatelessWidget {
   List<DashBoardModel> _list = List();
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
@@ -57,7 +59,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
       await _sharepreferenceshelper.initSharePref();
       if(_sharepreferenceshelper.getToken() != refreshToken){
         try{
-          var response = await ServiceHelper().updateUserToken(_sharepreferenceshelper.getUserUniqueKey(), refreshToken, Platform.isAndroid?'Android' : 'Ios');
+          var response = await ServiceHelper().updateUserToken(_sharepreferenceshelper.getUserUniqueKey(), refreshToken, PlatformHelper.isAndroid()?'Android' : 'Ios');
           await _userDb.openUserDb();
           await _userDb.insert(UserModel.fromJson(response.data));
           _userDb.closeUserDb();

@@ -8,6 +8,7 @@ import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
+import 'helper/PlatformHelper.dart';
 import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/DropDownWidget.dart';
 import 'myWidget/IosPickerWidget.dart';
@@ -160,7 +161,7 @@ class _LkwBizTaxCalculatorScreenState extends State<LkwBizTaxCalculatorScreen> {
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: Platform.isAndroid?
+                        child: PlatformHelper.isAndroid()?
 
                         DropDownWidget(
                           value: _dropDownBizLicenseType,
@@ -217,7 +218,7 @@ class _LkwBizTaxCalculatorScreenState extends State<LkwBizTaxCalculatorScreen> {
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: Platform.isAndroid?
+                        child: PlatformHelper.isAndroid()?
 
                         DropDownWidget(
                           value: _dropDownBizType,
@@ -274,7 +275,7 @@ class _LkwBizTaxCalculatorScreenState extends State<LkwBizTaxCalculatorScreen> {
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: Platform.isAndroid?
+                        child: PlatformHelper.isAndroid()?
 
                         DropDownWidget(
                           value: _dropDownGrade,

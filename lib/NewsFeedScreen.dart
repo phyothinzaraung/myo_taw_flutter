@@ -8,6 +8,7 @@ import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/model/NewsFeedReactModel.dart';
 import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
+import 'helper/PlatformHelper.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'helper/ShowDateTimeHelper.dart';
@@ -399,7 +400,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 10),
-                      child: Icon(Platform.isAndroid?Icons.arrow_back: CupertinoIcons.back,),
+                      child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,),
                     ),
                   ) : Container() : Container(),
                   Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
@@ -441,7 +442,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child: Icon(Platform.isAndroid?Icons.arrow_back: CupertinoIcons.back,),
+                        child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,),
                       ),
                     ) : Container() : Container(),
                     Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:myotaw/helper/PlatformHelper.dart';
 import '../helper/MyoTawConstant.dart';
 import 'dart:io';
 
@@ -14,7 +15,7 @@ class CustomDialogWidget {
     String buttonText,
     VoidCallback onPress,
   }){
-    return Platform.isAndroid?
+    return PlatformHelper.isAndroid()?
     showDialog(
         context: context,
         builder: (context){
@@ -48,7 +49,7 @@ class CustomDialogWidget {
     String textNo,
     VoidCallback onPress
   }){
-    return Platform.isAndroid?
+    return PlatformHelper.isAndroid()?
     showDialog(
         context: context,
         builder: (context){
@@ -84,7 +85,7 @@ class CustomDialogWidget {
     VoidCallback onPress,
     String titleTax
   }){
-    return Platform.isAndroid?
+    return PlatformHelper.isAndroid()?
     showDialog(
         context: context,
         builder: (context){

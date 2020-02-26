@@ -11,6 +11,7 @@ import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
+import 'helper/PlatformHelper.dart';
 import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/DropDownWidget.dart';
 import 'myWidget/IosPickerWidget.dart';
@@ -130,7 +131,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: Platform.isAndroid?
+                        child: PlatformHelper.isAndroid()?
 
                         DropDownWidget(
                           value: _dropDownBizLicenseType,
@@ -186,7 +187,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: Platform.isAndroid?
+                        child: PlatformHelper.isAndroid()?
 
                         DropDownWidget(
                           value: _dropDownBizType,

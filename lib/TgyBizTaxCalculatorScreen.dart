@@ -9,6 +9,7 @@ import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NumConvertHelper.dart';
+import 'helper/PlatformHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/DropDownWidget.dart';
@@ -165,7 +166,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: !Platform.isAndroid?
+                        child: PlatformHelper.isAndroid()?
 
                         DropDownWidget(
                           value: _dropDownBizLicenseType,
@@ -225,7 +226,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                                 color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                             )
                         ),
-                        child: Platform.isAndroid?
+                        child: PlatformHelper.isAndroid()?
 
                         DropDownWidget(
                           value: _dropDownBizType,
@@ -275,7 +276,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                                       color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                                   )
                               ),
-                              child: Platform.isAndroid?
+                              child: PlatformHelper.isAndroid()?
 
                               DropDownWidget(
                                 value: _dropDownGrade,
@@ -325,7 +326,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                                       color: MyColor.colorPrimary,style: BorderStyle.solid, width: 0.80
                                   )
                               ),
-                              child: Platform.isAndroid?
+                              child: PlatformHelper.isAndroid()?
 
                               DropDownWidget(
                                 value: _dropDownSquareFeet,
