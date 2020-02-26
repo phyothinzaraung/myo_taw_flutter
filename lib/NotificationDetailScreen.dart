@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/ShowDateTimeHelper.dart';
 import 'package:myotaw/model/NotificationModel.dart';
@@ -37,15 +38,21 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
 
   Widget _body(BuildContext context){
     return Container(
-      padding: EdgeInsets.all(16.0),
+      padding: EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 20),
       color: Colors.white,
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(
-            children: <Widget>[
-              Image.asset('images/calendar.png', width: 18.0, height: 18.0,),
-              Text(" " + _date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)
-            ],
+          Container(
+            margin: EdgeInsets.only(bottom: 20),
+            child: Row(
+              children: <Widget>[
+                Container(
+                    margin: EdgeInsets.only(right: 10),
+                    child: Image.asset('images/calendar.png', width: 18.0, height: 18.0,)),
+                Text(_date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)
+              ],
+            ),
           ),
           Text(_message, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorBlackSemiTransparent)),
         ],

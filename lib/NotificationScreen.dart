@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
@@ -118,26 +119,27 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
     String datetime = _notificationList[i].postedDate;
     String date = ShowDateTimeHelper.showDateTimeDifference(datetime);
     
-    return ListTile(
-      leading: Image.asset("images/noti.png", width: 30.0, height: 30.0,),
-      title: Text(_notificationList[i].message, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorBlackSemiTransparent), maxLines: 2,),
-      subtitle: Row(
-        children: <Widget>[
-          Text(""),
-          Text(date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),),
-        ],
+    return Card(
+      color: Colors.white,
+      margin: EdgeInsets.only(top: i == _notificationList.length? 0 : 1, left: 0, right: 0, bottom: 0),
+      elevation: 0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+      child: ListTile(
+        contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
+        leading: Image.asset("images/noti.png", width: 30.0, height: 30.0,),
+        title: Container(
+            margin: EdgeInsets.only(bottom: 10),
+            child: Text(_notificationList[i].message, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorBlackSemiTransparent), maxLines: 2,)),
+        subtitle: Text(date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),),
+        onTap: (){
+          NavigatorHelper.MyNavigatorPush(context, NotificationDetailScreen(_notificationList[i]), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+        },
       ),
-      onTap: (){
-        NavigatorHelper.MyNavigatorPush(context, NotificationDetailScreen(_notificationList[i]), ScreenName.NOTIFICATION_DETAIL_SCREEN);
-      },
     );
   }
 
   _listView(){
-    return ListView.separated(
-      separatorBuilder: (context, index) => Divider(
-        color: MyColor.colorTextGrey,
-      ),
+    return ListView.builder(
       itemCount: _notificationList.length,
       itemBuilder: (BuildContext context, int i){
         return Column(
@@ -165,7 +167,16 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
         initState: () async => _getUser(),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
-        renderSuccess: ({data}) => RefreshIndicator(child: _listView(), onRefresh: _handleRefresh)
+        renderSuccess: ({data}) => RefreshIndicator(
+            child: _notificationList.isNotEmpty?_listView() :
+            Column(
+              children: <Widget>[
+                _headerNotification(),
+                Expanded(child: emptyView(asyncLoaderState, MyString.txt_no_notification))
+              ],
+            ),
+            onRefresh: _handleRefresh
+        )
     );
     return Scaffold(
       body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: CustomProgressIndicatorWidget(),child: _asyncLoader)

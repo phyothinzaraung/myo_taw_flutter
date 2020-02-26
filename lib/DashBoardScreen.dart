@@ -49,16 +49,17 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       setState(() {
         _regionCode = _sharepreferenceshelper.getRegionCode();
       });
+      var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
+      _userDb.closeUserDb();
+      if(mounted){
+        setState(() {
+          _userModel = model;
+        });
+        _initHeaderTitle();
+        _initDashBoardWidget();
+      }
     }
-    var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    _userDb.closeUserDb();
-    if(mounted){
-      setState(() {
-        _userModel = model;
-      });
-      _initHeaderTitle();
-      _initDashBoardWidget();
-    }
+
     /*if(Platform.isIOS){
       _widget.removeLast();
     }*/
@@ -238,5 +239,14 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
         ),
       )
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    if(_userDb.isUserDbOpen()){
+      _userDb.closeUserDb();
+    }
   }
 }
