@@ -718,6 +718,7 @@ class ScreenName{
 
 
   static const String NOTIFICATION_SCREEN = 'Notification screen';
+  static const String NOTIFICATION_DETAIL_SCREEN = 'Notification detail screen';
 
   static const String PHOTO_DETAIL_SCREEN = 'Photo detail screen';
 
