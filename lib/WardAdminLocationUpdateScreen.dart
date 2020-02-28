@@ -5,6 +5,7 @@ import 'package:location/location.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -109,7 +110,7 @@ class _WardAdminLocationUpdateScreenState extends State<WardAdminLocationUpdateS
         ],
       ) :
       Center(
-        child: CircularProgressIndicator(),
+        child: NativeProgressIndicator(),
       ),
     floatingActionButton: _floatingActionButton()
     );

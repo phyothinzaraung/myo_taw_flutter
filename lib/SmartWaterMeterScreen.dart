@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/NumberFormatterHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
+import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -255,7 +257,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[NativeProgressIndicator()],)
         ],
       ),
     );
@@ -285,14 +287,14 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => Container(
-          child: RefreshIndicator(
+          child: NativePullRefresh(
               onRefresh: _handleRefresh,
               child: widget._userModel.meterNo!=null?_isRefresh == false?_smartWaterMeterLogList.isNotEmpty?_listView() :
                   ListView(children: <Widget>[_header()],) :
               Container(
                 margin: EdgeInsets.only(top: 10.0),
                 child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[CircularProgressIndicator()],),
+                  children: <Widget>[NativeProgressIndicator()],),
               ) : Container(
                 padding: EdgeInsets.all(10),
                   child: Column(

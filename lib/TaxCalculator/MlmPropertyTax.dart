@@ -1,5 +1,6 @@
 
 import 'package:myotaw/helper/NumConvertHelper.dart';
+import 'package:myotaw/helper/NumberFormatterHelper.dart';
 
 class MlmPropertyTax{
 
@@ -79,6 +80,7 @@ class MlmPropertyTax{
         _taxRange1 = 10000;
         break;
     }
-    return '${NumConvertHelper.getMyanNumInt(_taxRange)} - ${NumConvertHelper.getMyanNumInt(_taxRange1)}';
+    return '${NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_taxRange.toString()))} - '
+        '${NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_taxRange1.toString()))}';
   }
 }

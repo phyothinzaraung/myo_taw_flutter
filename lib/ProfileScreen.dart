@@ -9,6 +9,8 @@ import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
+import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -173,25 +175,27 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   ),
                 ),
               ),
-              GestureDetector(onTap: (){
-                //_dialogDelete(taxRecordModel.id);
-                CustomDialogWidget().customConfirmDialog(
-                  context: context,
-                  img: 'confirm_icon.png',
-                  content: MyString.txt_are_u_sure,
-                  textYes: MyString.txt_delete,
-                  textNo: MyString.txt_delete_cancel,
-                  onPress: ()async{
-                    Navigator.of(context).pop();
-                    setState(() {
-                      _isLoading = true;
-                    });
-                    _deleteTaxRecord(taxRecordModel.id);
-                    await _sharepreferenceshelper.initSharePref();
-                    FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.TAX_RECORD_DELETE_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+              IconButton(
+                  icon: Icon(PlatformHelper.isAndroid()?Icons.delete :CupertinoIcons.delete_solid, color: Colors.red,),
+                  onPressed: (){
+                    CustomDialogWidget().customConfirmDialog(
+                        context: context,
+                        img: 'confirm_icon.png',
+                        content: MyString.txt_are_u_sure,
+                        textYes: MyString.txt_delete,
+                        textNo: MyString.txt_delete_cancel,
+                        onPress: ()async{
+                          Navigator.of(context).pop();
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          _deleteTaxRecord(taxRecordModel.id);
+                          await _sharepreferenceshelper.initSharePref();
+                          FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.TAX_RECORD_DELETE_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                        }
+                    );
                   }
-                );
-              },child: Icon(PlatformHelper.isAndroid()?Icons.delete :CupertinoIcons.delete_solid, color: Colors.red,))
+              ),
             ],
           ),
         ),
@@ -379,7 +383,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         _headerProfile(),
         Column(
           children: <Widget>[
-            CircularProgressIndicator()
+            NativeProgressIndicator()
           ],
         )
       ],
@@ -449,18 +453,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
         initState: () async => await _getUser(),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => getNoConnectionWidget(),
-        renderSuccess: ({data}) => Container(
-          child: RefreshIndicator(
-            onRefresh: _handleRefresh,
-            child: _taxRecordModelList.isNotEmpty?
-            LoadMore(
-                isFinish: _isEnd,
-                onLoadMore: _loadMore,
-                delegate: DefaultLoadMoreDelegate(),
-                textBuilder: DefaultLoadMoreTextBuilder.english,
-                child: _listView()
-            ) : ListView(children: <Widget>[_headerProfile(), emptyView(asyncLoaderState, MyString.txt_no_data)],)
-          ),
+        renderSuccess: ({data}) => NativePullRefresh(
+          onRefresh: _handleRefresh,
+          child: _taxRecordModelList.isNotEmpty?
+          LoadMore(
+              isFinish: _isEnd,
+              onLoadMore: _loadMore,
+              delegate: DefaultLoadMoreDelegate(),
+              textBuilder: DefaultLoadMoreTextBuilder.english,
+              child: _listView()
+          ) : ListView(children: <Widget>[_headerProfile(), emptyView(asyncLoaderState, MyString.txt_no_data)],)
         )
     );
     return CustomScaffoldWidget(

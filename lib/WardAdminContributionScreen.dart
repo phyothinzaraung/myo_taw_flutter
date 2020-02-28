@@ -22,6 +22,7 @@ import 'model/UserModel.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'WardAdminLocationUpdateScreen.dart';
+import 'myWidget/NativeProgressIndicator.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
 
 class WardAdminContributionScreen extends StatefulWidget {
@@ -262,7 +263,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                             mainAxisSize: MainAxisSize.min,
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
-                              CircularProgressIndicator()
+                              NativeProgressIndicator()
                             ],
                           ),
                         ),

@@ -5,6 +5,8 @@ import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/ShowDateTimeHelper.dart';
 import 'package:myotaw/model/NotificationModel.dart';
 import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
+import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
@@ -79,7 +81,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
     await _sharepreferenceshelper.initSharePref();
     _regionCode = _sharepreferenceshelper.getRegionCode();
     try{
-      response = await ServiceHelper().getNotification(_regionCode);
+      response = await ServiceHelper().getNotification('TGY');
       if(response.data != null) {
         _notificationModelList = response.data;
         for(var i in _notificationModelList){
@@ -122,7 +124,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
     return Card(
       color: Colors.white,
       margin: EdgeInsets.only(top: i == _notificationList.length? 0 : 1, left: 0, right: 0, bottom: 0),
-      elevation: 0,
+      elevation: 0.5,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
       child: ListTile(
         contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
@@ -167,7 +169,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
         initState: () async => _getUser(),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
-        renderSuccess: ({data}) => RefreshIndicator(
+        renderSuccess: ({data}) => NativePullRefresh(
             child: _notificationList.isNotEmpty?_listView() :
             Column(
               children: <Widget>[
@@ -189,7 +191,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
             _headerNotification(),
-            Container(margin: EdgeInsets.only(top: 10.0),child: CircularProgressIndicator())
+            Container(margin: EdgeInsets.only(top: 10.0),child: NativeProgressIndicator())
           ],
         )
     );

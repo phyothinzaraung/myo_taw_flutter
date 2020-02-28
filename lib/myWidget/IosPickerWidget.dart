@@ -42,7 +42,7 @@ class IosPickerWidget extends StatelessWidget {
                 height: 180,
                 child: CupertinoPicker(
                     backgroundColor: Colors.white,
-                    itemExtent: 35,
+                    itemExtent: 30,
                     magnification: 1,
                     scrollController: fixedExtentScrollController,
                     useMagnifier: true,

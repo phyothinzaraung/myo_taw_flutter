@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:myotaw/TaxCalculator/TgyPropertyTax.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
@@ -28,8 +29,6 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
   List<String> _blockNoList;
   TextEditingController _lengthContorller = new TextEditingController();
   TextEditingController _widthContorller = new TextEditingController();
-  static const int base_value = 70;
-  double buildingValue, roadValue, zoneValue, rentalRate, arv;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
 
@@ -86,62 +85,11 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
       _dropDownRoad = MyString.txt_no_selected;
       _widthContorller.clear();
       _lengthContorller.clear();
+
+      _buildingTypePickerIndex = 0;
+      _roadTypePickerIndex = 0;
+      _blockNoPickerIndex = 0;
     });
-  }
-
-  String _getArv(){
-    switch (_buildingGrade()){
-      case MyString.BUILDING_GRADE_A:
-        buildingValue = 0;
-        break;
-      case MyString.BUILDING_GRADE_B:
-        buildingValue = -0.2;
-        break;
-      case MyString.BUILDING_GRADE_C:
-        buildingValue = -0.8;
-        break;
-      case MyString.GOV_BUILDING:
-        buildingValue = -0.15;
-        break;
-    }
-
-    switch (_roadType()){
-      case 1:
-        roadValue = 0.1;
-        break;
-      case 2:
-        roadValue = 0.05;
-        break;
-      case 3:
-        roadValue = 0;
-        break;
-    }
-
-    switch (_zone()){
-      case 1:
-        zoneValue = 0.5;
-        break;
-      case 2:
-        zoneValue = 0.25;
-        break;
-      case 3:
-        zoneValue = 0;
-        break;
-    }
-
-    rentalRate = base_value + buildingValue * base_value + roadValue *base_value + zoneValue *base_value;
-    arv = double.parse(_lengthContorller.text) * double.parse(_widthContorller.text) * rentalRate;
-    int lastTwoDigit = arv.round() % 100;
-    int finalArv;
-    if (lastTwoDigit >= 50){
-      finalArv = arv.round() + (100 - lastTwoDigit);
-
-    }else {
-      finalArv = arv.round() - lastTwoDigit;
-    }
-    print('rentalRate : ${rentalRate}');
-
-    return NumConvertHelper.getMyanNumInt((finalArv * 0.02 + finalArv * 0.02).round());
   }
 
   String _buildingGrade(){
@@ -407,7 +355,13 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                               CustomDialogWidget().customCalculateTaxDialog(
                                 context: context,
                                 titleTax: MyString.txt_biz_tax_property,
-                                taxValue: _getArv(),
+                                taxValue: TgyPropertyTax.getArv(
+                                  buildingGrade: _buildingGrade(),
+                                  roadType: _roadType(),
+                                  zone: _zone(),
+                                  length: _lengthContorller.text,
+                                  width: _widthContorller.text
+                                ),
                                 onPress: (){
                                   Navigator.of(context).pop();
                                   clearText();

@@ -1,8 +1,10 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:libphonenumber/libphonenumber.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/ButtonLoadingIndicatorWidget.dart';
+import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
 import 'package:myotaw/myWidget/DropDownWidget.dart';
 import 'package:myotaw/myWidget/IosPickerWidget.dart';
 import 'package:package_info/package_info.dart';
@@ -24,8 +26,7 @@ class LoginScreen extends StatefulWidget {
 class _LoginScreenState extends State<LoginScreen> {
   List<String> _cityList;
   String _dropDownCity = 'နေရပ်ရွေးပါ', _regionCode , _normalizedPhNo;
-  bool _showLoading = false;
-  bool _isCon = false;
+  bool _showLoading = false, _isCupertinoLoading = false,_isCon = false;
   var response;
   Sharepreferenceshelper _sharePrefHelper = new Sharepreferenceshelper();
   TextEditingController _phoneNoController = new TextEditingController();
@@ -61,7 +62,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
   void _getOtp()async{
     setState(() {
-      _showLoading = true;
+      PlatformHelper.isAndroid()? _showLoading = true : _isCupertinoLoading = true;
     });
     String _hasyKey = await SmsAutoFill().getAppSignature;
     response = await ServiceHelper().getOtpCode(_normalizedPhNo, _hasyKey);
@@ -75,7 +76,7 @@ class _LoginScreenState extends State<LoginScreen> {
     }
 
     setState(() {
-      _showLoading = false;
+      PlatformHelper.isAndroid()? _showLoading = false : _isCupertinoLoading = false;
     });
   }
 
@@ -102,148 +103,153 @@ class _LoginScreenState extends State<LoginScreen> {
     return Scaffold(
       key: _globalKey,
         backgroundColor: Colors.white,
-        body: Center(
-          child: Stack(
-            children: <Widget>[
-              //color primary bg
-              Container(
-                color: MyColor.colorPrimary,
-                width: double.maxFinite,
-                height: 300,
-              ),
-              //login card
-              Container(
-                width: double.maxFinite,
-                margin: EdgeInsets.only(top: 50),
-                child: ListView(
-                  children: <Widget>[
-                    Hero(
-                        tag: 'myotaw',
-                        child: Image.asset("images/myo_taw_logo_eng.png", width: 90, height: 80,)),
-                    Container(
-                      margin: EdgeInsets.all(30),
-                      child: Card(
-                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
-                        child: Container(
-                          margin: EdgeInsets.all(30),
-                          child: Column(
-                            children: <Widget>[
-                              Container(
-                                  margin: EdgeInsets.only(bottom: 30),
-                                  child: Text(MyString.txt_welcome, style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary), textAlign: TextAlign.center,)),
-                              Container(
-                                width: double.maxFinite,
-                                decoration: BoxDecoration(
-                                    border: Border.all(color: MyColor.colorPrimary, width: 1.0),
-                                    borderRadius: BorderRadius.all(Radius.circular(10.0))
+        body: ModalProgressHUD(
+          inAsyncCall: _isCupertinoLoading,
+          progressIndicator: CustomProgressIndicatorWidget(),
+          child: Center(
+            child: Stack(
+              children: <Widget>[
+                //color primary bg
+                Container(
+                  color: MyColor.colorPrimary,
+                  width: double.maxFinite,
+                  height: 300,
+                ),
+                //login card
+                Container(
+                  width: double.maxFinite,
+                  margin: EdgeInsets.only(top: 50),
+                  child: ListView(
+                    children: <Widget>[
+                      Hero(
+                          tag: 'myotaw',
+                          child: Image.asset("images/myo_taw_logo_eng.png", width: 90, height: 80,)),
+                      Container(
+                        margin: EdgeInsets.all(30),
+                        child: Card(
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                          child: Container(
+                            margin: EdgeInsets.all(30),
+                            child: Column(
+                              children: <Widget>[
+                                Container(
+                                    margin: EdgeInsets.only(bottom: 30),
+                                    child: Text(MyString.txt_welcome, style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorPrimary), textAlign: TextAlign.center,)),
+                                Container(
+                                  width: double.maxFinite,
+                                  decoration: BoxDecoration(
+                                      border: Border.all(color: MyColor.colorPrimary, width: 1.0),
+                                      borderRadius: BorderRadius.all(Radius.circular(10.0))
+                                  ),
+                                  margin: EdgeInsets.only(bottom: 20),
+                                  padding: EdgeInsets.only(left: 15, right: 15),
+                                  child: PlatformHelper.isAndroid()?
+                                      DropDownWidget(
+                                       list: _cityList,
+                                       value: _dropDownCity,
+                                       onChange: (value){
+                                         setState(() {
+                                           _dropDownCity = value;
+                                         });
+                                       },
+                                      ) :
+                                      IosPickerWidget(
+                                        children: _loginLocationWidgetList,
+                                        text: _dropDownCity,
+                                        fixedExtentScrollController: FixedExtentScrollController(initialItem: _locationPickerIndex),
+                                        onPress: (){
+                                          Navigator.of(context).pop();
+                                          setState(() {
+                                            _dropDownCity = _cityList[_locationPickerIndex];
+                                          });
+                                        },
+                                        onSelectedItemChanged: (i){
+                                          _locationPickerIndex = i;
+                                        },
+                                      ),
                                 ),
-                                margin: EdgeInsets.only(bottom: 20),
-                                padding: EdgeInsets.only(left: 15, right: 15),
-                                child: PlatformHelper.isAndroid()?
-                                    DropDownWidget(
-                                     list: _cityList,
-                                     value: _dropDownCity,
-                                     onChange: (value){
-                                       setState(() {
-                                         _dropDownCity = value;
-                                       });
-                                     },
-                                    ) :
-                                    IosPickerWidget(
-                                      children: _loginLocationWidgetList,
-                                      text: _dropDownCity,
-                                      fixedExtentScrollController: FixedExtentScrollController(initialItem: _locationPickerIndex),
-                                      onPress: (){
-                                        Navigator.of(context).pop();
-                                        setState(() {
-                                          _dropDownCity = _cityList[_locationPickerIndex];
-                                        });
-                                      },
-                                      onSelectedItemChanged: (i){
-                                        _locationPickerIndex = i;
-                                      },
+                                Container(
+                                  margin: EdgeInsets.only(bottom: 30.0),
+                                  padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                  decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(7.0),
+                                      border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                                  ),
+                                  child: TextField(
+                                    decoration: InputDecoration(
+                                      border: InputBorder.none,
+                                      suffixIcon: Icon(Icons.phone, color: MyColor.colorPrimary,),
+                                      hintText: '09xxxxxx',
                                     ),
-                              ),
-                              Container(
-                                margin: EdgeInsets.only(bottom: 30.0),
-                                padding: EdgeInsets.only(left: 10.0, right: 10.0),
-                                decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(7.0),
-                                    border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
-                                ),
-                                child: TextField(
-                                  decoration: InputDecoration(
-                                    border: InputBorder.none,
-                                    suffixIcon: Icon(Icons.phone, color: MyColor.colorPrimary,),
-                                    hintText: '09xxxxxx',
+                                    cursorColor: MyColor.colorPrimary,
+                                    controller: _phoneNoController,
+                                    style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),
+                                    keyboardType: TextInputType.phone,
                                   ),
-                                  cursorColor: MyColor.colorPrimary,
-                                  controller: _phoneNoController,
-                                  style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),
-                                  keyboardType: TextInputType.phone,
                                 ),
-                              ),
-                              Container(
-                                width: double.maxFinite,
-                                child: CustomButtonWidget(onPress: () async{
-                                  if(_dropDownCity != 'နေရပ်ရွေးပါ' && _phoneNoController.text.isNotEmpty){
-                                    await _checkCon();
-                                    if(_isCon){
-                                      switch(_dropDownCity){
-                                        case MyString.TGY_CITY:
-                                          _regionCode = MyString.TGY_REGIONCODE;
-                                          break;
-                                        case MyString.MLM_CITY:
-                                          _regionCode = MyString.MLM_REGIONCODE;
-                                          break;
-                                        case MyString.LKW_CITY:
-                                          _regionCode = MyString.LKW_REGIONCODE;
-                                          break;
-                                        default:
-                                      }
-                                      bool _isValid = await _checkPhNoValid();
-                                      if(_isValid){
-                                        FocusScope.of(context).requestFocus(FocusNode());
-                                        _getOtp();
+                                Container(
+                                  width: double.maxFinite,
+                                  child: CustomButtonWidget(onPress: () async{
+                                    if(_dropDownCity != 'နေရပ်ရွေးပါ' && _phoneNoController.text.isNotEmpty){
+                                      await _checkCon();
+                                      if(_isCon){
+                                        switch(_dropDownCity){
+                                          case MyString.TGY_CITY:
+                                            _regionCode = MyString.TGY_REGIONCODE;
+                                            break;
+                                          case MyString.MLM_CITY:
+                                            _regionCode = MyString.MLM_REGIONCODE;
+                                            break;
+                                          case MyString.LKW_CITY:
+                                            _regionCode = MyString.LKW_REGIONCODE;
+                                            break;
+                                          default:
+                                        }
+                                        bool _isValid = await _checkPhNoValid();
+                                        if(_isValid){
+                                          FocusScope.of(context).requestFocus(FocusNode());
+                                          _getOtp();
+                                        }else{
+                                          WarningSnackBar(_globalKey, MyString.txt_wrong_phNo);
+                                        }
                                       }else{
-                                        WarningSnackBar(_globalKey, MyString.txt_wrong_phNo);
-                                      }
-                                    }else{
-                                      WarningSnackBar(_globalKey, MyString.txt_no_internet);
-                                      }
-                                    }else if (_dropDownCity == 'နေရပ်ရွေးပါ'){
-                                      WarningSnackBar(_globalKey, MyString.txt_choose_city);
-                                      }else{
-                                        WarningSnackBar(_globalKey, MyString.txt_fill_phno);
-                                      }
-                                  //Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
-                                  },
-                                  child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: <Widget>[
-                                      Container(
-                                          margin: EdgeInsets.only(right: 20),
-                                          child: Text(MyString.txt_get_otp,style: TextStyle(color: Colors.white),)),
-                                      _showLoading?ButtonLoadingIndicatorWidget():Image.asset('images/get_otp.png', width: 25, height: 25,)
-                                    ],
-                                  ),
-                                    color: MyColor.colorPrimary,
-                                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
-                              ),
-                            ],
+                                        WarningSnackBar(_globalKey, MyString.txt_no_internet);
+                                        }
+                                      }else if (_dropDownCity == 'နေရပ်ရွေးပါ'){
+                                        WarningSnackBar(_globalKey, MyString.txt_choose_city);
+                                        }else{
+                                          WarningSnackBar(_globalKey, MyString.txt_fill_phno);
+                                        }
+                                    //Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment: MainAxisAlignment.center,
+                                      children: <Widget>[
+                                        Container(
+                                            margin: EdgeInsets.only(right: PlatformHelper.isAndroid()? 20 : 0),
+                                            child: Text(MyString.txt_get_otp,style: TextStyle(color: Colors.white,fontSize: FontSize.textSizeSmall),)),
+                                        PlatformHelper.isAndroid()?_showLoading?ButtonLoadingIndicatorWidget():Image.asset('images/get_otp.png', width: 25, height: 25,) :
+                                        Container()
+                                      ],
+                                    ),
+                                      color: MyColor.colorPrimary,
+                                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
+                                ),
+                              ],
+                            ),
                           ),
                         ),
                       ),
-                    ),
-                    Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Text(_appVersion, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextGrey),)),
-                  ],
+                      Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Text(_appVersion, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextGrey),)),
+                    ],
+                  ),
                 ),
-              ),
-              //tv version
+                //tv version
 
-            ],
+              ],
+            ),
           ),
         )
     );

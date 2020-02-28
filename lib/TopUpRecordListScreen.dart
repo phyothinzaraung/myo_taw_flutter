@@ -5,6 +5,8 @@ import 'package:myotaw/helper/NumConvertHelper.dart';
 import 'package:myotaw/helper/NumberFormatterHelper.dart';
 import 'package:myotaw/model/TopUpLogModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
+import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'helper/MyoTawConstant.dart';
 import 'model/UserModel.dart';
 import 'helper/ServiceHelper.dart';
@@ -106,7 +108,7 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[NativeProgressIndicator()],)
         ],
       ),
     );
@@ -127,7 +129,7 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => Container(
-          child: RefreshIndicator(
+          child: NativePullRefresh(
             onRefresh: _handleRefresh,
             child: _topUpLogModelList.isNotEmpty?_listView() : emptyView(asyncLoaderState,MyString.txt_no_top_up_record),
           ),

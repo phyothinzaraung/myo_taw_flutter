@@ -4,6 +4,7 @@ import 'package:myotaw/PhotoDetailScreen.dart';
 import 'package:myotaw/helper/FloodLevelFtInHelper.dart';
 import 'package:myotaw/model/ContributionModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 
 import 'helper/MyoTawConstant.dart';
 
@@ -33,7 +34,7 @@ class WardAdminContributionDetailScreen extends StatelessWidget {
                   ),);
               },
               placeholder: (context, url) => Center(child: Container(
-                child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 200.0,)),
+                child: Center(child: NativeProgressIndicator()), width: double.maxFinite, height: 200.0,)),
               errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg', width: double.maxFinite, height: 200,fit: BoxFit.cover,),
             ),
           ),

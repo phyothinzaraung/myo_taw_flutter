@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 
 /// return true is refresh success
 ///
@@ -327,7 +328,7 @@ class DefaultLoadMoreDelegate extends LoadMoreDelegate {
       return Center(
           child: Column(
             children: <Widget>[
-              CircularProgressIndicator(),
+              NativeProgressIndicator(),
             ],
           )
       );

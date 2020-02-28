@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/NumberFormatterHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
+import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
@@ -61,7 +63,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
     _amountViewModel = UserBillAmountViewModel.fromJson(_response.data);
     if(_amountViewModel != null){
       _name = _amountViewModel.name;
-      _amount = _amountViewModel.totalAmount;
+      _amount = _amountViewModel.totalAmount??0;
       var list = _response.data['Log'];
       if(list != null && list.lenght>0){
         for(var i in list){
@@ -190,7 +192,9 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                                 NavigatorHelper.MyNavigatorPush(context, TopUpRecordListScreen(_userModel), ScreenName.TOP_UP_RECORD_LIST_SCREEN);
 
                                 }, child: Text(MyString.txt_top_up_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                                color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.0),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
                             ),
                           ),
                           Expanded(
@@ -201,7 +205,9 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                                 _navigateToPaymentScreen();
 
                                 }, child: Text(MyString.txt_pay_tax, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
-                                color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
+                                color: Colors.white,
+                                borderRadius: BorderRadius.circular(10.0),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),
                             ),
                           ),
                         ],
@@ -267,7 +273,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[NativeProgressIndicator()],)
         ],
       ),
     );
@@ -297,14 +303,14 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => Container(
-          child: RefreshIndicator(
+          child: NativePullRefresh(
               onRefresh: _handleRefresh,
               child: _isRefresh == false?_paymentLogList.isNotEmpty?_listView() :
                   ListView(children: <Widget>[_header()],) :
               Container(
                 margin: EdgeInsets.only(top: 10.0),
                 child: Row(mainAxisAlignment: MainAxisAlignment.center,
-                  children: <Widget>[CircularProgressIndicator()],),
+                  children: <Widget>[NativeProgressIndicator()],),
               )
           ),
         )

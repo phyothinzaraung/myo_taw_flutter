@@ -6,8 +6,9 @@ import 'package:async_loader/async_loader.dart';
 import 'package:html/parser.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
-import 'package:myotaw/model/NewsFeedReactModel.dart';
-import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
+import 'package:myotaw/model/NewsFeedViewModel.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
+import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'helper/PlatformHelper.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -24,7 +25,6 @@ import 'ProfileScreen.dart';
 import 'Database/UserDb.dart';
 import 'myWidget/EmptyViewWidget.dart';
 import 'myWidget/NoConnectionWidget.dart';
-import 'model/NewsFeedModel.dart';
 
 class NewsFeedScreen extends StatefulWidget {
   @override
@@ -34,7 +34,7 @@ class NewsFeedScreen extends StatefulWidget {
 class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAliveClientMixin<NewsFeedScreen> {
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   var response;
-  List<NewsFeedReactModel> _newsFeedReactModelList = new List<NewsFeedReactModel>();
+  List<NewsFeedViewModel> _newsFeedReactModelList = new List<NewsFeedViewModel>();
   ScrollController _scrollController = new ScrollController();
   bool _isEnd = false, _isCon= false;
   int page = 1;
@@ -117,7 +117,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     return parsedString;
   }
 
-  _saveNewsFeed(NewsFeedModel model)async{
+  _saveNewsFeed(Article model)async{
     await _saveNewsFeedDb.openSaveNfDb();
     bool _isNewsfeedSaved = await _saveNewsFeedDb.isNewsFeedSaved(model.uniqueKey);
     if(!_isNewsfeedSaved){
@@ -126,7 +126,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       _saveNewsFeedModel.body = model.body;
       _saveNewsFeedModel.photoUrl = model.photoUrl;
       _saveNewsFeedModel.videoUrl = model.videoUrl;
-      _saveNewsFeedModel.thumbNail = model.thumbNail;
+      _saveNewsFeedModel.thumbNail = model.thumbnail;
       _saveNewsFeedModel.contentType = model.uploadType;
       _saveNewsFeedModel.accessTime = DateTime.now().toString();
       await _saveNewsFeedDb.insert(_saveNewsFeedModel);
@@ -157,11 +157,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     print('loadmore: ${p}');
     if(result != null && result.length > 0){
       for(var i in result){
-        NewsFeedReactModel _newsFeedReactModel = NewsFeedReactModel.fromJson(i);
+        NewsFeedViewModel _newsFeedReactModel = NewsFeedViewModel.fromJson(i);
         await _saveNewsFeedDb.openSaveNfDb();
-        bool isSaved = await _saveNewsFeedDb.isNewsFeedSaved(_newsFeedReactModel.newsFeedModel.uniqueKey);
+        bool isSaved = await _saveNewsFeedDb.isNewsFeedSaved(_newsFeedReactModel.article.uniqueKey);
         _saveNewsFeedDb.closeSaveNfDb();
-        _newsFeedReactModel.newsFeedModel.isSaved = isSaved;
+        _newsFeedReactModel.article.isSaved = isSaved;
         _newsFeedReactModelList.add(_newsFeedReactModel);
       }
       if(mounted){
@@ -223,9 +223,9 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
 
   Widget _newsFeedListWidget(int i){
-    NewsFeedModel newsFeedModel = _newsFeedReactModelList[i].newsFeedModel;
+    Article newsFeedModel = _newsFeedReactModelList[i].article;
     String newsFeedPhoto = newsFeedModel.photoUrl;
-    String newsFeedThumbNail = newsFeedModel.thumbNail;
+    String newsFeedThumbNail = newsFeedModel.thumbnail;
     String title = newsFeedModel.title;
     String body = newsFeedModel.body;
     String date = ShowDateTimeHelper.showDateTimeDifference(newsFeedModel.accesstime);
@@ -239,7 +239,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             GestureDetector(
               onTap: (){
 
-                NavigatorHelper.MyNavigatorPush(context, NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModelList[i].photoList), ScreenName.NEWS_FEED_DETAIL_SCREEN);
+                NavigatorHelper.MyNavigatorPush(context, NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModelList[i].photoLink), ScreenName.NEWS_FEED_DETAIL_SCREEN);
               },
               child: Container(
                 child: Column(
@@ -286,7 +286,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                                 ),);
                             },
                             placeholder: (context, url) => Center(child: Container(
-                              child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 150.0,)),
+                              child: Center(child: NativeProgressIndicator()), width: double.maxFinite, height: 150.0,)),
                             errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg', width: double.maxFinite,
                               height: 180, fit: BoxFit.cover,
                             ),
@@ -329,11 +329,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     onTap: (){
                       //print('like: ${isLike}');
                       setState(() {
-                        if(_newsFeedReactModelList[i].reactType == null){
+                        if(_newsFeedReactModelList[i].reacttype == null){
                           newsFeedModel.likeCount++;
-                          _newsFeedReactModelList[i].reactType = 'like';
+                          _newsFeedReactModelList[i].reacttype = 'like';
                         }else{
-                          _newsFeedReactModelList[i].reactType = null;
+                          _newsFeedReactModelList[i].reacttype = null;
                           if(newsFeedModel.likeCount >= 0){
                             newsFeedModel.likeCount--;
                           }
@@ -345,7 +345,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     child: Row(
                       children: <Widget>[
                         Container(margin: EdgeInsets.only(right: 5.0),
-                            child: Image.asset(_newsFeedReactModelList[i].reactType!=null?'images/like_fill.png':'images/like.png',
+                            child: Image.asset(_newsFeedReactModelList[i].reacttype!=null?'images/like_fill.png':'images/like.png',
                               width: 20.0,height: 20.0,)),
                         Text('${MyString.txt_like}',
                           style: TextStyle(color: MyColor.colorPrimary, fontSize: FontSize.textSizeSmall),)
@@ -400,7 +400,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 10),
-                      child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,),
+                      child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,color: Colors.black,size: 30,),
                     ),
                   ) : Container() : Container(),
                   Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
@@ -442,7 +442,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,),
+                        child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,color: Colors.black,size: 30,),
                       ),
                     ) : Container() : Container(),
                     Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
@@ -507,7 +507,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
         children: <Widget>[
           _headerNewsFeed(),
           Center(
-            child: CircularProgressIndicator(),
+            child: NativeProgressIndicator(),
           )
         ],
       ),
@@ -521,6 +521,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
           FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.GO_TO_TOP_CLICK_EVENT, _userUniqueKey);
           _topToScreen();
         },
+        backgroundColor: MyColor.colorPrimary,
         child: Icon(Icons.arrow_upward, color: Colors.white, size: 20,),
         mini: true,
       );
@@ -542,18 +543,16 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       initState: () async => await _getUser(),
       renderLoad: () => _renderLoad(),
       renderError: ([error]) => _noConWidget(),
-      renderSuccess: ({data}) => Container(
-        child: RefreshIndicator(
-          onRefresh: _handleRefresh,
-          child: _newsFeedReactModelList.isNotEmpty?
-          LoadMore(
-              isFinish: _isEnd,
-              onLoadMore: _loadMore,
-              delegate: DefaultLoadMoreDelegate(),
-              textBuilder: DefaultLoadMoreTextBuilder.english,
-              child: _listView()
-          ) : _emptyView(),
-        ),
+      renderSuccess: ({data}) => NativePullRefresh(
+        onRefresh: _handleRefresh,
+        child: _newsFeedReactModelList.isNotEmpty?
+        LoadMore(
+            isFinish: _isEnd,
+            onLoadMore: _loadMore,
+            delegate: DefaultLoadMoreDelegate(),
+            textBuilder: DefaultLoadMoreTextBuilder.english,
+            child: _listView()
+        ) : _emptyView(),
       )
     );
     return Scaffold(

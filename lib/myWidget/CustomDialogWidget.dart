@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:myotaw/helper/NumConvertHelper.dart';
 import 'package:myotaw/helper/PlatformHelper.dart';
 import '../helper/MyoTawConstant.dart';
 import 'dart:io';
@@ -32,10 +33,11 @@ class CustomDialogWidget {
         context: context,
         builder: (context){
           return _iosSuccessDialog(
-              context: context,
-              content: content,
-              img: img,
-              onPress: onPress,
+            context: context,
+            content: content,
+            img: img,
+            buttonText: buttonText,
+            onPress: onPress,
           );
         }
     );
@@ -90,10 +92,10 @@ class CustomDialogWidget {
         context: context,
         builder: (context){
           return _androidCalculateTaxDialog(
-            context: context,
-            onPress: onPress,
-            taxValue: taxValue,
-            titleTax: titleTax
+              context: context,
+              onPress: onPress,
+              taxValue: taxValue,
+              titleTax: titleTax
           );
         }
     ) :
@@ -101,10 +103,10 @@ class CustomDialogWidget {
         context: context,
         builder: (context){
           return _iosCalculateTaxDialog(
-            context: context,
-            onPress: onPress,
-            taxValue: taxValue,
-            titleTax: titleTax
+              context: context,
+              onPress: onPress,
+              taxValue: taxValue,
+              titleTax: titleTax
           );
         }
     );
@@ -152,6 +154,7 @@ class CustomDialogWidget {
     BuildContext context,
     String content,
     String img,
+    String buttonText,
     VoidCallback onPress,
   }){
     return WillPopScope(
@@ -164,12 +167,12 @@ class CustomDialogWidget {
                 margin: EdgeInsets.only(bottom: 20.0),
                 child: Image.asset('images/$img', width: 50.0, height: 50.0,)),
             Container(
-                margin: EdgeInsets.only(bottom: 10.0),
-                child: Text(content, style: TextStyle(fontSize: FontSize.textSizeSmall),textAlign: TextAlign.center,),),
+              margin: EdgeInsets.only(bottom: 10.0),
+              child: Text(content, style: TextStyle(fontSize: FontSize.textSizeSmall, height: 1.5),textAlign: TextAlign.center,),),
           ],
         ),
         actions: <Widget>[
-          CupertinoDialogAction(child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.blue),),
+          CupertinoDialogAction(child: Text(buttonText==null?MyString.txt_close:buttonText, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.blue),),
             onPressed: onPress,)
         ],
       ),
@@ -316,8 +319,8 @@ class CustomDialogWidget {
     return WillPopScope(
         child: CupertinoAlertDialog(
           actions: <Widget>[
-            CupertinoDialogAction(child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.red),),
-              onPressed: onPress),
+            CupertinoDialogAction(child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.blue),),
+                onPressed: onPress),
           ],
           content: Column(
             children: <Widget>[
@@ -330,7 +333,7 @@ class CustomDialogWidget {
                   style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
               ),
               Container(
-                margin: EdgeInsets.only(bottom: 10.0),
+                margin: EdgeInsets.only(bottom: 20.0),
                 child: Text(taxValue,
                   style: TextStyle(fontSize: FontSize.textSizeLarge, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
               ),
@@ -347,14 +350,12 @@ class CustomDialogWidget {
               Container(
                 margin: EdgeInsets.only(bottom: 10.0),
                 child: Text(MyString.txt_thanks,
-                  style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
+                  style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorPrimary, height: 1.5),textAlign: TextAlign.center,),
               ),
             ],
           ),
         ), onWillPop: (){});
   }
-
-
 }
 
 

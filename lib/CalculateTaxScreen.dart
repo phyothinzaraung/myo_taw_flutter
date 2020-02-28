@@ -64,7 +64,7 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
                   return GestureDetector(
                     onTap: (){
                       if(index == 0){
-                        switch (_sharepreferenceshelper.getRegionCode()){
+                        switch ('MLM'){
                           case MyString.TGY_REGIONCODE:
                             NavigatorHelper.MyNavigatorPush(context, TgyPropertyTaxCalculatorScreen(), ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN);
                             break;
@@ -90,14 +90,15 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
                       }
                     },
                     child: Container(
-                      //margin: EdgeInsets.only(top: 7, bottom: 7),
+                      margin: EdgeInsets.only(top: 7, bottom: 7),
                       child: Column(
                         children: <Widget>[
                           //image dao
                           Flexible(flex: 2,child: Image.asset(_widgetList[index].image,)),
+                          SizedBox(height: 5,),
                           //text title
                           Flexible(flex: 1,child: Text(_widgetList[index].title,textAlign: TextAlign.center,
-                            style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),))],),),
+                            style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack, letterSpacing: 0.5),))],),),
                   );
                 },childCount: _widgetList.length),
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(

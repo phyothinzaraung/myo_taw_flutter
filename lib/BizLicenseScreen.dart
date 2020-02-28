@@ -3,6 +3,8 @@ import 'package:flutter/material.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
+import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/ServiceHelper.dart';
@@ -92,7 +94,7 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[NativeProgressIndicator()],)
         ],
       ),
     );
@@ -123,17 +125,15 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
         initState: () async => await _getAllBizLicense(),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
-        renderSuccess: ({data}) => Container(
-          child: RefreshIndicator(
-              onRefresh: _handleRefresh,
-              child: _bizLicenseModelList.isNotEmpty? _listView() :
-                  Column(
-                    children: <Widget>[
-                      headerTitleWidget(MyString.title_biz_license, 'business_license_nocircle'),
-                      Expanded(child: emptyView(asyncLoaderState,MyString.txt_no_data)),
-                    ],
-                  )
-          ),
+        renderSuccess: ({data}) => NativePullRefresh(
+            onRefresh: _handleRefresh,
+            child: _bizLicenseModelList.isNotEmpty? _listView() :
+                Column(
+                  children: <Widget>[
+                    headerTitleWidget(MyString.title_biz_license, 'business_license_nocircle'),
+                    Expanded(child: emptyView(asyncLoaderState,MyString.txt_no_data)),
+                  ],
+                )
         )
     );
     return CustomScaffoldWidget(

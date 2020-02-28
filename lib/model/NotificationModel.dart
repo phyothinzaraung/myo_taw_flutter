@@ -1,72 +1,70 @@
-
-class NotificationModel{
-
-    int _id;
-    String _message;
-    String _regionCode;
-    String _postedDate;
+class NotificationModel {
     int _adminID;
-    String _adminName;
-    String _accessTime;
     bool _isDeleted;
+    String _message;
+    String _uniqueKey;
+    String _adminName;
+    String _postedDate;
+    int _iD;
+    String _accesstime;
 
-
-    int get id => _id;
-
-    set id(int value) {
-      _id = value;
-    }
-
-    String get message => _message;
-
-    set message(String value) {
-      _message = value;
-    }
-
-    String get regionCode => _regionCode;
-
-    set regionCode(String value) {
-      _regionCode = value;
-    }
-
-    String get postedDate => _postedDate;
-
-    set postedDate(String value) {
-      _postedDate = value;
+    NotificationModel(
+        {int adminID,
+            bool isDeleted,
+            String message,
+            String uniqueKey,
+            String adminName,
+            String postedDate,
+            int iD,
+            String accesstime}) {
+        this._adminID = adminID;
+        this._isDeleted = isDeleted;
+        this._message = message;
+        this._uniqueKey = uniqueKey;
+        this._adminName = adminName;
+        this._postedDate = postedDate;
+        this._iD = iD;
+        this._accesstime = accesstime;
     }
 
     int get adminID => _adminID;
-
-    set adminID(int value) {
-      _adminID = value;
-    }
-
-    String get adminName => _adminName;
-
-    set adminName(String value) {
-      _adminName = value;
-    }
-
-    String get accessTime => _accessTime;
-
-    set accessTime(String value) {
-      _accessTime = value;
-    }
-
+    set adminID(int adminID) => _adminID = adminID;
     bool get isDeleted => _isDeleted;
+    set isDeleted(bool isDeleted) => _isDeleted = isDeleted;
+    String get message => _message;
+    set message(String message) => _message = message;
+    String get uniqueKey => _uniqueKey;
+    set uniqueKey(String uniqueKey) => _uniqueKey = uniqueKey;
+    String get adminName => _adminName;
+    set adminName(String adminName) => _adminName = adminName;
+    String get postedDate => _postedDate;
+    set postedDate(String postedDate) => _postedDate = postedDate;
+    int get iD => _iD;
+    set iD(int iD) => _iD = iD;
+    String get accesstime => _accesstime;
+    set accesstime(String accesstime) => _accesstime = accesstime;
 
-    set isDeleted(bool value) {
-      _isDeleted = value;
+    NotificationModel.fromJson(Map<String, dynamic> json) {
+        _adminID = json['AdminID'];
+        _isDeleted = json['IsDeleted'];
+        _message = json['Message'];
+        _uniqueKey = json['UniqueKey'];
+        _adminName = json['AdminName'];
+        _postedDate = json['PostedDate'];
+        _iD = json['ID'];
+        _accesstime = json['Accesstime'];
     }
 
-    NotificationModel.fromJson(Map<String, dynamic> json) :
-          _id = json['ID'],
-          _message = json['Message'],
-          _regionCode = json['RegionCode'],
-          _postedDate = json['PostedDate'],
-          _adminID = json['AdminID'],
-          _adminName = json['AdminName'],
-          _accessTime = json['Accesstime'],
-          _isDeleted = json['IsDeleted'];
-
+    Map<String, dynamic> toJson() {
+        final Map<String, dynamic> data = new Map<String, dynamic>();
+        data['AdminID'] = this._adminID;
+        data['IsDeleted'] = this._isDeleted;
+        data['Message'] = this._message;
+        data['UniqueKey'] = this._uniqueKey;
+        data['AdminName'] = this._adminName;
+        data['PostedDate'] = this._postedDate;
+        data['ID'] = this._iD;
+        data['Accesstime'] = this._accesstime;
+        return data;
+    }
 }

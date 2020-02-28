@@ -12,6 +12,8 @@ import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/model/ContributionModel.dart';
 import 'package:myotaw/model/UserModel.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
+import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'ProfileScreen.dart';
 import 'helper/MyLoadMore.dart';
@@ -104,7 +106,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
         children: <Widget>[
           _headerContribution(),
           Center(
-            child: CircularProgressIndicator(),
+            child: NativeProgressIndicator(),
           )
         ],
       ),
@@ -126,7 +128,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                     },
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 10),
-                      child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,),
+                      child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back, color: Colors.black,size: 30,),
                     ),
                   ),
                   Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
@@ -275,7 +277,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                                     ),);
                                 },
                                 placeholder: (context, url) => Center(child: Container(
-                                  child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 150.0,)),
+                                  child: Center(child: NativeProgressIndicator()), width: double.maxFinite, height: 150.0,)),
                                 errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
                               ),
                             ),
@@ -366,7 +368,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                       },
                       child: Padding(
                         padding: const EdgeInsets.only(bottom: 10),
-                        child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,),
+                        child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,color: Colors.black,size: 30,),
                       ),
                     ) : Container() : Container(),
                     Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
@@ -406,18 +408,16 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
         initState: () async => await _getUser(),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => _noConWidget(),
-        renderSuccess: ({data}) => Container(
-          child: RefreshIndicator(
-            onRefresh: _handleRefresh,
-            child: _contributionModelList.isNotEmpty?
-            LoadMore(
-                isFinish: _isEnd,
-                onLoadMore: _loadMore,
-                delegate: DefaultLoadMoreDelegate(),
-                textBuilder: DefaultLoadMoreTextBuilder.english,
-                child: _listView()
-            ) : _emptyView(),
-          ),
+        renderSuccess: ({data}) => NativePullRefresh(
+          onRefresh: _handleRefresh,
+          child: _contributionModelList.isNotEmpty?
+          LoadMore(
+              isFinish: _isEnd,
+              onLoadMore: _loadMore,
+              delegate: DefaultLoadMoreDelegate(),
+              textBuilder: DefaultLoadMoreTextBuilder.english,
+              child: _listView()
+          ) : _emptyView(),
         )
     );
     return Scaffold(

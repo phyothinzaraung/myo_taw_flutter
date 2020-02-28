@@ -5,6 +5,8 @@ import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/model/DashBoardModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
+import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'package:myotaw/myWidget/OnlineTaxPinRequestDialogWidget.dart';
 import 'PinCodeSetUpScreen.dart';
 import 'helper/MyoTawConstant.dart';
@@ -91,16 +93,15 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
                 delegate: SliverChildBuilderDelegate((context, index){
                   return GestureDetector(
                     onTap: (){
-                      if(_userModel.pinCode != null){
-                        if(_userModel.currentRegionCode == MyString.TGY_REGIONCODE){
+                      if(_userModel.currentRegionCode == MyString.TGY_REGIONCODE){
+                        if(_userModel.pinCode != null){
                           _dialogPinRequest(index==0?'OnlineTax':'SmartWm');
                           OnlineTaxPinRequestDialogWidget(index==0?'OnlineTax':'SmartWm', _userModel);
                         }else{
-                          PrimaryColorSnackBarWidget(_globalKey, MyString.txt_coming_soon);
+                          _navigateToPinCodeSetupScreen();
                         }
-
                       }else{
-                       _navigateToPinCodeSetupScreen();
+                        PrimaryColorSnackBarWidget(_globalKey, MyString.txt_coming_soon);
                       }
 
                     },
@@ -135,7 +136,7 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[NativeProgressIndicator()],)
         ],
       ),
     );
@@ -150,7 +151,7 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => Container(
-          child: RefreshIndicator(
+          child: NativePullRefresh(
             onRefresh: _handleRefresh,
             child: _listView(),
           ),

@@ -32,9 +32,12 @@ class CustomProgressIndicatorWidget extends StatelessWidget {
           brightness: Brightness.dark
       ),
       child: Container(
-        color: Colors.black.withOpacity(0.5),
-        width: double.maxFinite,
-        height: double.maxFinite,
+        width: 70,
+        height: 70,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.black.withOpacity(0.5),
+        ),
         child: Center(
           child: CupertinoActivityIndicator(radius: 13,),
         ),

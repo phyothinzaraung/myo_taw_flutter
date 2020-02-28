@@ -9,6 +9,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NavigatorHelper.dart';
@@ -106,7 +107,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                             ),);
                         },
                         placeholder: (context, url) => Center(child: Container(
-                          child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 130.0,)),
+                          child: Center(child: NativeProgressIndicator()), width: double.maxFinite, height: 130.0,)),
                         errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg', width: 160,
                           height: 160, fit: BoxFit.cover,
                         ),
@@ -128,7 +129,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[NativeProgressIndicator()],)
         ],
       ),
     );

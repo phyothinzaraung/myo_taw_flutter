@@ -8,6 +8,8 @@ import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/model/ContributionModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
+import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'PhotoDetailScreen.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/ShowDateTimeHelper.dart';
@@ -107,7 +109,7 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
                                       ),);
                                   },
                                   placeholder: (context, url) => Center(child: Container(
-                                    child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: 90, height: 90.0,)),
+                                    child: Center(child: NativeProgressIndicator()), width: 90, height: 90.0,)),
                                   errorWidget: (context, url, error)=> Image.asset('images/placeholder.jpg',width: 90,
                                     height: 90, fit: BoxFit.cover,),
                                 )
@@ -131,7 +133,7 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[NativeProgressIndicator()],)
         ],
       ),
     );
@@ -169,11 +171,9 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
         initState: () async => await _getFloodReportList(),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
-        renderSuccess: ({data}) => Container(
-          child: RefreshIndicator(
-            onRefresh: _handleRefresh,
-            child: _floodLevelReportModelList.isNotEmpty?_listView() : emptyView(asyncLoaderState,MyString.txt_flood_level_no_record),
-          ),
+        renderSuccess: ({data}) => NativePullRefresh(
+          onRefresh: _handleRefresh,
+          child: _floodLevelReportModelList.isNotEmpty?_listView() : emptyView(asyncLoaderState,MyString.txt_flood_level_no_record),
         )
     );
     return CustomScaffoldWidget(

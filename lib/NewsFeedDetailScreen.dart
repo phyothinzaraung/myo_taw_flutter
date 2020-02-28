@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:myotaw/model/NewsFeedViewModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'helper/NavigatorHelper.dart';
-import 'model/NewsFeedPhotoModel.dart';
-import 'model/NewsFeedModel.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'helper/ShowDateTimeHelper.dart';
@@ -14,17 +14,18 @@ import 'NewsFeedVideoScreen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class NewsFeedDetailScreen extends StatefulWidget {
-  NewsFeedModel _model;
-  List _list = new List();
+  Article _model;
+  List<PhotoLink> _list = new List();
   NewsFeedDetailScreen(this._model, this._list);
   @override
   _NewsFeedDetailScreenState createState() => _NewsFeedDetailScreenState(this._model, this._list);
 }
 
 class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
-  NewsFeedModel _newsFeedModel;
+  Article _newsFeedModel;
   String _title,_photo,_date, _newsfeedBody,_type, _thumbNail, _videoUrl;
-  List _photoList = new List();
+  List<PhotoLink> _photoList = new List();
+  List<PhotoLink> _list = new List();
   int _currentPhoto = 0;
   List<Widget> _photoWidgetList = List();
   List<Widget> _indicatorWidgetList = List();
@@ -41,26 +42,31 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   }
 
   initNewsFeedData(){
-    setState(() {
-      _title = _newsFeedModel.title;
-      _photo = _newsFeedModel.photoUrl;
-      _date = ShowDateTimeHelper.showDateTimeDifference(_newsFeedModel.accesstime);
-      _newsfeedBody = _newsFeedModel.body;
-      _type = _newsFeedModel.uploadType=='Photo'?'Photo':'Video';
-      _thumbNail = _newsFeedModel.thumbNail;
-      _videoUrl = _newsFeedModel.videoUrl;
-    });
+    _title = _newsFeedModel.title;
+    _photo = _newsFeedModel.photoUrl;
+    _date = ShowDateTimeHelper.showDateTimeDifference(_newsFeedModel.accesstime);
+    _newsfeedBody = _newsFeedModel.body;
+    _type = _newsFeedModel.uploadType=='Photo'?'Photo':'Video';
+    _thumbNail = _newsFeedModel.thumbnail;
+    _videoUrl = _newsFeedModel.videoUrl;
+
+    _list.clear();
+    if(_photo != null){
+      PhotoLink photoLink = PhotoLink();
+      photoLink.photoUrl = _photo;
+      _list.add(photoLink);
+    }
+    _list.addAll(_photoList);
   }
 
   void addPhoto(){
     if(_photoList.isNotEmpty){
-      var photoModelList = _photoList.map((i) => NewsFeedPhotoModel.fromJson(i));
-      for(var i in photoModelList){
+      for(var i in _list){
         index++;
         _photoWidgetList.add(
             GestureDetector(
               onTap: (){
-                NavigatorHelper.MyNavigatorPush(context, NewsFeedPhotoDetailScreen(_photoList, null, _currentPhoto),
+                NavigatorHelper.MyNavigatorPush(context, NewsFeedPhotoDetailScreen(_list, null, _currentPhoto),
                     ScreenName.PHOTO_DETAIL_SCREEN);
               },
               child: Stack(
@@ -79,7 +85,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                         ),);
                     },
                     placeholder: (context, url) => Center(child: Container(
-                      child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 200.0,)),
+                      child: Center(child: NativeProgressIndicator()), width: double.maxFinite, height: 200.0,)),
                     errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg', width: double.maxFinite, height: 200,fit: BoxFit.cover,),
                   ),
                   Container(
@@ -147,7 +153,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         },
         child: CachedNetworkImage(
           width: double.maxFinite,
-          imageUrl: _photo!=null?BaseUrl.NEWS_FEED_CONTENT_URL+_photo:'',
+          imageUrl: BaseUrl.NEWS_FEED_CONTENT_URL+_photo,
           imageBuilder: (context, image){
             return Container(
               width: double.maxFinite,
@@ -189,7 +195,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                     ),);
                 },
                 placeholder: (context, url) => Center(child: Container(
-                  child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 150.0,)),
+                  child: Center(child: NativeProgressIndicator()), width: double.maxFinite, height: 150.0,)),
                 errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg', fit: BoxFit.cover,height: 200,),
               ),
               Container(
@@ -271,4 +277,5 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
       body: _body(context),
     );
   }
+
 }

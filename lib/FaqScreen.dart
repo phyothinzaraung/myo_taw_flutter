@@ -5,6 +5,7 @@ import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/PlatformHelper.dart';
@@ -166,7 +167,7 @@ class _FaqScreenState extends State<FaqScreen> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           headerTitleWidget(MyString.title_faq, 'questions_mark_no_circle'),
-          Container(margin: EdgeInsets.only(top: 10.0),child: CircularProgressIndicator())
+          Container(margin: EdgeInsets.only(top: 10.0),child: NativeProgressIndicator())
         ],
       )
     );

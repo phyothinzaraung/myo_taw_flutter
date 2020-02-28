@@ -1,11 +1,13 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:myotaw/model/NewsFeedViewModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:photo_view/photo_view.dart';
 import 'helper/MyoTawConstant.dart';
-import 'model/NewsFeedPhotoModel.dart';
+import 'helper/PlatformHelper.dart';
 
 class NewsFeedPhotoDetailScreen extends StatelessWidget {
-  List _photoList = new List();
+  List<PhotoLink> _photoList = new List();
   String _photoUrl;
   PageController _pageController;
   List<Widget> _photoWidget = new List();
@@ -13,15 +15,26 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
   NewsFeedPhotoDetailScreen(this._photoList,this._photoUrl, this._initialPage);
 
   void addPhoto(){
-    var photoModelList = _photoList.map((i) => NewsFeedPhotoModel.fromJson(i));
-    for(var i in photoModelList){
+    for(var i in _photoList){
       _photoWidget.add(PhotoView(
         imageProvider: NetworkImage(BaseUrl.NEWS_FEED_CONTENT_URL+i.photoUrl),
-        loadingChild: Center(child: CircularProgressIndicator(),),
+        loadingChild: _nativeProgressIndicator(),
         loadFailedChild: Image.asset('images/placeholder.jpg'),
       ),);
     }
   }
+
+  Widget _nativeProgressIndicator(){
+    return PlatformHelper.isAndroid() ?
+    Center(child: CircularProgressIndicator()) :
+    CupertinoTheme(
+        data: CupertinoThemeData(
+          brightness: Brightness.dark
+        ),
+        child: CupertinoActivityIndicator(radius: 15,)
+    );
+}
+
   @override
   Widget build(BuildContext context) {
     _pageController = new PageController(initialPage: _initialPage);
@@ -39,7 +52,7 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
           ) :
           PhotoView(
             imageProvider: NetworkImage(BaseUrl.NEWS_FEED_CONTENT_URL+_photoUrl),
-            loadingChild: Center(child: CircularProgressIndicator(),),
+            loadingChild: _nativeProgressIndicator(),
             loadFailedChild: Image.asset('images/placeholder.jpg'),
           ),
         ),

@@ -145,7 +145,7 @@ class MyString{
   static const String txt_top_up_cancel = 'ထွက်မည်';
   static const String txt_create_pin = 'ပင်ကုဒ်ပြုလုပ်မည်';
   static const String txt_profile_set_up = 'ဖြည့်သွင်းမည်';
-  static const String txt_profile_set_up_need = 'ကိုယ်ရေးအချက်အလတ် ဖြည့်သွင်းရန်လိုပါသည်။';
+  static const String txt_profile_set_up_need = 'ကိုယ်ရေးအချက်အလက် ဖြည့်သွင်းရန်လိုပါသည်။';
   static const String txt_online_payment_tax = 'အခွန်ဆောင်ရန်';
   static const String txt_invoice_no = 'ပြေစာနံပါတ်';
   static const String txt_choose_tax_type = 'အခွန်အမျိုးအစားရွေးပါ';
@@ -213,7 +213,7 @@ class MyString{
   static const String txt_need_subject = "အကြောင်းအရာရွေးပေးပါ";
   static const String txt_need_suggestion_photo = "ဓာတ်ပုံတင်ရန် လိုအပ်ပါသည်။";
   static const String txt_need_suggestion_location = "တည်နေရာ မရ ရှိပါ။";
-  static const String txt_try_again = "နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ။";
+  static const String txt_try_again = "နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ";
   static const String txt_fill_phno = "ဖုန်းနံပါတ်ရိုက်ထည့်ပါ။";
   static const String txt_choose_city = "မြို့ရွေးချယ်ပေးပါ။";
   static const String txt_wrong_phNo= "ဖုန်းနံပါတ် မှားယွင်းနေပါသည်။";

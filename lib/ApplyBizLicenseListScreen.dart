@@ -4,12 +4,14 @@ import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/ApplyBizLicenseModel.dart';
 import 'helper/ServiceHelper.dart';
 import 'ApplyBizLicenseDetailScreen.dart';
+import 'myWidget/NativePullRefresh.dart';
 
 class ApplyBizLicenseListScreen extends StatefulWidget {
   @override
@@ -102,7 +104,7 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[NativeProgressIndicator()],)
         ],
       ),
     );
@@ -121,12 +123,10 @@ class _ApplyBizLicenseListScreenState extends State<ApplyBizLicenseListScreen> {
         initState: () async => await _getAllApplyBizLicense(),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
-        renderSuccess: ({data}) => Container(
-          child: RefreshIndicator(
-              onRefresh: _handleRefresh,
-              child: _applyBizLicenseModelList.isNotEmpty? _listView() :
-              emptyView(asyncLoaderState,  MyString.txt_no_data)
-          ),
+        renderSuccess: ({data}) => NativePullRefresh(
+            onRefresh: _handleRefresh,
+            child: _applyBizLicenseModelList.isNotEmpty? _listView() :
+            emptyView(asyncLoaderState,  MyString.txt_no_data)
         )
     );
     return CustomScaffoldWidget(

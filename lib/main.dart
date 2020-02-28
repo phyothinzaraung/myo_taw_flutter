@@ -37,7 +37,7 @@ void main() {
   FirebaseAnalytics fireBaseAnalytics = FirebaseAnalytics();
   FirebaseAnalyticsObserver observer = FirebaseAnalyticsObserver(analytics: fireBaseAnalytics);
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]).then((_){
-    runApp(MaterialApp(
+    runApp(PlatformHelper.isAndroid()? MaterialApp(
       home: SplashScreen(),
       navigatorObservers: [
         observer
@@ -47,6 +47,21 @@ void main() {
           color: MyColor.colorPrimary,
         ),
         accentColor: MyColor.colorPrimaryDark,
+        scaffoldBackgroundColor: MyColor.colorGrey,
+      ),
+    ) : CupertinoApp(
+      home: SplashScreen(),
+      navigatorObservers: [
+        observer
+      ],
+      localizationsDelegates: <LocalizationsDelegate<dynamic>>[
+        DefaultMaterialLocalizations.delegate,
+        DefaultWidgetsLocalizations.delegate,
+        DefaultCupertinoLocalizations.delegate,
+      ],
+      theme: CupertinoThemeData(
+        brightness: Brightness.light,
+        primaryColor: Colors.white,
         scaffoldBackgroundColor: MyColor.colorGrey,
       ),
     ));

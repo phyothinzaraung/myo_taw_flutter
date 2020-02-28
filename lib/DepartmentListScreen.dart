@@ -1,19 +1,17 @@
-import 'dart:io';
 
 import 'package:async_loader/async_loader.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/helper/PlatformHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
-import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/NavigatorHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'model/DaoViewModel.dart';
 import 'helper/MyoTawConstant.dart';
-import 'model/DaoPhotoModel.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'DaoPhotoDetailScreen.dart';
 import 'helper/NumConvertHelper.dart';
@@ -33,7 +31,6 @@ class DepartmentListScreen extends StatefulWidget {
 
 class _DepartmentListScreenState extends State<DepartmentListScreen> {
   DaoViewModel _daoViewModel;
-  List<DaoPhotoModel> _daoPhotoModelList = new List();
   int index = 0;
   List<Widget> _photoWidgetList = List();
   List<Widget> _indicatorWidgetList = List();
@@ -68,17 +65,14 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
     _isManager = true;
     _isEngineer = false;
     _isLoading = false;
-    for(var i in _daoViewModel.photoList){
-      _daoPhotoModelList.add(DaoPhotoModel.fromJson(i));
-    }
-    for(var i in _daoPhotoModelList){
+    for(var i in _daoViewModel.photo){
       index++;
       _photoWidgetList.add(
           GestureDetector(
             onTap: (){
-              if(_daoPhotoModelList.isNotEmpty){
+              if(_daoViewModel.photo.isNotEmpty){
 
-                NavigatorHelper.MyNavigatorPush(context, DaoPhotoDetailScreen(_daoPhotoModelList, _currentPhoto), ScreenName.PHOTO_DETAIL_SCREEN);
+                NavigatorHelper.MyNavigatorPush(context, DaoPhotoDetailScreen(_daoViewModel.photo, _currentPhoto), ScreenName.PHOTO_DETAIL_SCREEN);
               }
             },
             child: Stack(
@@ -98,7 +92,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                       ),);
                   },
                   placeholder: (context, url) => Center(child: Container(
-                    child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 200.0,)),
+                    child: Center(child: NativeProgressIndicator()), width: double.maxFinite, height: 200.0,)),
                   errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
                 ),
                 Container(
@@ -108,7 +102,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                         color: Colors.black.withOpacity(0.6)
                     ),
                     //text image title
-                    child: Text('${NumConvertHelper.getMyanNumInt(index)}${'.'} ${_daoViewModel.daoModel.title}  ',
+                    child: Text('${NumConvertHelper.getMyanNumInt(index)}${'.'} ${_daoViewModel.dAO.title}  ',
                       style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),)),
               ],
             ),));
@@ -163,7 +157,8 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
       child: Column(
         children: <Widget>[
           _imageView(),
-          Platform.isIOS?_cupertinoSliderControl() :
+          SizedBox(height: 20,),
+          PlatformHelper.isAndroid()?
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
             children: <Widget>[
@@ -208,7 +203,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                 //padding: EdgeInsets.only(left: 20.0, right: 20.0, top: 7.0, bottom: 7.0),
               ),
             ],
-          )
+          ) : _cupertinoSliderControl()
         ],
       ),
     );
@@ -229,8 +224,8 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                 children: <Widget>[
                   Flexible(
                       flex: 1,
-                      child: _daoViewModelList[i].daoModel.icon!=null?
-                      Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[i].daoModel.icon, width: 50.0, height: 50.0,) :
+                      child: _daoViewModelList[i].dAO.icon!=null?
+                      Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[i].dAO.icon, width: 50.0, height: 50.0,) :
                           CircleAvatar(
                             backgroundImage: AssetImage('images/placeholder.jpg'),
                             radius: 25,
@@ -240,7 +235,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                       flex: 4,
                       child: Container(
                           margin: EdgeInsets.only(left: 20.0),
-                          child: Text(_daoViewModelList[i].daoModel.title, style: TextStyle(fontSize: FontSize.textSizeSmall),)))
+                          child: Text(_daoViewModelList[i].dAO.title, style: TextStyle(fontSize: FontSize.textSizeSmall),)))
                 ],
               ),
             ),
@@ -254,7 +249,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
       child: Column(
         children: <Widget>[
           Center(
-            child: CircularProgressIndicator(),
+            child: NativeProgressIndicator(),
           )
         ],
       ),
@@ -279,7 +274,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
   Widget _imageView(){
     _indicatorWidgetList.clear();
     _indicatorList();
-    return _daoViewModel.photoList.isNotEmpty?
+    return _daoViewModel.photo.isNotEmpty?
     Container(
         width: double.maxFinite,
         height: 200.0,
@@ -319,7 +314,9 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModel.daoModel.icon, width: 100.0, height: 100.0,)
+            _daoViewModel.dAO.icon!=null?
+            Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModel.dAO.icon, width: 100.0, height: 100.0,fit: BoxFit.cover) :
+            Image.asset('images/placeholder.jpg', width: double.maxFinite, height: 180,fit: BoxFit.cover,)
           ],
         ),
       ),
@@ -354,7 +351,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
         )
     );
     return CustomScaffoldWidget(
-      title: Text(_daoViewModel.daoModel.title,maxLines: 1, overflow: TextOverflow.ellipsis,
+      title: Text(_daoViewModel.dAO.title,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context, _asyncLoader),
       globalKey: _globalKey,

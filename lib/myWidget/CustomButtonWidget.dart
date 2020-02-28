@@ -45,6 +45,7 @@ class CustomButtonWidget extends StatelessWidget {
 
     CupertinoButton(
         borderRadius: borderRadius,
+        padding: EdgeInsets.all(10),
         color: color,
         child: child,
         onPressed: onPress);

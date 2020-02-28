@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:connectivity/connectivity.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:qr_flutter/qr_flutter.dart';
 import 'package:flutter/material.dart';
 import 'helper/MyoTawConstant.dart';
@@ -244,7 +245,7 @@ class _ReferralScreenState extends State<ReferralScreen> {
                   ),
                   _isLoading? Container(
                     alignment: FractionalOffset.center,
-                    child: CircularProgressIndicator(),
+                    child: NativeProgressIndicator(),
                   ) : Container()
                 ],
               )

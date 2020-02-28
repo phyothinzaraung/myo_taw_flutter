@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
+import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'helper/ServiceHelper.dart';
 import 'helper/MyoTawConstant.dart';
@@ -36,7 +38,7 @@ class _DaoScreenState extends State<DaoScreen> {
 
   _getAllDao()async{
     await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().getDao(page, pageSize, _sharepreferenceshelper.getRegionCode(), display);
+    _response = await ServiceHelper().getDao(page, pageSize, 'TGY', display);
     var daoViewModelList = _response.data['Results'];
     if(daoViewModelList != null && daoViewModelList.length > 0){
       for(var i in daoViewModelList){
@@ -55,7 +57,7 @@ class _DaoScreenState extends State<DaoScreen> {
                 delegate: SliverChildBuilderDelegate((context, index){
                   return GestureDetector(
                     onTap: (){
-                      if(_daoViewModelList[index].daoModel.title.contains('ဌာနများ')){
+                      if(_daoViewModelList[index].dAO.title.contains('ဌာနများ')){
                         NavigatorHelper.MyNavigatorPush(context, DepartmentListScreen(_daoViewModelList[index]), ScreenName.DEPARTMENT_LIST_SCREEN);
                       }else{
                         NavigatorHelper.MyNavigatorPush(context, DaoDetailScreen(_daoViewModelList[index]),
@@ -67,8 +69,8 @@ class _DaoScreenState extends State<DaoScreen> {
                       child: Column(
                         children: <Widget>[
                           //image dao
-                          Flexible(flex: 3,child: _daoViewModelList[index].daoModel.icon!=null?
-                          Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[index].daoModel.icon,) :
+                          Flexible(flex: 3,child: _daoViewModelList[index].dAO.icon!=null?
+                          Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[index].dAO.icon,) :
                               CircleAvatar(
                                 backgroundImage: AssetImage('images/placeholder.jpg'),
                                 radius: 60,
@@ -78,7 +80,7 @@ class _DaoScreenState extends State<DaoScreen> {
                           //text title
                           SizedBox(height: 5,),
                           //text title
-                          Flexible(flex: 1,child: Text(_daoViewModelList[index].daoModel.title,textAlign: TextAlign.center,
+                          Flexible(flex: 1,child: Text(_daoViewModelList[index].dAO.title,textAlign: TextAlign.center,
                             style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),))],),),
                   );
                 },childCount: _daoViewModelList.length),
@@ -96,7 +98,7 @@ class _DaoScreenState extends State<DaoScreen> {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[CircularProgressIndicator()],)
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[NativeProgressIndicator()],)
         ],
       ),
     );
@@ -115,11 +117,9 @@ class _DaoScreenState extends State<DaoScreen> {
         initState: () async => await _getAllDao(),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
-        renderSuccess: ({data}) => Container(
-          child: RefreshIndicator(
-            onRefresh: _handleRefresh,
-            child: _daoViewModelList.isNotEmpty?_listView() : emptyView(asyncLoaderState,MyString.txt_no_data),
-          ),
+        renderSuccess: ({data}) => NativePullRefresh(
+          onRefresh: _handleRefresh,
+          child: _daoViewModelList.isNotEmpty?_listView() : emptyView(asyncLoaderState,MyString.txt_no_data),
         )
     );
     return CustomScaffoldWidget(

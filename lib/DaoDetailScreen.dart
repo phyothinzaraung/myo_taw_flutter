@@ -3,9 +3,9 @@ import 'package:myotaw/WardAdminContributionScreen.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'model/DaoViewModel.dart';
 import 'helper/MyoTawConstant.dart';
-import 'model/DaoPhotoModel.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'helper/NumConvertHelper.dart';
@@ -23,7 +23,6 @@ class DaoDetailScreen extends StatefulWidget {
 
 class _DaoDetailScreenState extends State<DaoDetailScreen> {
   DaoViewModel _daoViewModel;
-  List<DaoPhotoModel> _daoPhotoModelList = new List();
   int index = 0;
   List<Widget> _photoWidgetList = List();
   List<Widget> _indicatorWidgetList = List();
@@ -39,17 +38,14 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
   }
 
   _init(){
-    for(var i in _daoViewModel.photoList){
-      _daoPhotoModelList.add(DaoPhotoModel.fromJson(i));
-    }
-    for(var i in _daoPhotoModelList){
+    for(var i in _daoViewModel.photo){
       index++;
       _photoWidgetList.add(
           GestureDetector(
             onTap: (){
-              if(_daoPhotoModelList.isNotEmpty){
+              if(_daoViewModel.photo.isNotEmpty){
 
-                NavigatorHelper.MyNavigatorPush(context, DaoPhotoDetailScreen(_daoPhotoModelList, _currentPhoto), ScreenName.PHOTO_DETAIL_SCREEN);
+                NavigatorHelper.MyNavigatorPush(context, DaoPhotoDetailScreen(_daoViewModel.photo, _currentPhoto), ScreenName.PHOTO_DETAIL_SCREEN);
               }
             },
             child: Stack(
@@ -69,7 +65,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
                       ),);
                   },
                   placeholder: (context, url) => Center(child: Container(
-                    child: Center(child: new CircularProgressIndicator(strokeWidth: 2.0,)), width: double.maxFinite, height: 200.0,)),
+                    child: Center(child: NativeProgressIndicator()), width: double.maxFinite, height: 200.0,)),
                   errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
                 ),
                 Container(
@@ -79,7 +75,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
                         color: Colors.black.withOpacity(0.6)
                     ),
                     //text image title
-                    child: Text('${NumConvertHelper.getMyanNumInt(index)}${'.'} ${_daoViewModel.daoModel.title}  ',
+                    child: Text('${NumConvertHelper.getMyanNumInt(index)}${'.'} ${_daoViewModel.dAO.title}  ',
                       style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),)),
               ],
             ),));
@@ -104,7 +100,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
   Widget _imageView(){
     _indicatorWidgetList.clear();
     _indicatorList();
-    return _daoViewModel.photoList.isNotEmpty?
+    return _daoViewModel.photo.isNotEmpty?
     Container(
       width: double.maxFinite,
       height: 230.0,
@@ -147,8 +143,8 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
           mainAxisSize: MainAxisSize.min,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            _daoViewModel.daoModel.icon!=null?
-            Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModel.daoModel.icon, width: 100.0, height: 100.0,) :
+            _daoViewModel.dAO.icon!=null?
+            Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModel.dAO.icon, width: 100.0, height: 100.0,) :
                 Image.asset('images/placeholder.jpg', height: 180, width: double.maxFinite, fit: BoxFit.cover,)
           ],
         ),
@@ -172,7 +168,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
                     Container(
                       color: Colors.white,
                       padding: EdgeInsets.all(30.0),
-                      child: Html(data: _daoViewModel.daoModel.description,),
+                      child: Html(data: _daoViewModel.dAO.description,),
                     )
                   ],
                 )
@@ -188,13 +184,13 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
                 await _sharepreferenceshelper.initSharePref();
                 NavigatorHelper.MyNavigatorPush(context,
                     //screen
-                    _daoViewModel.daoModel.title.contains('လိုင်စင်')?
+                    _daoViewModel.dAO.title.contains('လိုင်စင်')?
                     BizLicenseScreen() : _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():ContributionScreen(),
                     //screenName
-                    _daoViewModel.daoModel.title.contains('လိုင်စင်')?ScreenName.BIZ_LICENSE_SCREEN :
+                    _daoViewModel.dAO.title.contains('လိုင်စင်')?ScreenName.BIZ_LICENSE_SCREEN :
                     _sharepreferenceshelper.isWardAdmin()?ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN : ScreenName.CONTRIBUTION_SCREEN);
               },
-              child: Text(_daoViewModel.daoModel.title.contains('လိုင်စင်')?MyString.txt_biz_license:MyString.txt_suggestion,
+              child: Text(_daoViewModel.dAO.title.contains('လိုင်စင်')?MyString.txt_biz_license:MyString.txt_suggestion,
                 style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),color: MyColor.colorPrimary,),
           )
         ],
@@ -205,7 +201,7 @@ class _DaoDetailScreenState extends State<DaoDetailScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
-      title: Text(_daoViewModel.daoModel.title,maxLines: 1, overflow: TextOverflow.ellipsis,
+      title: Text(_daoViewModel.dAO.title,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
     );
