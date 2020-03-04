@@ -9,6 +9,7 @@ import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'helper/FireBaseAnalyticsHelper.dart';
 import 'helper/MyoTawConstant.dart';
+import 'helper/PlatformHelper.dart';
 import 'model/UserModel.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'Database/UserDb.dart';
@@ -18,6 +19,8 @@ import 'package:myotaw/myWidget/EmptyViewWidget.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/NotificationDetailScreen.dart';
+
+import 'myWidget/CustomDialogWidget.dart';
 
 class NotificationScreen extends StatefulWidget {
   @override
@@ -39,6 +42,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
 
   List<NotificationModel> _notificationList = new List<NotificationModel>();
   List _notificationModelList = new List();
+  GlobalKey<AnimatedListState> _globalKey = GlobalKey();
 
   @override
   void initState() {
@@ -129,6 +133,22 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
       child: ListTile(
         contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
         leading: Image.asset("images/noti.png", width: 30.0, height: 30.0,),
+        trailing: IconButton(
+            icon: Icon(PlatformHelper.isAndroid()?Icons.delete :CupertinoIcons.delete_solid, color: Colors.red,),
+            onPressed: (){
+              CustomDialogWidget().customConfirmDialog(
+                  context: context,
+                  content: MyString.txt_are_u_sure,
+                  textYes: MyString.txt_delete,
+                  textNo: MyString.txt_delete_cancel,
+                  img: PlatformHelper.isAndroid()? 'bin.png' : 'iosbin.png',
+                  onPress: (){
+                    Navigator.of(context).pop();
+
+                  }
+              );
+            }
+        ),
         title: Container(
             margin: EdgeInsets.only(bottom: 10),
             child: Text(_notificationList[i].message, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorBlackSemiTransparent), maxLines: 2,)),

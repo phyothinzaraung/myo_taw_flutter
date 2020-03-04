@@ -61,9 +61,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                 i==0?headerTitleWidget(MyString.title_save_nf, 'save_file_no_circle') : Container(width: 0.0, height: 0.0,),
                 GestureDetector(
                   onTap: (){
-                    /*Navigator.of(context).push(MaterialPageRoute(builder: (context) => SaveNewsFeedDetailScreen(model),
-                      settings: RouteSettings(name: ScreenName.SAVED_NEWS_FEED_DETAIL_SCREEN)
-                    ));*/
+
                     NavigatorHelper.MyNavigatorPush(context, SaveNewsFeedDetailScreen(model), ScreenName.SAVED_NEWS_FEED_DETAIL_SCREEN);
                   },
                   child: Card(
@@ -117,7 +115,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                                 CustomDialogWidget().customConfirmDialog(
                                     context: context,
                                     content: MyString.txt_are_u_sure,
-                                    img: 'confirm_icon.png',
+                                    img: PlatformHelper.isAndroid()? 'bin.png' : 'iosbin.png',
                                     textNo: MyString.txt_delete_cancel,
                                     textYes: MyString.txt_delete,
                                     onPress: ()async{

@@ -12,8 +12,9 @@ class CustomScaffoldWidget extends StatelessWidget {
   final Widget trailing;
   final Widget floatingActionButton;
   final GlobalKey globalKey;
+  bool centerTitle = false;
 
-  CustomScaffoldWidget({this.title, this.body, this.action, this.trailing, this.floatingActionButton, this.globalKey}) :
+  CustomScaffoldWidget({this.title, this.body, this.action, this.trailing, this.floatingActionButton, this.globalKey, this.centerTitle}) :
   assert(body != null);
   @override
   Widget build(BuildContext context) {
@@ -22,24 +23,18 @@ class CustomScaffoldWidget extends StatelessWidget {
         appBar: PlatformHelper.isAndroid()?AppBar(
           actions: action,
           title: title,
+          centerTitle: centerTitle,
         ) : null,
         body: PlatformHelper.isAndroid()?body :
-            CupertinoTheme(
-              data: CupertinoThemeData(
-                brightness: Brightness.light,
-                primaryColor: Colors.white,
-                scaffoldBackgroundColor: MyColor.colorGrey,
-              ),
-              child: CupertinoPageScaffold(
-                  navigationBar: CupertinoNavigationBar(
-                    trailing: trailing,
-                    transitionBetweenRoutes: true,
-                    backgroundColor: MyColor.colorPrimary,
-                    middle: title,
-                  ),
-                  child: body
-              ),
+        CupertinoPageScaffold(
+            navigationBar: CupertinoNavigationBar(
+              trailing: trailing,
+              transitionBetweenRoutes: true,
+              backgroundColor: MyColor.colorPrimary,
+              middle: title,
             ),
+            child: body
+        ),
         floatingActionButton: floatingActionButton,
     );
   }

@@ -30,7 +30,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
   List<Widget> _legnedList = new List<Widget>();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   int _year;
-  String _image;
+  Icon _greyArrow;
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
 
   @override
@@ -39,7 +39,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
     super.initState();
     dataMap = new Map();
     _year = DateTime.now().year;
-    _image = 'images/arrow_green.png';
+    _greyArrow = Icon(Icons.arrow_forward_ios, color: MyColor.colorGreyDark);
   }
 
 
@@ -138,32 +138,32 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: <Widget>[
-                RotatedBox(
-                    quarterTurns: 2,
-                    child: GestureDetector(
-                        onTap: ()async{
-                          setState(() {
-                            _isLoading = true;
-                            _year--;
-                            _taxUserModelList.clear();
-                            _legnedList.clear();
-                            _image = 'images/arrow_green.png';
-                            dataMap.clear();
-                          });
-                          //await _getTaxUse(_year);
-                          asyncLoaderState.currentState.reloadState();
-                          print('year : $_year');
-                          setState(() {
-                            _isLoading = false;
-                          });
-                        },
-                        child: Image.asset('images/arrow_green.png', width: 20.0, height: 20.0,))),
+                IconButton(
+                    icon: Icon(Icons.arrow_back_ios, color: MyColor.colorPrimary),
+                    onPressed: (){
+                      setState(() {
+                        _isLoading = true;
+                        _year--;
+                        _taxUserModelList.clear();
+                        _legnedList.clear();
+                        _greyArrow = Icon(Icons.arrow_forward_ios, color: MyColor.colorPrimary);
+                        dataMap.clear();
+                      });
+                      //await _getTaxUse(_year);
+                      asyncLoaderState.currentState.reloadState();
+                      print('year : $_year');
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
+                ),
                 Expanded(
                     child: Text(TaxUseBudgetYearHelper.getBudgetYear(_year),
                       textAlign: TextAlign.center, style: TextStyle(fontSize: FontSize.textSizeNormal),)),
-                GestureDetector(
-                    onTap: ()async {
-                      if(_year <= DateTime.now().year){
+                IconButton(
+                    icon: _greyArrow,
+                    onPressed: (){
+                      if(_year != DateTime.now().year){
                         setState(() {
                           _isLoading = true;
                           _year++;
@@ -178,13 +178,13 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
                           _isLoading = false;
                         });
                       }
-                      if(_year > DateTime.now().year){
+                      if(_year == DateTime.now().year){
                         setState(() {
-                          _image = 'images/arrow.png';
+                          _greyArrow = Icon(Icons.arrow_forward_ios, color: MyColor.colorGreyDark);
                         });
                       }
-                    },
-                    child: Image.asset(_image, width: 20.0, height: 20.0,))
+                    }
+                )
               ],
             ),
           ),

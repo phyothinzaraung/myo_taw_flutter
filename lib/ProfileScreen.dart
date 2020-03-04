@@ -180,7 +180,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   onPressed: (){
                     CustomDialogWidget().customConfirmDialog(
                         context: context,
-                        img: 'confirm_icon.png',
+                        img: PlatformHelper.isAndroid()? 'bin.png' : 'iosbin.png',
                         content: MyString.txt_are_u_sure,
                         textYes: MyString.txt_delete,
                         textNo: MyString.txt_delete_cancel,
