@@ -60,7 +60,7 @@ class LocationDb{
     if (result.length == 0) return [];
 
     List<LocationModel> list = result.map((item) {
-      return LocationModel.fromMap(item);
+      return LocationModel.fromDb(item);
     }).toList();
 
     print(result);
@@ -102,7 +102,7 @@ class LocationDb{
     if (result.length == 0) return null;
     List<String> stateList = new List<String>();
     for(var i in result){
-      stateList.add(LocationModel.fromMap(i).stateDivision_Unicode);
+      stateList.add(LocationModel.fromDb(i).stateDivision_Unicode);
     }
 
     return stateList;
@@ -114,7 +114,7 @@ class LocationDb{
     if (result.length == 0) return null;
     List<String> townshipList = new List<String>();
     for(var i in result){
-      townshipList.add(LocationModel.fromMap(i).township_Unicode);
+      townshipList.add(LocationModel.fromDb(i).township_Unicode);
     }
     return townshipList;
   }

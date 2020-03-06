@@ -129,8 +129,8 @@ class MyString{
   static const String txt_owner_location = 'တည်နေရာ';
   static const String txt_remark = 'မှတ်ချက်';
   static const String txt_apply_license = 'လျှောက်ထားမည်';
-  static const String txt_apply_license_need_to_fill = 'ပြထားသည့်များဖြည့်ပေးရန်လိုအပ်သည်';
-  static const String txt_need_paper_work = 'လိုအပ်သောစာရွက်စာတမ်းများတွဲရန်/ကြည့်ရန်';
+  static const String txt_apply_license_need_to_fill = 'ပြထားသည့်များဖြည့်ပေးရန်လိုအပ်သည်။';
+  static const String txt_need_paper_work = 'လိုအပ်သောစာရွက်စာတမ်းများတင်ရန်/ကြည့်ရန်';
   static const String txt_apply_biz_license_photo = 'လုပ်ငန်းလိုင်စင်ဓာတ်ပုံများ';
   static const String txt_tax_use_no_data = 'ဒေတာမရှိပါ';
   static const String txt_tax_type = 'အခွန်အမျိုးအစား';
@@ -186,7 +186,7 @@ class MyString{
   static const String txt_calculate = "တွက်မည်";
   static const String txt_biz_tax_range = "ပေးဆောင်ရမည့် အခွန်နှုန်းထားမှာ";
   static const String txt_biz_tax_property = "ပေးဆောင်ရမည့် အခွန်မှာ";
-  static const String txt_thanks = "အခွန်ပေးဆောင်မှုအတွက် \n ကျေးဇူးတင်ပါသည်";
+  static const String txt_thanks = "အခွန်ပေးဆောင်မှုအတွက် \n ကျေးဇူးတင်ပါသည်။";
   static const String txt_choose_license_type = "လိုင်စင်အမျိုးအစားရွေးပါ";
   static const String txt_license_type = "လိုင်စင်အမျိုးအစား";
   static const String txt_site_area = "အဆောက်အဦး (အလျား × အနံ)";
@@ -209,8 +209,8 @@ class MyString{
   static const String txt_no_newsFeed_data = "သတင်းများမရှိသေးပါ။";
   static const String txt_no_data = "ဒေတာမရှိပါ။";
   static const String txt_coming_soon = "မကြာမီလာမည်။";
-  static const String txt_need_suggestion = "အကြံပြုစာရေးပေးပါ";
-  static const String txt_need_subject = "အကြောင်းအရာရွေးပေးပါ";
+  static const String txt_need_suggestion = "အကြံပြုစာရေးပေးပါ။";
+  static const String txt_need_subject = "အကြောင်းအရာရွေးပေးပါ။";
   static const String txt_need_suggestion_photo = "ဓာတ်ပုံတင်ရန် လိုအပ်ပါသည်။";
   static const String txt_need_suggestion_location = "တည်နေရာ မရ ရှိပါ။";
   static const String txt_try_again = "နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ";
@@ -225,6 +225,7 @@ class MyString{
   static const String txt_choose_blockNo= "ရပ်ကွက် အမျိုးအစားရွေးပေးပါ။";
   static const String txt_type_length= "အလျား လိုအပ်သည်။";
   static const String txt_type_width= "အနံ လိုအပ်သည်။";
+  static const String txt_type_length_width= "အလျား အနံ လိုအပ်သည်။";
   static const String txt_wrong_pin_code = "ပင်ကုဒ် မှားနေပါသည်။";
   static const String txt_need_prepaid_code = "ငွေဖြည့်ကုဒ် ရိုက်ပေးပါ။";
   static const String txt_need_pin_code = "ပင်ကုဒ် ရိုက်ပေးပါ။";
@@ -275,12 +276,16 @@ class MyString{
   static const String txt_square_feet = 'စတုရန်းပေ';
   static const String txt_choose_square_feet = 'စတုရန်းပေရွေးပေးပါ';
   static const String txt_no_notification = 'အသိပေးနှိုးဆော်ချက် မရှိသေးပါ။';
+  static const String txt_choose_road= "လမ်းဥပစာ အမျိုးအစားရွေးပေးပါ။";
+  static const String txt_upload = 'ပုံတင်မည်';
+  static const String txt_upload_file_name = 'ဖိုင်အမည်';
+  static const String txt_no_apply_biz_form_warning = 'အချက်အလက်များဖြည့်စွက်ရန်ကျန်ရှိသည်။';
+  static const String txt_special_grade = 'အထူးနှုန်း';
 
   static const String txt_first_grade = 'ပထမတန်းစား';
   static const String txt_second_grade = 'ဒုတိယတန်းစား';
   static const String txt_third_grade = 'တတိယတန်းစား';
   static const String txt_fourth_grade = 'စတုတ္ထတန်းစား';
-  static const String txt_special_grade = 'အထူးနှုန်း';
 
 
 

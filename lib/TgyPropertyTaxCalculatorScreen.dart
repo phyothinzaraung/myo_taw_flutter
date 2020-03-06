@@ -374,14 +374,19 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
 
                             }else if(_dropDownBuildingType == MyString.txt_no_selected){
                               WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
+
                             }else if(_dropDownRoad == MyString.txt_no_selected){
-                              WarningSnackBar(_globalKey, MyString.txt_choose_story);
+                              WarningSnackBar(_globalKey, MyString.txt_choose_road);
+
                             }else if(_dropDownBlockNo == MyString.txt_no_selected){
                               WarningSnackBar(_globalKey, MyString.txt_choose_blockNo);
+
                             }else if(_lengthContorller.text.isEmpty){
                               WarningSnackBar(_globalKey, MyString.txt_type_length);
+
                             }else if(_widthContorller.text.isEmpty){
                               WarningSnackBar(_globalKey, MyString.txt_type_width);
+
                             }
 
                           },color: MyColor.colorPrimary,

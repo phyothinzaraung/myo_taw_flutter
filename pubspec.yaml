@@ -56,9 +56,10 @@ dependencies:
   firebase_analytics: ^5.0.10
   package_info: ^0.4.0+13
   firebase_messaging: ^6.0.9
-  sqflite: ^1.2.1
+  sqflite: ^1.1.0
   path_provider: ^1.6.1
   custom_refresh_indicator: ^0.2.0
+  notifier: ^1.0.2
 
 dev_dependencies:
   flutter_test:

@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/LoginScreen.dart';
 import 'package:myotaw/PhotoDetailScreen.dart';
+import 'package:myotaw/database/NotificationDb.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/CustomDialogWidget.dart';
@@ -48,11 +49,13 @@ class _ProfileScreenState extends State<ProfileScreen> {
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   bool _isEnd , _isCon, _isLoading = false;
   int page = 1;
-  int pageCount = 10;
+  int pageCount = 100;
   var response;
   ImageProvider _profilePhoto;
   List<TaxRecordModel> _taxRecordModelList = new List<TaxRecordModel>();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+  GlobalKey<SliverAnimatedListState> _animatedListKey = GlobalKey();
+  NotificationDb _notificationDb = NotificationDb();
 
   @override
   void initState() {
@@ -122,22 +125,36 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
     await _sharepreferenceshelper.initSharePref();
     _sharepreferenceshelper.logOutSharePref();
+
     await _userDb.openUserDb();
     await _userDb.deleteUser();
     _userDb.closeUserDb();
+
     await _saveNewsFeedDb.openSaveNfDb();
     await _saveNewsFeedDb.deleteSavedNewsFeed();
      _saveNewsFeedDb.closeSaveNfDb();
+
+    await _notificationDb.openNotificationDb();
+    await _notificationDb.deleteNotification();
+    _notificationDb.closeSaveNotificationDb();
     setState(() {
       _isLoading = false;
     });
     NavigatorHelper.MyNavigatorPushAndRemoveUntil(context, LoginScreen(), ScreenName.LOGIN_SCREEN);
   }
 
-  void _deleteTaxRecord(int id)async{
+  void _deleteTaxRecord(int id, int i)async{
     try{
       response = await ServiceHelper().deleteTaxRecord(id);
-      await _handleRefresh();
+      //await _handleRefresh();
+      Future.delayed(Duration(milliseconds: 200),(){
+        setState(() {
+          var model = _taxRecordModelList.removeAt(i);
+          _animatedListKey.currentState.removeItem(i, (context, animation){
+            return _taxRecordList(model, animation);
+          },duration: Duration(milliseconds: 500));
+        });
+      });
     }catch(e){
       print(e);
       WarningSnackBar(_globalKey, MyString.txt_try_again);
@@ -147,56 +164,62 @@ class _ProfileScreenState extends State<ProfileScreen> {
     });
   }
 
-  Widget _taxRecordList(int i){
-    TaxRecordModel taxRecordModel = _taxRecordModelList[i];
+  Widget _taxRecordList(TaxRecordModel model, Animation animation,[int i]){
+    TaxRecordModel taxRecordModel = model;
     return GestureDetector(
       onTap: (){
         NavigatorHelper.MyNavigatorPush(context, PhotoDetailScreen(BaseUrl.TAX_RECORD_PHOTO_URL+taxRecordModel.photoUrl),
             ScreenName.PHOTO_DETAIL_SCREEN);
       },
-      child: Card(
-        margin: EdgeInsets.only(bottom: 1.0),
-        elevation: 0.5,
-        child: Container(
-          margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
-          child: Row(
-            children: <Widget>[
-              Image.asset('images/tax_record.png', width: 50.0, height: 50.0,),
-              Expanded(
-                child: Container(
-                  margin: EdgeInsets.all(15.0),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Container(margin: EdgeInsets.only(bottom: 5.0),
-                          child: Text(taxRecordModel.subject,style: TextStyle(fontSize: FontSize.textSizeNormal,color: MyColor.colorTextBlack),overflow: TextOverflow.ellipsis,maxLines: 1,)),
-                      Text(ShowDateTimeHelper.showDateTimeDifference(taxRecordModel.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)
-                    ],
+      child: ScaleTransition(
+        scale: CurvedAnimation(parent: animation, curve: Interval(0.2, 1)),
+        child: FadeTransition(
+          opacity: CurvedAnimation(parent: animation, curve: Interval(0.2, 1)),
+          child: Card(
+            margin: EdgeInsets.only(bottom: 1.0),
+            elevation: 0.5,
+            child: Container(
+              margin: EdgeInsets.only(left: 20.0, right: 20.0, top: 10.0, bottom: 10.0),
+              child: Row(
+                children: <Widget>[
+                  Image.asset('images/tax_record.png', width: 50.0, height: 50.0,),
+                  Expanded(
+                    child: Container(
+                      margin: EdgeInsets.all(15.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Container(margin: EdgeInsets.only(bottom: 5.0),
+                              child: Text(taxRecordModel.subject,style: TextStyle(fontSize: FontSize.textSizeNormal,color: MyColor.colorTextBlack),overflow: TextOverflow.ellipsis,maxLines: 1,)),
+                          Text(ShowDateTimeHelper.showDateTimeDifference(taxRecordModel.accessTime), style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)
+                        ],
+                      ),
+                    ),
                   ),
-                ),
+                  IconButton(
+                      icon: Icon(PlatformHelper.isAndroid()?Icons.delete :CupertinoIcons.delete_solid, color: Colors.red,),
+                      onPressed: (){
+                        CustomDialogWidget().customConfirmDialog(
+                            context: context,
+                            img: PlatformHelper.isAndroid()? 'bin.png' : 'iosbin.png',
+                            content: MyString.txt_are_u_sure,
+                            textYes: MyString.txt_delete,
+                            textNo: MyString.txt_delete_cancel,
+                            onPress: ()async{
+                              Navigator.of(context).pop();
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              _deleteTaxRecord(taxRecordModel.id, i);
+                              await _sharepreferenceshelper.initSharePref();
+                              FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.TAX_RECORD_DELETE_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                            }
+                        );
+                      }
+                  ),
+                ],
               ),
-              IconButton(
-                  icon: Icon(PlatformHelper.isAndroid()?Icons.delete :CupertinoIcons.delete_solid, color: Colors.red,),
-                  onPressed: (){
-                    CustomDialogWidget().customConfirmDialog(
-                        context: context,
-                        img: PlatformHelper.isAndroid()? 'bin.png' : 'iosbin.png',
-                        content: MyString.txt_are_u_sure,
-                        textYes: MyString.txt_delete,
-                        textNo: MyString.txt_delete_cancel,
-                        onPress: ()async{
-                          Navigator.of(context).pop();
-                          setState(() {
-                            _isLoading = true;
-                          });
-                          _deleteTaxRecord(taxRecordModel.id);
-                          await _sharepreferenceshelper.initSharePref();
-                          FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.TAX_RECORD_DELETE_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-                        }
-                    );
-                  }
-              ),
-            ],
+            ),
           ),
         ),
       ),
@@ -391,7 +414,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
 
-  Widget _listView(){
+  /*Widget _listView(){
     return ListView.builder(
         itemCount: _taxRecordModelList.length,
         itemBuilder: (context, i){
@@ -410,7 +433,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
           );
         });
 
-  }
+  }*/
 
   Widget getNoConnectionWidget(){
     return ListView(
@@ -456,12 +479,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
         renderSuccess: ({data}) => NativePullRefresh(
           onRefresh: _handleRefresh,
           child: _taxRecordModelList.isNotEmpty?
-          LoadMore(
-              isFinish: _isEnd,
-              onLoadMore: _loadMore,
-              delegate: DefaultLoadMoreDelegate(),
-              textBuilder: DefaultLoadMoreTextBuilder.english,
-              child: _listView()
+          CustomScrollView(
+            slivers: <Widget>[
+              SliverList(delegate: SliverChildBuilderDelegate((context, i){
+                return _headerProfile();
+              }, childCount: 1)),
+              SliverAnimatedList(itemBuilder: (context, i, animation){
+                return _taxRecordList(_taxRecordModelList[i], animation, i);
+              }, initialItemCount: _taxRecordModelList.length,key: _animatedListKey,)
+            ],
           ) : ListView(children: <Widget>[_headerProfile(), emptyView(asyncLoaderState, MyString.txt_no_data)],)
         )
     );

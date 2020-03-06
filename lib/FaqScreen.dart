@@ -140,7 +140,7 @@ class _FaqScreenState extends State<FaqScreen> {
                             Container(
                               margin: EdgeInsets.only(bottom: 10.0),
                                 //text question
-                                child: Text(_faqList[i].question, style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                                child: Text(_faqList[i].question, style: TextStyle(fontSize: FontSize.textSizeSmall, fontWeight: FontWeight.bold),)),
                             //text answer
                             _faqList[i].isVisible?Text(_faqList[i].answer, style: TextStyle(fontSize: FontSize.textSizeSmall),):
                                 Container()

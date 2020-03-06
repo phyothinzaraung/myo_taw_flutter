@@ -113,7 +113,7 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
       },
       child: Container(
           margin: EdgeInsets.only(right: 10.0),
-          child: Image.asset('images/history.png', width: 25, height: 25,)),
+          child: Image.asset('images/history.png', width: 30, height: 30,)),
     );
   }
 

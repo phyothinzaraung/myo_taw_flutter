@@ -273,8 +273,10 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
 
                           }else if(_dropDownBuildingType == MyString.txt_no_selected){
                             WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
+
                           }else if(_dropDownStory == MyString.txt_no_selected){
                             WarningSnackBar(_globalKey, MyString.txt_choose_story);
+
                           }
                         },color: MyColor.colorPrimary,
                         shape: RoundedRectangleBorder(

@@ -62,7 +62,7 @@ class SaveNewsFeedDb{
     if (result.length == 0) return [];
 
     List<SaveNewsFeedModel> list = result.map((item) {
-      return SaveNewsFeedModel.fromMap(item);
+      return SaveNewsFeedModel.fromDb(item);
     }).toList();
 
     print(result);

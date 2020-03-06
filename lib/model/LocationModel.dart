@@ -60,7 +60,7 @@ class LocationModel{
       _township_Unicode = json['Township_Unicode'],
       _townshipCode = json['TownshipCode'];
 
-  LocationModel.fromMap(Map<String, dynamic> map):
+  LocationModel.fromDb(Map<String, dynamic> map):
       _locationId = map[DbHelper.COLUMN_LOCATION_ID],
       _stateDivision = map[DbHelper.COLUMN_STATE_DIVISION],
       _stateDivision_Unicode = map[DbHelper.COLUMN_STATE_DIVISION_UNICODE],

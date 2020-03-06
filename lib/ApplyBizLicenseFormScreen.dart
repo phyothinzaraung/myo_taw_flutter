@@ -187,6 +187,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
         CustomDialogWidget().customSuccessDialog(
           context: context,
           content: MyString.txt_need_paper_work,
+          buttonText: MyString.txt_upload,
           img: 'camera.png',
           onPress: (){
             Navigator.of(context).pop();
@@ -988,7 +989,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                   FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.APPLY_BIZ_LICENSE_FORM_SCREEN, ClickEvent.BIZ_LICENSE_APPLIED_CLICK_EVENT, _userModel.uniqueKey);
                   _callWebService(_applyBizLicenseModel);
                 }else{
-                  ApplyBizLicenseFormSnackBarWidget(_globalKey, MyString.txt_apply_license_need_to_fill);
+                  WarningSnackBar(_globalKey, MyString.txt_no_apply_biz_form_warning);
                 }
               }else{
                 WarningSnackBar(_globalKey, MyString.txt_check_internet);

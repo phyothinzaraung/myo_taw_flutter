@@ -177,7 +177,8 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
               child: Column(
                 children: <Widget>[
                   Expanded(child: _listView()),
-                  _applyBizLicenseModel.isValid?Container():Row(
+                  _applyBizLicenseModel.isValid?Container():
+                  Row(
                     children: <Widget>[
                       Flexible(
                           flex: 2,
@@ -199,11 +200,10 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                                 padding: EdgeInsets.all(5.0),
                                 width: double.maxFinite,
                                 color: Colors.white,
-                                height: 50.0,
                                 child: TextField(
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
-                                    hintText:'Type attach photo file name',
+                                    hintText:MyString.txt_upload_file_name,
                                   ),
                                   cursorColor: MyColor.colorPrimary,
                                   controller: _fileTitleController,

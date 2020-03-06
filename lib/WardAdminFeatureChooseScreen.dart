@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/WardAdminContributionListScreen.dart';
+import 'package:myotaw/database/NotificationDb.dart';
 import 'package:myotaw/database/UserDb.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
@@ -10,17 +11,21 @@ import 'package:myotaw/main.dart';
 import 'package:myotaw/model/DashBoardModel.dart';
 import 'package:myotaw/model/UserModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:notifier/main_notifier.dart';
 import 'FloodReportListScreen.dart';
+import 'NotificationDetailScreen.dart';
 import 'helper/NavigatorHelper.dart';
-import 'dart:io';
-
+import 'dart:convert';
 import 'helper/PlatformHelper.dart';
+import 'model/NotificationModel.dart';
 
 class WardAdminFeatureChooseScreen extends StatelessWidget {
   List<DashBoardModel> _list = List();
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
+  NotificationDb _notificationDb = NotificationDb();
+  Notifier _notifier;
 
   _init(BuildContext context){
     DashBoardModel model1 = new DashBoardModel();
@@ -40,17 +45,48 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
     _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
           print('on message $message');
+
+          /*if(message != null){
+            String json = message['data']['notification'];
+            Map<String, dynamic> temp = jsonDecode(json);
+            await _notificationDb.openNotificationDb();
+            await _notificationDb.insert(NotificationModel.fromJson(temp));
+            var count = await _notificationDb.getUnReadNotificationCount();
+            _notificationDb.closeSaveNotificationDb();
+            _notifier.notify('noti_count', count);
+            _notifier.notify('noti_add', temp);
+          }*/
         },
         onResume: (Map<String, dynamic> message) async {
           print('on resume ${message['data']['screen']}');
-          if(message['data']['screen'] == MyString.NOTIFICATION_TAB){
-            NavigatorHelper.MyNavigatorPush(context, MainScreen(true), null);
+
+          if(message != null){
+            String json = message['data']['notification'];
+            Map<String, dynamic> temp = jsonDecode(json);
+            await _notificationDb.openNotificationDb();
+            NotificationModel model = NotificationModel.fromJson(temp);
+            model.isSeen = true;
+            await _notificationDb.insert(model);
+            _notificationDb.closeSaveNotificationDb();
+            if(message['data']['notification'] != null){
+              NavigatorHelper.MyNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+            }
           }
         },
         onLaunch: (Map<String, dynamic> message) async {
           print('on launch ${message['data']['screen']}');
-          if(message['data']['screen'] == MyString.NOTIFICATION_TAB){
-            NavigatorHelper.MyNavigatorPush(context, MainScreen(true), null);
+
+          if (message != null) {
+            String json = message['data']['notification'];
+            Map<String, dynamic> temp = jsonDecode(json);
+            await _notificationDb.openNotificationDb();
+            NotificationModel model = NotificationModel.fromJson(temp);
+            model.isSeen = true;
+            await _notificationDb.insert(model);
+            _notificationDb.closeSaveNotificationDb();
+            if(message['data']['notification'] != null){
+              NavigatorHelper.MyNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+            }
           }
         }
     );

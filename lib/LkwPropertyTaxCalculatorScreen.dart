@@ -27,18 +27,17 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
   String _dropDownStory = MyString.txt_no_selected;
   List<String> _storyList;
 
-  String _dropDownGrade = MyString.txt_no_selected;
-  List<String> _gradeList;
+  String _grade;
 
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
 
   List<Widget> _buildingTypeWidgetList = List();
   List<Widget> _storyTypeWidgetList = List();
-  List<Widget> _gradeWidgetList = List();
-  int _buildingTypePickerIndex, _storyTypePickerIndex, _gradePickerIndex;
-
-  bool _isStoryVisible, _isGradeVisible;
+  int _buildingTypePickerIndex, _storyTypePickerIndex;
+  bool _isNeedStory, _isNeedLengthWidth;
+  TextEditingController _lengthContorller = new TextEditingController();
+  TextEditingController _widthContorller = new TextEditingController();
 
   @override
   void initState() {
@@ -47,17 +46,14 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
     _buildingTypeList = [_dropDownBuildingType];
     _buildingTypeList.addAll(MyStringList.property_lkw_building);
     _storyList = [_dropDownStory];
-    _gradeList = [_dropDownGrade, MyString.txt_first_grade, MyString.txt_second_grade, MyString.txt_third_grade];
 
     _buildingTypePickerIndex = 0;
     _storyTypePickerIndex = 0;
-    _gradePickerIndex = 0;
 
-    _isGradeVisible = true;
-    _isStoryVisible = true;
+    _isNeedLengthWidth = true;
+    _isNeedStory = true;
 
     _initBuildingTypeIosPickerWidgetList();
-    _initGradeIosPickerWidgetList();
   }
 
   _initBuildingTypeIosPickerWidgetList(){
@@ -78,55 +74,46 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
     }
   }
 
-  _initGradeIosPickerWidgetList(){
-    for(var i in _gradeList){
-      _gradeWidgetList.add(Padding(
-        padding: const EdgeInsets.only(left: 5),
-        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
-      ));
-    }
-  }
-
   _getStoryByBuildingType(){
     switch (_dropDownBuildingType){
       case 'RC':
         setState(() {
           _storyList = [_dropDownStory,'(၁) ထပ်', '(၂) ထပ်', '(၃) ထပ်'];
-          _isStoryVisible = true;
-          _isGradeVisible = true;
+          _isNeedStory = true;
+          _isNeedLengthWidth = true;
         });
         break;
       case 'အုတ်တိုက်':
         setState(() {
           _storyList = [_dropDownStory,'(၁) ထပ်', '(၂) ထပ်'];
-          _isStoryVisible = true;
-          _isGradeVisible = true;
+          _isNeedStory = true;
+          _isNeedLengthWidth = true;
         });
         break;
       case 'အုတ်ညှပ်':
         setState(() {
           _storyList = [_dropDownStory,'(၁) ထပ်', '(၂) ထပ်'];
-          _isStoryVisible = true;
-          _isGradeVisible = true;
+          _isNeedStory = true;
+          _isNeedLengthWidth = true;
         });
         break;
       case 'တိုက်ခံ':
         setState(() {
-          _isStoryVisible = false;
-          _isGradeVisible = true;
+          _isNeedStory = false;
+          _isNeedLengthWidth = true;
         });
         break;
       case 'ပျဉ်ထောင်':
         setState(() {
           _storyList = [_dropDownStory,'(၁) ထပ်', '(၂) ထပ်'];
-          _isStoryVisible = true;
-          _isGradeVisible = true;
+          _isNeedStory = true;
+          _isNeedLengthWidth = true;
         });
         break;
       case 'တဲအိမ်':
         setState(() {
-          _isStoryVisible = false;
-          _isGradeVisible = false;
+          _isNeedStory = false;
+          _isNeedLengthWidth = false;
         });
         break;
     }
@@ -144,50 +131,70 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
       _storyList = [MyString.txt_no_selected];
 
       _dropDownStory = MyString.txt_no_selected;
-      _dropDownGrade = MyString.txt_no_selected;
 
       _initStoryIosPickerWidgetList();
 
       _buildingTypePickerIndex = 0;
       _storyTypePickerIndex = 0;
-      _gradePickerIndex = 0;
 
-      _isGradeVisible = true;
-      _isStoryVisible = true;
+      _isNeedLengthWidth = true;
+      _isNeedStory = true;
+
+      _lengthContorller.text = '';
+      _widthContorller.text = '';
     });
   }
 
   bool _isValid(){
-    if(_isStoryVisible && _isGradeVisible){
-      return _dropDownBuildingType != MyString.txt_no_selected &&_dropDownStory != MyString.txt_no_selected
-          && _dropDownGrade != MyString.txt_no_selected;
-    }else if(!_isStoryVisible && _isGradeVisible){
-      return _dropDownBuildingType != MyString.txt_no_selected && _dropDownGrade != MyString.txt_no_selected;
+    if(_isNeedStory && _isNeedLengthWidth){
+      return _dropDownBuildingType != MyString.txt_no_selected && _dropDownStory != MyString.txt_no_selected
+          && _lengthContorller.text.isNotEmpty && _widthContorller.text.isNotEmpty;
+    }else if(!_isNeedStory && _isNeedLengthWidth){
+      return _dropDownBuildingType != MyString.txt_no_selected && _lengthContorller.text.isNotEmpty && _widthContorller.text.isNotEmpty;
     }else {
       return _dropDownBuildingType != MyString.txt_no_selected;
     }
   }
 
-  Widget _warningSnackBar(){
-    if(_isStoryVisible && _isGradeVisible){
+  _warningSnackBar(){
+    if(_isNeedStory && _isNeedLengthWidth){
       if(_dropDownBuildingType == MyString.txt_no_selected){
         WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
       }else if(_dropDownStory == MyString.txt_no_selected){
         WarningSnackBar(_globalKey, MyString.txt_choose_story);
       }else{
-        WarningSnackBar(_globalKey, MyString.txt_choose_grade);
+        WarningSnackBar(_globalKey, MyString.txt_type_length_width);
       }
-    }else if(!_isStoryVisible && _isGradeVisible){
+    }else if(!_isNeedStory && _isNeedLengthWidth){
       if(_dropDownBuildingType == MyString.txt_no_selected){
         WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
       }else{
-        WarningSnackBar(_globalKey, MyString.txt_choose_grade);
+        WarningSnackBar(_globalKey, MyString.txt_type_length_width);
       }
     }else {
       if(_dropDownBuildingType == MyString.txt_no_selected){
         WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
       }
     }
+  }
+
+  String _getGrade(){
+    if(_lengthContorller.text.isNotEmpty && _widthContorller.text.isNotEmpty){
+      int _area = int.parse(_lengthContorller.text) * int.parse(_widthContorller.text);
+      print(_area);
+      if( 400 <= _area || _area >= 600){
+        _grade = MyString.txt_third_grade;
+      }else if(600 <= _area || _area >= 800){
+        _grade = MyString.txt_second_grade;
+      }else if(800 <= _area || _area >= 1000){
+        _grade = MyString.txt_first_grade;
+      }else if(_area > 1000){
+        _grade = MyString.txt_special_grade;
+      }
+    }
+
+    return _grade;
+
   }
 
   Widget _body(BuildContext context){
@@ -264,14 +271,14 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
                     ),
 
 
-                    _isStoryVisible?Container(
+                    _isNeedStory?Container(
                       margin: EdgeInsets.only(bottom: 10),
                       child: Text(MyString.txt_story,
                         style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                     ) : Container(),
-                    _isStoryVisible?Container(
+                    _isNeedStory?Container(
                       padding: EdgeInsets.symmetric(horizontal: 10.0),
-                      margin: EdgeInsets.only(bottom: 10),
+                      margin: EdgeInsets.only(bottom: 20),
                       width: double.maxFinite,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(7.0),
@@ -308,13 +315,14 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
                       ),
                     ) : Container(),
 
-                    _isGradeVisible?Container(
+                    /*_isGradeVisible?Container(
                       margin: EdgeInsets.only(bottom: 10),
                       child: Text(MyString.txt_grade,
                         style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                     ) : Container(),
                     _isGradeVisible?Container(
                       padding: EdgeInsets.symmetric(horizontal: 10.0),
+                      margin: EdgeInsets.only(bottom: 10),
                       width: double.maxFinite,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(7.0),
@@ -349,23 +357,96 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
                         },
                         children: _gradeWidgetList,
                       ),
+                    ) : Container(),*/
+
+                    _isNeedLengthWidth?Container(
+                      margin: EdgeInsets.only(bottom: 10),
+                      child: Text(MyString.txt_site_area,
+                        style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
+                    ) : Container(),
+                    _isNeedLengthWidth?Container(
+                      margin: EdgeInsets.only(bottom: 20.0),
+                      child: Row(
+                        children: <Widget>[
+                          Flexible(
+                            flex: 1,
+                            child: Row(
+                              children: <Widget>[
+                                Flexible(
+                                  flex: 2,
+                                  child: Container(
+                                    margin: EdgeInsets.only(right: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(7.0),
+                                        border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                                    ),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                      cursorColor: MyColor.colorPrimary,
+                                      controller: _lengthContorller,
+                                      keyboardType: TextInputType.number,
+                                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                                    ),
+                                  ),
+                                ),
+                                Flexible(
+                                    flex: 1,
+                                    child: Text(MyString.txt_unit_feet, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
+                              ],
+                            ),
+                          ),
+                          Flexible(
+                            flex: 1,
+                            child: Row(
+                              children: <Widget>[
+                                Flexible(
+                                  flex: 2,
+                                  child: Container(
+                                    margin: EdgeInsets.only(right: 10.0),
+                                    padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                                    decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(7.0),
+                                        border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                                    ),
+                                    child: TextField(
+                                      decoration: InputDecoration(
+                                        border: InputBorder.none,
+                                      ),
+                                      cursorColor: MyColor.colorPrimary,
+                                      controller: _widthContorller,
+                                      keyboardType: TextInputType.number,
+                                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                                    ),
+                                  ),
+                                ),
+                                Flexible(
+                                    flex: 1,
+                                    child: Text(MyString.txt_unit_feet, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
+                              ],
+                            ),
+                          )
+                        ],
+                      ),
                     ) : Container(),
 
 
                     Container(
                       margin: EdgeInsets.only(top: 40.0),
                       width: double.maxFinite,
-                      height: 50.0,
                       child: CustomButtonWidget(
                         onPress: ()async{
                           if(_isValid()){
+                            FocusScope.of(context).requestFocus(FocusNode());
                             CustomDialogWidget().customCalculateTaxDialog(
                               context: context,
                               titleTax: MyString.txt_biz_tax_range,
                               taxValue: LkwPropertyTax.getTax(
                                 buildingType: _dropDownBuildingType,
                                 story: _dropDownStory,
-                                grade: _dropDownGrade,
+                                grade: _getGrade(),
                               ),
                               onPress: (){
                                 Navigator.of(context).pop();

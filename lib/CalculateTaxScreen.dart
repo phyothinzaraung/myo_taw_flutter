@@ -64,7 +64,7 @@ class _CalculateTaxScreenState extends State<CalculateTaxScreen> {
                   return GestureDetector(
                     onTap: (){
                       if(index == 0){
-                        switch ('MLM'){
+                        switch (_sharepreferenceshelper.getRegionCode()){
                           case MyString.TGY_REGIONCODE:
                             NavigatorHelper.MyNavigatorPush(context, TgyPropertyTaxCalculatorScreen(), ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN);
                             break;

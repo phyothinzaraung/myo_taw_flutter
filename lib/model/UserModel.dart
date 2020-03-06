@@ -181,7 +181,7 @@ class UserModel{
      return json;
   }
 
-  UserModel.fromDataBase(Map<String, dynamic> map):
+  UserModel.fromDb(Map<String, dynamic> map):
         _uniqueKey = map[DbHelper.COLUMN_USER_UNIQUE],
         _name = map[DbHelper.COLUMN_USER_NAME],
         _phoneNo = map[DbHelper.COLUMN_USER_PHONE_NO],

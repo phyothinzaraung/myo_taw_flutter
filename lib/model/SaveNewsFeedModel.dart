@@ -60,7 +60,7 @@ class SaveNewsFeedModel{
     _title = value;
   }
 
-  SaveNewsFeedModel.fromMap(Map<String, dynamic> map):
+  SaveNewsFeedModel.fromDb(Map<String, dynamic> map):
         _id = map[DbHelper.COLUMN_SAVE_NF_ID],
         _title = map[DbHelper.COLUMN_SAVE_NF_TITLE],
         _body = map[DbHelper.COLUMN_SAVE_NF_BODY],

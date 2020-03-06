@@ -88,7 +88,7 @@ class UserDb {
     if (result.length == 0) return [];
 
     List<UserModel> list = result.map((item) {
-      return UserModel.fromDataBase(item);
+      return UserModel.fromDb(item);
     }).toList();
 
     print(result);
@@ -139,7 +139,7 @@ class UserDb {
         where: '${DbHelper.COLUMN_USER_UNIQUE} = ?', whereArgs: ['$uniqueKey']);
     if (result.length == 0) return null;
     for(var i in result){
-      userModel = UserModel.fromDataBase(i);
+      userModel = UserModel.fromDb(i);
     }
     //print('getuserid ${userModel.name}');
     return userModel;
