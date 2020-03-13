@@ -17,7 +17,7 @@ class UserModel{
   int _pinCode;
   int _amount;
   int _isDeletedDb;
-  int _isWardAdmin;
+  bool _isWardAdmin;
   String _wardName;
   String _meterNo;
 
@@ -28,9 +28,9 @@ class UserModel{
     _meterNo = value;
   }
 
-  int get isWardAdmin => _isWardAdmin;
+  bool get isWardAdmin => _isWardAdmin;
 
-  set isWardAdmin(int value) {
+  set isWardAdmin(bool value) {
     _isWardAdmin = value;
   }
 
@@ -153,7 +153,7 @@ class UserModel{
         _currentRegionCode = json['CurrentRegionCode'],
         _pinCode = json['PinCode'],
         _amount = json['Amount'],
-        _isWardAdmin = json['IsWardAdmin']==true?1:0,
+        _isWardAdmin = json['IsWardAdmin']??false,
         _wardName = json['WardName'],
         _meterNo = json['MeterNo'];
 
@@ -174,7 +174,7 @@ class UserModel{
       json['CurrentRegionCode'] = _currentRegionCode;
       json['PinCode'] = _pinCode;
       json['Amount'] = _amount;
-      json['IsWardAdmin'] = _isWardAdmin==1?true:false;
+      json['IsWardAdmin'] = _isWardAdmin;
       json['WardName'] = _wardName;
       json['MeterNo'] = _meterNo;
 
@@ -197,7 +197,7 @@ class UserModel{
         _currentRegionCode = map[DbHelper.COLUMN_USER_CURRENT_REGION_CODE],
         _pinCode = map[DbHelper.COLUMN_USER_PIN_CODE],
         _amount = map[DbHelper.COLUMN_USER_AMOUNT],
-        _isWardAdmin = map[DbHelper.COLUMN_USER_IS_WARD_ADMIN],
+        _isWardAdmin = map[DbHelper.COLUMN_USER_IS_WARD_ADMIN] ==1 ? true : false,
         _wardName = map[DbHelper.COLUMN_USER_WARD_NAME],
         _meterNo = map[DbHelper.COLUMN_USER_METER_NO];
 }

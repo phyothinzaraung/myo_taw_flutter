@@ -31,7 +31,8 @@ class NotificationDb{
             ${DbHelper.COLUMN_NOTIFICATION_MESSAGE} TEXT,
             ${DbHelper.COLUMN_NOTIFICATION_DATE} TEXT,
             ${DbHelper.COLUMN_NOTIFICATION_IS_DELETED} INTEGER,
-            ${DbHelper.COLUMN_NOTIFICATION_IS_SEEN} INTEGER)
+            ${DbHelper.COLUMN_NOTIFICATION_IS_SEEN} INTEGER,
+            ${DbHelper.COLUMN_NOTIFICATION_BIZ_ID} INTEGER)
           ''');
   }
 
@@ -42,6 +43,7 @@ class NotificationDb{
       DbHelper.COLUMN_NOTIFICATION_DATE : model.postedDate,
       DbHelper.COLUMN_NOTIFICATION_IS_DELETED : model.isDeleted?1:0,
       DbHelper.COLUMN_NOTIFICATION_IS_SEEN : model.isSeen?1:0,
+      DbHelper.COLUMN_NOTIFICATION_BIZ_ID : model.bizId
     };
     print('sqlInsert: ${row}');
     return await _database.insert(DbHelper.TABLE_NAME_NOTIFICATION, row, conflictAlgorithm: ConflictAlgorithm.replace);
@@ -56,6 +58,14 @@ class NotificationDb{
     return await _database.update(DbHelper.TABLE_NAME_NOTIFICATION, model.toDb(), where: '${DbHelper.COLUMN_SAVE_NF_ID} = ?', whereArgs: [model.iD]);
   }
 
+  Future<int> updateNotificationForApplyBiz(NotificationModel model) async {
+    return await _database.update(DbHelper.TABLE_NAME_NOTIFICATION, model.toDb(), where: '${DbHelper.COLUMN_NOTIFICATION_MESSAGE} = ?', whereArgs: [model.message]);
+  }
+
+  Future deleteBizId0()async{
+    await _database.delete(DbHelper.TABLE_NAME_NOTIFICATION, where: '${DbHelper.COLUMN_NOTIFICATION_ID} = ?', whereArgs: [0]);
+  }
+
   Future<List<NotificationModel>> getNotification() async {
     var result = await _database.query(DbHelper.TABLE_NAME_NOTIFICATION, where: '${DbHelper.COLUMN_NOTIFICATION_IS_DELETED} =?',whereArgs: [0],
         orderBy: '${DbHelper.COLUMN_NOTIFICATION_DATE} DESC');
@@ -67,6 +77,19 @@ class NotificationDb{
 
     print(result);
     return list;
+  }
+
+  Future<int> getLastID() async {
+    var result = await _database.query(DbHelper.TABLE_NAME_NOTIFICATION, where: '${DbHelper.COLUMN_NOTIFICATION_IS_DELETED} =?',whereArgs: [0],
+        orderBy: '${DbHelper.COLUMN_NOTIFICATION_DATE} ASC',);
+    if (result.length == 0) return 0;
+
+    List<NotificationModel> list = result.map((item) {
+      return NotificationModel.fromDb(item);
+    }).toList();
+
+    print(result);
+    return list.last.iD;
   }
 
   Future<int> getUnReadNotificationCount() async {
@@ -89,15 +112,27 @@ class NotificationDb{
     await _database.delete(DbHelper.TABLE_NAME_NOTIFICATION, where: '${DbHelper.COLUMN_NOTIFICATION_ID} = ?', whereArgs: [id]);
   }
 
-  Future<bool> isBadge()async{
-    bool _isBadge;
+  Future<bool> isSeen()async{
+    bool _isSeen;
     var list = await _database.query(DbHelper.TABLE_NAME_NOTIFICATION,where:'${DbHelper.COLUMN_NOTIFICATION_IS_SEEN} = ?', whereArgs: [0]);
     if(list.isNotEmpty){
-      _isBadge = true;
+      _isSeen = true;
     }else{
-      _isBadge = false;
+      _isSeen = false;
     }
-    return _isBadge;
+    return _isSeen;
+  }
+
+  Future<bool> isSeenById(NotificationModel model)async{
+    bool _isSeen;
+    var list = await _database.query(DbHelper.TABLE_NAME_NOTIFICATION,where:'${DbHelper.COLUMN_NOTIFICATION_IS_SEEN} = ? AND ${DbHelper.COLUMN_NOTIFICATION_ID} = ?',
+        whereArgs: [1, model.iD]);
+    if(list.isNotEmpty){
+      _isSeen = true;
+    }else{
+      _isSeen = false;
+    }
+    return _isSeen;
   }
 
   Future deleteNotification()async{

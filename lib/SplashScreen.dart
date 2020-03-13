@@ -2,6 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
+import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:package_info/package_info.dart';
@@ -44,27 +45,10 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     });
     if(_sharepreferenceshelper.getRegionCode()!=null){
       //await getUserData();
-      switch(_sharepreferenceshelper.getRegionCode()){
-        case MyString.TGY_REGIONCODE:
-          setState(() {
-            _logo = 'images/tgy_logo.png';
-            _title = MyString.txt_welcome_tgy;
-          });
-          break;
-        case MyString.MLM_REGIONCODE:
-          setState(() {
-            _logo = 'images/mlm_logo.png';
-            _title = MyString.txt_welcome_mlm;
-          });
-          break;
-        case MyString.LKW_REGIONCODE:
-          setState(() {
-            //_logo = 'images/mlm_logo.png';
-            _title = MyString.txt_welcome_lkw;
-          });
-          break;
-        default:
-      }
+      setState(() {
+        _logo = MyoTawCitySetUpHelper.getCityLogo(_sharepreferenceshelper.getRegionCode());
+        _title = MyoTawCitySetUpHelper.getCityWelcomeTitle(_sharepreferenceshelper.getRegionCode());
+      });
     }
     await _locationInit();
     navigateMainScreen();

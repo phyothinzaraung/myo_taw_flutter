@@ -90,11 +90,11 @@ class _OtpScreenState extends State<OtpScreen> {
       if(result != null){
         _userModel = UserModel.fromJson(result);
         _sharePrefHelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo,
-            _regionCode, _userModel.isWardAdmin==1?true:false, _userModel.wardName, fcmToken);
+            _regionCode, _userModel.isWardAdmin?true:false, _userModel.wardName, fcmToken);
         await _userDb.openUserDb();
         await _userDb.insert(_userModel);
         _userDb.closeUserDb();
-        if(_userModel.isWardAdmin==1){
+        if(_userModel.isWardAdmin){
 
           NavigatorHelper.MyNavigatorPushReplacement(context, WardAdminFeatureChooseScreen(), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{

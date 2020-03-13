@@ -7,6 +7,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/WardAdminContributionDetailScreen.dart';
 import 'package:myotaw/database/UserDb.dart';
+import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/model/ContributionModel.dart';
@@ -305,18 +306,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
     _profilePhoto = _userModel.photoUrl!=null?
     new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl) :
     AssetImage('images/profile_placeholder.png');
-    switch(_userModel.currentRegionCode){
-      case MyString.TGY_REGIONCODE:
-        _city = _userModel.isWardAdmin==1? MyString.TGY_CITY +' '+'(Ward admin)':MyString.TGY_CITY;
-        break;
-      case MyString.MLM_REGIONCODE:
-        _city = _userModel.isWardAdmin==1? MyString.MLM_CITY +' '+'(Ward admin)': MyString.MLM_CITY;
-        break;
-      case MyString.LKW_REGIONCODE:
-        _city = _userModel.isWardAdmin==1? MyString.LKW_CITY +' '+'(Ward admin)': MyString.LKW_CITY;
-        break;
-      default:
-    }
+    _city = _userModel.isWardAdmin? MyoTawCitySetUpHelper.getCity(_userModel.currentRegionCode) +' '+'(Ward admin)': MyoTawCitySetUpHelper.getCity(_userModel.currentRegionCode);
   }
 
   Widget _noConWidget(){
@@ -362,7 +352,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    _userModel!=null?_userModel.isWardAdmin==1?GestureDetector(
+                    _userModel!=null?_userModel.isWardAdmin?GestureDetector(
                       onTap: (){
                         Navigator.of(context).pop();
                       },

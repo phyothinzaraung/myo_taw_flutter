@@ -70,7 +70,6 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
     await _sharepreferenceshelper.initSharePref();
     _response = await ServiceHelper().getApplyBizPhotoList(_applyBizLicenseModel.id);
     List applyBizLicensePhotoList = _response.data;
-    //List applyBizLicensePhotoList = [];
     if(applyBizLicensePhotoList != null && applyBizLicensePhotoList.length > 0){
       for(var i in applyBizLicensePhotoList){
         setState(() {

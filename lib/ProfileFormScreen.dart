@@ -165,7 +165,8 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     _userModel.address = _addressController.text;
     _userModel.state = _dropDownState;
     _userModel.township = _dropDownTownship;
-    //_userModel.isWardAdmin = 1;//1 is true -- 0 is false ---change ward admin and user
+    /*_userModel.isWardAdmin = true;// ---change ward admin and user
+    _sharepreferenceshelper.setIsWardAdmin(true); // change ward admin and user*/
     print('${_userModel.toJson()}');
     try{
       _response = await ServiceHelper().updateUserInfo(_userModel);
@@ -173,7 +174,6 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
         await _userDb.openUserDb();
         await _userDb.insert(UserModel.fromJson(_response.data));
         _userDb.closeUserDb();
-        //_sharepreferenceshelper.setIsWardAdmin(_userModel.isWardAdmin==1? true : false); // change ward admin and user
         CustomDialogWidget().customSuccessDialog(
           context: context,
           content: MyString.txt_profile_complete,

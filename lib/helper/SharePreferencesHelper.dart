@@ -7,14 +7,15 @@ class Sharepreferenceshelper{
   static String USER_IS_WARD_ADMIN = 'user_is_ward_admin';
   static String USER_WARD_NAME = 'user_ward_name';
   static String USER_FCM_TOKEN = 'user_fcm_token';
-  SharedPreferences sharedPreferences;
+  static String NOTIFICATION_ADD = 'notification_add';
+  SharedPreferences _sharedPreferences;
 
   Future initSharePref() async{
-    sharedPreferences = await SharedPreferences.getInstance();
+    _sharedPreferences = await SharedPreferences.getInstance();
   }
 
   void setLoginSharePreference(String uniqueKey, String phone, String regionCode, bool isWardAdmin, String wardName, String token){
-    sharedPreferences
+    _sharedPreferences
         ..setString(USER_UNIQUE_KEY, uniqueKey)
         ..setString(USER_PHONE_KEY, phone)
         ..setString(USER_REGION_CODE_KEY, regionCode)
@@ -24,41 +25,41 @@ class Sharepreferenceshelper{
   }
 
   void setUserToken(String token){
-    sharedPreferences
+    _sharedPreferences
       ..setString(USER_FCM_TOKEN, token);
   }
 
   void setIsWardAdmin(bool isWardAdmin){
-    sharedPreferences
+    _sharedPreferences
       ..setBool(USER_IS_WARD_ADMIN, isWardAdmin);
   }
 
   String getRegionCode(){
-    return sharedPreferences.get(USER_REGION_CODE_KEY);
+    return _sharedPreferences.get(USER_REGION_CODE_KEY);
   }
 
   String getUserUniqueKey(){
-    return sharedPreferences.get(USER_UNIQUE_KEY);
+    return _sharedPreferences.get(USER_UNIQUE_KEY);
   }
 
   String getUserPhoneNo(){
-    return sharedPreferences.get(USER_PHONE_KEY);
+    return _sharedPreferences.get(USER_PHONE_KEY);
   }
 
   String getWardName(){
-    return sharedPreferences.get(USER_WARD_NAME);
+    return _sharedPreferences.get(USER_WARD_NAME);
   }
 
   String getToken(){
-    return sharedPreferences.get(USER_FCM_TOKEN);
+    return _sharedPreferences.get(USER_FCM_TOKEN);
   }
 
   void logOutSharePref(){
-    sharedPreferences.clear();
+    _sharedPreferences.clear();
   }
 
   bool isWardAdmin(){
-    if(sharedPreferences.getBool(USER_IS_WARD_ADMIN)){
+    if(_sharedPreferences.getBool(USER_IS_WARD_ADMIN)){
       return true;
     }else{
       return false;
@@ -66,10 +67,18 @@ class Sharepreferenceshelper{
   }
 
   bool isLogin(){
-    if(sharedPreferences.containsKey(USER_PHONE_KEY)){
+    if(_sharedPreferences.containsKey(USER_PHONE_KEY)){
       return true;
     }else{
       return false;
     }
+  }
+
+  void setNotificationAdd(bool isAdd){
+    _sharedPreferences.setBool(NOTIFICATION_ADD, isAdd);
+  }
+
+  bool isNotificationAdd(){
+    return _sharedPreferences.getBool(NOTIFICATION_ADD);
   }
 }

@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:html/parser.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/model/NewsFeedViewModel.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
@@ -151,7 +152,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
-    response = await ServiceHelper().getNewsFeed(_organizationId,p,pageCount,_userUniqueKey);
+    response = await ServiceHelper().getNewsFeed(MyoTawCitySetUpHelper.getNewsFeedCityId(_sharepreferenceshelper.getRegionCode()),p,pageCount,_userUniqueKey);
     var result = response.data['Results'];
     //var result = [];
     print('loadmore: ${p}');
@@ -204,21 +205,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     _profilePhoto = _userModel.photoUrl!=null?
     new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl) :
     AssetImage('images/profile_placeholder.png');
-    switch(_userModel.currentRegionCode){
-      case MyString.TGY_REGIONCODE:
-        _city = _userModel.isWardAdmin==1? MyString.TGY_CITY +' '+'(Ward admin)':MyString.TGY_CITY;
-        _organizationId = OrganizationId.TGY_ORGANIZATION_ID;
-        break;
-      case MyString.MLM_REGIONCODE:
-        _city = _userModel.isWardAdmin==1? MyString.MLM_CITY +' '+'(Ward admin)': MyString.MLM_CITY;
-        _organizationId = OrganizationId.MLM_ORGANIZATION_ID;
-        break;
-      case MyString.LKW_REGIONCODE:
-        _city = _userModel.isWardAdmin==1? MyString.LKW_CITY +' '+'(Ward admin)': MyString.LKW_CITY;
-        _organizationId = OrganizationId.LKW_ORGANIZATION_ID;
-        break;
-      default:
-    }
+    _city = _userModel.isWardAdmin?MyoTawCitySetUpHelper.getCity(_userModel.currentRegionCode)+' '+'(Ward admin)' : MyoTawCitySetUpHelper.getCity(_userModel.currentRegionCode);
   }
 
 
@@ -394,7 +381,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  _userModel!=null?_userModel.isWardAdmin==1?GestureDetector(
+                  _userModel!=null?_userModel.isWardAdmin?GestureDetector(
                     onTap: (){
                       Navigator.of(context).pop();
                     },
@@ -403,7 +390,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,color: Colors.black,size: 30,),
                     ),
                   ) : Container() : Container(),
-                  Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                  Text(_city??'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
                   Text(MyString.txt_newsfeed, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                 ],
               ),
@@ -436,7 +423,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
-                    _userModel!=null?_userModel.isWardAdmin==1?GestureDetector(
+                    _userModel!=null?_userModel.isWardAdmin?GestureDetector(
                       onTap: (){
                         Navigator.of(context).pop();
                       },
@@ -445,7 +432,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                         child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,color: Colors.black,size: 30,),
                       ),
                     ) : Container() : Container(),
-                    Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                    Text(_city??'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
                     Text(MyString.txt_newsfeed, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                   ],
                 ),

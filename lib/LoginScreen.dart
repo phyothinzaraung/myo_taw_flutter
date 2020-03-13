@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:libphonenumber/libphonenumber.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/ButtonLoadingIndicatorWidget.dart';
 import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
@@ -40,7 +41,8 @@ class _LoginScreenState extends State<LoginScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _cityList = [_dropDownCity,MyString.TGY_CITY,MyString.MLM_CITY, MyString.LKW_CITY];
+    _cityList = [_dropDownCity];
+    _cityList.addAll(MyoTawCitySetUpHelper.getCityList());
     _sharePrefHelper.initSharePref();
     PackageInfo.fromPlatform().then((info){
       setState(() {
@@ -193,18 +195,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                     if(_dropDownCity != 'နေရပ်ရွေးပါ' && _phoneNoController.text.isNotEmpty){
                                       await _checkCon();
                                       if(_isCon){
-                                        switch(_dropDownCity){
-                                          case MyString.TGY_CITY:
-                                            _regionCode = MyString.TGY_REGIONCODE;
-                                            break;
-                                          case MyString.MLM_CITY:
-                                            _regionCode = MyString.MLM_REGIONCODE;
-                                            break;
-                                          case MyString.LKW_CITY:
-                                            _regionCode = MyString.LKW_REGIONCODE;
-                                            break;
-                                          default:
-                                        }
+                                        _regionCode = MyoTawCitySetUpHelper.getRegionCode(_dropDownCity);
                                         bool _isValid = await _checkPhNoValid();
                                         if(_isValid){
                                           FocusScope.of(context).requestFocus(FocusNode());

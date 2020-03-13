@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/database/NotificationDb.dart';
+import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/ShowDateTimeHelper.dart';
@@ -40,11 +41,9 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
   bool _isLoading = false;
   var response;
   List<NotificationModel> _notificationList = new List<NotificationModel>();
-  List _notificationModelList = new List();
   GlobalKey<SliverAnimatedListState> _globalKey = GlobalKey();
   NotificationDb _notificationDb = NotificationDb();
   Notifier _notifier;
-  bool _isClear = false, _isCheck = false;
   List<NotificationModel> _deleteList = List();
 
 
@@ -67,23 +66,10 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
     setState(() {
       _userModel = model;
     });
-    _initHeaderTitle();
+    _city = MyoTawCitySetUpHelper.getCity(_sharepreferenceshelper.getRegionCode());
     await _getNotifications();
   }
 
-  _initHeaderTitle(){
-    switch(_userModel.currentRegionCode){
-      case MyString.TGY_REGIONCODE:
-        _city = MyString.TGY_CITY;
-        break;
-      case MyString.MLM_REGIONCODE:
-        _city = MyString.MLM_CITY;
-        break;
-      case MyString.LKW_REGIONCODE:
-        _city = MyString.LKW_CITY;
-        break;
-    }
-  }
 
   _getNotifications() async{
     await _sharepreferenceshelper.initSharePref();
@@ -91,23 +77,17 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
     try{
       response = await ServiceHelper().getNotification(_regionCode);
       if(response.data != null) {
-        _notificationModelList = response.data;
+        var result  = response.data;
         await _notificationDb.openNotificationDb();
-        //_notificationDb.deleteNotification();
         var l = await _notificationDb.getNotification();
         if(l.length == 0){
-          for(var i in _notificationModelList){
-            //_notificationList.add(NotificationModel.fromJson(i));
-            bool isSave = await _notificationDb.isNotificationSaved(NotificationModel.fromJson(i).iD);
+          for(var i in result){
             NotificationModel model = NotificationModel.fromJson(i);
             model.isSeen = true;
-            if(!isSave){
-              _notificationDb.insert(model);
-            }
+            _notificationDb.insert(model);
           }
         }else{
-          for(var i in _notificationModelList){
-            //_notificationList.add(NotificationModel.fromJson(i));
+          for(var i in result){
             bool isSave = await _notificationDb.isNotificationSaved(NotificationModel.fromJson(i).iD);
             if(!isSave){
               _notificationDb.insert(NotificationModel.fromJson(i));
@@ -138,34 +118,11 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                  Text(_city??'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
                   Text(MyString.txt_title_notification, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                 ],
               ),
             ),
-            _isClear?IconButton(icon: Icon(Icons.clear), onPressed: (){
-              setState(() {
-                _isClear = false;
-                _isCheck = false;
-              });
-            }) : Container(),
-            _isClear?_deleteList.isNotEmpty?IconButton(icon: Icon(Icons.delete), onPressed: ()async{
-              setState(() {
-                _isLoading = true;
-              });
-              for(var i in _deleteList){
-                await _notificationDb.openNotificationDb();
-                await _notificationDb.insert(i);
-                _notificationDb.closeSaveNotificationDb();
-                setState(() {
-                  _isClear = false;
-                  _isCheck = false;
-                });
-              }
-              setState(() {
-                _isLoading = false;
-              });
-            }) : Container() : Container(),
 
           ],
         )
@@ -189,7 +146,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
           child: ListTile(
             contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
             leading: Image.asset(model.isSeen?"images/noti_open.png" : 'images/noti_close.png', width: 30.0, height: 30.0,),
-            trailing: !_isCheck?IconButton(
+            trailing: IconButton(
                 icon: Icon(PlatformHelper.isAndroid()?Icons.delete :CupertinoIcons.delete_solid, color: Colors.red,),
                 onPressed: (){
                   CustomDialogWidget().customConfirmDialog(
@@ -218,41 +175,13 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
                       }
                   );
                 }
-            ) : IconButton(icon: Icon(Icons.check_box, color: model.isCheck? MyColor.colorPrimary : MyColor.colorGreyDark,), onPressed: (){
-              setState(() {
-                model.isCheck = !model.isCheck;
-                if(model.isCheck){
-                  NotificationModel deleteModel = model;
-                  deleteModel.isDeleted = true;
-                  setState(() {
-                    _deleteList.add(deleteModel);
-                  });
-                }else{
-                  setState(() {
-                    _deleteList.remove(model);
-                  });
-                }
-              });
-            }),
+            ),
             title: Container(
                 margin: EdgeInsets.only(bottom: 10),
-                child: Text(model.message, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorBlackSemiTransparent), maxLines: 2,overflow: TextOverflow.ellipsis,)),
+                child: Text(model.message, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorBlackSemiTransparent), maxLines: 1,overflow: TextOverflow.ellipsis,)),
             subtitle: Text(date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),),
-            onLongPress: (){
-              print('longepress');
-              setState(() {
-                _isClear = true;
-                _isCheck = true;
-              });
-            },
             onTap: ()async{
-              await _notificationDb.openNotificationDb();
-              NotificationModel notificationModel = model;
-              notificationModel.isSeen = true;
-              await _notificationDb.updateNotification(notificationModel);
-              var count = await _notificationDb.getUnReadNotificationCount();
-              _notifier.notify('noti_count', count);
-              _notificationDb.closeSaveNotificationDb();
+              await _readNotification(model);
               setState(() {
                 model.isSeen = true;
               });
@@ -262,6 +191,18 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
         ),
       ),
     );
+  }
+
+  _readNotification(NotificationModel model)async{
+    await _notificationDb.openNotificationDb();
+    var isSeen = await _notificationDb.isSeenById(model);
+    if(!isSeen){
+      model.isSeen = true;
+      await _notificationDb.updateNotification(model);
+      var count = await _notificationDb.getUnReadNotificationCount();
+      _notifier.notify('noti_count', count);
+    }
+    _notificationDb.closeSaveNotificationDb();
   }
 
   /*_listView(){
@@ -306,7 +247,12 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
         key: asyncLoaderState,
         initState: () async => _getUser(),
         renderLoad: () => _renderLoad(),
-        renderError: ([error]) => noConnectionWidget(asyncLoaderState),
+        renderError: ([error]) => Column(
+          children: <Widget>[
+            _headerNotification(),
+            Expanded(child: noConnectionWidget(asyncLoaderState))
+          ],
+        ),
         renderSuccess: ({data}) => NativePullRefresh(
             child: _notificationList.isNotEmpty?CustomScrollView(
               slivers: <Widget>[
@@ -315,10 +261,11 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
                 }, childCount: 1)),
                 Notifier.of(context).register<Map<String, dynamic>>('noti_add', (value){
                   var data = value.data;
-                  if(data != null){
+                  if(data != null && _sharepreferenceshelper.isNotificationAdd()){
                     _notificationList.insert(0, NotificationModel.fromJson(value.data));
                     //_globalKey.currentState.insertItem(0,duration: Duration(milliseconds: 500));
                   }
+                  _sharepreferenceshelper.setNotificationAdd(false);
                   return SliverAnimatedList(itemBuilder: (context, i, animation){
                     return _notificationListWidget(_notificationList[i], animation, i);
                   }, initialItemCount: _notificationList.length,key: _globalKey,);

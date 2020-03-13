@@ -1,9 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_linkify/flutter_linkify.dart';
+import 'package:myotaw/database/NotificationDb.dart';
+import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ShowDateTimeHelper.dart';
+import 'package:myotaw/model/ApplyBizLicenseModel.dart';
 import 'package:myotaw/model/NotificationModel.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:notifier/main_notifier.dart';
+import 'package:notifier/notifier.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'ApplyBizLicensePhotoListScreen.dart';
+import 'myWidget/CustomButtonWidget.dart';
 
 class NotificationDetailScreen extends StatefulWidget{
   NotificationModel notificationModel;
@@ -16,8 +25,10 @@ class NotificationDetailScreen extends StatefulWidget{
 class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
 
   NotificationModel _notificationModel;
-
+  NotificationDb _notificationDb = NotificationDb();
   String _message, _date;
+  var _list;
+  Notifier _notifier;
 
   _NotificationDetailScreenState(this._notificationModel);
 
@@ -31,8 +42,8 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
   initNotificationData(){
     setState(() {
       _message = _notificationModel.message;
+      _list = _message.split('-');
       _date = ShowDateTimeHelper.showDateTimeDifference(_notificationModel.postedDate);
-
     });
   }
 
@@ -54,7 +65,30 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
               ],
             ),
           ),
-          Text(_message, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorBlackSemiTransparent)),
+          Expanded(
+            //child: Text(_message, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorBlackSemiTransparent))
+            child: Linkify(text: _message,onOpen: (link)async{
+              if(await canLaunch(link.url)){
+                await launch(link.url);
+              }
+            },linkStyle: TextStyle(color: Colors.red),),
+          ),
+          _list.length == 2?Container(
+            width: double.maxFinite,
+            margin: EdgeInsets.only(bottom: 10.0),
+            child: CustomButtonWidget(
+              onPress: ()async{
+                ApplyBizLicenseModel model = ApplyBizLicenseModel();
+                model.id = _notificationModel.bizId;
+                model.isValid = false;
+                NavigatorHelper.MyNavigatorPush(context, ApplyBizLicensePhotoListScreen(model), ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN);
+
+              }, child: Text(MyString.txt_upload_need_apply_biz_file, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+              color: MyColor.colorPrimary,
+              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ) : Container()
         ],
       ),
     );
@@ -63,6 +97,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
+    _notifier = NotifierProvider.of(context);
     return CustomScaffoldWidget(
       title: Text(MyString.txt_title_notification,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),

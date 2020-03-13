@@ -122,13 +122,9 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
 
         if(l.length == 0){
           for(var i in result){
-            //_notificationList.add(NotificationModel.fromJson(i));
-            bool isSave = await _notificationDb.isNotificationSaved(NotificationModel.fromJson(i).iD);
             NotificationModel model = NotificationModel.fromJson(i);
             model.isSeen = true;
-            if(!isSave){
-              _notificationDb.insert(model);
-            }
+            _notificationDb.insert(model);
           }
         }else{
           for(var i in result){
@@ -179,7 +175,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
        }
      });
 
-     if(_userModel.isWardAdmin == 0){
+     if(!_userModel.isWardAdmin){
        _firebaseMesssaging.subscribeToTopic('all');
        _firebaseMesssaging.configure(
            onMessage: (Map<String, dynamic> message) async {
@@ -194,10 +190,11 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
                _notificationDb.closeSaveNotificationDb();
                _notifier.notify('noti_count', count);
                _notifier.notify('noti_add', temp);
+               _sharepreferenceshelper.setNotificationAdd(true);
              }
            },
            onResume: (Map<String, dynamic> message) async {
-             print('on resume ${message['data']['screen']}');
+             print('on resume ${message['data']['notification']}');
 
              if(message != null){
                String json = message['data']['notification'];
@@ -213,7 +210,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
              }
            },
            onLaunch: (Map<String, dynamic> message) async {
-             print('on launch ${message['data']['screen']}');
+             print('on launch ${message['data']['notification']}');
 
              if (message != null) {
                String json = message['data']['notification'];
@@ -250,7 +247,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   }
 
   _navigateToProfileFormScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_userModel.isWardAdmin==1?true:false)));
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_userModel.isWardAdmin)));
     if(result != null && result.containsKey('isNeedRefresh') == true){
       Navigator.of(context).pop();
     }

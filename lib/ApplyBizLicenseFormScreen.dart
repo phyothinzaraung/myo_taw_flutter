@@ -954,8 +954,9 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
             child: CustomButtonWidget(onPress: ()async{
               await _checkCon();
               if(_isCon){
-                if(_bizTypeController.text!=null && _bizLengthController.text!=null && _bizWidthController.text != null && _dropDownBizState != MyString.txt_choose_state_township
-                    && _dropDownBizTownship != MyString.txt_choose_state_township &&_ownerNameController.text !=null && _ownerNrcController.text != null && _ownerPhoneController.text !=null
+                if(_bizTypeController.text.isNotEmpty && _bizLengthController.text.isNotEmpty && _bizWidthController.text.isNotEmpty &&
+                    _dropDownBizState != MyString.txt_choose_state_township && _dropDownBizTownship != MyString.txt_choose_state_township &&
+                    _ownerNameController.text.isNotEmpty && _ownerNrcController.text.isNotEmpty && _ownerPhoneController.text.isNotEmpty
                     && _dropDownOwnerState != MyString.txt_choose_state_township && _dropDownOwnerTownship != MyString.txt_choose_state_township){
                   setState(() {
                     _isLoading = true;

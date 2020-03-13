@@ -9,9 +9,10 @@ class NotificationModel {
     String _postedDate;
     int _iD;
     String _accesstime;
-    bool _isSeen = false;
+    int _bizId;
 
-    bool _isCheck = false;
+    //local field
+    bool _isSeen = false;
 
     NotificationModel(
         {int adminID,
@@ -21,7 +22,9 @@ class NotificationModel {
             String adminName,
             String postedDate,
             int iD,
-            String accesstime}) {
+            String accesstime,
+            int bizId,
+        }) {
         this._adminID = adminID;
         this._isDeleted = isDeleted;
         this._message = message;
@@ -30,6 +33,14 @@ class NotificationModel {
         this._postedDate = postedDate;
         this._iD = iD;
         this._accesstime = accesstime;
+        this._bizId = bizId;
+    }
+
+
+    int get bizId => _bizId;
+
+    set bizId(int value) {
+        _bizId = value;
     }
 
     int get adminID => _adminID;
@@ -56,13 +67,6 @@ class NotificationModel {
         _isSeen = value;
     }
 
-
-    bool get isCheck => _isCheck;
-
-    set isCheck(bool value) {
-        _isCheck = value;
-    }
-
     NotificationModel.fromJson(Map<String, dynamic> json) {
         _adminID = json['AdminID'];
         _message = json['Message'];
@@ -71,6 +75,7 @@ class NotificationModel {
         _postedDate = json['PostedDate'];
         _iD = json['ID'];
         _accesstime = json['Accesstime'];
+        _bizId = json['BizID'];
     }
 
     Map<String, dynamic> toJson() {
@@ -82,6 +87,7 @@ class NotificationModel {
         data['PostedDate'] = this._postedDate;
         data['ID'] = this._iD;
         data['Accesstime'] = this._accesstime;
+        data['BizID'] = this._bizId;
         return data;
     }
 
@@ -90,7 +96,8 @@ class NotificationModel {
             _message = map[DbHelper.COLUMN_NOTIFICATION_MESSAGE],
             _postedDate = map[DbHelper.COLUMN_NOTIFICATION_DATE],
             _isDeleted = map[DbHelper.COLUMN_NOTIFICATION_IS_DELETED]==1?true:false,
-            _isSeen = map[DbHelper.COLUMN_NOTIFICATION_IS_SEEN]==1?true:false;
+            _isSeen = map[DbHelper.COLUMN_NOTIFICATION_IS_SEEN]==1?true:false,
+            _bizId = map[DbHelper.COLUMN_NOTIFICATION_BIZ_ID];
 
     Map<String, dynamic> toDb(){
         final Map<String, dynamic> data = new Map<String, dynamic>();
@@ -99,6 +106,7 @@ class NotificationModel {
         data[DbHelper.COLUMN_NOTIFICATION_DATE] = this._postedDate;
         data[DbHelper.COLUMN_NOTIFICATION_IS_DELETED] = this._isDeleted?1:0;
         data[DbHelper.COLUMN_NOTIFICATION_IS_SEEN] = this._isSeen?1:0;
+        data[DbHelper.COLUMN_NOTIFICATION_BIZ_ID] = this._bizId;
         return data;
     }
 

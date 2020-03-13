@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:myotaw/FloodReportListScreen.dart';
 import 'package:myotaw/WardAdminContributionScreen.dart';
+import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
 import 'helper/FireBaseAnalyticsHelper.dart';
@@ -25,7 +26,7 @@ class DashBoardScreen extends StatefulWidget {
   _DashBoardScreenState createState() => _DashBoardScreenState();
 }
 
-class _DashBoardScreenState extends State<DashBoardScreen> {
+class _DashBoardScreenState extends State<DashBoardScreen> with AutomaticKeepAliveClientMixin {
   UserModel _userModel;
   String _city, _regionCode;
   List _widget = new List();
@@ -44,39 +45,23 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   _getUser()async{
     await _sharepreferenceshelper.initSharePref();
-    await _userDb.openUserDb();
     if(mounted){
+      await _userDb.openUserDb();
       setState(() {
         _regionCode = _sharepreferenceshelper.getRegionCode();
       });
       var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
       _userDb.closeUserDb();
-      if(mounted){
-        setState(() {
-          _userModel = model;
-        });
-        _initHeaderTitle();
-        _initDashBoardWidget();
-      }
+      setState(() {
+        _userModel = model;
+      });
     }
+    _city = MyoTawCitySetUpHelper.getCity(_regionCode);
+    _initDashBoardWidget();
 
     /*if(Platform.isIOS){
       _widget.removeLast();
     }*/
-  }
-
-  _initHeaderTitle(){
-    switch(_userModel.currentRegionCode){
-      case MyString.TGY_REGIONCODE:
-        _city = MyString.TGY_CITY;
-        break;
-      case MyString.MLM_REGIONCODE:
-        _city = MyString.MLM_CITY;
-        break;
-      case MyString.LKW_REGIONCODE:
-        _city = MyString.LKW_CITY;
-        break;
-    }
   }
 
   _initDashBoardWidget(){
@@ -197,6 +182,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
       key: _globalKey,
       body: SafeArea(
@@ -215,7 +201,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: <Widget>[
-                                Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                                Text(_city??'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
                                 Text(MyString.txt_title_dashboard, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                               ],
                             ),
@@ -249,4 +235,8 @@ class _DashBoardScreenState extends State<DashBoardScreen> {
       _userDb.closeUserDb();
     }
   }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
 }

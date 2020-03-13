@@ -67,7 +67,7 @@ class UserDb {
       DbHelper.COLUMN_USER_CURRENT_REGION_CODE : model.currentRegionCode,
       DbHelper.COLUMN_USER_PIN_CODE : model.pinCode,
       DbHelper.COLUMN_USER_AMOUNT : model.amount,
-      DbHelper.COLUMN_USER_IS_WARD_ADMIN : model.isWardAdmin,
+      DbHelper.COLUMN_USER_IS_WARD_ADMIN : model.isWardAdmin?1:0,
       DbHelper.COLUMN_USER_WARD_NAME : model.wardName,
       DbHelper.COLUMN_USER_METER_NO : model.meterNo
     };

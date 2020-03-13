@@ -73,6 +73,7 @@ class DbHelper{
   static final COLUMN_NOTIFICATION_DATE = 'date';
   static final COLUMN_NOTIFICATION_IS_DELETED = 'is_deleted';
   static final COLUMN_NOTIFICATION_IS_SEEN = 'is_seen';
+  static final COLUMN_NOTIFICATION_BIZ_ID = 'biz_id';
 
 }
 

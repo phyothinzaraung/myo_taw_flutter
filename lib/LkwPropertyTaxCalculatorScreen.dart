@@ -142,6 +142,8 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
 
       _lengthContorller.text = '';
       _widthContorller.text = '';
+
+      LkwPropertyTax.clearValue();
     });
   }
 
@@ -182,17 +184,17 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
     if(_lengthContorller.text.isNotEmpty && _widthContorller.text.isNotEmpty){
       int _area = int.parse(_lengthContorller.text) * int.parse(_widthContorller.text);
       print(_area);
-      if( 400 <= _area || _area >= 600){
+      if( 400 >= _area || _area <= 600){
         _grade = MyString.txt_third_grade;
-      }else if(600 <= _area || _area >= 800){
+      }else if(600 >= _area || _area <= 800){
         _grade = MyString.txt_second_grade;
-      }else if(800 <= _area || _area >= 1000){
+      }else if(800 >= _area || _area <= 1000){
         _grade = MyString.txt_first_grade;
       }else if(_area > 1000){
         _grade = MyString.txt_special_grade;
       }
     }
-
+    print(_grade);
     return _grade;
 
   }
@@ -440,6 +442,7 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
                         onPress: ()async{
                           if(_isValid()){
                             FocusScope.of(context).requestFocus(FocusNode());
+                            _getGrade() != MyString.txt_special_grade?
                             CustomDialogWidget().customCalculateTaxDialog(
                               context: context,
                               titleTax: MyString.txt_biz_tax_range,
@@ -448,6 +451,14 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
                                 story: _dropDownStory,
                                 grade: _getGrade(),
                               ),
+                              onPress: (){
+                                Navigator.of(context).pop();
+                                clear();
+                              }
+                            ) : CustomDialogWidget().customSpecialGradeCalculateTaxDialog(
+                              context: context,
+                              taxValue: MyString.txt_special_grade,
+                              titleTax: MyString.txt_biz_tax_range,
                               onPress: (){
                                 Navigator.of(context).pop();
                                 clear();

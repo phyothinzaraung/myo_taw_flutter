@@ -5,6 +5,10 @@ import 'package:myotaw/helper/NumConvertHelper.dart';
 class LkwPropertyTax{
 
   static String _taxRange = '';
+
+  static void clearValue(){
+    _taxRange = '';
+  }
   
   static String getTax({buildingType, story, grade}){
     switch(buildingType){

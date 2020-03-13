@@ -114,6 +114,39 @@ class CustomDialogWidget {
 
 
 
+  Future customSpecialGradeCalculateTaxDialog({
+    BuildContext context,
+    String taxValue,
+    VoidCallback onPress,
+    String titleTax
+  }){
+    return PlatformHelper.isAndroid()?
+    showDialog(
+        context: context,
+        builder: (context){
+          return _androidSpecialGradeCalculateTaxDialog(
+              context: context,
+              onPress: onPress,
+              taxValue: taxValue,
+              titleTax: titleTax
+          );
+        }
+    ) :
+    showCupertinoDialog(
+        context: context,
+        builder: (context){
+          return _iosSpecialGradeCalculateTaxDialog(
+              context: context,
+              onPress: onPress,
+              taxValue: taxValue,
+              titleTax: titleTax
+          );
+        }
+    );
+  }
+
+
+
 
   Widget _androidSuccessDialog(
       {BuildContext context,
@@ -351,6 +384,91 @@ class CustomDialogWidget {
                 margin: EdgeInsets.only(bottom: 10.0),
                 child: Text(MyString.txt_thanks,
                   style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorPrimary, height: 1.5),textAlign: TextAlign.center,),
+              ),
+            ],
+          ),
+        ), onWillPop: (){});
+  }
+
+
+
+
+
+
+
+  Widget _androidSpecialGradeCalculateTaxDialog({
+    BuildContext context,
+    String taxValue,
+    VoidCallback onPress,
+    String titleTax
+  }){
+    return WillPopScope(
+        child: SimpleDialog(
+          contentPadding: EdgeInsets.all(20.0),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+          children: <Widget>[
+            Column(
+              children: <Widget>[
+                Container(
+                    margin: EdgeInsets.only(bottom: 20.0),
+                    child: Image.asset('images/calculate_tax_no_circle.png', width: 60.0, height: 60.0,)),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Text(titleTax,
+                    style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Text(taxValue,
+                    style: TextStyle(fontSize: FontSize.textSizeLarge, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
+                ),
+                Container(
+                  margin: EdgeInsets.only(bottom: 10.0),
+                  child: Text('ဖြစ်ပါသည်။',
+                    style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
+                ),
+                CustomButtonWidget(onPress: onPress,
+                  child: Text(MyString.txt_close,
+                    style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,
+                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7.0)),
+                  borderRadius: BorderRadius.circular(10),
+                )
+              ],
+            )
+          ],), onWillPop: (){});
+  }
+
+  Widget _iosSpecialGradeCalculateTaxDialog({
+    BuildContext context,
+    String taxValue,
+    VoidCallback onPress,
+    String titleTax
+  }){
+    return WillPopScope(
+        child: CupertinoAlertDialog(
+          actions: <Widget>[
+            CupertinoDialogAction(child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.blue),),
+                onPressed: onPress),
+          ],
+          content: Column(
+            children: <Widget>[
+              Container(
+                  margin: EdgeInsets.only(bottom: 20.0),
+                  child: Image.asset('images/calculate_tax_no_circle.png', width: 60.0, height: 60.0,)),
+              Container(
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: Text(titleTax,
+                  style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: 20.0),
+                child: Text(taxValue,
+                  style: TextStyle(fontSize: FontSize.textSizeLarge, color: MyColor.colorPrimary,),textAlign: TextAlign.center,),
+              ),
+              Container(
+                margin: EdgeInsets.only(bottom: 10.0),
+                child: Text('ဖြစ်ပါသည်။',
+                  style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),textAlign: TextAlign.center,),
               ),
             ],
           ),

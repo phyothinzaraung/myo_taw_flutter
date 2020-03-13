@@ -37,20 +37,34 @@ class BaseUrl{
   static const String TAX_RECORD_PHOTO_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/TaxRecord/";
 }
 
+class OrganizationId{
+  static const int TGY_ORGANIZATION_ID = 8;
+  static const int MLM_ORGANIZATION_ID = 9;
+  static const int LKW_ORGANIZATION_ID = 13;
+  static const int MGY_ORGANIZATION_ID = 14;
+}
+
 class MyString{
   static const String API_KEY = "B93979A51C8C46712DD2C8271587B262";
 
   static const String txt_like = "နှစ်သက်";
   static const String txt_save = "သိမ်းမည်";
+
   static const String txt_welcome_tgy ='တောင်ကြီးမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String txt_welcome_mlm ='မော်လမြိုင်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String txt_welcome_lkw ='လွိုင်ကော်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
+  static const String txt_welcome_mgy ='မကွေးမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
+
   static const String TGY_CITY = 'တောင်ကြီးမြို့';
   static const String MLM_CITY = 'မော်လမြိုင်မြို့';
   static const String LKW_CITY = 'လွိုင်ကော်မြို့';
+  static const String MGY_CITY = 'မကွေးမြို့';
+
   static const String TGY_REGIONCODE = "TGY";
   static const String MLM_REGIONCODE = "MLM";
   static const String LKW_REGIONCODE = "LKW";
+  static const String MGY_REGIONCODE = "MGY";
+
   static const String txt_welcome = "မြို့တော်မှ ကြိုဆိုပါ၏။";
 
 
@@ -281,6 +295,7 @@ class MyString{
   static const String txt_upload_file_name = 'ဖိုင်အမည်';
   static const String txt_no_apply_biz_form_warning = 'အချက်အလက်များဖြည့်စွက်ရန်ကျန်ရှိသည်။';
   static const String txt_special_grade = 'အထူးနှုန်း';
+  static const String txt_upload_need_apply_biz_file = 'လိုအပ်သောစာရွက်စာတမ်းတင်မည်';
 
   static const String txt_first_grade = 'ပထမတန်းစား';
   static const String txt_second_grade = 'ဒုတိယတန်းစား';
@@ -657,12 +672,6 @@ class MyStringList{
     'ထီအရောင်းဆိုင်',
     'ရေခဲသေတ္တာပြင်'
   ];
-}
-
-class OrganizationId{
-  static const int LKW_ORGANIZATION_ID = 13;
-  static const int TGY_ORGANIZATION_ID = 8;
-  static const int MLM_ORGANIZATION_ID = 9;
 }
 
 class ScreenName{
