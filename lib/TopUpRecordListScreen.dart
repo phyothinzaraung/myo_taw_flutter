@@ -68,7 +68,7 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
                           children: <Widget>[
                             Expanded(
                                 child: Text(MyString.txt_top_up_amount, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),)),
-                            Text('${NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_topUpLogModelList[index].amount.toString()))} ${MyString.txt_kyat}',
+                            Text('${NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat(_topUpLogModelList[index].amount.toString()))} ${MyString.txt_kyat}',
                                 style: TextStyle(fontSize: FontSize.textSizeNormal))
                           ],
                         ),
@@ -76,7 +76,7 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
                           children: <Widget>[
                             Expanded(
                                 child: Text(MyString.txt_top_up_amount_before, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),)),
-                            Text('${NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_topUpLogModelList[index].leftAmount.toString()))} ${MyString.txt_kyat}',
+                            Text('${NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat(_topUpLogModelList[index].leftAmount.toString()))} ${MyString.txt_kyat}',
                                 style: TextStyle(fontSize: FontSize.textSizeNormal))
                           ],
                         ),
@@ -84,7 +84,7 @@ class _TopUpRecordListScreenState extends State<TopUpRecordListScreen> {
                           children: <Widget>[
                             Expanded(
                                 child: Text(MyString.txt_top_up_amount_after, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),)),
-                            Text('${NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_topUpLogModelList[index].totalAmount.toString()))} ${MyString.txt_kyat}',
+                            Text('${NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat(_topUpLogModelList[index].totalAmount.toString()))} ${MyString.txt_kyat}',
                                 style: TextStyle(fontSize: FontSize.textSizeNormal))
                           ],
                         ),

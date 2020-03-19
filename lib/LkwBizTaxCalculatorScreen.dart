@@ -325,7 +325,7 @@ class _LkwBizTaxCalculatorScreenState extends State<LkwBizTaxCalculatorScreen> {
                                 }
                               );
                               await _sharepreferenceshelper.initSharePref();
-                              FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.LKW_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
+                              FireBaseAnalyticsHelper.trackClickEvent(ScreenName.LKW_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
                                   _sharepreferenceshelper.getUserUniqueKey());
                             }else if(_dropDownBizLicenseType == MyString.txt_no_selected){
                               WarningSnackBar(_globalKey, MyString.txt_choose_license_type);

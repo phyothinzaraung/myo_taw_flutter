@@ -72,7 +72,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
             onTap: (){
               if(_daoViewModel.photo.isNotEmpty){
 
-                NavigatorHelper.MyNavigatorPush(context, DaoPhotoDetailScreen(_daoViewModel.photo, _currentPhoto), ScreenName.PHOTO_DETAIL_SCREEN);
+                NavigatorHelper.myNavigatorPush(context, DaoPhotoDetailScreen(_daoViewModel.photo, _currentPhoto), ScreenName.PHOTO_DETAIL_SCREEN);
               }
             },
             child: Stack(
@@ -144,7 +144,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
             _getDaoByDeptType(page);
           });
           await _sharepreferenceshelper.initSharePref();
-          FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.DEPARTMENT_LIST_SCREEN, ClickEvent.MANAGEMENT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+          FireBaseAnalyticsHelper.trackClickEvent(ScreenName.DEPARTMENT_LIST_SCREEN, ClickEvent.MANAGEMENT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
         },
         groupValue: _currentSegment,
       ),
@@ -174,7 +174,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                       _getDaoByDeptType(page);
                     });
                     await _sharepreferenceshelper.initSharePref();
-                    FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.DEPARTMENT_LIST_SCREEN, ClickEvent.MANAGEMENT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                    FireBaseAnalyticsHelper.trackClickEvent(ScreenName.DEPARTMENT_LIST_SCREEN, ClickEvent.MANAGEMENT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
 
                   },child: Text(MyString.txt_dept_manager, style: TextStyle(color: _isManager?Colors.white:MyColor.colorPrimary),),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),
@@ -194,7 +194,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
                     _getDaoByDeptType(page);
                   });
                   await _sharepreferenceshelper.initSharePref();
-                  FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.DEPARTMENT_LIST_SCREEN, ClickEvent.ENGINEER_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                  FireBaseAnalyticsHelper.trackClickEvent(ScreenName.DEPARTMENT_LIST_SCREEN, ClickEvent.ENGINEER_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
 
                 },child: Text(MyString.txt_dept_engineer, style: TextStyle(color: _isEngineer?Colors.white:MyColor.colorPrimary),),
                 shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(5.0)),

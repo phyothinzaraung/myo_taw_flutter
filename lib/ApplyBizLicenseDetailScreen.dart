@@ -24,7 +24,7 @@ class ApplyBizLicenseDetailScreen extends StatelessWidget {
         ),
         child: CustomButtonWidget(
           onPress: ()async{
-            NavigatorHelper.MyNavigatorPush(context, ApplyBizLicensePhotoListScreen(_applyBizLicenseModel), ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN);
+            NavigatorHelper.myNavigatorPush(context, ApplyBizLicensePhotoListScreen(_applyBizLicenseModel), ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN);
           },
           color: Colors.white,
           shape: RoundedRectangleBorder(side: BorderSide(color: MyColor.colorPrimary,), borderRadius: BorderRadius.circular(5.0)),

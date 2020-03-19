@@ -268,7 +268,7 @@ class _MlmPropertyTaxCalculatorScreenState extends State<MlmPropertyTaxCalculato
                               }
                             );
                             await _sharepreferenceshelper.initSharePref();
-                            FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_PROPERTY_TAX_CLICK_EVENT,
+                            FireBaseAnalyticsHelper.trackClickEvent(ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_PROPERTY_TAX_CLICK_EVENT,
                                 _sharepreferenceshelper.getUserUniqueKey());
 
                           }else if(_dropDownBuildingType == MyString.txt_no_selected){

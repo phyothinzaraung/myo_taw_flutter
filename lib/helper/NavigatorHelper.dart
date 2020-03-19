@@ -8,7 +8,7 @@ import 'PlatformHelper.dart';
 class NavigatorHelper{
   static var _navigator;
 
-  static Future<dynamic> MyNavigatorPush(BuildContext context, Widget screen, String screenName){
+  static Future<dynamic> myNavigatorPush(BuildContext context, Widget screen, String screenName){
     _navigator = Navigator.push(context, PlatformHelper.isAndroid()? MaterialPageRoute(builder: (context) => screen,
         settings: RouteSettings(name: screenName)) :
 
@@ -19,7 +19,7 @@ class NavigatorHelper{
 
   }
 
-  static Future<dynamic> MyNavigatorPushAndRemoveUntil(BuildContext context, Widget screen, String screenName){
+  static Future<dynamic> myNavigatorPushAndRemoveUntil(BuildContext context, Widget screen, String screenName){
 
     _navigator = Navigator.of(context).pushAndRemoveUntil( PlatformHelper.isAndroid()? MaterialPageRoute(builder: (context) => screen,
         settings: RouteSettings(name: screenName)
@@ -33,7 +33,7 @@ class NavigatorHelper{
 
   }
 
-  static Future<dynamic> MyNavigatorPushReplacement(BuildContext context, Widget screen, String screenName){
+  static Future<dynamic> myNavigatorPushReplacement(BuildContext context, Widget screen, String screenName){
 
 
     _navigator = Navigator.pushReplacement(context, PlatformHelper.isAndroid()? MaterialPageRoute(builder: (context) => screen,

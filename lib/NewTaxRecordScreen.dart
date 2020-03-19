@@ -79,7 +79,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
             onPress: ()async{
               FocusScope.of(context).requestFocus(FocusNode());
               await _sharepreferenceshelper.initSharePref();
-              FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.NEW_TAX_RECORD_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+              FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.NEW_TAX_RECORD_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
               Navigator.of(context).pop();
               Navigator.of(context).pop({'isNeedRefresh' : true});
             }
@@ -139,7 +139,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                     child: CustomButtonWidget(onPress: ()async{
                       camera();
                       await _sharepreferenceshelper.initSharePref();
-                      FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                      FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                     },child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
@@ -166,7 +166,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                     child: CustomButtonWidget(onPress: ()async{
                       gallery();
                       await _sharepreferenceshelper.initSharePref();
-                      FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                      FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                     },child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[

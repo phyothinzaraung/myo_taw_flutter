@@ -17,6 +17,7 @@ class FontSize{
   static const double textSizeNormal = 15;
   static const double textSizeExtraSmall = 13;
   static const double textSizeSmall = 12;
+  static const double textSizeLessSmall = 10;
 }
 
 class BaseUrl{
@@ -296,6 +297,7 @@ class MyString{
   static const String txt_no_apply_biz_form_warning = 'အချက်အလက်များဖြည့်စွက်ရန်ကျန်ရှိသည်။';
   static const String txt_special_grade = 'အထူးနှုန်း';
   static const String txt_upload_need_apply_biz_file = 'လိုအပ်သောစာရွက်စာတမ်းတင်မည်';
+  static const String txt_select_all = 'အားလုံး';
 
   static const String txt_first_grade = 'ပထမတန်းစား';
   static const String txt_second_grade = 'ဒုတိယတန်းစား';

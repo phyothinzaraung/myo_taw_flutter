@@ -256,7 +256,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                               _getTaxType();
                               _getAmount();
                               await _sharepreferenceshelper.initSharePref();
-                              FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.ONLINE_TAX_PAYMENT_SCREEN, ClickEvent.GET_TAX_AMOUNT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                              FireBaseAnalyticsHelper.trackClickEvent(ScreenName.ONLINE_TAX_PAYMENT_SCREEN, ClickEvent.GET_TAX_AMOUNT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                             }else if (_invoiceNoController.text.isEmpty){
                               WarningSnackBar(_scaffoldState, MyString.txt_need_invoice_no);
 
@@ -266,7 +266,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
                             }
                           }else{
                             await _sharepreferenceshelper.initSharePref();
-                            FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.ONLINE_TAX_PAYMENT_SCREEN, ClickEvent.PAY_TAX_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                            FireBaseAnalyticsHelper.trackClickEvent(ScreenName.ONLINE_TAX_PAYMENT_SCREEN, ClickEvent.PAY_TAX_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                             CustomDialogWidget().customConfirmDialog(
                               context: context,
                               content: MyString.txt_are_u_sure,

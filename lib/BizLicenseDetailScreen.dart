@@ -58,7 +58,7 @@ class _BizLicenseDetailScreenState extends State<BizLicenseDetailScreen> {
                 margin: EdgeInsets.all(20.0),
                 child: CustomButtonWidget(onPress: ()async{
 
-                  NavigatorHelper.MyNavigatorPushReplacement(context, ApplyBizLicenseFormScreen(_bizLicenseModel), ScreenName.APPLY_BIZ_LICENSE_FORM_SCREEN);
+                  NavigatorHelper.myNavigatorPushReplacement(context, ApplyBizLicenseFormScreen(_bizLicenseModel), ScreenName.APPLY_BIZ_LICENSE_FORM_SCREEN);
                 }, child: Text(MyString.txt_apply_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
                   color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                   borderRadius: BorderRadius.circular(10),

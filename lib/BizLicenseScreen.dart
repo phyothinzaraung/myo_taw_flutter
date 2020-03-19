@@ -59,7 +59,7 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
               i==0? headerTitleWidget(MyString.title_biz_license, 'business_license_nocircle') : Container(),
               GestureDetector(
                 onTap: (){
-                  NavigatorHelper.MyNavigatorPush(context, BizLicenseDetailScreen(_bizLicenseModelList[i]), ScreenName.BIZ_LICENSE_DETAIL_SCREEN);
+                  NavigatorHelper.myNavigatorPush(context, BizLicenseDetailScreen(_bizLicenseModelList[i]), ScreenName.BIZ_LICENSE_DETAIL_SCREEN);
                 },
                 child: Card(
                   margin: EdgeInsets.only(left: 0.0, right: 0.0, top: 0.0, bottom: 0.5),
@@ -109,7 +109,7 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
   Widget _action(){
     return GestureDetector(
       onTap: (){
-        NavigatorHelper.MyNavigatorPush(context, ApplyBizLicenseListScreen(), ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN);
+        NavigatorHelper.myNavigatorPush(context, ApplyBizLicenseListScreen(), ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN);
       },
       child: Container(
           margin: EdgeInsets.only(right: 10.0),

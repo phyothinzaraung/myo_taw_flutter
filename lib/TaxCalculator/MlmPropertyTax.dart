@@ -80,7 +80,7 @@ class MlmPropertyTax{
         _taxRange1 = 10000;
         break;
     }
-    return '${NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_taxRange.toString()))} - '
-        '${NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_taxRange1.toString()))}';
+    return '${NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat(_taxRange.toString()))} - '
+        '${NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat(_taxRange1.toString()))}';
   }
 }

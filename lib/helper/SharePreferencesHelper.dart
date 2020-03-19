@@ -8,6 +8,9 @@ class Sharepreferenceshelper{
   static String USER_WARD_NAME = 'user_ward_name';
   static String USER_FCM_TOKEN = 'user_fcm_token';
   static String NOTIFICATION_ADD = 'notification_add';
+  static String IS_NEWS_FEED_DELETE = 'is_news_feed_delete';
+  static String IS_NOTIFICATION_UNCHECK = 'is_notification_uncheck';
+  static String IS_NEWS_FEED_SCROLL_TOP = 'is_news_feed_scroll_top';
   SharedPreferences _sharedPreferences;
 
   Future initSharePref() async{
@@ -80,5 +83,21 @@ class Sharepreferenceshelper{
 
   bool isNotificationAdd(){
     return _sharedPreferences.getBool(NOTIFICATION_ADD);
+  }
+
+  void setNotificationUnCheck(bool isAdd){
+    _sharedPreferences.setBool(IS_NOTIFICATION_UNCHECK, isAdd);
+  }
+
+  bool isNotificationUnCheck(){
+    return _sharedPreferences.getBool(IS_NOTIFICATION_UNCHECK);
+  }
+
+  void setNewsFeedScrollTop(bool isScroll){
+    _sharedPreferences.setBool(IS_NEWS_FEED_SCROLL_TOP, isScroll);
+  }
+
+  bool isNewsFeedScrollTop(){
+    return _sharedPreferences.getBool(IS_NEWS_FEED_SCROLL_TOP);
   }
 }

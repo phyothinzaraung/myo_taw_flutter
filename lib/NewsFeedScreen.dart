@@ -10,6 +10,7 @@ import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/model/NewsFeedViewModel.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/NativePullRefresh.dart';
+import 'package:notifier/main_notifier.dart';
 import 'helper/PlatformHelper.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -59,18 +60,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   void initState() {
     // TODO: implement initState
     super.initState();
-    _scrollController.addListener((){
-      if(_scrollController.offset > 500){
-        setState(() {
-          _isTop = false;
-        });
-      }else{
-        setState(() {
-          _isTop = true;
-        });
-      }
-    });
-    FireBaseAnalyticsHelper.TrackCurrentScreen(ScreenName.NEWS_FEED_SCREEN);
+    FireBaseAnalyticsHelper.trackCurrentScreen(ScreenName.NEWS_FEED_SCREEN);
   }
 
 
@@ -226,7 +216,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             GestureDetector(
               onTap: (){
 
-                NavigatorHelper.MyNavigatorPush(context, NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModelList[i].photoLink), ScreenName.NEWS_FEED_DETAIL_SCREEN);
+                NavigatorHelper.myNavigatorPush(context, NewsFeedDetailScreen(newsFeedModel, _newsFeedReactModelList[i].photoLink), ScreenName.NEWS_FEED_DETAIL_SCREEN);
               },
               child: Container(
                 child: Column(
@@ -325,7 +315,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                             newsFeedModel.likeCount--;
                           }
                         }
-                        FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_LIKE_CLICK_EVENT, _userUniqueKey);
+                        FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_LIKE_CLICK_EVENT, _userUniqueKey);
                         _callLikeWebService(newsFeedModel.uniqueKey);
                       });
                     },
@@ -341,7 +331,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   ),
                   //save newsfeed button
                   Expanded(child: GestureDetector(onTap: (){
-                    FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_SAVE_CLICK_EVENT, _userUniqueKey);
+                    FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_SAVE_CLICK_EVENT, _userUniqueKey);
                     _saveNewsFeed(newsFeedModel);
                     if(!newsFeedModel.isSaved){
                       setState(() {
@@ -397,7 +387,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             ),
             GestureDetector(
               onTap: (){
-                NavigatorHelper.MyNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
+                NavigatorHelper.myNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
 
               },
               child: Hero(
@@ -501,22 +491,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     );
   }
 
-  Widget _floatActionButton(){
-    if(!_isTop){
-      return FloatingActionButton(
-        onPressed: (){
-          FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.GO_TO_TOP_CLICK_EVENT, _userUniqueKey);
-          _topToScreen();
-        },
-        backgroundColor: MyColor.colorPrimary,
-        child: Icon(Icons.arrow_upward, color: Colors.white, size: 20,),
-        mini: true,
-      );
-    }else{
-      return null;
-    }
-  }
-
   void _topToScreen(){
     _scrollController.animateTo(0, duration: Duration(milliseconds: 700), curve: Curves.easeIn);
   }
@@ -526,26 +500,32 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   Widget build(BuildContext context) {
     super.build(context);
     var _asyncLoader = new AsyncLoader(
-      key: asyncLoaderState,
-      initState: () async => await _getUser(),
-      renderLoad: () => _renderLoad(),
-      renderError: ([error]) => _noConWidget(),
-      renderSuccess: ({data}) => NativePullRefresh(
-        onRefresh: _handleRefresh,
-        child: _newsFeedReactModelList.isNotEmpty?
-        LoadMore(
-            isFinish: _isEnd,
-            onLoadMore: _loadMore,
-            delegate: DefaultLoadMoreDelegate(),
-            textBuilder: DefaultLoadMoreTextBuilder.english,
-            child: _listView()
-        ) : _emptyView(),
-      )
+        key: asyncLoaderState,
+        initState: () async => await _getUser(),
+        renderLoad: () => _renderLoad(),
+        renderError: ([error]) => _noConWidget(),
+        renderSuccess: ({data}) => Container(
+          child: NativePullRefresh(
+              onRefresh: _handleRefresh,
+              child: Notifier.of(context).register<bool>('scroll_top', (value){
+                if(value.data != null && value.data == true && _sharepreferenceshelper.isNewsFeedScrollTop()){
+                  _topToScreen();
+                }
+                _sharepreferenceshelper.setNewsFeedScrollTop(false);
+                return _newsFeedReactModelList.isNotEmpty?LoadMore(
+                    isFinish: _isEnd,
+                    onLoadMore: _loadMore,
+                    delegate: DefaultLoadMoreDelegate(),
+                    textBuilder: DefaultLoadMoreTextBuilder.english,
+                    child: _listView()
+                ) : _emptyView();
+              })
+          ),
+        )
     );
     return Scaffold(
       key: _globalKey,
       body: _asyncLoader,
-      floatingActionButton: _floatActionButton()
     );
   }
 

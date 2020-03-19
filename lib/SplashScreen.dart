@@ -87,14 +87,14 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     if(_sharepreferenceshelper.isLogin()){
       Future.delayed(Duration(seconds: 2), (){
         if(_sharepreferenceshelper.isWardAdmin()){
-          NavigatorHelper.MyNavigatorPushReplacement(context, WardAdminFeatureChooseScreen(), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
+          NavigatorHelper.myNavigatorPushReplacement(context, WardAdminFeatureChooseScreen(), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{
-          NavigatorHelper.MyNavigatorPushReplacement(context, MainScreen(false), null);
+          NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(false), null);
         }
       });
     }else{
       Future.delayed(Duration(seconds: 2), (){
-        NavigatorHelper.MyNavigatorPushReplacement(context, LoginScreen(), ScreenName.LOGIN_SCREEN);
+        NavigatorHelper.myNavigatorPushReplacement(context, LoginScreen(), ScreenName.LOGIN_SCREEN);
       });
     }
   }
@@ -121,12 +121,12 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                     style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal,),softWrap: true,maxLines: 3, textAlign: TextAlign.center,),
                 ):Container(width: 0.0,height: 0.0,),
               ),
-              Flexible(flex: 2,
+              _logo==null?Flexible(flex: 2,
                   child: Container(
                       margin: EdgeInsets.only(bottom: 30, top: 20),
                       child: Hero(
                           tag: 'myotaw',
-                          child: Image.asset('images/myo_taw_logo_eng.png', width: 100.0, height: 100.0,)))),
+                          child: Image.asset('images/myo_taw_logo_eng.png', width: 100.0, height: 100.0,)))) : Container(),
               !_isDbSetup?Flexible(
                 flex: 1,
                 child: Container(

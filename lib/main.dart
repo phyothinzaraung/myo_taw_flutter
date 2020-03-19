@@ -97,6 +97,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   bool _isBadgeShow = false;
   int _noticount = 0;
   Notifier _notifier;
+  CupertinoTabController _cupertinoTabController = CupertinoTabController();
 
   @override
   void initState() {
@@ -109,6 +110,26 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
       _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
       _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
     }
+
+    if(PlatformHelper.isAndroid()){
+      _tabController.addListener((){
+        if(_tabController.previousIndex == 2){
+          NotificationModel _model = NotificationModel();
+          _model.message = 'unCheckAll';
+          _sharepreferenceshelper.setNotificationUnCheck(true);
+          _notifier.notify('noti_add', _model.toJson());
+        }
+      });
+    }else{
+      _cupertinoTabController.addListener((){
+        if(_cupertinoTabController.index != 2){
+          NotificationModel _model = NotificationModel();
+          _model.message = 'unCheckAll';
+          _sharepreferenceshelper.setNotificationUnCheck(true);
+          _notifier.notify('noti_add', _model.toJson());
+        }
+      });
+    }
   }
 
   initBadge()async{
@@ -120,19 +141,10 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
         await _notificationDb.openNotificationDb();
         var l = await _notificationDb.getNotification();
 
-        if(l.length == 0){
-          for(var i in result){
-            NotificationModel model = NotificationModel.fromJson(i);
-            model.isSeen = true;
-            _notificationDb.insert(model);
-          }
-        }else{
-          for(var i in result){
-            //_notificationList.add(NotificationModel.fromJson(i));
-            bool isSave = await _notificationDb.isNotificationSaved(NotificationModel.fromJson(i).iD);
-            if(!isSave){
-              _notificationDb.insert(NotificationModel.fromJson(i));
-            }
+        for(var i in result){
+          bool isSave = await _notificationDb.isNotificationSaved(NotificationModel.fromJson(i).iD);
+          if(!isSave){
+            _notificationDb.insert(NotificationModel.fromJson(i));
           }
         }
         await _notificationDb.openNotificationDb();
@@ -201,11 +213,14 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
                Map<String, dynamic> temp = jsonDecode(json);
                await _notificationDb.openNotificationDb();
                NotificationModel model = NotificationModel.fromJson(temp);
-               model.isSeen = true;
-               await _notificationDb.insert(model);
+               var _isSaved = await _notificationDb.isNotificationSaved(model.iD);
+               if (!_isSaved) {
+                 model.isSeen = true;
+                 await _notificationDb.insert(model);
+               }
                _notificationDb.closeSaveNotificationDb();
-               if(message['data']['notification'] != null){
-                 NavigatorHelper.MyNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+               if(message['data']['notification'] != null && !_isSaved){
+                 NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
                }
              }
            },
@@ -217,11 +232,14 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
                Map<String, dynamic> temp = jsonDecode(json);
                await _notificationDb.openNotificationDb();
                NotificationModel model = NotificationModel.fromJson(temp);
-               model.isSeen = true;
-               await _notificationDb.insert(model);
+               var _isSaved = await _notificationDb.isNotificationSaved(model.iD);
+               if (!_isSaved) {
+                 model.isSeen = true;
+                 await _notificationDb.insert(model);
+               }
                _notificationDb.closeSaveNotificationDb();
-               if(message['data']['notification'] != null){
-                 NavigatorHelper.MyNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+               if(message['data']['notification'] != null && !_isSaved){
+                 NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
                }
              }
            }
@@ -279,30 +297,39 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
             unselectedLabelColor: MyColor.colorGreyDark,
             controller: _tabController,
             tabs: [
-              Tab(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,)),
+              GestureDetector(
+                  onTap: (){
+
+                    if(_tabController.index == 0){
+                      _sharepreferenceshelper.setNewsFeedScrollTop(true);
+                      _notifier.notify('scroll_top', true);
+                    }
+                    _tabController.animateTo(0);
+                  },
+                  child: Tab(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,))),
               Tab(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
-              Tab(icon: Stack(
-                alignment: Alignment.topRight,
-                children: <Widget>[
-                  Icon(MyoTawCustomIcon.Notification_icon, size: 25,),
-                  _isBadgeShow?Container(
-                    alignment: Alignment.center,
-                    width: 13,
-                    height: 13,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.all(Radius.circular(10)),
-                      color: Colors.red,
-                    ),
-                    child: Notifier.of(context).register<int>('noti_count', (value){
-                      //_noticount = value.data;
-                      if(value.data != null && value.data == 0){
-                        _isBadgeShow = false;
-                      }
-                      return Text('${value.data??_noticount}', style: TextStyle(fontSize: 8, color: Colors.white),);
-                    }),
-                  ) : Container(width: 0, height: 0,)
-                ],
-              ))
+              Tab(icon: Notifier.of(context).register<int>('noti_count', (value){
+                //_noticount = value.data;
+                if(value.data != null && value.data == 0){
+                  _isBadgeShow = false;
+                }
+                return Stack(
+                  alignment: _isBadgeShow?Alignment.topRight : Alignment.center,
+                  children: <Widget>[
+                    Icon(MyoTawCustomIcon.Notification_icon, size: 25,),
+                    _isBadgeShow?Container(
+                        alignment: Alignment.center,
+                        width: 13,
+                        height: 13,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.all(Radius.circular(10)),
+                          color: Colors.red,
+                        ),
+                        child: Text('${value.data??_noticount}', style: TextStyle(fontSize: 8, color: Colors.white),)
+                    ) : Container()
+                  ],
+                );
+              }))
             ],
           ),
         ),
@@ -313,35 +340,42 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   Widget _iosTabBarNavigation(){
     return CupertinoPageScaffold(
         child: CupertinoTabScaffold(
+            controller: _cupertinoTabController,
             tabBar: CupertinoTabBar(
               activeColor: MyColor.colorPrimary,
               inactiveColor: MyColor.colorGreyDark,
               backgroundColor: Colors.white,
+              onTap: (i){
+                if(i == 0){
+                  _sharepreferenceshelper.setNewsFeedScrollTop(true);
+                  _notifier.notify('scroll_top', true);
+                }
+              },
               items: [
                 BottomNavigationBarItem(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,)),
                 BottomNavigationBarItem(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
-                BottomNavigationBarItem(icon: Stack(
-                  alignment: Alignment.topRight,
-                  children: <Widget>[
-                    Icon(MyoTawCustomIcon.Notification_icon, size: 25,),
-                    _isBadgeShow?Container(
-                      alignment: Alignment.center,
-                      width: 13,
-                      height: 13,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.all(Radius.circular(10)),
-                        color: Colors.red,
-                      ),
-                      child: Notifier.of(context).register<int>('noti_count', (value){
-                        //_noticount = value.data;
-                        if(value.data != null && value.data == 0){
-                          _isBadgeShow = false;
-                        }
-                        return Text('${value.data??_noticount}', style: TextStyle(fontSize: 8, color: Colors.white),);
-                      }),
-                    ) : Container(width: 0, height: 0,)
-                  ],
-                )),
+                BottomNavigationBarItem(icon: Notifier.of(context).register<int>('noti_count', (value){
+                  //_noticount = value.data;
+                  if(value.data != null && value.data == 0){
+                    _isBadgeShow = false;
+                  }
+                  return Stack(
+                    alignment: _isBadgeShow?Alignment.topRight : Alignment.center,
+                    children: <Widget>[
+                      Icon(MyoTawCustomIcon.Notification_icon, size: 25,),
+                      _isBadgeShow?Container(
+                          alignment: Alignment.center,
+                          width: 13,
+                          height: 13,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.all(Radius.circular(10)),
+                            color: Colors.red,
+                          ),
+                          child: Text('${value.data??_noticount}', style: TextStyle(fontSize: 8, color: Colors.white),)
+                      ) : Container()
+                    ],
+                  );
+                })),
               ],
             ),
             tabBuilder: (context, index){
@@ -373,10 +407,23 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   }
 
   Future<bool> onWillPop() {
-    if (_tabController.index == 0) {
-      return Future.value(true);
+    if(PlatformHelper.isAndroid()){
+      if (_tabController.index == 0) {
+        return Future.value(true);
+      }
+
+      if(_tabController.previousIndex == 2){
+        NotificationModel _model = NotificationModel();
+        _model.message = 'unCheckAll';
+        _sharepreferenceshelper.setNotificationUnCheck(true);
+        _notifier.notify('noti_add', _model.toJson());
+      }
+
+      _sharepreferenceshelper.setNewsFeedScrollTop(true);
+      _notifier.notify('scroll_top', true);
+      _tabController.animateTo(0);
     }
-    _tabController.animateTo(0);
+
     return Future.value(false);
   }
 

@@ -66,10 +66,10 @@ class _OnlineTaxPinRequestDialogWidgetState extends State<OnlineTaxPinRequestDia
                     Navigator.of(context).pop();
                     if(widget._type == 'OnlineTax'){
 
-                      NavigatorHelper.MyNavigatorPush(context, OnlineTaxScreen(), ScreenName.ONLINE_TAX_SCREEN);
+                      NavigatorHelper.myNavigatorPush(context, OnlineTaxScreen(), ScreenName.ONLINE_TAX_SCREEN);
                     }else{
 
-                      NavigatorHelper.MyNavigatorPush(context, SmartWaterMeterScreen(widget._userModel), ScreenName.SMART_WATER_METER_SCREEN);
+                      NavigatorHelper.myNavigatorPush(context, SmartWaterMeterScreen(widget._userModel), ScreenName.SMART_WATER_METER_SCREEN);
                     }
 
                     setState(() {

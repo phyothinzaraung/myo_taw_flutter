@@ -118,7 +118,7 @@ class _FaqScreenState extends State<FaqScreen> {
                 }else{
                   _faqList[i].isVisible = true;
                 }
-                FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_ANSWER_CLICK_EVENT, _userUniqueKey);
+                FireBaseAnalyticsHelper.trackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_ANSWER_CLICK_EVENT, _userUniqueKey);
               });
             },
             child: Container(
@@ -214,7 +214,7 @@ class _FaqScreenState extends State<FaqScreen> {
                           }else{
                             _getFaqByCategory(_dropDownCategory);
                           }
-                          FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_BY_CATEGORY_CLICK_EVENT, _userUniqueKey);
+                          FireBaseAnalyticsHelper.trackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_BY_CATEGORY_CLICK_EVENT, _userUniqueKey);
                         },
                         list: _categoryList,
                       ) :
@@ -229,7 +229,7 @@ class _FaqScreenState extends State<FaqScreen> {
                           }else{
                             _getFaqByCategory(_dropDownCategory);
                           }
-                          FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_BY_CATEGORY_CLICK_EVENT, _userUniqueKey);
+                          FireBaseAnalyticsHelper.trackClickEvent(ScreenName.FAQ_SCREEN, ClickEvent.FAQ_BY_CATEGORY_CLICK_EVENT, _userUniqueKey);
                           Navigator.pop(context);
                         },
                         onSelectedItemChanged: (index){

@@ -146,7 +146,7 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
   }
 
   _navigateToNewFloodReportScreen()async{
-    Map result = await NavigatorHelper.MyNavigatorPush(context, NewFloodReportScreen(), ScreenName.NEWS_FLOOD_REPORT_SCREEN);
+    Map result = await NavigatorHelper.myNavigatorPush(context, NewFloodReportScreen(), ScreenName.NEWS_FLOOD_REPORT_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh')){
       _handleRefresh();
     }

@@ -66,7 +66,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         _photoWidgetList.add(
             GestureDetector(
               onTap: (){
-                NavigatorHelper.MyNavigatorPush(context, NewsFeedPhotoDetailScreen(_list, null, _currentPhoto),
+                NavigatorHelper.myNavigatorPush(context, NewsFeedPhotoDetailScreen(_list, null, _currentPhoto),
                     ScreenName.PHOTO_DETAIL_SCREEN);
               },
               child: Stack(

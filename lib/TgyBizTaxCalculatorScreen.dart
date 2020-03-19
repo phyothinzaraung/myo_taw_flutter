@@ -384,7 +384,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                                       titleTax: MyString.txt_biz_tax_range
                                   );
                                   await _sharepreferenceshelper.initSharePref();
-                                  FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
+                                  FireBaseAnalyticsHelper.trackClickEvent(ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
                                       _sharepreferenceshelper.getUserUniqueKey());
                                 }else{
                                   WarningSnackBar(_globalKey, MyString.txt_choose_grade);
@@ -409,7 +409,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                                       titleTax: MyString.txt_biz_tax_range
                                   );
                                   await _sharepreferenceshelper.initSharePref();
-                                  FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
+                                  FireBaseAnalyticsHelper.trackClickEvent(ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
                                       _sharepreferenceshelper.getUserUniqueKey());
                                 }else{
                                   WarningSnackBar(_globalKey, MyString.txt_choose_square_feet);
@@ -432,7 +432,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
                                     titleTax: MyString.txt_biz_tax_range
                                 );
                                 await _sharepreferenceshelper.initSharePref();
-                                FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
+                                FireBaseAnalyticsHelper.trackClickEvent(ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
                                     _sharepreferenceshelper.getUserUniqueKey());
                               }
 

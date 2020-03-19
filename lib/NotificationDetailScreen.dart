@@ -37,6 +37,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
     // TODO: implement initState
     super.initState();
     initNotificationData();
+    _readNotification(_notificationModel);
   }
 
   initNotificationData(){
@@ -45,6 +46,18 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
       _list = _message.split('-');
       _date = ShowDateTimeHelper.showDateTimeDifference(_notificationModel.postedDate);
     });
+  }
+
+  _readNotification(NotificationModel model)async{
+    await _notificationDb.openNotificationDb();
+    var isSeen = await _notificationDb.isSeenById(model);
+    if(!isSeen){
+      model.isSeen = true;
+      await _notificationDb.updateNotification(model);
+      var count = await _notificationDb.getUnReadNotificationCount();
+      _notifier.notify('noti_count', count);
+    }
+    _notificationDb.closeSaveNotificationDb();
   }
 
   Widget _body(BuildContext context){
@@ -73,15 +86,14 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
               }
             },linkStyle: TextStyle(color: Colors.red),),
           ),
-          _list.length == 2?Container(
+          _list.length != 2?Container(
             width: double.maxFinite,
             margin: EdgeInsets.only(bottom: 10.0),
             child: CustomButtonWidget(
               onPress: ()async{
                 ApplyBizLicenseModel model = ApplyBizLicenseModel();
                 model.id = _notificationModel.bizId;
-                model.isValid = false;
-                NavigatorHelper.MyNavigatorPush(context, ApplyBizLicensePhotoListScreen(model), ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN);
+                NavigatorHelper.myNavigatorPush(context, ApplyBizLicensePhotoListScreen(model), ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN);
 
               }, child: Text(MyString.txt_upload_need_apply_biz_file, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
               color: MyColor.colorPrimary,

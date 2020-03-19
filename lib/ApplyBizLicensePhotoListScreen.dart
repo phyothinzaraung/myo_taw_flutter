@@ -3,6 +3,7 @@ import 'package:async_loader/async_loader.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:connectivity/connectivity.dart';
 import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:image_picker/image_picker.dart';
@@ -13,6 +14,7 @@ import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/NavigatorHelper.dart';
+import 'helper/PlatformHelper.dart';
 import 'model/ApplyBizLicenseModel.dart';
 import 'model/ApplyBizLicensePhotoModel.dart';
 import 'helper/SharePreferencesHelper.dart';
@@ -88,7 +90,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                 delegate: SliverChildBuilderDelegate((context, index){
                   return GestureDetector(
                     onTap: (){
-                      NavigatorHelper.MyNavigatorPush(context, PhotoDetailScreen(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl),
+                      NavigatorHelper.myNavigatorPush(context, PhotoDetailScreen(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl),
                           ScreenName.PHOTO_DETAIL_SCREEN);
                     },
                     child: Padding(
@@ -162,7 +164,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
     });
 
   }
-  
+
   @override
   Widget build(BuildContext context) {
     var _asyncLoader = new AsyncLoader(
@@ -178,27 +180,32 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                   Expanded(child: _listView()),
                   _applyBizLicenseModel.isValid?Container():
                   Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[
-                      Flexible(
+                      Expanded(
                           flex: 2,
                           child: GestureDetector(
                             onTap: ()async{
                               gallery();
                               await _sharepreferenceshelper.initSharePref();
-                              FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                              FireBaseAnalyticsHelper.trackClickEvent(ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN, ClickEvent.GALLERY_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                             },
-                            child: _image==null?Image.asset('images/add_image_placeholder.png', width: double.maxFinite, height: 50.0,):
+                            child: _image==null?
+                            Container(
+                                color: MyColor.colorPrimary,
+                                child: Icon(PlatformHelper.isAndroid()? Icons.add : CupertinoIcons.add, size: 50, color: Colors.white,)):
                             Image.file(_image, width: double.maxFinite, height: 50.0, fit: BoxFit.cover,),
                           )),
-                      Flexible(
+                      Expanded(
                           flex: 8,
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: <Widget>[
                               Container(
-                                padding: EdgeInsets.all(5.0),
+                                height: 50,
                                 width: double.maxFinite,
                                 color: Colors.white,
+                                padding: EdgeInsets.only(left: 5, right: 5),
                                 child: TextField(
                                   decoration: InputDecoration(
                                     border: InputBorder.none,
@@ -206,14 +213,14 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                                   ),
                                   cursorColor: MyColor.colorPrimary,
                                   controller: _fileTitleController,
-                                  style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack),
+                                  style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                                 ),
                               ),
                             ],
                           )
                       ),
-                      Flexible(
-                        flex: 3,
+                      Expanded(
+                        flex: 4,
                         child: Container(
                           height: 50.0,
                           width: double.maxFinite,
@@ -225,7 +232,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                                   _isLoading = true;
                                 });
                                 await _sharepreferenceshelper.initSharePref();
-                                FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN, ClickEvent.APPLY_BIZ_LICENSE_PHOTO_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                                FireBaseAnalyticsHelper.trackClickEvent(ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN, ClickEvent.APPLY_BIZ_LICENSE_PHOTO_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                                 _uploadPhoto();
                               }
                             }else{
@@ -239,6 +246,9 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                               WarningSnackBar(_globalKey, MyString.txt_need_apply_biz_photo_name);
                             }
                           },
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(0)
+                            ),
                             child: Text(MyString.txt_send, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),color: MyColor.colorPrimary,),
                         ),
                       )

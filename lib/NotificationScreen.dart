@@ -31,7 +31,7 @@ class NotificationScreen extends StatefulWidget {
   _NotificationScreenState createState() => _NotificationScreenState();
 }
 
-class _NotificationScreenState extends State<NotificationScreen> with AutomaticKeepAliveClientMixin<NotificationScreen> {
+class _NotificationScreenState extends State<NotificationScreen> with AutomaticKeepAliveClientMixin<NotificationScreen>, TickerProviderStateMixin {
   UserModel _userModel;
   UserDb _userDb = UserDb();
 
@@ -41,17 +41,21 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
   bool _isLoading = false;
   var response;
   List<NotificationModel> _notificationList = new List<NotificationModel>();
+  List<NotificationModel> _notificationDeleteList = new List<NotificationModel>();
   GlobalKey<SliverAnimatedListState> _globalKey = GlobalKey();
   NotificationDb _notificationDb = NotificationDb();
   Notifier _notifier;
-  List<NotificationModel> _deleteList = List();
+  bool _isLongPress = false, _isSelectAll = false;
+  AnimationController _animatinController;
+  Tween<double> _tween = Tween(begin: 1, end: 1.3);
 
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    FireBaseAnalyticsHelper.TrackCurrentScreen(ScreenName.NOTIFICATION_SCREEN);
+    _animatinController = AnimationController(duration: const Duration(milliseconds: 700), vsync: this);
+    FireBaseAnalyticsHelper.trackCurrentScreen(ScreenName.NOTIFICATION_SCREEN);
   }
 
   @override
@@ -80,18 +84,10 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
         var result  = response.data;
         await _notificationDb.openNotificationDb();
         var l = await _notificationDb.getNotification();
-        if(l.length == 0){
-          for(var i in result){
-            NotificationModel model = NotificationModel.fromJson(i);
-            model.isSeen = true;
-            _notificationDb.insert(model);
-          }
-        }else{
-          for(var i in result){
-            bool isSave = await _notificationDb.isNotificationSaved(NotificationModel.fromJson(i).iD);
-            if(!isSave){
-              _notificationDb.insert(NotificationModel.fromJson(i));
-            }
+        for(var i in result){
+          bool isSave = await _notificationDb.isNotificationSaved(NotificationModel.fromJson(i).iD);
+          if(!isSave){
+            _notificationDb.insert(NotificationModel.fromJson(i));
           }
         }
         var list = await _notificationDb.getNotification();
@@ -107,33 +103,10 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
 
   }
 
-  Widget _headerNotification(){
-    return Container(
-        margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
-        child: Column(
-        children: <Widget>[
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Text(_city??'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
-                  Text(MyString.txt_title_notification, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
-                ],
-              ),
-            ),
-
-          ],
-        )
-      ],
-    ));
-  }
-
   Widget _notificationListWidget(NotificationModel model,Animation animation, [int i]){
     String datetime = model.postedDate;
-    String date = ShowDateTimeHelper.showDateTimeDifference(datetime)??'';
-    
+    String date = ShowDateTimeHelper.showDateTimeDifference(datetime);
+
     return ScaleTransition(
       scale: CurvedAnimation(parent: animation, curve: Interval(0.2, 1)),
       child: FadeTransition(
@@ -145,8 +118,10 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
           child: ListTile(
             contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
-            leading: Image.asset(model.isSeen?"images/noti_open.png" : 'images/noti_close.png', width: 30.0, height: 30.0,),
-            trailing: IconButton(
+            leading: ScaleTransition(
+                scale: _tween.animate(CurvedAnimation(parent: _animatinController, curve: Curves.linearToEaseOut)),
+                child: Image.asset(model.isSeen?"images/noti_open.png" : 'images/noti_close.png', width: 30.0, height: 30.0,)),
+            trailing: !_isLongPress?IconButton(
                 icon: Icon(PlatformHelper.isAndroid()?Icons.delete :CupertinoIcons.delete_solid, color: Colors.red,),
                 onPressed: (){
                   CustomDialogWidget().customConfirmDialog(
@@ -160,7 +135,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
                         NotificationModel notificationModel = _notificationList[i];
                         notificationModel.isDeleted = true;
                         await _notificationDb.updateNotification(notificationModel);
-                        var count =await _notificationDb.getUnReadNotificationCount();
+                        var count = await _notificationDb.getUnReadNotificationCount();
                         _notificationDb.closeSaveNotificationDb();
                         _notifier.notify('noti_count', count);
                         Navigator.of(context).pop();
@@ -175,17 +150,38 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
                       }
                   );
                 }
-            ),
+            ) : IconButton(icon: Icon(PlatformHelper.isAndroid()? Icons.check_circle : CupertinoIcons.check_mark_circled), onPressed: (){
+              setState(() {
+                model.isCheck = !model.isCheck;
+                NotificationModel _model = model;
+                _model.listIndex = i;
+                model.isCheck? _notificationDeleteList.add(_model) : _notificationDeleteList.remove(_model);
+                //model.isCheck? _animatinController.repeat(reverse: true) : _animatinController.animateTo(0);
+              });
+              print(_notificationDeleteList.length);
+            },color: model.isCheck==true? MyColor.colorPrimary : MyColor.colorGreyDark),
             title: Container(
                 margin: EdgeInsets.only(bottom: 10),
-                child: Text(model.message, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorBlackSemiTransparent), maxLines: 1,overflow: TextOverflow.ellipsis,)),
+                child: Text(model.message, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorBlackSemiTransparent), maxLines: 2,overflow: TextOverflow.ellipsis,)),
             subtitle: Text(date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),),
             onTap: ()async{
-              await _readNotification(model);
+
+              if(!_isLongPress){
+                //await _readNotification(model);
+                setState(() {
+                  model.isSeen = true;
+                });
+                NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+
+              }else{
+                _clearCheckNotification();
+              }
+            },
+            onLongPress: (){
+              _animatinController.repeat(reverse: true);
               setState(() {
-                model.isSeen = true;
+                _isLongPress = true;
               });
-              NavigatorHelper.MyNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
             },
           ),
         ),
@@ -193,33 +189,120 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
     );
   }
 
-  _readNotification(NotificationModel model)async{
-    await _notificationDb.openNotificationDb();
-    var isSeen = await _notificationDb.isSeenById(model);
-    if(!isSeen){
-      model.isSeen = true;
-      await _notificationDb.updateNotification(model);
-      var count = await _notificationDb.getUnReadNotificationCount();
-      _notifier.notify('noti_count', count);
-    }
-    _notificationDb.closeSaveNotificationDb();
+  Widget _headerNotification(){
+    return Container(
+        margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
+        child: Column(
+          children: <Widget>[
+            Row(
+              children: <Widget>[
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: <Widget>[
+                      Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                      Text(MyString.txt_title_notification, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
+                    ],
+                  ),
+                ),
+                _isLongPress?GestureDetector(
+                  onTap: (){
+                    _notificationDeleteList.clear();
+                    _isSelectAll = !_isSelectAll;
+                    if(_isSelectAll){
+                      for(var i in _notificationList){
+                        setState(() {
+                          i.isCheck = true;
+                          _notificationDeleteList.add(i);
+                        });
+                      }
+                    }else{
+                      for(var i in _notificationList){
+                        setState(() {
+                          i.isCheck = false;
+                          _notificationDeleteList.remove(i);
+                        });
+                      }
+                    }
+                  },
+                  child: Container(
+                    padding: EdgeInsets.only(left: 10,right: 10,top: 3, bottom: 3),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: MyColor.colorPrimary
+                    ),
+                    child: Text(MyString.txt_select_all, style: TextStyle(color: Colors.white,fontSize: FontSize.textSizeLessSmall)),
+                  ),
+                ) : Container(),
+                _notificationDeleteList.isNotEmpty?
+                Row(
+                  children: <Widget>[
+                    GestureDetector(
+                        onTap: ()async{
+                          setState(() {
+                            _isLoading = true;
+                          });
+                          await _notificationDb.openNotificationDb();
+                          for(var i in _notificationDeleteList){
+                            NotificationModel notificationModel = i;
+                            notificationModel.isSeen = true;
+                            notificationModel.isCheck = false;
+                            await _notificationDb.updateNotification(notificationModel);
+                          }
+                          var count = await _notificationDb.getUnReadNotificationCount();
+                          _notificationDb.closeSaveNotificationDb();
+                          _notifier.notify('noti_count', count);
+                          setState(() {
+                            _notificationDeleteList.clear();
+                            _isLoading = false;
+                            _isLongPress = false;
+                          });
+                          _animatinController.animateBack(0);
+                        },
+                        child: Container(
+                            margin: EdgeInsets.only(left: 20,right: 5),
+                            child: Image.asset('images/noti_open.png',width: 20, height: 20,))
+                    ),
+                    IconButton(icon: Icon(PlatformHelper.isAndroid()?Icons.delete : CupertinoIcons.delete_solid),
+                      onPressed: ()async{
+
+                        setState(() {
+                          _isLoading = true;
+                        });
+                        await _notificationDb.openNotificationDb();
+                        for(var i in _notificationDeleteList){
+                          NotificationModel notificationModel = i;
+                          notificationModel.isDeleted = true;
+                          await _notificationDb.updateNotification(notificationModel);
+                          /*var noti = _notificationList.removeAt(i.listIndex);
+                        _globalKey.currentState.removeItem(i.listIndex, (context, animation){
+                          return _notificationListWidget(noti, animation);
+                        },);*/
+                        }
+                        var count = await _notificationDb.getUnReadNotificationCount();
+                        _notificationDb.closeSaveNotificationDb();
+                        _notifier.notify('noti_count', count);
+                        setState(() {
+                          _notificationDeleteList.clear();
+                          _isLoading = false;
+                          _isLongPress = false;
+                        });
+                        _notificationList.clear();
+                        asyncLoaderState.currentState.reloadState();
+                        _animatinController.animateBack(0);
+
+                      },color: Colors.red,),
+                  ],
+                ) : Container(),
+              ],
+            ),
+
+          ],
+        ));
   }
 
   /*_listView(){
-    return AnimatedList(
-      key: _globalKey,
-      initialItemCount: _notificationList.length,
-      itemBuilder: (context, i, animation){
-        return _notificationListWidget(_notificationList[i], animation, i);
-        *//*return Column(
-          children: <Widget>[
-            i==0? _headerNotification():Container(),
-            _notificationListWidget(_notificationList[i], animation, i)
-          ],
-        );*//*
-      },
-    );
-    *//*return ListView.builder(
+    return ListView.builder(
       itemCount: _notificationList.length,
       itemBuilder: (BuildContext context, int i){
         return Column(
@@ -229,7 +312,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
           ],
         );
       },
-    );*//*
+    );
   }*/
 
   Future<Null> _handleRefresh() async {
@@ -238,11 +321,24 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
     return null;
   }
 
+
+  _clearCheckNotification(){
+    _animatinController.animateBack(0);
+    for(var i in _notificationList){
+      i.isCheck = false;
+    }
+    setState(() {
+      _isLongPress = false;
+      _notificationDeleteList.clear();
+    });
+  }
+
+
+
   @override
   Widget build(BuildContext context) {
     super.build(context);
     _notifier = NotifierProvider.of(context);
-    print(_notificationList);
     var _asyncLoader = new AsyncLoader(
         key: asyncLoaderState,
         initState: () async => _getUser(),
@@ -254,23 +350,41 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
           ],
         ),
         renderSuccess: ({data}) => NativePullRefresh(
-            child: _notificationList.isNotEmpty?CustomScrollView(
-              slivers: <Widget>[
-                SliverList(delegate: SliverChildBuilderDelegate((context, i){
-                  return _headerNotification();
-                }, childCount: 1)),
-                Notifier.of(context).register<Map<String, dynamic>>('noti_add', (value){
-                  var data = value.data;
-                  if(data != null && _sharepreferenceshelper.isNotificationAdd()){
-                    _notificationList.insert(0, NotificationModel.fromJson(value.data));
-                    //_globalKey.currentState.insertItem(0,duration: Duration(milliseconds: 500));
+            child: _notificationList.isNotEmpty?
+            GestureDetector(
+              onTap: (){
+                _clearCheckNotification();
+              },
+              child: Notifier.of(context).register('noti_add', (value){
+
+                var data = value.data;
+
+                if(data != null && _sharepreferenceshelper.isNotificationAdd() && NotificationModel.fromJson(data).message!='unCheckAll'){
+                  _notificationList.insert(0, NotificationModel.fromJson(value.data));
+                  _globalKey.currentState.insertItem(0, duration: Duration(milliseconds: 500));
+                }
+                if(data != null && NotificationModel.fromJson(data).message=='unCheckAll' && _sharepreferenceshelper.isNotificationUnCheck()){
+                  for(var i in _notificationList){
+                    i.isCheck = false;
                   }
-                  _sharepreferenceshelper.setNotificationAdd(false);
-                  return SliverAnimatedList(itemBuilder: (context, i, animation){
-                    return _notificationListWidget(_notificationList[i], animation, i);
-                  }, initialItemCount: _notificationList.length,key: _globalKey,);
-                })
-              ],
+                  _notificationDeleteList.clear();
+                  _isLongPress = false;
+                  _animatinController.animateBack(0);
+                }
+                _sharepreferenceshelper.setNotificationUnCheck(false);
+                _sharepreferenceshelper.setNotificationAdd(false);
+
+                return CustomScrollView(
+                  slivers: <Widget>[
+                    SliverList(delegate: SliverChildBuilderDelegate((context, i){
+                      return _headerNotification();
+                    }, childCount: 1)),
+                    SliverAnimatedList(itemBuilder: (context, i, animation){
+                      return _notificationListWidget(_notificationList[i], animation, i);
+                    }, initialItemCount: _notificationList.length,key: _globalKey,)
+                  ],
+                );
+              }),
             ) :
             Column(
               children: <Widget>[
@@ -282,7 +396,11 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
         )
     );
     return Scaffold(
-      body: ModalProgressHUD(inAsyncCall: _isLoading,progressIndicator: CustomProgressIndicatorWidget(),child: _asyncLoader)
+      body: ModalProgressHUD(
+          inAsyncCall: _isLoading,
+          progressIndicator: CustomProgressIndicatorWidget(),
+          child: _asyncLoader
+      ),
     );
   }
 
@@ -302,5 +420,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
   void dispose() {
     // TODO: implement dispose
     super.dispose();
+    _animatinController.stop();
+    _animatinController.dispose();
   }
 }

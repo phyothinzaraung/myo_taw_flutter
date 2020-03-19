@@ -40,7 +40,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AutomaticKeepAli
     // TODO: implement initState
     super.initState();
     _getUser();
-    FireBaseAnalyticsHelper.TrackCurrentScreen(ScreenName.DASHBOARD_SCREEN);
+    FireBaseAnalyticsHelper.trackCurrentScreen(ScreenName.DASHBOARD_SCREEN);
   }
 
   _getUser()async{
@@ -121,52 +121,52 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AutomaticKeepAli
           switch(i.title){
             case MyString.txt_municipal:
 
-              NavigatorHelper.MyNavigatorPush(context, DaoScreen(''), ScreenName.ABOUT_DAO_SCREEN);
+              NavigatorHelper.myNavigatorPush(context, DaoScreen(''), ScreenName.ABOUT_DAO_SCREEN);
               break;
             case MyString.txt_tax:
 
-              NavigatorHelper.MyNavigatorPush(context, DaoScreen('Tax'), ScreenName.ABOUT_TAX_SCREEN);
+              NavigatorHelper.myNavigatorPush(context, DaoScreen('Tax'), ScreenName.ABOUT_TAX_SCREEN);
               break;
             case MyString.txt_suggestion:
-              NavigatorHelper.MyNavigatorPush(context, _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():
+              NavigatorHelper.myNavigatorPush(context, _sharepreferenceshelper.isWardAdmin()?WardAdminContributionScreen():
               ContributionScreen(), _sharepreferenceshelper.isWardAdmin()?ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN : ScreenName.CONTRIBUTION_SCREEN);
               break;
             case MyString.txt_business_tax:
 
-              NavigatorHelper.MyNavigatorPush(context, BizLicenseScreen(), ScreenName.BIZ_LICENSE_SCREEN);
+              NavigatorHelper.myNavigatorPush(context, BizLicenseScreen(), ScreenName.BIZ_LICENSE_SCREEN);
               break;
             case MyString.txt_online_tax:
               _regionCode == MyString.TGY_REGIONCODE?
 
-              NavigatorHelper.MyNavigatorPush(context, OnlineTaxChooseScreen(), ScreenName.ONLINE_TAX_CHOOSE_SCREEN)
+              NavigatorHelper.myNavigatorPush(context, OnlineTaxChooseScreen(), ScreenName.ONLINE_TAX_CHOOSE_SCREEN)
               :
               PrimaryColorSnackBarWidget(_globalKey, MyString.txt_coming_soon);
               break;
             case MyString.txt_tax_use:
 
-              NavigatorHelper.MyNavigatorPush(context, TaxUserScreen(), ScreenName.TAX_USE_SCREEN);
+              NavigatorHelper.myNavigatorPush(context, TaxUserScreen(), ScreenName.TAX_USE_SCREEN);
               break;
             case MyString.txt_calculate_tax:
-              NavigatorHelper.MyNavigatorPush(context, CalculateTaxScreen(), ScreenName.CALCULATE_TAX_SCREEN);
+              NavigatorHelper.myNavigatorPush(context, CalculateTaxScreen(), ScreenName.CALCULATE_TAX_SCREEN);
               break;
             case MyString.txt_faq:
 
-              NavigatorHelper.MyNavigatorPush(context, FaqScreen(), ScreenName.FAQ_SCREEN);
+              NavigatorHelper.myNavigatorPush(context, FaqScreen(), ScreenName.FAQ_SCREEN);
               break;
             case MyString.txt_save_newsFeed:
 
-              NavigatorHelper.MyNavigatorPush(context, SaveNewsFeedScreen(), ScreenName.SAVED_NEWS_FEED_SCREEN);
+              NavigatorHelper.myNavigatorPush(context, SaveNewsFeedScreen(), ScreenName.SAVED_NEWS_FEED_SCREEN);
               break;
             case MyString.txt_profile:
 
-              NavigatorHelper.MyNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
+              NavigatorHelper.myNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
               break;
             case MyString.txt_referral:
               Navigator.of(context).push(MaterialPageRoute(builder: (context) => ReferralScreen(_userModel),));
               break;
             case MyString.txt_flood_level:
 
-              NavigatorHelper.MyNavigatorPush(context, FloodReportListScreen(), ScreenName.FLOOD_REPORT_LIST_SCREEN);
+              NavigatorHelper.myNavigatorPush(context, FloodReportListScreen(), ScreenName.FLOOD_REPORT_LIST_SCREEN);
               break;
             default:
           }

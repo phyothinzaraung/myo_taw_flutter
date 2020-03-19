@@ -28,7 +28,7 @@ class _SaveNewsFeedDetailScreenState extends State<SaveNewsFeedDetailScreen> {
               _saveNewsFeedModel.contentType==MyString.NEWS_FEED_CONTENT_TYPE_PHOTO?
               _saveNewsFeedModel.photoUrl!=null?GestureDetector(
                 onTap: (){
-                  NavigatorHelper.MyNavigatorPush(context, NewsFeedPhotoDetailScreen([], _saveNewsFeedModel.photoUrl, 0), ScreenName.PHOTO_DETAIL_SCREEN);
+                  NavigatorHelper.myNavigatorPush(context, NewsFeedPhotoDetailScreen([], _saveNewsFeedModel.photoUrl, 0), ScreenName.PHOTO_DETAIL_SCREEN);
                 },
                 child: Hero(
                   tag: _saveNewsFeedModel.id,

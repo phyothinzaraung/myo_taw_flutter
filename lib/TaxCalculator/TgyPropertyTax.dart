@@ -59,6 +59,6 @@ class TgyPropertyTax{
     }
     print('rentalRate : ${rentalRate}');
 
-    return NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat((finalArv * 0.02 + finalArv * 0.02).round().toString()));
+    return NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat((finalArv * 0.02 + finalArv * 0.02).round().toString()));
   }
 }

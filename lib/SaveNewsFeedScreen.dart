@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
@@ -23,6 +22,7 @@ class SaveNewsFeedScreen extends StatefulWidget {
 class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
   SaveNewsFeedDb _saveNewsFeedDb = SaveNewsFeedDb();
   List _saveNewsFeedList = new List();
+  List _saveNewsFeedDeleteList = new List();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   GlobalKey<SliverAnimatedListState> _globalKey = GlobalKey();
 
@@ -37,11 +37,9 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
   _getSaveNewsFeed()async{
     await _saveNewsFeedDb.openSaveNfDb();
     var list = await _saveNewsFeedDb.getSaveNewsFeed();
-    for(var i in list){
-      setState(() {
-        _saveNewsFeedList.add(i);
-      });
-    }
+    setState(() {
+      _saveNewsFeedList.addAll(list);
+    });
   }
 
   _deleteNewsFeed(String id)async{
@@ -53,8 +51,7 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
   _saveNewsFeedWidgetList(SaveNewsFeedModel model, animation, [int i]){
     return GestureDetector(
       onTap: (){
-
-        NavigatorHelper.MyNavigatorPush(context, SaveNewsFeedDetailScreen(model), ScreenName.SAVED_NEWS_FEED_DETAIL_SCREEN);
+        NavigatorHelper.myNavigatorPush(context, SaveNewsFeedDetailScreen(model), ScreenName.SAVED_NEWS_FEED_DETAIL_SCREEN);
       },
       child: ScaleTransition(
         scale: CurvedAnimation(parent: animation, curve: Interval(0.2, 1)),
@@ -115,13 +112,11 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                             textNo: MyString.txt_delete_cancel,
                             textYes: MyString.txt_delete,
                             onPress: ()async{
-                              _deleteNewsFeed(model.id);
-                              /*setState(() {
-                                _saveNewsFeedList.removeAt(i);
-                              });*/
-                              Navigator.of(context).pop();
+
                               await _sharepreferenceshelper.initSharePref();
-                              FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.SAVED_NEWS_FEED_SCREEN, ClickEvent.DELETE_SAVED_NEWS_FEED_CLICK_EVENT,
+                              _deleteNewsFeed(model.id);
+                              Navigator.of(context).pop();
+                              FireBaseAnalyticsHelper.trackClickEvent(ScreenName.SAVED_NEWS_FEED_SCREEN, ClickEvent.DELETE_SAVED_NEWS_FEED_CLICK_EVENT,
                                   _sharepreferenceshelper.getUserUniqueKey());
                               Future.delayed(Duration(milliseconds: 200),(){
                                 setState(() {
@@ -131,10 +126,11 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
                                   },duration: Duration(milliseconds: 500));
                                 });
                               });
+
                             }
                         );
                       }
-                  ),
+                  )
                 ],
               ),
             ),
@@ -145,29 +141,11 @@ class _SaveNewsFeedScreenState extends State<SaveNewsFeedScreen> {
   }
 
 
-  /*Widget _listView(){
-    return AnimatedList(
-        key: _globalKey,
-        initialItemCount: _saveNewsFeedList.length,
-        itemBuilder: (context, i, animation){
-          SaveNewsFeedModel model = _saveNewsFeedList[i];
-          return Container(
-            child: Column(
-              children: <Widget>[
-                i==0?headerTitleWidget(MyString.title_save_nf, 'save_file_no_circle') : Container(width: 0.0, height: 0.0,),
-                _saveNewsFeedWidgetList(model, animation, i)
-              ],
-            ),
-          );
-        });
-  }*/
-
-
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
       title: Text(MyString.title_save_nf,maxLines: 1, overflow: TextOverflow.ellipsis,
-        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),
       body: Container(
           child: _saveNewsFeedList.isNotEmpty?
           CustomScrollView(

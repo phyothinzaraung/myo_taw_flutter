@@ -465,7 +465,7 @@ class _LkwPropertyTaxCalculatorScreenState extends State<LkwPropertyTaxCalculato
                               }
                             );
                             await _sharepreferenceshelper.initSharePref();
-                            FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_PROPERTY_TAX_CLICK_EVENT,
+                            FireBaseAnalyticsHelper.trackClickEvent(ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_PROPERTY_TAX_CLICK_EVENT,
                                 _sharepreferenceshelper.getUserUniqueKey());
 
                           }else {

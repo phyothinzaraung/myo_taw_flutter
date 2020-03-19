@@ -140,7 +140,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _isLoading = false;
     });
-    NavigatorHelper.MyNavigatorPushAndRemoveUntil(context, LoginScreen(), ScreenName.LOGIN_SCREEN);
+    NavigatorHelper.myNavigatorPushAndRemoveUntil(context, LoginScreen(), ScreenName.LOGIN_SCREEN);
   }
 
   void _deleteTaxRecord(int id, int i)async{
@@ -168,7 +168,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     TaxRecordModel taxRecordModel = model;
     return GestureDetector(
       onTap: (){
-        NavigatorHelper.MyNavigatorPush(context, PhotoDetailScreen(BaseUrl.TAX_RECORD_PHOTO_URL+taxRecordModel.photoUrl),
+        NavigatorHelper.myNavigatorPush(context, PhotoDetailScreen(BaseUrl.TAX_RECORD_PHOTO_URL+taxRecordModel.photoUrl),
             ScreenName.PHOTO_DETAIL_SCREEN);
       },
       child: ScaleTransition(
@@ -212,7 +212,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                               });
                               _deleteTaxRecord(taxRecordModel.id, i);
                               await _sharepreferenceshelper.initSharePref();
-                              FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.TAX_RECORD_DELETE_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                              FireBaseAnalyticsHelper.trackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.TAX_RECORD_DELETE_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                             }
                         );
                       }
@@ -228,14 +228,14 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToProfileScreen()async{
-    Map result = await NavigatorHelper.MyNavigatorPush(context, ProfileFormScreen(_sharepreferenceshelper.isWardAdmin()), ScreenName.PROFILE_FORM_SCREEN);
+    Map result = await NavigatorHelper.myNavigatorPush(context, ProfileFormScreen(_sharepreferenceshelper.isWardAdmin()), ScreenName.PROFILE_FORM_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       await _handleRefresh();
     }
   }
 
   _navigateToProfilePhotoScreen()async{
-    Map result = await NavigatorHelper.MyNavigatorPush(context, ProfilePhotoUploadScreen(), ScreenName.PROFILE_PHOTO_SCREEN);
+    Map result = await NavigatorHelper.myNavigatorPush(context, ProfilePhotoUploadScreen(), ScreenName.PROFILE_PHOTO_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       //await _getUser();
       await _handleRefresh();
@@ -243,7 +243,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _navigateToNewTaxRecordScreen()async{
-    Map result = await NavigatorHelper.MyNavigatorPush(context, NewTaxRecordScreen(), ScreenName.NEW_TAX_RECORD_SCREEN);
+    Map result = await NavigatorHelper.myNavigatorPush(context, NewTaxRecordScreen(), ScreenName.NEW_TAX_RECORD_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       await _handleRefresh();
     }
@@ -322,7 +322,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     GestureDetector(
                       onTap: (){
 
-                        NavigatorHelper.MyNavigatorPush(context, ApplyBizLicenseListScreen(), ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN);
+                        NavigatorHelper.myNavigatorPush(context, ApplyBizLicenseListScreen(), ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN);
                       },
                       child: Container(
                         child: Row(
@@ -346,7 +346,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           onPress: ()async{
                             Navigator.pop(context);
                             await _sharepreferenceshelper.initSharePref();
-                            FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.USER_LOG_OUT_CLICK_EVENT,
+                            FireBaseAnalyticsHelper.trackClickEvent(ScreenName.PROFILE_SCREEN, ClickEvent.USER_LOG_OUT_CLICK_EVENT,
                                 _sharepreferenceshelper.getUserUniqueKey());
                             _logOutClear();
                           }

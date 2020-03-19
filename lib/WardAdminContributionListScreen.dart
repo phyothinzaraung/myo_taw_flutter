@@ -139,7 +139,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
             ),
             GestureDetector(
               onTap: (){
-                NavigatorHelper.MyNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
+                NavigatorHelper.myNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
 
               },
               child: Hero(
@@ -223,7 +223,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
           children: <Widget>[
             GestureDetector(
               onTap: (){
-                NavigatorHelper.MyNavigatorPush(context,
+                NavigatorHelper.myNavigatorPush(context,
                     WardAdminContributionDetailScreen(_contributionModelList[i]), ScreenName.CONTRIBUTION_DETAIL_SCREEN);
               },
               child: Container(
@@ -385,7 +385,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
     /*Map result = await Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionScreen(),
       settings: RouteSettings(name: ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN)
     ));*/
-    Map result = await NavigatorHelper.MyNavigatorPush(context, WardAdminContributionScreen(), ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN);
+    Map result = await NavigatorHelper.myNavigatorPush(context, WardAdminContributionScreen(), ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       await _handleRefresh();
     }

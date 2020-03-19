@@ -13,6 +13,8 @@ class NotificationModel {
 
     //local field
     bool _isSeen = false;
+    bool _isCheck = false;
+    int _listIndex;
 
     NotificationModel(
         {int adminID,
@@ -24,6 +26,9 @@ class NotificationModel {
             int iD,
             String accesstime,
             int bizId,
+            bool isSeen,
+            bool isCheck,
+            int listIndex,
         }) {
         this._adminID = adminID;
         this._isDeleted = isDeleted;
@@ -34,6 +39,9 @@ class NotificationModel {
         this._iD = iD;
         this._accesstime = accesstime;
         this._bizId = bizId;
+        this._isSeen = isSeen;
+        this._isCheck = isCheck;
+        this._listIndex = listIndex;
     }
 
 
@@ -65,6 +73,20 @@ class NotificationModel {
 
     set isSeen(bool value) {
         _isSeen = value;
+    }
+
+
+    bool get isCheck => _isCheck;
+
+    set isCheck(bool value) {
+        _isCheck = value;
+    }
+
+
+    int get listIndex => _listIndex;
+
+    set listIndex(int value) {
+        _listIndex = value;
     }
 
     NotificationModel.fromJson(Map<String, dynamic> json) {

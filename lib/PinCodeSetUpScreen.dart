@@ -151,7 +151,7 @@ class _PinCodeSetUpScreenState extends State<PinCodeSetUpScreen> {
                             child: CustomButtonWidget(onPress: (){
                               if(_pinCodeController.text.isNotEmpty){
                                 _userModel.pinCode = int.parse(_pinCodeController.text);
-                                FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.PIN_CODE_SET_UP_SCREEN, ClickEvent.PIN_CODE_SET_UP_CLICK_EVENT, _userModel.uniqueKey);
+                                FireBaseAnalyticsHelper.trackClickEvent(ScreenName.PIN_CODE_SET_UP_SCREEN, ClickEvent.PIN_CODE_SET_UP_CLICK_EVENT, _userModel.uniqueKey);
                                 _updateUser();
                               }else{
                                 WarningSnackBar(_scaffoldState, MyString.txt_need_pin_code);

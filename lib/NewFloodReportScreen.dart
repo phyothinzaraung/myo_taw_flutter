@@ -84,7 +84,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
   }
 
   _navigateToGetFloodLevelScreen() async{
-    Map result = await NavigatorHelper.MyNavigatorPush(context, GetFloodLevelScreen(), ScreenName.GET_FLOOD_LEVEL_SCREEN);
+    Map result = await NavigatorHelper.myNavigatorPush(context, GetFloodLevelScreen(), ScreenName.GET_FLOOD_LEVEL_SCREEN);
     if(result != null && result.containsKey('FloodLevel')){
       setState(() {
         _floodLevel = result['FloodLevel'];
@@ -116,7 +116,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
           img: 'flood_level.png',
           onPress: ()async{
             await _sharepreferenceshelper.initSharePref();
-            FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+            FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
             Navigator.of(context).pop();
             Navigator.of(context).pop({'isNeedRefresh' : true});
           }
@@ -156,7 +156,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                 }
               });
               await _sharepreferenceshelper.initSharePref();
-              FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+              FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.CAMERA_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
             },child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: <Widget>[
@@ -212,7 +212,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                       if(_isCon){
                         if(_image != null && _floodLevel != 0){
                           await _sharepreferenceshelper.initSharePref();
-                          FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_FLOOD_LEVEL_REPORT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                          FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_FLOOD_LEVEL_REPORT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                           _reportFloodLevel();
                         }else if(_image == null){
                           WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);

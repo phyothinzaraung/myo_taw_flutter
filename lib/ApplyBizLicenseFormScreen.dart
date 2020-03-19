@@ -987,7 +987,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                   _applyBizLicenseModel.licenseType = _bizLicenseModel.licenseType;
                   _applyBizLicenseModel.licensetypeId = _bizLicenseModel.id;
                   _applyBizLicenseModel.source = 'app'; //to know apply biz is from mobile app or chat bot
-                  FireBaseAnalyticsHelper.TrackClickEvent(ScreenName.APPLY_BIZ_LICENSE_FORM_SCREEN, ClickEvent.BIZ_LICENSE_APPLIED_CLICK_EVENT, _userModel.uniqueKey);
+                  FireBaseAnalyticsHelper.trackClickEvent(ScreenName.APPLY_BIZ_LICENSE_FORM_SCREEN, ClickEvent.BIZ_LICENSE_APPLIED_CLICK_EVENT, _userModel.uniqueKey);
                   _callWebService(_applyBizLicenseModel);
                 }else{
                   WarningSnackBar(_globalKey, MyString.txt_no_apply_biz_form_warning);

@@ -58,9 +58,9 @@ class _DaoScreenState extends State<DaoScreen> {
                   return GestureDetector(
                     onTap: (){
                       if(_daoViewModelList[index].dAO.title.contains('ဌာနများ')){
-                        NavigatorHelper.MyNavigatorPush(context, DepartmentListScreen(_daoViewModelList[index]), ScreenName.DEPARTMENT_LIST_SCREEN);
+                        NavigatorHelper.myNavigatorPush(context, DepartmentListScreen(_daoViewModelList[index]), ScreenName.DEPARTMENT_LIST_SCREEN);
                       }else{
-                        NavigatorHelper.MyNavigatorPush(context, DaoDetailScreen(_daoViewModelList[index]),
+                        NavigatorHelper.myNavigatorPush(context, DaoDetailScreen(_daoViewModelList[index]),
                             display.isEmpty?ScreenName.ABOUT_DAO_DETAIL_SCREEN : ScreenName.ABOUT_TAX_DETAIL_SCREEN);
                       }
                     },

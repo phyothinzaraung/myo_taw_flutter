@@ -115,7 +115,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
 
 
   _navigateToPaymentScreen()async{
-    Map result = await NavigatorHelper.MyNavigatorPush(context, PaymentScreen(), ScreenName.ONLINE_TAX_PAYMENT_SCREEN);
+    Map result = await NavigatorHelper.myNavigatorPush(context, PaymentScreen(), ScreenName.ONLINE_TAX_PAYMENT_SCREEN);
     if(result != null && result.containsKey('isNeedRefresh') == true){
       _handleRefresh();
     }
@@ -176,7 +176,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                           Container(
                             margin: EdgeInsets.only(right: 10),
                               child: Image.asset('images/money.png', width: 35, height: 35,)),
-                          Text(NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_amount.toString())) +' '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeLarge, color: Colors.white),),
+                          Text(NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat(_amount.toString())) +' '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeLarge, color: Colors.white),),
                         ],
                       ),
                     ),
@@ -189,7 +189,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                               height: 45.0,
                               child: CustomButtonWidget(onPress: ()async{
 
-                                NavigatorHelper.MyNavigatorPush(context, TopUpRecordListScreen(_userModel), ScreenName.TOP_UP_RECORD_LIST_SCREEN);
+                                NavigatorHelper.myNavigatorPush(context, TopUpRecordListScreen(_userModel), ScreenName.TOP_UP_RECORD_LIST_SCREEN);
 
                                 }, child: Text(MyString.txt_top_up_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                                 color: Colors.white,
@@ -253,7 +253,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
                             Row(
                               children: <Widget>[
                                 Expanded(child: Text(MyString.txt_tax_bill_amount, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
-                                Expanded(child: Text(NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_paymentLogList[index].useAmount.toString()))+'  '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
+                                Expanded(child: Text(NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat(_paymentLogList[index].useAmount.toString()))+'  '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
                               ],
                             )
                           ],

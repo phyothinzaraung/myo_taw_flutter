@@ -145,7 +145,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
                           Container(
                             margin: EdgeInsets.only(right: 10),
                               child: Image.asset('images/money.png', width: 35, height: 35,)),
-                          Text(NumConvertHelper.getMyanNumString(NumberFormatterHelper.NumberFormat(_amount.toString()))+' '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeLarge, color: Colors.white),),
+                          Text(NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat(_amount.toString()))+' '+MyString.txt_kyat, style: TextStyle(fontSize: FontSize.textSizeLarge, color: Colors.white),),
                         ],
                       ),
                     ),
@@ -187,7 +187,7 @@ class _SmartWaterMeterScreenState extends State<SmartWaterMeterScreen> {
                       width: double.maxFinite,
                       child: CustomButtonWidget(onPress: ()async{
 
-                        NavigatorHelper.MyNavigatorPush(context, TopUpRecordListScreen(_userModel), ScreenName.TOP_UP_RECORD_LIST_SCREEN);
+                        NavigatorHelper.myNavigatorPush(context, TopUpRecordListScreen(_userModel), ScreenName.TOP_UP_RECORD_LIST_SCREEN);
 
                         }, child: Text(MyString.txt_top_up_record, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorPrimary),),
                         color: Colors.white, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),),

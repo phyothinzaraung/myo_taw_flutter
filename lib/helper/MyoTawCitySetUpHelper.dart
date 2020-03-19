@@ -109,16 +109,16 @@ class MyoTawCitySetUpHelper{
     var _navigator;
     switch (regionCode){
       case MyString.TGY_REGIONCODE:
-        _navigator = NavigatorHelper.MyNavigatorPush(context, TgyPropertyTaxCalculatorScreen(), ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN);
+        _navigator = NavigatorHelper.myNavigatorPush(context, TgyPropertyTaxCalculatorScreen(), ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN);
         break;
       case MyString.MLM_REGIONCODE:
-        _navigator = NavigatorHelper.MyNavigatorPush(context, MlmPropertyTaxCalculatorScreen(), ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN);
+        _navigator = NavigatorHelper.myNavigatorPush(context, MlmPropertyTaxCalculatorScreen(), ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN);
         break;
       case MyString.LKW_REGIONCODE:
-        _navigator = NavigatorHelper.MyNavigatorPush(context, LkwPropertyTaxCalculatorScreen(), ScreenName.LKW_PROPERTY_TAX_CALCULATOR_SCREEN);
+        _navigator = NavigatorHelper.myNavigatorPush(context, LkwPropertyTaxCalculatorScreen(), ScreenName.LKW_PROPERTY_TAX_CALCULATOR_SCREEN);
         break;
       case MyString.MGY_REGIONCODE:
-        _navigator = NavigatorHelper.MyNavigatorPush(context, LkwPropertyTaxCalculatorScreen(), ScreenName.LKW_PROPERTY_TAX_CALCULATOR_SCREEN);
+        _navigator = NavigatorHelper.myNavigatorPush(context, LkwPropertyTaxCalculatorScreen(), ScreenName.LKW_PROPERTY_TAX_CALCULATOR_SCREEN);
         break;
     }
     return _navigator;
@@ -128,16 +128,16 @@ class MyoTawCitySetUpHelper{
     var _navigator;
     switch (regionCode){
       case MyString.TGY_REGIONCODE:
-        _navigator = NavigatorHelper.MyNavigatorPush(context, TgyBizTaxCalculatorScreen(), ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN);
+        _navigator = NavigatorHelper.myNavigatorPush(context, TgyBizTaxCalculatorScreen(), ScreenName.TGY_BIZ_TAX_CALCULATOR_SCREEN);
         break;
       case MyString.MLM_REGIONCODE:
-        _navigator = NavigatorHelper.MyNavigatorPush(context, MlmBizTaxCalculatorScreen(), ScreenName.MLM_BIZ_TAX_CALCULATOR_SCREEN);
+        _navigator = NavigatorHelper.myNavigatorPush(context, MlmBizTaxCalculatorScreen(), ScreenName.MLM_BIZ_TAX_CALCULATOR_SCREEN);
         break;
       case MyString.LKW_REGIONCODE:
-        _navigator = NavigatorHelper.MyNavigatorPush(context, LkwBizTaxCalculatorScreen(), ScreenName.LKW_PROPERTY_TAX_CALCULATOR_SCREEN);
+        _navigator = NavigatorHelper.myNavigatorPush(context, LkwBizTaxCalculatorScreen(), ScreenName.LKW_PROPERTY_TAX_CALCULATOR_SCREEN);
         break;
       case MyString.MGY_REGIONCODE:
-        _navigator = NavigatorHelper.MyNavigatorPush(context, LkwBizTaxCalculatorScreen(), ScreenName.LKW_PROPERTY_TAX_CALCULATOR_SCREEN);
+        _navigator = NavigatorHelper.myNavigatorPush(context, LkwBizTaxCalculatorScreen(), ScreenName.LKW_PROPERTY_TAX_CALCULATOR_SCREEN);
         break;
     }
     return _navigator;
