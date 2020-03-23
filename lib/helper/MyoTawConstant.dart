@@ -202,7 +202,7 @@ class MyString{
   static const String txt_biz_tax_range = "ပေးဆောင်ရမည့် အခွန်နှုန်းထားမှာ";
   static const String txt_biz_tax_property = "ပေးဆောင်ရမည့် အခွန်မှာ";
   static const String txt_thanks = "အခွန်ပေးဆောင်မှုအတွက် \n ကျေးဇူးတင်ပါသည်။";
-  static const String txt_choose_license_type = "လိုင်စင်အမျိုးအစားရွေးပါ";
+  static const String txt_choose_biz_license_type = "လိုင်စင်အမျိုးအစားရွေးပါ";
   static const String txt_license_type = "လိုင်စင်အမျိုးအစား";
   static const String txt_site_area = "အဆောက်အဦး (အလျား × အနံ)";
   static const String txt_grade = "အတန်းအစား";

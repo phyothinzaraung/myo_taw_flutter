@@ -328,7 +328,7 @@ class _LkwBizTaxCalculatorScreenState extends State<LkwBizTaxCalculatorScreen> {
                               FireBaseAnalyticsHelper.trackClickEvent(ScreenName.LKW_BIZ_TAX_CALCULATOR_SCREEN, ClickEvent.CALCULATE_BIZ_TAX_CLICK_EVENT,
                                   _sharepreferenceshelper.getUserUniqueKey());
                             }else if(_dropDownBizLicenseType == MyString.txt_no_selected){
-                              WarningSnackBar(_globalKey, MyString.txt_choose_license_type);
+                              WarningSnackBar(_globalKey, MyString.txt_choose_biz_license_type);
 
                             }else if(_dropDownBizType == MyString.txt_no_selected){
                               WarningSnackBar(_globalKey, MyString.txt_choose_biz_license);

@@ -140,11 +140,11 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
                     )
                 ),
               ),
-              Container(
+              /*Container(
                 height: 10,
                 width: double.maxFinite,
                 color: MyColor.colorPrimary,
-              ),
+              ),*/
               Container(
                 margin: EdgeInsets.all(20),
                 width: double.maxFinite,
