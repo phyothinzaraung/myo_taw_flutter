@@ -1,7 +1,9 @@
 import 'dart:io';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:libphonenumber/libphonenumber.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:myotaw/MyoTawPolicyWebViewScreen.dart';
 import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/ButtonLoadingIndicatorWidget.dart';
@@ -127,7 +129,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           tag: 'myotaw',
                           child: Image.asset("images/myo_taw_logo_eng.png", width: 90, height: 80,)),
                       Container(
-                        margin: EdgeInsets.all(30),
+                        margin: EdgeInsets.only(top: 30, left: 30, right: 30, bottom: 10),
                         child: Card(
                           shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
                           child: Container(
@@ -231,6 +233,19 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                       ),
+                      Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                              margin: EdgeInsets.only(bottom: 30),
+                              child: InkWell(
+                                onTap: (){
+                                  NavigatorHelper.myNavigatorPush(context, MyoTawPolicyWebViewScreen(), ScreenName.MYO_TAW_POLICY_SCREEN);
+                                },
+                                child: Text(MyString.txt_myotaw_app_policy,
+                                  style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorPrimary,decoration: TextDecoration.underline),
+                                  textAlign: TextAlign.center,
+                                  ),
+                              ),)),
                       Align(
                           alignment: Alignment.bottomCenter,
                           child: Text(_appVersion, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextGrey),)),

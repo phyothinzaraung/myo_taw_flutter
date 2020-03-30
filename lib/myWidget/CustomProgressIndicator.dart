@@ -9,9 +9,12 @@ class CustomProgressIndicatorWidget extends StatelessWidget {
 
   Widget _androidIndicator(){
     return Container(
-        width: double.maxFinite,
-        height: double.maxFinite,
-        color: Colors.black.withOpacity(0.5),
+        width: 70,
+        height: 70,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.black.withOpacity(0.5),
+        ),
         child: Center(child: CircularProgressIndicator(valueColor: AlwaysStoppedAnimation<Color>(MyColor.colorPrimary)))
     );
   }

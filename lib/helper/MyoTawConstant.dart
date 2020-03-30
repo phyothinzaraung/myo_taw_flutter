@@ -28,6 +28,7 @@ class BaseUrl{
   static const String WEB_SERVICE_ROOT_ADDRESS_DAO_INVOICE_NO = "https://daoapifinal.azurewebsites.net/api/";
   static const String REFERRAL_URL = "https://maymayadmin.azurewebsites.net/Referral/CityAppReferralDetail?referralpno=";
   static const String WEB_SERVICE_ROOT_ADDRESS_OTP = "https://kktsmsverification.azurewebsites.net/api/";
+  static const String MYO_TAW_POLICY_URL = "https://myotawadmin.azurewebsites.net/Privacy/privacypolicy";
 
   //photo url
   static const String NEWS_FEED_CONTENT_URL = "https://portalvhdslvb28rs1c3tmc.blob.core.windows.net/city/NewsFeed/";
@@ -298,6 +299,7 @@ class MyString{
   static const String txt_special_grade = 'အထူးနှုန်း';
   static const String txt_upload_need_apply_biz_file = 'လိုအပ်သောစာရွက်စာတမ်းတင်မည်';
   static const String txt_select_all = 'အားလုံး';
+  static const String txt_myotaw_app_policy = 'Login ဝင်ခြင်းသည် MyoTaw app ၏ Policy \n ကိုလက်ခံပြီးဖြစ်သည်။';
 
   static const String txt_first_grade = 'ပထမတန်းစား';
   static const String txt_second_grade = 'ဒုတိယတန်းစား';
@@ -737,6 +739,8 @@ class ScreenName{
   static const String NOTIFICATION_DETAIL_SCREEN = 'Notification detail screen';
 
   static const String PHOTO_DETAIL_SCREEN = 'Photo detail screen';
+
+  static const String MYO_TAW_POLICY_SCREEN = 'Myo taw policy screen';
 
 }
 
