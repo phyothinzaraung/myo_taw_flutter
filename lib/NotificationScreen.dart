@@ -79,7 +79,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
     await _sharepreferenceshelper.initSharePref();
     _regionCode = _sharepreferenceshelper.getRegionCode();
     try{
-      response = await ServiceHelper().getNotification(_regionCode);
+      response = await ServiceHelper().getNotification(_regionCode,_sharepreferenceshelper.getUserUniqueKey());
       if(response.data != null) {
         var result  = response.data;
         await _notificationDb.openNotificationDb();
@@ -105,6 +105,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
 
   Widget _notificationListWidget(NotificationModel model,Animation animation, [int i]){
     String datetime = model.postedDate;
+    var list = model.message.split('-');
     String date = ShowDateTimeHelper.showDateTimeDifference(datetime);
 
     return ScaleTransition(
@@ -162,7 +163,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
             },color: model.isCheck==true? MyColor.colorPrimary : MyColor.colorGreyDark),
             title: Container(
                 margin: EdgeInsets.only(bottom: 10),
-                child: Text(model.message, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorBlackSemiTransparent), maxLines: 2,overflow: TextOverflow.ellipsis,)),
+                child: Text(list.length == 2?list[1] : model.message, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorBlackSemiTransparent), maxLines: 2,overflow: TextOverflow.ellipsis,)),
             subtitle: Text(date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),),
             onTap: ()async{
 

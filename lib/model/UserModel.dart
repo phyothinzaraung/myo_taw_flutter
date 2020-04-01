@@ -21,6 +21,7 @@ class UserModel{
   String _wardName;
   String _meterNo;
 
+  UserModel();
 
   String get meterNo => _meterNo;
 

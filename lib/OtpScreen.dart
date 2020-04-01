@@ -123,7 +123,7 @@ class _OtpScreenState extends State<OtpScreen> {
     var result = response.data;
     if(result != null){
       if(result['code'] == '002'){
-        await _logIn();
+        _logIn();
       }else{
         WarningSnackBar(_globalKey, MyString.txt_wrong_pin_code);
       }
@@ -322,5 +322,6 @@ class _OtpScreenState extends State<OtpScreen> {
     // TODO: implement dispose
     super.dispose();
     _timer.cancel();
+    SmsAutoFill().unregisterListener();
   }
 }

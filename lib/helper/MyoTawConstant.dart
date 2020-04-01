@@ -246,7 +246,7 @@ class MyString{
   static const String txt_need_prepaid_code = "ငွေဖြည့်ကုဒ် ရိုက်ပေးပါ။";
   static const String txt_need_pin_code = "ပင်ကုဒ် ရိုက်ပေးပါ။";
   static const String txt_choose_grade = "အတန်းအစား ရွေး‌ပေးပါ။";
-  static const String txt_choose_biz_license = "လုပ်ငန်းအမျိုးအစား ရွေး‌ပေးပါ။";
+  static const String txt_choose_biz_type = "လုပ်ငန်းအမျိုးအစား ရွေး‌ပေးပါ။";
   static const String txt_need_tax_record_name = "မှတ်တမ်းအမည် ဖြည့်ရန်လိုအပ်သည်။";
   static const String txt_wrong_invoice_or_tax_type = "ပြေစာနံပါတ် သို့မဟုတ် အခွန်အမျိုးအစား မှားနေပါသည်။";
   static const String txt_need_invoice_no = "ပြေစာနံပါတ် ဖြည့်ရန်လိုအပ်သည်။";
@@ -300,6 +300,7 @@ class MyString{
   static const String txt_upload_need_apply_biz_file = 'လိုအပ်သောစာရွက်စာတမ်းတင်မည်';
   static const String txt_select_all = 'အားလုံး';
   static const String txt_myotaw_app_policy = 'Login ဝင်ခြင်းသည် MyoTaw app ၏ Policy \n ကိုလက်ခံပြီးဖြစ်သည်။';
+  static const String txt_noti_biz_license = 'Business License ';
 
   static const String txt_first_grade = 'ပထမတန်းစား';
   static const String txt_second_grade = 'ဒုတိယတန်းစား';

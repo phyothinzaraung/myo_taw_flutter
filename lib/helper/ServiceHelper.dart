@@ -161,7 +161,7 @@ class ServiceHelper{
  getApplyBizPhotoList<Response>(int id) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
-  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/ApplyBizPhotosList",
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/ApplyBizPhotosListForFlutter",
       queryParameters: {"ID": id});
   return response;
  }
@@ -316,11 +316,11 @@ class ServiceHelper{
   return response;
  }
 
- getNotification<Response>(String regionCode) async{
+ getNotification<Response>(String regionCode,String uniqueKey) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Notification/GetNotificationListForAndroid",
-      queryParameters: {"RegionCode":regionCode});
+      queryParameters: {"RegionCode":regionCode, "UniqueKey":uniqueKey});
   return response;
  }
 

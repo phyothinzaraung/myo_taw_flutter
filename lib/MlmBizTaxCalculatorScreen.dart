@@ -240,7 +240,7 @@ class _MlmBizTaxCalculatorScreenState extends State<MlmBizTaxCalculatorScreen> {
                               WarningSnackBar(_globalKey, MyString.txt_choose_biz_license_type);
 
                             }else if(_dropDownBizType == MyString.txt_no_selected){
-                              WarningSnackBar(_globalKey, MyString.txt_choose_biz_license);
+                              WarningSnackBar(_globalKey, MyString.txt_choose_biz_type);
                             }
                           },color: MyColor.colorPrimary,
                           shape: RoundedRectangleBorder(

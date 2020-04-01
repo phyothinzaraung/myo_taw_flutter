@@ -37,10 +37,12 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
   bool _isCon, _isLoading;
   var _response;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
-  List<ApplyBizLicensePhotoModel> _applyBizLicensePhotoModelList = new List<ApplyBizLicensePhotoModel>();
+  List<Photo> _applyBizLicensePhotoList = new List<Photo>();
+  ApplyBizLicensePhotoModel _applyBizLicensePhotoModel = ApplyBizLicensePhotoModel();
   TextEditingController _fileTitleController = TextEditingController();
   File _image;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
+  bool _isValid = false;
   _ApplyBizLicensePhotoListScreenState(this._applyBizLicenseModel);
 
   @override
@@ -71,18 +73,16 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
   _getAllBizLicense()async{
     await _sharepreferenceshelper.initSharePref();
     _response = await ServiceHelper().getApplyBizPhotoList(_applyBizLicenseModel.id);
-    List applyBizLicensePhotoList = _response.data;
-    if(applyBizLicensePhotoList != null && applyBizLicensePhotoList.length > 0){
-      for(var i in applyBizLicensePhotoList){
-        setState(() {
-          _applyBizLicensePhotoModelList.add(ApplyBizLicensePhotoModel.fromJson(i));
-        });
-      }
+    var result = _response.data;
+    if(result != null){
+      _applyBizLicensePhotoModel = ApplyBizLicensePhotoModel.fromJson(result);
+      _isValid = _applyBizLicensePhotoModel.isValid;
+      _applyBizLicensePhotoList.addAll(_applyBizLicensePhotoModel.photo);
     }
   }
 
   _listView(){
-    return _applyBizLicensePhotoModelList.isNotEmpty?
+    return _applyBizLicensePhotoList.isNotEmpty?
     Container(
         child: CustomScrollView(
           slivers: <Widget>[
@@ -90,13 +90,13 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                 delegate: SliverChildBuilderDelegate((context, index){
                   return GestureDetector(
                     onTap: (){
-                      NavigatorHelper.myNavigatorPush(context, PhotoDetailScreen(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl),
+                      NavigatorHelper.myNavigatorPush(context, PhotoDetailScreen(BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoList[index].photoUrl),
                           ScreenName.PHOTO_DETAIL_SCREEN);
                     },
                     child: Padding(
                       padding: EdgeInsets.all(10.0),
                       child: CachedNetworkImage(
-                        imageUrl: BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoModelList[index].photoUrl,
+                        imageUrl: BaseUrl.APPLY_BIZ_LICENSE_PHOTO_URL+_applyBizLicensePhotoList[index].photoUrl,
                         imageBuilder: (context, image){
                           return Container(
                             width: 160,
@@ -115,7 +115,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
                       ),
                     ),
                   );
-                },childCount: _applyBizLicensePhotoModelList.length),
+                },childCount: _applyBizLicensePhotoList.length),
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 200.0,
                     crossAxisSpacing: 0.0))
@@ -137,7 +137,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
   }
 
   Future<Null> _handleRefresh() async {
-    _applyBizLicensePhotoModelList.clear();
+    _applyBizLicensePhotoList.clear();
     asyncLoaderState.currentState.reloadState();
     return null;
   }
@@ -178,7 +178,7 @@ class _ApplyBizLicensePhotoListScreenState extends State<ApplyBizLicensePhotoLis
               child: Column(
                 children: <Widget>[
                   Expanded(child: _listView()),
-                  _applyBizLicenseModel.isValid?Container():
+                  _isValid?Container():
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.end,
                     children: <Widget>[

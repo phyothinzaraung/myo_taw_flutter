@@ -135,7 +135,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   initBadge()async{
     try{
       await _sharepreferenceshelper.initSharePref();
-      var response = await ServiceHelper().getNotification(_sharepreferenceshelper.getRegionCode());
+      var response = await ServiceHelper().getNotification(_sharepreferenceshelper.getRegionCode(),_sharepreferenceshelper.getUserUniqueKey());
       if(response.data != null) {
         var result = response.data;
         await _notificationDb.openNotificationDb();
@@ -187,81 +187,82 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
        }
      });
 
-     if(!_userModel.isWardAdmin){
-       _firebaseMesssaging.subscribeToTopic('all');
-       _firebaseMesssaging.configure(
-           onMessage: (Map<String, dynamic> message) async {
-             print('on message $message');
+    if(_sharepreferenceshelper.isWardAdmin()){
+      _firebaseMesssaging.configure(
+          onMessage: (Map<String, dynamic> message) async {
+            print('on message $message');
 
-             if(message != null){
-               String json = message['data']['notification'];
-               Map<String, dynamic> temp = jsonDecode(json);
-               await _notificationDb.openNotificationDb();
-               await _notificationDb.insert(NotificationModel.fromJson(temp));
-               var count = await _notificationDb.getUnReadNotificationCount();
-               _notificationDb.closeSaveNotificationDb();
-               _notifier.notify('noti_count', count);
-               _notifier.notify('noti_add', temp);
-               _sharepreferenceshelper.setNotificationAdd(true);
-             }
-           },
-           onResume: (Map<String, dynamic> message) async {
-             print('on resume ${message['data']['notification']}');
+            if(message != null){
+              String json = message['data']['notification'];
+              Map<String, dynamic> temp = jsonDecode(json);
+              await _notificationDb.openNotificationDb();
+              NotificationModel model = NotificationModel.fromJson(temp);
+              await _notificationDb.insert(model);
+              var count = await _notificationDb.getUnReadNotificationCount();
+              _notificationDb.closeSaveNotificationDb();
+              _sharepreferenceshelper.setNotificationAdd(true);
+              _notifier.notify('noti_count', count);
+              _notifier.notify('noti_add', temp);
+            }
+          },
 
-             if(message != null){
-               String json = message['data']['notification'];
-               Map<String, dynamic> temp = jsonDecode(json);
-               await _notificationDb.openNotificationDb();
-               NotificationModel model = NotificationModel.fromJson(temp);
-               var _isSaved = await _notificationDb.isNotificationSaved(model.iD);
-               if (!_isSaved) {
-                 model.isSeen = true;
-                 await _notificationDb.insert(model);
-               }
-               _notificationDb.closeSaveNotificationDb();
-               if(message['data']['notification'] != null && !_isSaved){
-                 NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
-               }
-             }
-           },
-           onLaunch: (Map<String, dynamic> message) async {
-             print('on launch ${message['data']['notification']}');
+      );
 
-             if (message != null) {
-               String json = message['data']['notification'];
-               Map<String, dynamic> temp = jsonDecode(json);
-               await _notificationDb.openNotificationDb();
-               NotificationModel model = NotificationModel.fromJson(temp);
-               var _isSaved = await _notificationDb.isNotificationSaved(model.iD);
-               if (!_isSaved) {
-                 model.isSeen = true;
-                 await _notificationDb.insert(model);
-               }
-               _notificationDb.closeSaveNotificationDb();
-               if(message['data']['notification'] != null && !_isSaved){
-                 NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
-               }
-             }
-           }
-       );
+    }else{
+      _firebaseMesssaging.subscribeToTopic('all');
+      _firebaseMesssaging.configure(
+          onMessage: (Map<String, dynamic> message) async {
+            print('on message $message');
 
-       _firebaseMesssaging.onTokenRefresh.listen((refreshToken)async{
-         await _sharepreferenceshelper.initSharePref();
-         if(_sharepreferenceshelper.getToken() != refreshToken){
-           try{
-             var response = await ServiceHelper().updateUserToken(_sharepreferenceshelper.getUserUniqueKey(), refreshToken, PlatformHelper.isAndroid()?'Android' : 'Ios');
-             await _userDb.openUserDb();
-             await _userDb.insert(UserModel.fromJson(response.data));
-             _userDb.closeUserDb();
-             _sharepreferenceshelper.setUserToken(refreshToken);
-           }catch(e){
-             print(e);
-           }
-           print('update user token');
-         }
-         print('Token refresh : ' + refreshToken);
-       });
-     }
+            if(message != null){
+              String json = message['data']['notification'];
+              Map<String, dynamic> temp = jsonDecode(json);
+              await _notificationDb.openNotificationDb();
+              NotificationModel model = NotificationModel.fromJson(temp);
+              await _notificationDb.insert(model);
+              var count = await _notificationDb.getUnReadNotificationCount();
+              _notificationDb.closeSaveNotificationDb();
+              _sharepreferenceshelper.setNotificationAdd(true);
+              _notifier.notify('noti_count', count);
+              _notifier.notify('noti_add', temp);
+            }
+          },
+          onResume: (Map<String, dynamic> message) async {
+            print('on resume ${message['data']['notification']}');
+
+            if(message != null){
+              String json = message['data']['notification'];
+              Map<String, dynamic> temp = jsonDecode(json);
+              await _notificationDb.openNotificationDb();
+              NotificationModel model = NotificationModel.fromJson(temp);
+              await _notificationDb.insert(model);
+              var count = await _notificationDb.getUnReadNotificationCount();
+              _notificationDb.closeSaveNotificationDb();
+              if(message['data']['notification'] != null){
+                _sharepreferenceshelper.setNotificationAdd(true);
+                _notifier.notify('noti_count', count);
+                _notifier.notify('noti_add', temp);
+                NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+              }
+            }
+          },
+          onLaunch: (Map<String, dynamic> message) async {
+            print('on launch ${message['data']['notification']}');
+
+            if (message != null) {
+              String json = message['data']['notification'];
+              Map<String, dynamic> temp = jsonDecode(json);
+              await _notificationDb.openNotificationDb();
+              NotificationModel model = NotificationModel.fromJson(temp);
+              await _notificationDb.insert(model);
+              _notificationDb.closeSaveNotificationDb();
+              if(message['data']['notification'] != null){
+                NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+              }
+            }
+          }
+      );
+    }
   }
 
   _navigateToProfileFormScreen()async{

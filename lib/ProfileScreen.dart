@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/LoginScreen.dart';
@@ -56,6 +57,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   GlobalKey<SliverAnimatedListState> _animatedListKey = GlobalKey();
   NotificationDb _notificationDb = NotificationDb();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   @override
   void initState() {
@@ -123,6 +125,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _isLoading = true;
     });
+    _firebaseMessaging.unsubscribeFromTopic('all');
+    _firebaseMessaging.deleteInstanceID();
     await _sharepreferenceshelper.initSharePref();
     _sharepreferenceshelper.logOutSharePref();
 

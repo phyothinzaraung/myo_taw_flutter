@@ -69,7 +69,7 @@ class _DaoScreenState extends State<DaoScreen> {
                       child: Column(
                         children: <Widget>[
                           //image dao
-                          Flexible(flex: 3,child: _daoViewModelList[index].dAO.icon!=null?
+                          Flexible(flex: 2,child: _daoViewModelList[index].dAO.icon!=null?
                           Image.network(BaseUrl.DAO_PHOTO_URL+_daoViewModelList[index].dAO.icon,) :
                               CircleAvatar(
                                 backgroundImage: AssetImage('images/placeholder.jpg'),
@@ -86,7 +86,9 @@ class _DaoScreenState extends State<DaoScreen> {
                 },childCount: _daoViewModelList.length),
                 gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
                     maxCrossAxisExtent: 250.0,
-                    crossAxisSpacing: 0.0,))
+                    crossAxisSpacing: 0.0,
+                    mainAxisSpacing: 10
+                ))
           ],
         )
     );

@@ -43,24 +43,22 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
     _list = [model1,model3, model2];
     _firebaseMessaging.subscribeToTopic('all');
     _firebaseMessaging.configure(
-        onMessage: (Map<String, dynamic> message) async {
+        /*onMessage: (Map<String, dynamic> message) async {
           print('on message $message');
 
-          String json = message['data']['notification'];
-          Map<String, dynamic> temp = jsonDecode(json);
-          await _notificationDb.openNotificationDb();
-          var lastid = await _notificationDb.getLastID();
-          NotificationModel model = NotificationModel.fromJson(temp);
-          if(model.iD == 0){
-            model.iD = lastid + 1;
+          if(message != null){
+            String json = message['data']['notification'];
+            Map<String, dynamic> temp = jsonDecode(json);
+            await _notificationDb.openNotificationDb();
+            NotificationModel model = NotificationModel.fromJson(temp);
+            await _notificationDb.insert(model);
+            var count = await _notificationDb.getUnReadNotificationCount();
+            _notificationDb.closeSaveNotificationDb();
+            _sharepreferenceshelper.setNotificationAdd(true);
+            _notifier.notify('noti_count', count);
+            _notifier.notify('noti_add', temp);
           }
-          await _notificationDb.insert(model);
-          var count = await _notificationDb.getUnReadNotificationCount();
-          _notificationDb.closeSaveNotificationDb();
-          _notifier.notify('noti_count', count);
-          _notifier.notify('noti_add', temp);
-          _sharepreferenceshelper.setNotificationAdd(true);
-        },
+        },*/
         onResume: (Map<String, dynamic> message) async {
           print('on resume ${message['data']['screen']}');
 
@@ -68,12 +66,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             String json = message['data']['notification'];
             Map<String, dynamic> temp = jsonDecode(json);
             await _notificationDb.openNotificationDb();
-            var lastid = await _notificationDb.getLastID();
             NotificationModel model = NotificationModel.fromJson(temp);
-            if(model.iD == 0){
-              model.iD = lastid + 1;
-            }
-            model.isSeen = true;
             await _notificationDb.insert(model);
             _notificationDb.closeSaveNotificationDb();
             if(message['data']['notification'] != null){
@@ -88,12 +81,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             String json = message['data']['notification'];
             Map<String, dynamic> temp = jsonDecode(json);
             await _notificationDb.openNotificationDb();
-            var lastid = await _notificationDb.getLastID();
             NotificationModel model = NotificationModel.fromJson(temp);
-            if(model.iD == 0){
-              model.iD = lastid + 1;
-            }
-            model.isSeen = true;
             await _notificationDb.insert(model);
             _notificationDb.closeSaveNotificationDb();
             if(message['data']['notification'] != null){

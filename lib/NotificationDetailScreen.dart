@@ -27,7 +27,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
   NotificationModel _notificationModel;
   NotificationDb _notificationDb = NotificationDb();
   String _message, _date;
-  var _list;
+  List _list;
   Notifier _notifier;
 
   _NotificationDetailScreenState(this._notificationModel);
@@ -46,6 +46,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
       _list = _message.split('-');
       _date = ShowDateTimeHelper.showDateTimeDifference(_notificationModel.postedDate);
     });
+    print('bizid : ${_notificationModel.bizId}');
   }
 
   _readNotification(NotificationModel model)async{
@@ -80,19 +81,20 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
           ),
           Expanded(
             //child: Text(_message, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorBlackSemiTransparent))
-            child: Linkify(text: _message,onOpen: (link)async{
+            child: Linkify(text: _list.length == 2? _list[1] : _message,onOpen: (link)async{
               if(await canLaunch(link.url)){
                 await launch(link.url);
               }
             },linkStyle: TextStyle(color: Colors.red),),
           ),
-          _list.length != 2?Container(
+          _list[0] == MyString.txt_noti_biz_license?Container(
             width: double.maxFinite,
             margin: EdgeInsets.only(bottom: 10.0),
             child: CustomButtonWidget(
               onPress: ()async{
                 ApplyBizLicenseModel model = ApplyBizLicenseModel();
                 model.id = _notificationModel.bizId;
+                print('apply biz id : ${model.id}');
                 NavigatorHelper.myNavigatorPush(context, ApplyBizLicensePhotoListScreen(model), ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN);
 
               }, child: Text(MyString.txt_upload_need_apply_biz_file, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),

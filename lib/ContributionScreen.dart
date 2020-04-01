@@ -276,7 +276,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
                               WarningSnackBar(_globalKey, MyString.txt_no_internet);
                             }
 
-                          }, child: Text(MyString.txt_save_user_profile, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                          }, child: Text(MyString.txt_send_contribution, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
                             color: MyColor.colorPrimary,
                             shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
                             borderRadius: BorderRadius.circular(10),
