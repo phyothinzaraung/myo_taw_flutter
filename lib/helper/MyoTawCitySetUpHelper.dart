@@ -31,6 +31,25 @@ class MyoTawCitySetUpHelper{
     return _city;
   }
 
+  static String getState(String regionCode){
+    String _state = '';
+    switch(regionCode){
+      case MyString.TGY_REGIONCODE:
+        _state = MyString.TGY_STATE;
+        break;
+      case MyString.MLM_REGIONCODE:
+        _state = MyString.MLM_STATE;
+        break;
+      case MyString.LKW_REGIONCODE:
+        _state = MyString.LKW_STATE;
+        break;
+      case MyString.MGY_REGIONCODE:
+        _state = MyString.MGY_STATE;
+        break;
+    }
+    return _state;
+  }
+
   static int getNewsFeedCityId(String regionCode){
     int _organizationId = 0;
     switch(regionCode){

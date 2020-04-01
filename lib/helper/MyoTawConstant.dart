@@ -62,6 +62,11 @@ class MyString{
   static const String LKW_CITY = 'လွိုင်ကော်မြို့';
   static const String MGY_CITY = 'မကွေးမြို့';
 
+  static const String TGY_STATE = 'ရှမ်းပြည်နယ်';
+  static const String MLM_STATE = 'မွန်ပြည်နယ်';
+  static const String LKW_STATE = 'ကယားပြည်နယ်';
+  static const String MGY_STATE = 'မကွေးတိုင်း';
+
   static const String TGY_REGIONCODE = "TGY";
   static const String MLM_REGIONCODE = "MLM";
   static const String LKW_REGIONCODE = "LKW";
