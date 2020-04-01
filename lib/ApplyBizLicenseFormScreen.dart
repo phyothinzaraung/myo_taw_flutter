@@ -9,6 +9,11 @@ import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/DropDownWidget.dart';
 import 'package:myotaw/myWidget/IosPickerWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
+import 'helper/MyoTawCitySetUpHelper.dart';
+import 'helper/MyoTawCitySetUpHelper.dart';
+import 'helper/MyoTawCitySetUpHelper.dart';
+import 'helper/MyoTawCitySetUpHelper.dart';
+import 'helper/MyoTawCitySetUpHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/PlatformHelper.dart';
 import 'model/BizLicenseModel.dart';
@@ -41,6 +46,8 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   TextEditingController _bizRegionNoController = TextEditingController();
   TextEditingController _bizStreetController = TextEditingController();
   TextEditingController _bizBlockNoController = TextEditingController();
+  TextEditingController _bizStateController;
+  TextEditingController _bizTownshipController;
 
   TextEditingController _ownerNameController = TextEditingController();
   TextEditingController _ownerNrcController = TextEditingController();
@@ -74,13 +81,16 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   List<Widget> _ownerTownshipWidgetList = List();
   int _bizStatePickerIndex, _bizTownshipPickerIndex, _ownerStatePickerIndex, _ownerTownshipPickerIndex;
 
-
   _ApplyBizLicenseFormScreenState(this._bizLicenseModel);
+
+  String _regionCode;
+
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+
     _stateList = [_dropDownBizState];
     _townshipList = [_dropDownBizTownship];
     _ownerStateList = [_dropDownOwnerState];
@@ -134,6 +144,14 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
     _stateList.addAll(stateList);
     _ownerStateList.addAll(stateList);
     _pickerWidgetStateInit();
+    _getStateTownship();
+  }
+
+  _getStateTownship()async{
+    await _sharepreferenceshelper.initSharePref();
+    _regionCode = _sharepreferenceshelper.getRegionCode();
+    _bizStateController = TextEditingController(text: MyoTawCitySetUpHelper.getState(_regionCode));
+    _bizTownshipController = TextEditingController(text: MyoTawCitySetUpHelper.getCity(_regionCode));
   }
 
   _getUser()async{
@@ -499,61 +517,25 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                             Image.asset('images/star.png', width: 8.0, height: 8.0,)
                           ],
                         )),
-                    //dropdown biz state
+                    //textfield biz state
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
-                      padding: EdgeInsets.symmetric(horizontal: 10.0),
-                      width: double.maxFinite,
+                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(7.0),
-                          border: Border.all(
-                              color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
-                          )
+                          border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
                       ),
-                      child: PlatformHelper.isAndroid()?
-
-                          DropDownWidget(
-                            value: _dropDownBizState,
-                            onChange: (value){
-                              FocusScope.of(context).requestFocus(FocusNode());
-                              setState(() {
-                                _dropDownBizState = value;
-                              });
-                              _townshipList.clear();
-                              setState(() {
-                                _dropDownBizTownship = MyString.txt_choose_state_township;
-                              });
-                              _townshipList = [_dropDownBizTownship];
-                              _getTownshipByState(_dropDownBizState);
-                            },
-                            list: _stateList,
-                          )
-
-                          :
-                      IosPickerWidget(
-                        text: _dropDownBizState,
-                        fixedExtentScrollController: FixedExtentScrollController(initialItem: _bizStatePickerIndex),
-                        onSelectedItemChanged: (index){
-                          _bizStatePickerIndex = index;
-                        },
-                        onPress: (){
-                          setState(() {
-                            _dropDownBizState = _stateList[_bizStatePickerIndex];
-                          });
-                          _townshipList.clear();
-                          _bizTownshipWidgetList.clear();
-
-                          setState(() {
-                            _townshipList = [MyString.txt_choose_state_township];
-                          });
-
-                          _dropDownBizTownship = _townshipList[0];
-                          _getTownshipByState(_dropDownBizState);
-                          Navigator.pop(context);
-                        },
-                        children: _bizStateWidgetList,
+                      child: TextField(
+                        enabled: false,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        cursorColor: MyColor.colorPrimary,
+                        controller: _bizStateController,
+                        style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                       ),
                     ),
+
                     //text biz township
                     Container(
                         margin: EdgeInsets.only(bottom: 5.0),
@@ -565,47 +547,24 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                             Image.asset('images/star.png', width: 8.0, height: 8.0,)
                           ],
                         )),
-                    //dropdown biz township
+                    //textfield biz township
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
-                      padding: EdgeInsets.symmetric(horizontal: 10.0),
-                      width: double.maxFinite,
+                      padding: EdgeInsets.only(left: 10.0, right: 10.0),
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(7.0),
-                          border: Border.all(
-                              color: MyColor.colorGreyDark,style: BorderStyle.solid, width: 0.80
-                          )
+                          border: Border.all(color: MyColor.colorGreyDark, style: BorderStyle.solid, width: 0.80)
                       ),
-                      child: PlatformHelper.isAndroid()?
-
-                      DropDownWidget(
-                        value: _dropDownBizTownship,
-                        onChange: (value){
-                          FocusScope.of(context).requestFocus(FocusNode());
-                          setState(() {
-                            _dropDownBizTownship = value;
-                          });
-                        },
-                        list: _townshipList,
-                      )
-
-                          :
-                      IosPickerWidget(
-                        text: _dropDownBizTownship,
-                        fixedExtentScrollController: FixedExtentScrollController(initialItem: _bizTownshipPickerIndex),
-                        onSelectedItemChanged: (index){
-                          _bizTownshipPickerIndex = index;
-                        },
-                        onPress: (){
-                          setState(() {
-                            _dropDownBizTownship = _townshipList[_bizTownshipPickerIndex];
-                          });
-                          Navigator.pop(context);
-                        },
-                        children: _bizTownshipWidgetList,
+                      child: TextField(
+                        enabled: false,
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                        ),
+                        cursorColor: MyColor.colorPrimary,
+                        controller: _bizTownshipController,
+                        style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                       ),
                     ),
-
                   ],
                 ),
               ),
