@@ -163,7 +163,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
             },color: model.isCheck==true? MyColor.colorPrimary : MyColor.colorGreyDark),
             title: Container(
                 margin: EdgeInsets.only(bottom: 10),
-                child: Text(list.length == 2?list[1] : model.message, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorBlackSemiTransparent), maxLines: 2,overflow: TextOverflow.ellipsis,)),
+                child: Text(model.message.contains(MyString.txt_noti_biz_license)?list[1] : model.message, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorBlackSemiTransparent), maxLines: 2,overflow: TextOverflow.ellipsis,)),
             subtitle: Text(date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),),
             onTap: ()async{
 

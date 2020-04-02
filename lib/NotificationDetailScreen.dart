@@ -81,13 +81,13 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
           ),
           Expanded(
             //child: Text(_message, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorBlackSemiTransparent))
-            child: Linkify(text: _list.length == 2? _list[1] : _message,onOpen: (link)async{
+            child: Linkify(text: _message.contains(MyString.txt_noti_biz_license)? _list[1] : _message,onOpen: (link)async{
               if(await canLaunch(link.url)){
                 await launch(link.url);
               }
             },linkStyle: TextStyle(color: Colors.red),),
           ),
-          _list[0] == MyString.txt_noti_biz_license?Container(
+          _message.contains(MyString.txt_noti_biz_license)?Container(
             width: double.maxFinite,
             margin: EdgeInsets.only(bottom: 10.0),
             child: CustomButtonWidget(
