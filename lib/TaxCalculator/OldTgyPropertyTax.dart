@@ -208,6 +208,6 @@ class OLdTgyPropertyTax{
     }
 
     print("rentalRate : ${arv} ${arv_int} ${rentalRate} ${ARV}");
-    return NumConvertHelper.getMyanNumInt(ARV);
+    return NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat(ARV.toString()));
   }
 }
