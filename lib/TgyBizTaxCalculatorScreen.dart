@@ -78,7 +78,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
     for(var i in _bizList){
       _bizTypeWidgetList.add(Padding(
         padding: const EdgeInsets.only(left: 5),
-        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
+        child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),),
       ));
     }
   }
@@ -118,6 +118,7 @@ class _TgyBizTaxCalculatorScreenState extends State<TgyBizTaxCalculatorScreen> {
         _bizList.add('သောက်ရေသန့်လုပ်ငန်း');
         break;
       case 'ကိုယ်ပိုင်ဈေး(စတိုးဆိုင်) လုပ်ငန်းလိုင်စင်':
+        _bizList.add('ကိုယ်ပိုင်ဈေးစတိုး');
         _bizList.add('ကုန်တိုက်နှင့်အလားတူလုပ်ငန်းများ၊ အရောင်းဆိုင်ကြီးများ(၁ စတုန်ရန်းပေလျှင်)');
         _bizList.add('အုပ်စုလိုက်/အတန်းလိုက်ရှိသောစတိုးဆိုင်များ/TV၊ ဖုန်း၊ အလှကုန်၊ လူသုံးကုန်၊ အိမ်ဆောက်ပစ္စည်း၊ ကား/ဆိုင်ကယ်အရောင်းဆိုင်၊ ပစ္စည်းအရောင်းဆိုင်နှင့်ဝန်ဆောင်မှုလုပ်ငန်းများ');
         break;

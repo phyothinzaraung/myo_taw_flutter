@@ -4,61 +4,210 @@ import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/helper/NumConvertHelper.dart';
 import 'package:myotaw/helper/NumberFormatterHelper.dart';
 
-class TgyPropertyTax{
-  static double buildingValue = 0, roadValue = 0, zoneValue = 0, rentalRate = 0, arv = 0;
-  static const int base_value = 70;
-  static String getArv({buildingGrade, roadType, zone, length, width}){
-    switch (buildingGrade){
-      case MyString.BUILDING_GRADE_A:
-        buildingValue = 0;
+class OLdTgyPropertyTax{
+   static double rentalRate = 0, arv = 0, length = 0, width = 0;
+   static int ARV;
+
+   static String getArv({building,story,roadType, l, w})
+  {
+
+    switch (building){
+      case "သက်ကယ်မိုးထရံကာ":
+        switch (story){
+          case "၁ ထပ်":
+            switch (roadType){
+              case "လမ်းကျယ်":
+                rentalRate = 9.3;
+                break;
+              case "လမ်းကျဉ်း":
+                rentalRate = 9.3;
+                break;
+            }
+            break;
+        }
         break;
-      case MyString.BUILDING_GRADE_B:
-        buildingValue = -0.2;
+      case "သွပ်မိုးထရံကာ":
+        switch (story){
+          case "၁ ထပ်":
+            switch (roadType){
+              case "လမ်းကျယ်":
+                rentalRate = 12.4;
+                break;
+              case "လမ်းကျဉ်း":
+                rentalRate = 12.4;
+                break;
+            }
+            break;
+          case "၂ ထပ်":
+            switch (roadType){
+              case "လမ်းကျယ်":
+                rentalRate = 15.5;
+                break;
+              case "လမ်းကျဉ်း":
+                rentalRate = 15.5;
+                break;
+            }
+            break;
+        }
         break;
-      case MyString.BUILDING_GRADE_C:
-        buildingValue = -0.8;
+      case "ပျဉ်":
+        switch (story){
+          case "၁ ထပ်":
+            switch (roadType){
+              case "လမ်းမကြီး":
+                rentalRate = 46.5;
+                break;
+              case "လမ်းကျယ်":
+                rentalRate = 24.8;
+                break;
+              case "လမ်းကျဉ်း":
+                rentalRate = 15.5;
+                break;
+            }
+            break;
+          case "၂ ထပ်":
+            switch (roadType){
+              case "လမ်းမကြီး":
+                rentalRate = 62;
+                break;
+              case "လမ်းကျယ်":
+                rentalRate = 31;
+                break;
+              case "လမ်းကျဉ်း":
+                rentalRate = 24.8;
+                break;
+            }
+            break;
+        }
         break;
-      case MyString.GOV_BUILDING:
-        buildingValue = -0.15;
+      case "နံကပ်":
+        switch (story){
+          case "၁ ထပ်":
+            switch (roadType){
+              case "လမ်းမကြီး":
+                rentalRate = 62;
+                break;
+              case "လမ်းကျယ်":
+                rentalRate = 46.5;
+                break;
+              case "လမ်းကျဉ်း":
+                rentalRate = 31;
+                break;
+            }
+            break;
+          case "၂ ထပ်":
+            switch (roadType){
+              case "လမ်းမကြီး":
+                rentalRate = 93;
+                break;
+              case "လမ်းကျယ်":
+                rentalRate = 62;
+                break;
+              case "လမ်းကျဉ်း":
+                rentalRate = 46.5;
+                break;
+            }
+            break;
+        }
+        break;
+      case "တိုက်":
+        switch (story){
+          case "၁ ထပ်":
+            switch (roadType){
+              case "လမ်းမကြီး":
+                rentalRate = 124;
+                break;
+              case "လမ်းကျယ်":
+                rentalRate = 93;
+                break;
+              case "လမ်းကျဉ်း":
+                rentalRate = 77.5;
+                break;
+            }
+            break;
+          case "၂ ထပ်":
+            switch (roadType){
+              case "လမ်းမကြီး":
+                rentalRate = 170.5;
+                break;
+              case "လမ်းကျယ်":
+                rentalRate = 155;
+                break;
+              case "လမ်းကျဉ်း":
+                rentalRate = 93;
+                break;
+            }
+            break;
+          case "၃ ထပ်":
+            switch (roadType){
+              case "လမ်းမကြီး":
+                rentalRate = 232.5;
+                break;
+              case "လမ်းကျယ်":
+                rentalRate = 217;
+                break;
+              case "လမ်းကျဉ်း":
+                rentalRate = 124;
+                break;
+            }
+            break;
+          case "၄ ထပ်":
+            switch (roadType){
+              case "လမ်းမကြီး":
+                rentalRate = 310;
+                break;
+              case "လမ်းကျယ်":
+                rentalRate = 279;
+                break;
+              case "လမ်းကျဉ်း":
+                rentalRate = 186;
+                break;
+            }
+            break;
+          case "၅ ထပ်":
+            switch (roadType){
+              case "လမ်းမကြီး":
+                rentalRate = 372;
+                break;
+              case "လမ်းကျယ်":
+                rentalRate = 310;
+                break;
+              case "လမ်းကျဉ်း":
+                rentalRate = 248;
+                break;
+            }
+            break;
+          case "၆ ထပ်":
+            switch (roadType){
+              case "လမ်းမကြီး":
+                rentalRate = 465;
+                break;
+              case "လမ်းကျယ်":
+                rentalRate = 327;
+                break;
+              case "လမ်းကျဉ်း":
+                rentalRate = 310;
+                break;
+            }
+            break;
+        }
         break;
     }
+    length = double.parse(l);
+    width = double.parse(w);
+    print('l&W : ${building} ${roadType} ${story} ${l} ${w}');
+    arv = length * width * rentalRate;
+    int arv_int = (arv * 0.08).toInt();
+    int lastTwoInt = arv_int%100;
 
-    switch (roadType){
-      case 1:
-        roadValue = 0.1;
-        break;
-      case 2:
-        roadValue = 0.05;
-        break;
-      case 3:
-        roadValue = 0;
-        break;
-    }
-
-    switch (zone){
-      case 1:
-        zoneValue = 0.5;
-        break;
-      case 2:
-        zoneValue = 0.25;
-        break;
-      case 3:
-        zoneValue = 0;
-        break;
-    }
-
-    rentalRate = base_value + buildingValue * base_value + roadValue *base_value + zoneValue *base_value;
-    arv = double.parse(length) * double.parse(width) * rentalRate;
-    int lastTwoDigit = arv.round() % 100;
-    int finalArv;
-    if (lastTwoDigit >= 50){
-      finalArv = arv.round() + (100 - lastTwoDigit);
+    if (lastTwoInt >= 50){
+      ARV = arv_int + (100 - lastTwoInt);
 
     }else {
-      finalArv = arv.round() - lastTwoDigit;
+      ARV = arv_int - lastTwoInt;
     }
-    print('rentalRate : ${rentalRate}');
 
-    return NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat((finalArv * 0.02 + finalArv * 0.02).round().toString()));
+    print("rentalRate : ${arv} ${arv_int} ${rentalRate} ${ARV}");
+    return NumConvertHelper.getMyanNumInt(ARV);
   }
 }

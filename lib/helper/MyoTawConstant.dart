@@ -426,6 +426,14 @@ class MyStringList{
     'RC',
     'Steel structure'];
 
+  static const List<String> property_old_tgy_building_type = [
+    'သက်ကယ်မိုးထရံကာ',
+    'သွပ်မိုးထရံကာ',
+    'ပျဉ်',
+    'နံကပ်',
+    'တိုက်',
+  ];
+
   static const List<String> property_tgy_road = [
     'လမ်းမကြီး',
     'လမ်းကျယ်',
