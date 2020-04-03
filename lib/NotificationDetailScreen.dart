@@ -63,13 +63,14 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
 
   Widget _body(BuildContext context){
     return Container(
-      padding: EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 20),
+      //padding: EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 20),
       color: Colors.white,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+      child: ListView(
+        //crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
           Container(
-            margin: EdgeInsets.only(bottom: 20),
+            margin: EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 20),
+            //padding: EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 20),
             child: Row(
               children: <Widget>[
                 Container(
@@ -79,8 +80,8 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
               ],
             ),
           ),
-          Expanded(
-            //child: Text(_message, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorBlackSemiTransparent))
+          Container(
+            margin: EdgeInsets.only(left: 30, right: 30, bottom: 50),
             child: Linkify(text: _message.contains(MyString.txt_noti_biz_license)? _list[1] : _message,onOpen: (link)async{
               if(await canLaunch(link.url)){
                 await launch(link.url);
@@ -89,7 +90,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
           ),
           _message.contains(MyString.txt_noti_biz_license)?Container(
             width: double.maxFinite,
-            margin: EdgeInsets.only(bottom: 10.0),
+            margin: EdgeInsets.only(left: 30, right: 30,),
             child: CustomButtonWidget(
               onPress: ()async{
                 ApplyBizLicenseModel model = ApplyBizLicenseModel();

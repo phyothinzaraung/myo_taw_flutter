@@ -57,10 +57,10 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
   TextEditingController _ownerBlockNoController = TextEditingController();
   TextEditingController _remarkController = TextEditingController();
 
-  List<String> _stateList;
-  List<String> _townshipList;
-  String _dropDownBizState = MyString.txt_choose_state_township;
-  String _dropDownBizTownship = MyString.txt_choose_state_township;
+  /*List<String> _stateList;
+  List<String> _townshipList;*/
+  /*String _dropDownBizState = MyString.txt_choose_state_township;
+  String _dropDownBizTownship = MyString.txt_choose_state_township;*/
 
   List<String> _ownerStateList;
   List<String> _ownerTownshipList;
@@ -91,8 +91,8 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
     // TODO: implement initState
     super.initState();
 
-    _stateList = [_dropDownBizState];
-    _townshipList = [_dropDownBizTownship];
+    /*_stateList = [_dropDownBizState];
+    _townshipList = [_dropDownBizTownship];*/
     _ownerStateList = [_dropDownOwnerState];
     _ownerTownshipList = [_dropDownOwnerTownship];
 
@@ -104,7 +104,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
     _getUser();
   }
 
-  _pickerWidgetStateInit(){
+  /*_pickerWidgetStateInit(){
     for(var i in _stateList){
       _bizStateWidgetList.add(Padding(
         padding: const EdgeInsets.only(left: 5),
@@ -116,16 +116,16 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
         child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
       ));
     }
-  }
+  }*/
 
-  _pickerWidgetBizTownshipInit(){
+  /*_pickerWidgetBizTownshipInit(){
     for(var i in _townshipList){
       _bizTownshipWidgetList.add(Padding(
         padding: const EdgeInsets.only(left: 5),
         child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
       ));
     }
-  }
+  }*/
 
   _pickerWidgetOwnerTownshipInit(){
     for(var i in _ownerTownshipList){
@@ -141,9 +141,9 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
     await _locationDb.openLocationDb();
     var stateList = await _locationDb.getState();
     _locationDb.closeLocationDb();
-    _stateList.addAll(stateList);
+    //_stateList.addAll(stateList);
     _ownerStateList.addAll(stateList);
-    _pickerWidgetStateInit();
+    //_pickerWidgetStateInit();
     _getStateTownship();
   }
 
@@ -164,7 +164,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
     });
   }
 
-  _getTownshipByState(String state)async{
+  /*_getTownshipByState(String state)async{
     await _locationDb.openLocationDb();
     var townshipList = await _locationDb.getTownshipByState(state);
     _locationDb.closeLocationDb();
@@ -174,7 +174,7 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
     });
 
     _pickerWidgetBizTownshipInit();
-  }
+  }*/
 
   _getOwnerTownshipByState(String state)async{
     await _locationDb.openLocationDb();
@@ -914,13 +914,12 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
               await _checkCon();
               if(_isCon){
                 if(_bizTypeController.text.isNotEmpty && _bizLengthController.text.isNotEmpty && _bizWidthController.text.isNotEmpty &&
-                    _dropDownBizState != MyString.txt_choose_state_township && _dropDownBizTownship != MyString.txt_choose_state_township &&
                     _ownerNameController.text.isNotEmpty && _ownerNrcController.text.isNotEmpty && _ownerPhoneController.text.isNotEmpty
                     && _dropDownOwnerState != MyString.txt_choose_state_township && _dropDownOwnerTownship != MyString.txt_choose_state_township){
                   setState(() {
                     _isLoading = true;
                   });
-                  _applyBizLicenseModel.id = 0;//int id cannot be null for post object
+                  _applyBizLicenseModel.id = 0;//id cannot be null for post object
                   _applyBizLicenseModel.bizName = _bizNameController.text;
                   _applyBizLicenseModel.bizType = _bizTypeController.text;
                   _applyBizLicenseModel.length = double.parse(_bizLengthController.text);
@@ -929,8 +928,8 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                   _applyBizLicenseModel.bizRegionNo = _bizRegionNoController.text;
                   _applyBizLicenseModel.bizStreetName = _bizStreetController.text;
                   _applyBizLicenseModel.bizBlockNo = _bizBlockNoController.text;
-                  _applyBizLicenseModel.bizTownship = _dropDownBizTownship;
-                  _applyBizLicenseModel.bizState = _dropDownBizState;
+                  _applyBizLicenseModel.bizTownship = _bizTownshipController.text;
+                  _applyBizLicenseModel.bizState = _bizStateController.text;
                   _applyBizLicenseModel.ownerName = _ownerNameController.text;
                   _applyBizLicenseModel.nrcNo = _ownerNrcController.text;
                   _applyBizLicenseModel.phoneNo = _ownerPhoneController.text;
