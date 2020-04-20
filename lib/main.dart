@@ -262,6 +262,23 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
             }
           }
       );
+
+      _firebaseMesssaging.onTokenRefresh.listen((refreshToken)async{
+        await _sharepreferenceshelper.initSharePref();
+        if(_sharepreferenceshelper.getToken() != refreshToken){
+          try{
+            var response = await ServiceHelper().updateUserToken(_sharepreferenceshelper.getUserUniqueKey(), refreshToken, PlatformHelper.isAndroid()?'Android' : 'Ios');
+            await _userDb.openUserDb();
+            await _userDb.insert(UserModel.fromJson(response.data));
+            _userDb.closeUserDb();
+            _sharepreferenceshelper.setUserToken(refreshToken);
+          }catch(e){
+            print(e);
+          }
+          print('update user token');
+        }
+        print('Token refresh : ' + refreshToken);
+      });
     }
   }
 
