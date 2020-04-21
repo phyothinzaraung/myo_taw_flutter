@@ -125,8 +125,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _isLoading = true;
     });
-    _firebaseMessaging.unsubscribeFromTopic('all');
-    _firebaseMessaging.deleteInstanceID();
+    await _firebaseMessaging.unsubscribeFromTopic('all');
+    await _firebaseMessaging.deleteInstanceID();
     await _sharepreferenceshelper.initSharePref();
     _sharepreferenceshelper.logOutSharePref();
 
