@@ -139,15 +139,15 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
       if(response.data != null) {
         var result = response.data;
         await _notificationDb.openNotificationDb();
-        var l = await _notificationDb.getNotification();
+        //var l = await _notificationDb.getNotification();
 
         for(var i in result){
           bool isSave = await _notificationDb.isNotificationSaved(NotificationModel.fromJson(i).iD);
           if(!isSave){
-            _notificationDb.insert(NotificationModel.fromJson(i));
+            await _notificationDb.insert(NotificationModel.fromJson(i));
           }
         }
-        await _notificationDb.openNotificationDb();
+        //await _notificationDb.openNotificationDb();
         //var isBadge = await _notificationDb.isBadge();
         var count = await _notificationDb.getUnReadNotificationCount();
         _notificationDb.closeSaveNotificationDb();
