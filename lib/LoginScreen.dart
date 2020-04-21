@@ -65,15 +65,19 @@ class _LoginScreenState extends State<LoginScreen> {
   }
 
   void _getOtp()async{
+    _normalizedPhNo = await PhoneNumberUtil.normalizePhoneNumber(phoneNumber: _phoneNoController.text, isoCode: 'MM');
     setState(() {
       PlatformHelper.isAndroid()? _showLoading = true : _isCupertinoLoading = true;
     });
     String _hasyKey = await SmsAutoFill().getAppSignature;
     response = await ServiceHelper().getOtpCode(_normalizedPhNo, _hasyKey);
+    print(response.data);
     var result = response.data;
     if(result != null){
       if(result['code'] == '002'){
         NavigatorHelper.myNavigatorPushReplacement(context, OtpScreen(_normalizedPhNo, _regionCode), ScreenName.OTP_SCREEN);
+      }else{
+        WarningSnackBar(_globalKey, MyString.txt_wrong_phNo);
       }
     }else{
       WarningSnackBar(_globalKey, MyString.txt_try_again);
@@ -94,13 +98,16 @@ class _LoginScreenState extends State<LoginScreen> {
     print('isCon : ${_isCon}');
   }
 
-  Future<bool> _checkPhNoValid() async{
+  /*void _checkPhNoValid() async{
     bool _isValid = false;
-    _normalizedPhNo = await PhoneNumberUtil.normalizePhoneNumber(phoneNumber: _phoneNoController.text, isoCode: 'MM');
     _isValid = await PhoneNumberUtil.isValidPhoneNumber(phoneNumber: _phoneNoController.text, isoCode: 'MM');
-
-    return _isValid && !_normalizedPhNo.contains('+951');
-  }
+    PhoneNumberType type = await PhoneNumberUtil.getNumberType(phoneNumber: _phoneNoController.text, isoCode: 'MM');
+    if(_isValid && type == PhoneNumberType.mobile){
+      return true;
+    }else{
+      return false;
+    }
+  }*/
 
   @override
   Widget build(BuildContext context) {
@@ -198,13 +205,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       await _checkCon();
                                       if(_isCon){
                                         _regionCode = MyoTawCitySetUpHelper.getRegionCode(_dropDownCity);
-                                        bool _isValid = await _checkPhNoValid();
-                                        if(_isValid){
-                                          FocusScope.of(context).requestFocus(FocusNode());
-                                          _getOtp();
-                                        }else{
-                                          WarningSnackBar(_globalKey, MyString.txt_wrong_phNo);
-                                        }
+                                        //bool _isValid = await _checkPhNoValid();
+                                        FocusScope.of(context).requestFocus(FocusNode());
+                                        _getOtp();
                                       }else{
                                         WarningSnackBar(_globalKey, MyString.txt_no_internet);
                                         }
