@@ -7,7 +7,8 @@ import 'package:myotaw/helper/NumberFormatterHelper.dart';
 class TgyPropertyTax{
   static double buildingValue = 0, roadValue = 0, zoneValue = 0, rentalRate = 0, arv = 0;
   static const int base_value = 70;
-  static String getArv({buildingGrade, roadType, zone, length, width}){
+  static double tax = 0;
+  static String getArv({buildingGrade, roadType, zone, length, width,story}){
     switch (buildingGrade){
       case MyString.BUILDING_GRADE_A:
         buildingValue = 0;
@@ -48,7 +49,7 @@ class TgyPropertyTax{
     }
 
     rentalRate = base_value + buildingValue * base_value + roadValue *base_value + zoneValue *base_value;
-    arv = double.parse(length) * double.parse(width) * rentalRate;
+    arv = double.parse(length) * double.parse(width) * rentalRate * story;
     int lastTwoDigit = arv.round() % 100;
     int finalArv;
     if (lastTwoDigit >= 50){
@@ -57,8 +58,9 @@ class TgyPropertyTax{
     }else {
       finalArv = arv.round() - lastTwoDigit;
     }
-    print('rentalRate : ${rentalRate}');
+    buildingGrade == MyString.GOV_BUILDING? tax = 0.04 : tax = 0.02;
+    print('rentalRate : ${rentalRate} : $tax');
 
-    return NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat((finalArv * 0.02 + finalArv * 0.02).round().toString()));
+    return NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat((finalArv * tax + finalArv * tax).round().toString()));
   }
 }
