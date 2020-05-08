@@ -135,11 +135,11 @@ class ServiceHelper{
    return response;
  }
 
- getBizLicense<Response>(String regionCode) async{
+ getBizLicense<Response>(String regionCode, int page, int pageSize) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
-  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/GetBizLicenseList",
-      queryParameters: {"RegionCode": regionCode});
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"BizLicense/GetBizLicenseListWithPaging",
+      queryParameters: {"RegionCode": regionCode, 'page' : page, 'pageSize' : pageSize});
   return response;
  }
 

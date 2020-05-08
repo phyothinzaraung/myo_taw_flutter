@@ -290,7 +290,15 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                     //text biz name
                     Container(
                         margin: EdgeInsets.only(bottom: 5.0),
-                        child: Text(MyString.txt_biz_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                                margin: EdgeInsets.only(right: 10.0),
+                                child: Text(MyString.txt_biz_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                            Image.asset('images/star.png', width: 8.0, height: 8.0,)
+                          ],
+                        )
+                    ),
                     //text field biz name
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
@@ -432,7 +440,15 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                                 //text biz region no
                                 Container(
                                     margin: EdgeInsets.only(bottom: 5.0),
-                                    child: Text(MyString.txt_biz_region_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                            margin: EdgeInsets.only(right: 10.0),
+                                            child: Text(MyString.txt_biz_region_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                                        Image.asset('images/star.png', width: 8.0, height: 8.0,)
+                                      ],
+                                    )
+                                ),
                                 //text field biz region no
                                 Container(
                                   margin: EdgeInsets.only(right: 10.0),
@@ -461,7 +477,15 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                                 //text biz street
                                 Container(
                                     margin: EdgeInsets.only(bottom: 5.0),
-                                    child: Text(MyString.txt_biz_street_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                                    child: Row(
+                                      children: <Widget>[
+                                        Container(
+                                            margin: EdgeInsets.only(right: 10.0),
+                                            child: Text(MyString.txt_biz_street_name, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                                        Image.asset('images/star.png', width: 8.0, height: 8.0,)
+                                      ],
+                                    )
+                                ),
                                 //text field biz street
                                 Container(
                                   margin: EdgeInsets.only(right: 10.0),
@@ -488,7 +512,15 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
                     //text block no
                     Container(
                         margin: EdgeInsets.only(bottom: 10.0),
-                        child: Text(MyString.txt_biz_block_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                        child: Row(
+                          children: <Widget>[
+                            Container(
+                                margin: EdgeInsets.only(right: 10.0),
+                                child: Text(MyString.txt_biz_block_no, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),)),
+                            Image.asset('images/star.png', width: 8.0, height: 8.0,)
+                          ],
+                        )
+                    ),
                     //text field block no
                     Container(
                       margin: EdgeInsets.only(bottom: 10.0),
@@ -915,7 +947,9 @@ class _ApplyBizLicenseFormScreenState extends State<ApplyBizLicenseFormScreen> {
               if(_isCon){
                 if(_bizTypeController.text.isNotEmpty && _bizLengthController.text.isNotEmpty && _bizWidthController.text.isNotEmpty &&
                     _ownerNameController.text.isNotEmpty && _ownerNrcController.text.isNotEmpty && _ownerPhoneController.text.isNotEmpty
-                    && _dropDownOwnerState != MyString.txt_choose_state_township && _dropDownOwnerTownship != MyString.txt_choose_state_township){
+                    && _dropDownOwnerState != MyString.txt_choose_state_township && _dropDownOwnerTownship != MyString.txt_choose_state_township
+                    && _bizNameController.text.isNotEmpty && _bizRegionNoController.text.isNotEmpty && _bizStreetController.text.isNotEmpty &&
+                    _bizBlockNoController.text.isNotEmpty){
                   setState(() {
                     _isLoading = true;
                   });
