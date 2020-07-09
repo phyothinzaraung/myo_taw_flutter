@@ -12,7 +12,6 @@ import 'package:flutter/services.dart';
 class NewsFeedPhotoDetailScreen extends StatelessWidget {
   List<PhotoLink> _photoList = new List();
   String _photoUrl;
-  String _downloadPhotoUrl;
   PageController _pageController;
   List<Widget> _photoWidget = new List();
   int _initialPage = 0;
@@ -20,39 +19,12 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
 
   void addPhoto() {
     for (var i in _photoList) {
-      _photoWidget.add(Stack(children: <Widget>[
-        PhotoView(
-          imageProvider:
-              NetworkImage(BaseUrl.NEWS_FEED_CONTENT_URL + i.photoUrl),
-          loadingChild: _nativeProgressIndicator(),
-          loadFailedChild: Image.asset('images/placeholder.jpg'),
-        ),
-        Align(
-          alignment: Alignment.topRight,
-          child: RaisedButton(
-            onPressed: () async {
-              try {
-                  var imageId =
-                      await ImageDownloader.downloadImage(BaseUrl.NEWS_FEED_CONTENT_URL + i.photoUrl);
-                  Fluttertoast.showToast(
-                      msg: "Photo has been successfully downloaded.",
-                      toastLength: Toast.LENGTH_SHORT);
-                  if (imageId == null) {
-                    return;
-                  }
-              } on PlatformException catch (error) {
-                print(error);
-              }
-            },
-            //child: const Text('Save Photo', style: TextStyle(fontSize: 16)),
-            child: const Icon(Icons.file_download, size: 40),
-            color: Colors.black,
-            textColor: MyColor.colorPrimary,
-            elevation: 5,
-            padding: EdgeInsets.all(16.0),
-          ),
-        )
-      ]));
+      _photoWidget.add(PhotoView(
+        imageProvider:
+        NetworkImage(BaseUrl.NEWS_FEED_CONTENT_URL + i.photoUrl),
+        loadingChild: _nativeProgressIndicator(),
+        loadFailedChild: Image.asset('images/placeholder.jpg'),
+      ));
     }
   }
 
@@ -70,8 +42,28 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     _pageController = new PageController(initialPage: _initialPage);
     addPhoto();
+    _pageController.addListener(() {
+      _initialPage = _pageController.page.toInt();
+    });
     return CustomScaffoldWidget(
       title: null,
+      action: <Widget>[
+        IconButton(icon: Icon(Icons.file_download), onPressed: ()async{
+          try {
+            var imageId =
+            await ImageDownloader.downloadImage(BaseUrl.NEWS_FEED_CONTENT_URL + '${_photoList.isNotEmpty?_photoList[_initialPage].photoUrl : _photoUrl}',);
+            Fluttertoast.showToast(
+                msg: MyString.txt_save_newsFeed_success,
+                toastLength: Toast.LENGTH_SHORT);
+            print('imageid : $imageId');
+            if (imageId == null) {
+              return;
+            }
+          } on PlatformException catch (error) {
+            print(error);
+          }
+        })
+      ],
       body: Container(
         color: Colors.black,
         child: Center(

@@ -260,12 +260,12 @@ class MyString{
   static const String txt_top_up_already = "ငွေဖြည့်ကုဒ်မှာအသုံးပြုပြီပါပြီး။";
   static const String txt_no_photo = "ဓာတ်ပုံများမရှိပါ";
   static const String txt_newsfeed = "သတင်းများ";
-  static const String txt_contributions = "အကြုံပြုစာများ";
+  static const String txt_contributions = "အကြပြုစာများ";
   static const String txt_profile_complete = "ကိုယ်ရေးအချက်အလက်ဖြည့်သွင်းမှု အောင်မြင်သည်။";
   static const String txt_empty_contribution = "အကြံပြုစာများ မရှိသေးပါ။";
   static const String txt_to_contribute = "အကြုံပြုမည်";
-  static const String txt_contribute_fact = "အကြုံပြုချက်";
-  static const String txt_send_contribution = "အကြုံပြုစာပို့မည်";
+  static const String txt_contribute_fact = "အကြပြုချက်";
+  static const String txt_send_contribution = "အကြံပြုစာပို့မည်";
   static const String txt_ward_admin_feature = "Ward Admin ၏ ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
   static const String txt_myotaw_feature = "မြို့တော်အပ်ပလီကေးရှင်းကဏ္ဍ";
   static const String txt_choose_feature = "ကဏ္ဍရွေးချယ်ပေးပါ";

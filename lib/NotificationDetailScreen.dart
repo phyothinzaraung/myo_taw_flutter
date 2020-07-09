@@ -1,67 +1,59 @@
+import 'package:async_loader/async_loader.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_linkify/flutter_linkify.dart';
-import 'package:myotaw/database/NotificationDb.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ShowDateTimeHelper.dart';
 import 'package:myotaw/model/ApplyBizLicenseModel.dart';
-import 'package:myotaw/model/NotificationModel.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:notifier/main_notifier.dart';
 import 'package:notifier/notifier.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'ApplyBizLicensePhotoListScreen.dart';
+import 'helper/ServiceHelper.dart';
+import 'helper/SharePreferencesHelper.dart';
+import 'model/NotificationModel.dart';
 import 'myWidget/CustomButtonWidget.dart';
+import 'myWidget/NativeProgressIndicator.dart';
+import 'myWidget/NoConnectionWidget.dart';
 
 class NotificationDetailScreen extends StatefulWidget{
-  NotificationModel notificationModel;
-  NotificationDetailScreen(this.notificationModel);
+  int id;
+  NotificationDetailScreen(this.id);
 
   @override
-  _NotificationDetailScreenState createState() => _NotificationDetailScreenState(this.notificationModel);
+  _NotificationDetailScreenState createState() => _NotificationDetailScreenState();
 }
 
 class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
 
-  NotificationModel _notificationModel;
-  NotificationDb _notificationDb = NotificationDb();
   String _message, _date;
   List _list;
+  NotificationModel _notificationModel;
   Notifier _notifier;
-
-  _NotificationDetailScreenState(this._notificationModel);
+  final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
+  Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    initNotificationData();
-    _readNotification(_notificationModel);
+    //_readNotification(_notificationModel);
   }
 
-  initNotificationData(){
-    setState(() {
+  _getNotiDetail()async{
+    await _sharepreferenceshelper.initSharePref();
+    var response = await ServiceHelper().getNotificationDetail(_sharepreferenceshelper.getUserUniqueKey(), widget.id.toString());
+    if(response.data != null) {
+      _notificationModel = NotificationModel.fromJson(response.data);
       _message = _notificationModel.message;
       _list = _message.split('-');
       _date = ShowDateTimeHelper.showDateTimeDifference(_notificationModel.postedDate);
-    });
-    print('bizid : ${_notificationModel.bizId}');
-  }
-
-  _readNotification(NotificationModel model)async{
-    await _notificationDb.openNotificationDb();
-    var isSeen = await _notificationDb.isSeenById(model);
-    if(!isSeen){
-      model.isSeen = true;
-      await _notificationDb.updateNotification(model);
-      var count = await _notificationDb.getUnReadNotificationCount();
-      _notifier.notify('noti_count', count);
     }
-    _notificationDb.closeSaveNotificationDb();
   }
 
-  Widget _body(BuildContext context){
+  Widget _body(){
     return Container(
       //padding: EdgeInsets.only(left: 30, right: 30, top: 20, bottom: 20),
       color: Colors.white,
@@ -94,7 +86,7 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
             child: CustomButtonWidget(
               onPress: ()async{
                 ApplyBizLicenseModel model = ApplyBizLicenseModel();
-                model.id = _notificationModel.bizId;
+                model.id = _notificationModel.bizID;
                 print('apply biz id : ${model.id}');
                 NavigatorHelper.myNavigatorPush(context, ApplyBizLicensePhotoListScreen(model), ScreenName.APPLY_BIZ_LICENSE_PHOTO_LIST_SCREEN);
 
@@ -113,10 +105,26 @@ class _NotificationDetailScreenState extends State<NotificationDetailScreen>{
   Widget build(BuildContext context) {
     // TODO: implement build
     _notifier = NotifierProvider.of(context);
+    var _asyncLoader = new AsyncLoader(
+        key: asyncLoaderState,
+        initState: () async => await _getNotiDetail(),
+        renderLoad: () => Container(
+          margin: EdgeInsets.only(top: 10),
+          width: double.maxFinite,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              NativeProgressIndicator()
+            ],
+          ),
+        ),
+        renderError: ([error]) => noConnectionWidget(asyncLoaderState),
+        renderSuccess: ({data}) => _body()
+    );
     return CustomScaffoldWidget(
       title: Text(MyString.txt_title_notification,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),
-      body: _body(context),
+      body: _asyncLoader,
     );
   }
 

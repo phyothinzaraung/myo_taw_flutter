@@ -6,6 +6,7 @@ import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:package_info/package_info.dart';
+import 'database/NotificationDb.dart';
 import 'helper/MyoTawConstant.dart';
 import 'main.dart';
 import 'package:flutter/services.dart';
@@ -29,6 +30,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   bool _isDbSetup = true;
   String _appVersion = '';
   FirebaseMessaging _firebaseMesssaging = FirebaseMessaging();
+  NotificationDb _notificationDb = new NotificationDb();
 
   @override
   void initState() {
@@ -50,6 +52,14 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         _title = MyoTawCitySetUpHelper.getCityWelcomeTitle(_sharepreferenceshelper.getRegionCode());
       });
     }
+    await _notificationDb.openNotificationDb();
+    bool _isTableExists = await _notificationDb.isNotiTableExist();
+    if(_isTableExists){
+      await _notificationDb.dropNotificationTable();
+      print('drop notification table');
+    }
+    print('table exists $_isTableExists');
+    _notificationDb.closeSaveNotificationDb();
     await _locationInit();
     navigateMainScreen();
   }
@@ -89,7 +99,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         if(_sharepreferenceshelper.isWardAdmin()){
           NavigatorHelper.myNavigatorPushReplacement(context, WardAdminFeatureChooseScreen(), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{
-          NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(false), null);
+          NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);
         }
       });
     }else{

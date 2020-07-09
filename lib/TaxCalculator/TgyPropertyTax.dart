@@ -60,7 +60,9 @@ class TgyPropertyTax{
     }
     buildingGrade == MyString.GOV_BUILDING? tax = 0.04 : tax = 0.02;
     print('rentalRate : ${rentalRate} : $tax');
+    var _finalValue = (finalArv * tax + finalArv * tax).round();
+    _finalValue < 1000 ? _finalValue = 1000 : _finalValue = _finalValue;
 
-    return NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat((finalArv * tax + finalArv * tax).round().toString()));
+    return NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat(_finalValue.toString()));
   }
 }

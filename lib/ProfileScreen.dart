@@ -56,7 +56,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   List<TaxRecordModel> _taxRecordModelList = new List<TaxRecordModel>();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   GlobalKey<SliverAnimatedListState> _animatedListKey = GlobalKey();
-  NotificationDb _notificationDb = NotificationDb();
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
 
   @override
@@ -137,10 +136,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
     await _saveNewsFeedDb.openSaveNfDb();
     await _saveNewsFeedDb.deleteSavedNewsFeed();
      _saveNewsFeedDb.closeSaveNfDb();
-
-    await _notificationDb.openNotificationDb();
-    await _notificationDb.deleteNotification();
-    _notificationDb.closeSaveNotificationDb();
     setState(() {
       _isLoading = false;
     });

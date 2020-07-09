@@ -80,8 +80,6 @@ void main() {
 }
 
 class MainScreen extends StatefulWidget {
-  bool _isNoti;
-  MainScreen(this._isNoti);
 
   @override
   _mainState createState() => _mainState();
@@ -93,11 +91,12 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   UserDb _userDb = UserDb();
   FirebaseMessaging _firebaseMesssaging = FirebaseMessaging();
-  NotificationDb _notificationDb = NotificationDb();
+  //NotificationDb _notificationDb = NotificationDb();
   bool _isBadgeShow = false;
   int _noticount = 0;
   Notifier _notifier;
   CupertinoTabController _cupertinoTabController = CupertinoTabController();
+  int _count;
 
   @override
   void initState() {
@@ -106,12 +105,12 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
     _tabController = new TabController(length: 3, vsync: this);
     _requestPermission();
     getUserData();
-    if(widget._isNoti){
+    /*if(widget._isNoti){
       _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
       _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
-    }
+    }*/
 
-    if(PlatformHelper.isAndroid()){
+    /*if(PlatformHelper.isAndroid()){
       _tabController.addListener((){
         if(_tabController.previousIndex == 2){
           NotificationModel _model = NotificationModel();
@@ -129,34 +128,21 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
           _notifier.notify('noti_add', _model.toJson());
         }
       });
-    }
+    }*/
   }
 
   initBadge()async{
+    await _sharepreferenceshelper.initSharePref();
     try{
-      await _sharepreferenceshelper.initSharePref();
       var response = await ServiceHelper().getNotification(_sharepreferenceshelper.getRegionCode(),_sharepreferenceshelper.getUserUniqueKey());
       if(response.data != null) {
-        var result = response.data;
-        await _notificationDb.openNotificationDb();
-        //var l = await _notificationDb.getNotification();
-
-        for(var i in result){
-          bool isSave = await _notificationDb.isNotificationSaved(NotificationModel.fromJson(i).iD);
-          if(!isSave){
-            await _notificationDb.insert(NotificationModel.fromJson(i));
-          }
-        }
-        //await _notificationDb.openNotificationDb();
-        //var isBadge = await _notificationDb.isBadge();
-        var count = await _notificationDb.getUnReadNotificationCount();
-        _notificationDb.closeSaveNotificationDb();
-        print(count);
-        if(count != 0){
+        _count = response.data['unReadCount'];
+        if(_count != 0){
           setState(() {
             _isBadgeShow = true;
-            _noticount = count;
           });
+          _notifier.notify('noti_count', _count);
+          _sharepreferenceshelper.saveNotiUnreadCount(_count);
         }else{
           _isBadgeShow = false;
         }
@@ -195,17 +181,28 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
             if(message != null){
               String json = message['data']['notification'];
               Map<String, dynamic> temp = jsonDecode(json);
-              await _notificationDb.openNotificationDb();
-              NotificationModel model = NotificationModel.fromJson(temp);
-              await _notificationDb.insert(model);
-              var count = await _notificationDb.getUnReadNotificationCount();
-              _notificationDb.closeSaveNotificationDb();
-              _sharepreferenceshelper.setNotificationAdd(true);
-              _notifier.notify('noti_count', count);
-              _notifier.notify('noti_add', temp);
+              if(message['data']['notification'] != null ){
+                _sharepreferenceshelper.setNotificationAdd(true);
+                _count = _sharepreferenceshelper.getUnreadCount() + 1;
+                _sharepreferenceshelper.saveNotiUnreadCount(_count);
+                _notifier.notify('noti_count', _count);
+                _notifier.notify('noti_add', temp);
+              }
             }
           },
+        onResume: (Map<String, dynamic> message) async {
+          print('on resume ${message['data']['notification']}');
 
+          if(message != null){
+            String json = message['data']['notification'];
+            Map<String, dynamic> temp = jsonDecode(json);
+            NotificationModel model = NotificationModel.fromJson(temp);
+            if(message['data']['notification'] != null ){
+              _sharepreferenceshelper.setNotificationAdd(true);
+              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+            }
+          }
+        },
       );
 
     }else{
@@ -215,16 +212,12 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
             print('on message $message');
 
             if(message != null){
-              String json = message['data']['notification'];
-              Map<String, dynamic> temp = jsonDecode(json);
-              await _notificationDb.openNotificationDb();
-              NotificationModel model = NotificationModel.fromJson(temp);
-              await _notificationDb.insert(model);
-              var count = await _notificationDb.getUnReadNotificationCount();
-              _notificationDb.closeSaveNotificationDb();
-              _sharepreferenceshelper.setNotificationAdd(true);
-              _notifier.notify('noti_count', count);
-              _notifier.notify('noti_add', temp);
+              if(message['data']['notification'] != null ){
+                _count = _sharepreferenceshelper.getUnreadCount() + 1;
+                _sharepreferenceshelper.saveNotiUnreadCount(_count);
+                _sharepreferenceshelper.setNotificationAdd(true);
+                _notifier.notify('noti_count', _count);
+              }
             }
           },
           onResume: (Map<String, dynamic> message) async {
@@ -233,16 +226,10 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
             if(message != null){
               String json = message['data']['notification'];
               Map<String, dynamic> temp = jsonDecode(json);
-              await _notificationDb.openNotificationDb();
               NotificationModel model = NotificationModel.fromJson(temp);
-              await _notificationDb.insert(model);
-              var count = await _notificationDb.getUnReadNotificationCount();
-              _notificationDb.closeSaveNotificationDb();
-              if(message['data']['notification'] != null){
+              if(message['data']['notification'] != null ){
                 _sharepreferenceshelper.setNotificationAdd(true);
-                _notifier.notify('noti_count', count);
-                _notifier.notify('noti_add', temp);
-                NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+                NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
               }
             }
           },
@@ -252,12 +239,10 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
             if (message != null) {
               String json = message['data']['notification'];
               Map<String, dynamic> temp = jsonDecode(json);
-              await _notificationDb.openNotificationDb();
               NotificationModel model = NotificationModel.fromJson(temp);
-              await _notificationDb.insert(model);
-              _notificationDb.closeSaveNotificationDb();
               if(message['data']['notification'] != null){
-                NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+                _sharepreferenceshelper.setNotificationAdd(true);
+                NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
               }
             }
           }
@@ -299,7 +284,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
         children: [
           NewsFeedScreen(),
           DashBoardScreen(),
-          NotificationScreen(),
+          NotificationScreen(_sharepreferenceshelper),
         ],
         controller: _tabController,
       ),
@@ -330,6 +315,9 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
                 //_noticount = value.data;
                 if(value.data != null && value.data == 0){
                   _isBadgeShow = false;
+                }else if(value.data != null){
+                  _noticount = value.data;
+                  _isBadgeShow = true;
                 }
                 return Stack(
                   alignment: _isBadgeShow?Alignment.topRight : Alignment.center,
@@ -376,6 +364,9 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
                   //_noticount = value.data;
                   if(value.data != null && value.data == 0){
                     _isBadgeShow = false;
+                  }else if(value.data != null){
+                    _noticount = value.data;
+                    _isBadgeShow = true;
                   }
                   return Stack(
                     alignment: _isBadgeShow?Alignment.topRight : Alignment.center,
@@ -405,7 +396,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
                   return DashBoardScreen();
                   break;
                 case 2:
-                  return NotificationScreen();
+                  return NotificationScreen(_sharepreferenceshelper);
               }
               return null;
             }
@@ -430,12 +421,12 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
         return Future.value(true);
       }
 
-      if(_tabController.previousIndex == 2){
+      /*if(_tabController.previousIndex == 2){
         NotificationModel _model = NotificationModel();
         _model.message = 'unCheckAll';
         _sharepreferenceshelper.setNotificationUnCheck(true);
         _notifier.notify('noti_add', _model.toJson());
-      }
+      }*/
 
       _sharepreferenceshelper.setNewsFeedScrollTop(true);
       _notifier.notify('scroll_top', true);

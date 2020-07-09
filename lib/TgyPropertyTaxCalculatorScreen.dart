@@ -117,10 +117,11 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
   }
 
   int _zone(){
-    if(_dropDownBlockNo == "ရတနာသီရိရပ်ကွက်" || _dropDownBlockNo == "ဘုရားဖြူရပ်ကွက်" || _dropDownBlockNo == "ချမ်းသာရပ်ကွက်" ||
-        _dropDownBlockNo == "ချမ်းမြသာစည်ရပ်ကွက်" || _dropDownBlockNo == "ကျောင်းကြီးစုရပ်ကွက်"){
+    if(_dropDownBlockNo == "ရတနာသီရိရပ်ကွက်" || _dropDownBlockNo == "ချမ်းသာရပ်ကွက်" ||
+        _dropDownBlockNo == "ချမ်းမြသာစည်ရပ်ကွက်" || _dropDownBlockNo == "ကျောင်းကြီးစုရပ်ကွက်" || _dropDownBlockNo == "မင်္ဂလာဦးရပ်ကွက်" || _dropDownBlockNo == "ညောင်ဖြူစခန်းရပ်ကွက်"
+        || _dropDownBlockNo == "ကံသာရပ်ကွက်" ){
       return 2;
-    }else if(_dropDownBlockNo == "ကံကြီးရပ်ကွက်" || _dropDownBlockNo == "ကံသာရပ်ကွက်" || _dropDownBlockNo == "စဝ်စံထွန်းရပ်ကွက်" ||
+    }else if(_dropDownBlockNo == "ကံကြီးရပ်ကွက်" || _dropDownBlockNo == "စဝ်စံထွန်းရပ်ကွက်" ||
         _dropDownBlockNo == "စိန်ပန်းရပ်ကွက်" || _dropDownBlockNo == "ရွှေတောင်ရပ်ကွက်"){
       return 3;
     }else {

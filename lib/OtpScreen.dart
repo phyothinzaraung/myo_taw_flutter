@@ -99,7 +99,7 @@ class _OtpScreenState extends State<OtpScreen> {
           NavigatorHelper.myNavigatorPushReplacement(context, WardAdminFeatureChooseScreen(), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{
 
-          NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(false), null);
+          NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);
         }
 
       }else{

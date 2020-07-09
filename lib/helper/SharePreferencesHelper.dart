@@ -11,6 +11,7 @@ class Sharepreferenceshelper{
   static String IS_NEWS_FEED_DELETE = 'is_news_feed_delete';
   static String IS_NOTIFICATION_UNCHECK = 'is_notification_uncheck';
   static String IS_NEWS_FEED_SCROLL_TOP = 'is_news_feed_scroll_top';
+  static String SAVE_NOTI_UNREAD_COUNT = 'save_noti_unread_count';
   SharedPreferences _sharedPreferences;
 
   Future initSharePref() async{
@@ -57,6 +58,10 @@ class Sharepreferenceshelper{
     return _sharedPreferences.get(USER_FCM_TOKEN);
   }
 
+  int getUnreadCount(){
+    return _sharedPreferences.get(SAVE_NOTI_UNREAD_COUNT);
+  }
+
   void logOutSharePref(){
     _sharedPreferences.clear();
   }
@@ -99,5 +104,9 @@ class Sharepreferenceshelper{
 
   bool isNewsFeedScrollTop(){
     return _sharedPreferences.getBool(IS_NEWS_FEED_SCROLL_TOP);
+  }
+
+  void saveNotiUnreadCount(int count){
+    _sharedPreferences.setInt(SAVE_NOTI_UNREAD_COUNT, count);
   }
 }
