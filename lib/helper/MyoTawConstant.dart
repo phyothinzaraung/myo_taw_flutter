@@ -246,6 +246,7 @@ class MyString{
   static const String txt_choose_blockNo= "ရပ်ကွက် အမျိုးအစားရွေးပေးပါ။";
   static const String txt_type_length= "အလျား လိုအပ်သည်။";
   static const String txt_type_width= "အနံ လိုအပ်သည်။";
+  static const String txt_type_story= "အထပ် အရေအတွက်လိုအပ်သည်။";
   static const String txt_type_length_width= "အလျား အနံ လိုအပ်သည်။";
   static const String txt_wrong_pin_code = "ပင်ကုဒ် မှားနေပါသည်။";
   static const String txt_need_prepaid_code = "ငွေဖြည့်ကုဒ် ရိုက်ပေးပါ။";
@@ -259,12 +260,12 @@ class MyString{
   static const String txt_top_up_already = "ငွေဖြည့်ကုဒ်မှာအသုံးပြုပြီပါပြီး။";
   static const String txt_no_photo = "ဓာတ်ပုံများမရှိပါ";
   static const String txt_newsfeed = "သတင်းများ";
-  static const String txt_contributions = "အကြုံပြုစာများ";
+  static const String txt_contributions = "အကြပြုစာများ";
   static const String txt_profile_complete = "ကိုယ်ရေးအချက်အလက်ဖြည့်သွင်းမှု အောင်မြင်သည်။";
   static const String txt_empty_contribution = "အကြံပြုစာများ မရှိသေးပါ။";
   static const String txt_to_contribute = "အကြုံပြုမည်";
-  static const String txt_contribute_fact = "အကြုံပြုချက်";
-  static const String txt_send_contribution = "အကြုံပြုစာပို့မည်";
+  static const String txt_contribute_fact = "အကြပြုချက်";
+  static const String txt_send_contribution = "အကြံပြုစာပို့မည်";
   static const String txt_ward_admin_feature = "Ward Admin ၏ ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
   static const String txt_myotaw_feature = "မြို့တော်အပ်ပလီကေးရှင်းကဏ္ဍ";
   static const String txt_choose_feature = "ကဏ္ဍရွေးချယ်ပေးပါ";
@@ -416,15 +417,19 @@ class MyStringList{
 
   static const List<String> property_tgy_building_type = [
     'သက်ကယ်မိုးထရံကာ',
-    'သွပ်မိုးထရံကာ','ပျဉ်',
-    'နံကပ်','တိုက်',
-    'ထရံ/ဖက်','ပျဥ်/သွပ်',
-    'ပျည်ထောင်',
+    'သွပ်မိုးထရံကာ',
+    'ပျဉ်',
+    'နံကပ်',
+    'တိုက်',
+    'ထရံ/ဖက်',
+    'ပျဥ်/သွပ်',
+    'ပျဥ်ထောင်',
     'ဝါး/ဓနိ',
     'အုတ်',
     'အုတ်ညှပ်',
     'RC',
-    'Steel structure'];
+    'Steel structure',
+    'အစိုးရအဆောက်အဦးများ'];
 
   static const List<String> property_old_tgy_building_type = [
     'သက်ကယ်မိုးထရံကာ',
@@ -463,8 +468,7 @@ class MyStringList{
     'သစ်တောရပ်ကွက်',
     'ဟော်ကုန်းရပ်ကွက်',
     'ရေအေးကွင်း ၁ ရပ်ကွက်',
-    'ရေအေးကွင်း ၂ ရပ်ကွက်',
-    'အစိုးရအဆောက်အဦးများ'];
+    'ရေအေးကွင်း ၂ ရပ်ကွက်'];
 
   static const List<String> suggestion_subject = [
     'လမ်းပြင်၊ လမ်းပျက်',

@@ -129,7 +129,7 @@ class MyoTawCitySetUpHelper{
     var _navigator;
     switch (regionCode){
       case MyString.TGY_REGIONCODE:
-        _navigator = NavigatorHelper.myNavigatorPush(context, OldTgyPropertyTaxCalculatorScreen(), ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN);
+        _navigator = NavigatorHelper.myNavigatorPush(context, TgyPropertyTaxCalculatorScreen(), ScreenName.TGY_PROPERTY_TAX_CALCULATOR_SCREEN);
         break;
       case MyString.MLM_REGIONCODE:
         _navigator = NavigatorHelper.myNavigatorPush(context, MlmPropertyTaxCalculatorScreen(), ScreenName.MLM_PROPERTY_TAX_CALCULATOR_SCREEN);

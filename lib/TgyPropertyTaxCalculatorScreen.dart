@@ -29,6 +29,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
   List<String> _blockNoList;
   TextEditingController _lengthContorller = new TextEditingController();
   TextEditingController _widthContorller = new TextEditingController();
+  TextEditingController _storyContorller = new TextEditingController();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
 
@@ -85,6 +86,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
       _dropDownRoad = MyString.txt_no_selected;
       _widthContorller.clear();
       _lengthContorller.clear();
+      _storyContorller.clear();
 
       _buildingTypePickerIndex = 0;
       _roadTypePickerIndex = 0;
@@ -115,10 +117,11 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
   }
 
   int _zone(){
-    if(_dropDownBlockNo == "ရတနာသီရိရပ်ကွက်" || _dropDownBlockNo == "ဘုရားဖြူရပ်ကွက်" || _dropDownBlockNo == "ချမ်းသာရပ်ကွက်" ||
-        _dropDownBlockNo == "ချမ်းမြသာစည်ရပ်ကွက်" || _dropDownBlockNo == "ကျောင်းကြီးစုရပ်ကွက်"){
+    if(_dropDownBlockNo == "ရတနာသီရိရပ်ကွက်" || _dropDownBlockNo == "ချမ်းသာရပ်ကွက်" ||
+        _dropDownBlockNo == "ချမ်းမြသာစည်ရပ်ကွက်" || _dropDownBlockNo == "ကျောင်းကြီးစုရပ်ကွက်" || _dropDownBlockNo == "မင်္ဂလာဦးရပ်ကွက်" || _dropDownBlockNo == "ညောင်ဖြူစခန်းရပ်ကွက်"
+        || _dropDownBlockNo == "ကံသာရပ်ကွက်" ){
       return 2;
-    }else if(_dropDownBlockNo == "ကံကြီးရပ်ကွက်" || _dropDownBlockNo == "ကံသာရပ်ကွက်" || _dropDownBlockNo == "စဝ်စံထွန်းရပ်ကွက်" ||
+    }else if(_dropDownBlockNo == "ကံကြီးရပ်ကွက်" || _dropDownBlockNo == "စဝ်စံထွန်းရပ်ကွက်" ||
         _dropDownBlockNo == "စိန်ပန်းရပ်ကွက်" || _dropDownBlockNo == "ရွှေတောင်ရပ်ကွက်"){
       return 3;
     }else {
@@ -184,6 +187,28 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                             Navigator.pop(context);
                           },
                           children: _buildingTypeWidgetList,
+                        ),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: Text(MyString.txt_story,
+                          style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
+                      ),
+                      Container(
+                        margin: EdgeInsets.only(right: 10.0, bottom: 20),
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                        ),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                          ),
+                          cursorColor: MyColor.colorPrimary,
+                          controller: _storyContorller,
+                          keyboardType: TextInputType.number,
+                          style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                         ),
                       ),
                       Container(
@@ -351,7 +376,8 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                           onPress: ()async{
 
                             if(_dropDownRoad != MyString.txt_no_selected && _dropDownBuildingType != MyString.txt_no_selected &&
-                                _dropDownBlockNo != MyString.txt_no_selected && _lengthContorller.text.isNotEmpty && _widthContorller.text.isNotEmpty){
+                                _dropDownBlockNo != MyString.txt_no_selected && _lengthContorller.text.isNotEmpty && _widthContorller.text.isNotEmpty &&
+                                _storyContorller.text.isNotEmpty){
                               CustomDialogWidget().customCalculateTaxDialog(
                                 context: context,
                                 titleTax: MyString.txt_biz_tax_property,
@@ -360,7 +386,8 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                                   roadType: _roadType(),
                                   zone: _zone(),
                                   length: _lengthContorller.text,
-                                  width: _widthContorller.text
+                                  width: _widthContorller.text,
+                                  story: double.parse(_storyContorller.text)
                                 ),
                                 onPress: (){
                                   Navigator.of(context).pop();
@@ -375,6 +402,9 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                             }else if(_dropDownBuildingType == MyString.txt_no_selected){
                               WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
 
+                            }else if (_storyContorller.text.isEmpty){
+                              WarningSnackBar(_globalKey, MyString.txt_type_story);
+                              
                             }else if(_dropDownRoad == MyString.txt_no_selected){
                               WarningSnackBar(_globalKey, MyString.txt_choose_road);
 

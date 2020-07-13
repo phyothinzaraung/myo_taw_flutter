@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 
@@ -328,7 +329,10 @@ class DefaultLoadMoreDelegate extends LoadMoreDelegate {
       return Center(
           child: Column(
             children: <Widget>[
-              NativeProgressIndicator(),
+              Container(
+                margin: EdgeInsets.only(top: 10),
+                  child: NativeProgressIndicator()
+              ),
             ],
           )
       );

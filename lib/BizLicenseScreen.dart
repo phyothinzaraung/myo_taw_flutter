@@ -6,6 +6,7 @@ import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
+import 'helper/MyLoadMore.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:dio/dio.dart';
@@ -27,6 +28,8 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
   String display;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   List<BizLicenseModel> _bizLicenseModelList = new List<BizLicenseModel>();
+  int page = 1, pageSize = 10;
+  bool _isCon = false, _isEnd = false;
 
   @override
   void initState() {
@@ -34,10 +37,10 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
     super.initState();
   }
 
-  _getAllBizLicense()async{
+  _getAllBizLicense(int p)async{
     await _sharepreferenceshelper.initSharePref();
-    _response = await ServiceHelper().getBizLicense(_sharepreferenceshelper.getRegionCode());
-    List bizLicenseList = _response.data;
+    _response = await ServiceHelper().getBizLicense(_sharepreferenceshelper.getRegionCode(), p, pageSize);
+    List bizLicenseList = _response.data['Results'];
     if(bizLicenseList != null && bizLicenseList.length > 0){
       for(var i in bizLicenseList){
         if(mounted){
@@ -45,6 +48,17 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
             _bizLicenseModelList.add(BizLicenseModel.fromJson(i));
           });
         }
+      }
+      if(mounted){
+        setState(() {
+          _isEnd = false;
+        });
+      }
+    }else{
+      if(mounted){
+        setState(() {
+          _isEnd = true;
+        });
       }
     }
   }
@@ -101,7 +115,11 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
   }
 
   Future<Null> _handleRefresh() async {
-    _bizLicenseModelList.clear();
+    setState(() {
+      page = 0;
+      page ++;
+      _bizLicenseModelList.clear();
+    });
     asyncLoaderState.currentState.reloadState();
     return null;
   }
@@ -117,17 +135,42 @@ class _BizLicenseScreenState extends State<BizLicenseScreen> {
     );
   }
 
+  _checkCon()async{
+    var conResult = await(Connectivity().checkConnectivity());
+    if (conResult == ConnectivityResult.none) {
+      _isCon = false;
+    }else{
+      _isCon = true;
+    }
+  }
+
+  Future<bool> _loadMore() async {
+    await _checkCon();
+    if(_isCon){
+      page++;
+      await _getAllBizLicense(page);
+    }
+    return _isCon;
+  }
+
 
   @override
   Widget build(BuildContext context) {
     var _asyncLoader = new AsyncLoader(
         key: asyncLoaderState,
-        initState: () async => await _getAllBizLicense(),
+        initState: () async => await _getAllBizLicense(page),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => NativePullRefresh(
             onRefresh: _handleRefresh,
-            child: _bizLicenseModelList.isNotEmpty? _listView() :
+            child: _bizLicenseModelList.isNotEmpty?
+            LoadMore(
+                isFinish: _isEnd,
+                onLoadMore: _loadMore,
+                delegate: DefaultLoadMoreDelegate(),
+                textBuilder: DefaultLoadMoreTextBuilder.english,
+                child: _listView()
+            ):
                 Column(
                   children: <Widget>[
                     headerTitleWidget(MyString.title_biz_license, 'business_license_nocircle'),

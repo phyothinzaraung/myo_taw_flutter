@@ -24,7 +24,6 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
-  NotificationDb _notificationDb = NotificationDb();
   Notifier _notifier;
 
   _init(BuildContext context){
@@ -43,49 +42,29 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
     _list = [model1,model3, model2];
     _firebaseMessaging.subscribeToTopic('all');
     _firebaseMessaging.configure(
-        /*onMessage: (Map<String, dynamic> message) async {
-          print('on message $message');
-
-          if(message != null){
-            String json = message['data']['notification'];
-            Map<String, dynamic> temp = jsonDecode(json);
-            await _notificationDb.openNotificationDb();
-            NotificationModel model = NotificationModel.fromJson(temp);
-            await _notificationDb.insert(model);
-            var count = await _notificationDb.getUnReadNotificationCount();
-            _notificationDb.closeSaveNotificationDb();
-            _sharepreferenceshelper.setNotificationAdd(true);
-            _notifier.notify('noti_count', count);
-            _notifier.notify('noti_add', temp);
-          }
-        },*/
         onResume: (Map<String, dynamic> message) async {
-          print('on resume ${message['data']['screen']}');
+          print('on resume ${message['data']['notification']}');
 
-          if(message != null){
+          if(message.isNotEmpty){
             String json = message['data']['notification'];
             Map<String, dynamic> temp = jsonDecode(json);
-            await _notificationDb.openNotificationDb();
             NotificationModel model = NotificationModel.fromJson(temp);
-            await _notificationDb.insert(model);
-            _notificationDb.closeSaveNotificationDb();
-            if(message['data']['notification'] != null){
-              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+            if(message['data']['notification'] != null ){
+              _sharepreferenceshelper.setNotificationAdd(true);
+              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
             }
           }
         },
         onLaunch: (Map<String, dynamic> message) async {
-          print('on launch ${message['data']['screen']}');
+          print('on launch ${message['data']['notification']}');
 
-          if (message != null) {
+          if (message.isNotEmpty) {
             String json = message['data']['notification'];
             Map<String, dynamic> temp = jsonDecode(json);
-            await _notificationDb.openNotificationDb();
             NotificationModel model = NotificationModel.fromJson(temp);
-            await _notificationDb.insert(model);
-            _notificationDb.closeSaveNotificationDb();
             if(message['data']['notification'] != null){
-              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+              _sharepreferenceshelper.setNotificationAdd(true);
+              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
             }
           }
         }
@@ -118,7 +97,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
 
             break;
           case MyString.txt_myotaw_feature:
-            NavigatorHelper.myNavigatorPush(context, MainScreen(false), null);
+            NavigatorHelper.myNavigatorPush(context, MainScreen(), null);
             //Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
             break;
           case MyString.txt_flood_level:

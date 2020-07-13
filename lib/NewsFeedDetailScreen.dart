@@ -153,7 +153,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         },
         child: CachedNetworkImage(
           width: double.maxFinite,
-          imageUrl: BaseUrl.NEWS_FEED_CONTENT_URL+_photo,
+          imageUrl: _photo!=null?BaseUrl.NEWS_FEED_CONTENT_URL+_photo : '',
           imageBuilder: (context, image){
             return Container(
               width: double.maxFinite,
@@ -171,7 +171,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
                 image: DecorationImage(image: Image.asset('images/placeholder_newsfeed.jpg').image, fit: BoxFit.cover)
             ),
           ),
-        ),
+        )
       );
     }else{
       return GestureDetector(
