@@ -105,30 +105,6 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
     _tabController = new TabController(length: 3, vsync: this);
     _requestPermission();
     getUserData();
-    /*if(widget._isNoti){
-      _tabController.animateTo(1,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
-      _tabController.animateTo(2,duration: Duration(milliseconds: 500),curve: Curves.easeIn);
-    }*/
-
-    /*if(PlatformHelper.isAndroid()){
-      _tabController.addListener((){
-        if(_tabController.previousIndex == 2){
-          NotificationModel _model = NotificationModel();
-          _model.message = 'unCheckAll';
-          _sharepreferenceshelper.setNotificationUnCheck(true);
-          _notifier.notify('noti_add', _model.toJson());
-        }
-      });
-    }else{
-      _cupertinoTabController.addListener((){
-        if(_cupertinoTabController.index != 2){
-          NotificationModel _model = NotificationModel();
-          _model.message = 'unCheckAll';
-          _sharepreferenceshelper.setNotificationUnCheck(true);
-          _notifier.notify('noti_add', _model.toJson());
-        }
-      });
-    }*/
   }
 
   initBadge()async{
@@ -178,65 +154,70 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
           onMessage: (Map<String, dynamic> message) async {
             print('on message $message');
 
-            if(message != null){
+            if(message.isNotEmpty){
               String json = message['data']['notification'];
               Map<String, dynamic> temp = jsonDecode(json);
               if(message['data']['notification'] != null ){
                 _sharepreferenceshelper.setNotificationAdd(true);
-                _count = _sharepreferenceshelper.getUnreadCount() + 1;
+                var _count = _sharepreferenceshelper.getUnreadCount() + 1;
                 _sharepreferenceshelper.saveNotiUnreadCount(_count);
                 _notifier.notify('noti_count', _count);
                 _notifier.notify('noti_add', temp);
               }
             }
           },
-        onResume: (Map<String, dynamic> message) async {
-          print('on resume ${message['data']['notification']}');
-
-          if(message != null){
-            String json = message['data']['notification'];
-            Map<String, dynamic> temp = jsonDecode(json);
-            NotificationModel model = NotificationModel.fromJson(temp);
-            if(message['data']['notification'] != null ){
-              _sharepreferenceshelper.setNotificationAdd(true);
-              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
-            }
-          }
-        },
-      );
-
-    }else{
-      _firebaseMesssaging.subscribeToTopic('all');
-      _firebaseMesssaging.configure(
-          onMessage: (Map<String, dynamic> message) async {
-            print('on message $message');
-
-            if(message != null){
-              if(message['data']['notification'] != null ){
-                _count = _sharepreferenceshelper.getUnreadCount() + 1;
-                _sharepreferenceshelper.saveNotiUnreadCount(_count);
-                _sharepreferenceshelper.setNotificationAdd(true);
-                _notifier.notify('noti_count', _count);
-              }
-            }
-          },
           onResume: (Map<String, dynamic> message) async {
             print('on resume ${message['data']['notification']}');
 
-            if(message != null){
+            if(message.isNotEmpty){
               String json = message['data']['notification'];
               Map<String, dynamic> temp = jsonDecode(json);
               NotificationModel model = NotificationModel.fromJson(temp);
               if(message['data']['notification'] != null ){
                 _sharepreferenceshelper.setNotificationAdd(true);
+                _notifier.notify('noti_add', temp);
                 NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
               }
             }
           },
-          onLaunch: (Map<String, dynamic> message) async {
+      );
+
+    }else{
+      _firebaseMesssaging.subscribeToTopic('all');
+      _firebaseMesssaging.configure(
+        onMessage: (Map<String, dynamic> message) async {
+          print('on message $message');
+
+          if(message.isNotEmpty){
+            String json = message['data']['notification'];
+            Map<String, dynamic> temp = jsonDecode(json);
+            if(message['data']['notification'] != null ){
+              _sharepreferenceshelper.setNotificationAdd(true);
+              var _count = _sharepreferenceshelper.getUnreadCount() + 1;
+              _sharepreferenceshelper.saveNotiUnreadCount(_count);
+              _notifier.notify('noti_count', _count);
+              _notifier.notify('noti_add', temp);
+            }
+          }
+        },
+        onResume: (Map<String, dynamic> message) async {
+          print('on resume ${message['data']['notification']}');
+
+          if(message.isNotEmpty){
+            String json = message['data']['notification'];
+            Map<String, dynamic> temp = jsonDecode(json);
+            NotificationModel model = NotificationModel.fromJson(temp);
+            if(message['data']['notification'] != null ){
+              _sharepreferenceshelper.setNotificationAdd(true);
+              _notifier.notify('noti_add', temp);
+              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
+            }
+          }
+        },
+        onLaunch: (Map<String, dynamic> message) async {
             print('on launch ${message['data']['notification']}');
 
-            if (message != null) {
+            if (message.isNotEmpty) {
               String json = message['data']['notification'];
               Map<String, dynamic> temp = jsonDecode(json);
               NotificationModel model = NotificationModel.fromJson(temp);
@@ -420,13 +401,6 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
       if (_tabController.index == 0) {
         return Future.value(true);
       }
-
-      /*if(_tabController.previousIndex == 2){
-        NotificationModel _model = NotificationModel();
-        _model.message = 'unCheckAll';
-        _sharepreferenceshelper.setNotificationUnCheck(true);
-        _notifier.notify('noti_add', _model.toJson());
-      }*/
 
       _sharepreferenceshelper.setNewsFeedScrollTop(true);
       _notifier.notify('scroll_top', true);

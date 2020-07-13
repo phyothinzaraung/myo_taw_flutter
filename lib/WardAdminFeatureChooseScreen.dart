@@ -42,26 +42,10 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
     _list = [model1,model3, model2];
     _firebaseMessaging.subscribeToTopic('all');
     _firebaseMessaging.configure(
-        /*onMessage: (Map<String, dynamic> message) async {
-          print('on message $message');
-
-          if(message != null){
-            String json = message['data']['notification'];
-            Map<String, dynamic> temp = jsonDecode(json);
-            await _notificationDb.openNotificationDb();
-            NotificationModel model = NotificationModel.fromJson(temp);
-            await _notificationDb.insert(model);
-            var count = await _notificationDb.getUnReadNotificationCount();
-            _notificationDb.closeSaveNotificationDb();
-            _sharepreferenceshelper.setNotificationAdd(true);
-            _notifier.notify('noti_count', count);
-            _notifier.notify('noti_add', temp);
-          }
-        },*/
         onResume: (Map<String, dynamic> message) async {
           print('on resume ${message['data']['notification']}');
 
-          if(message != null){
+          if(message.isNotEmpty){
             String json = message['data']['notification'];
             Map<String, dynamic> temp = jsonDecode(json);
             NotificationModel model = NotificationModel.fromJson(temp);
@@ -74,14 +58,13 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
         onLaunch: (Map<String, dynamic> message) async {
           print('on launch ${message['data']['notification']}');
 
-          if (message != null) {
+          if (message.isNotEmpty) {
             String json = message['data']['notification'];
             Map<String, dynamic> temp = jsonDecode(json);
             NotificationModel model = NotificationModel.fromJson(temp);
             if(message['data']['notification'] != null){
               _sharepreferenceshelper.setNotificationAdd(true);
               NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
-              //Navigator.push(context, MaterialPageRoute(builder: (context) => MainScreen()));
             }
           }
         }
