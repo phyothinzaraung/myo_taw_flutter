@@ -267,7 +267,7 @@ class MyString{
   static const String txt_contribute_fact = "အကြပြုချက်";
   static const String txt_send_contribution = "အကြံပြုစာပို့မည်";
   static const String txt_ward_admin_feature = "Ward Admin ၏ ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
-  static const String txt_myotaw_feature = "မြို့တော်အပ်ပလီကေးရှင်းကဏ္ဍ";
+  static const String txt_myotaw_channel = "ချန်နယ်";
   static const String txt_choose_feature = "ကဏ္ဍရွေးချယ်ပေးပါ";
   static const String txt_title_dashboard = "ကဏ္ဍများ";
   static const String txt_title_notification = "အသိပေးနှိုးဆော်ချက်";
@@ -276,7 +276,7 @@ class MyString{
   static const String txt_top_up_amount = 'ငွေဖြည့်ကဒ်တန်ဖိုး';
   static const String txt_top_up_amount_before = 'ငွေမဖြည့်ရသေးသည့်တန်ဖိုး';
   static const String txt_top_up_amount_after = 'ငွေဖြည့်ပြီးတန်ဖိုး';
-  static const String txt_flood_level = 'ရေကြီးခြင်းမှတ်တမ်း';
+  static const String txt_flood_level = 'ရေကြီးခြင်းမှတ်တမ်း \n ';
   static const String txt_flood_level_inch = 'ရေကြီးခြင်း (အမြင့်)';
   static const String txt_add_flood_level_record = 'မှတ်တမ်းတင်မည်';
   static const String txt_flood_level_height = 'ရေကြီးခြင်းအတိုင်းအတာ';
@@ -307,6 +307,12 @@ class MyString{
   static const String txt_select_all = 'အားလုံး';
   static const String txt_myotaw_app_policy = 'Login ဝင်ခြင်းသည် MyoTaw app ၏ Policy \n ကိုလက်ခံပြီးဖြစ်သည်။';
   static const String txt_noti_biz_license = 'Business License ';
+  static const String txt_form = 'ဖောင်များ';
+  static const String txt_search_type = 'ရှာဖွေမှု အမျိုးအစား';
+  static const String txt_search_text = 'စာသား';
+  static const String txt_search_content_type = 'ပုံသို့မဟုတ်ဗွီဒီယို';
+  static const String txt_search_date = 'ရက်စွဲ';
+  static const String txt_search = 'ရှာမည်';
 
   static const String txt_first_grade = 'ပထမတန်းစား';
   static const String txt_second_grade = 'ဒုတိယတန်းစား';
@@ -491,8 +497,18 @@ class MyStringList{
     'ရေပေးဝေရေး',
     'အများပိုင်နေရာ',
     'မော်တော်ယာဉ်ဆိုင်ရာ',
-    'မှုခင်း',
-    'အခြား'];
+    'အခြား',
+    'လမ်းအပေါက်များ၊ချိုင့်များ (pothole)',
+    'လော့ဒေါင်းဧရိယာများ (lockdown)',
+    'Covid -19 နှင့်သက်ဆိုင်သော (covid)'
+  ];
+
+  static const List<String> content_type_list = [
+    'ပုံ',
+    'ဗွီဒီယို',
+    'အသံဖိုင်',
+    'pdf'
+  ];
 
   //--------------------------------------------------------------------------------------------------------------------------------------------
 
@@ -712,6 +728,8 @@ class ScreenName{
   static const String FLOOD_REPORT_LIST_SCREEN = 'Flood report list screen';
   static const String NEWS_FLOOD_REPORT_SCREEN = 'New flood report screen';
   static const String GET_FLOOD_LEVEL_SCREEN = 'Get flood level screen';
+  static const String FORM_SCREEN = 'Form screen';
+  static const String MYOTAW_CHANNEL = 'Channel';
 
   static const String NEWS_FEED_SCREEN = 'News feed screen';
   static const String NEWS_FEED_DETAIL_SCREEN = 'News feed detail screen';

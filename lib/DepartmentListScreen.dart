@@ -45,7 +45,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
 
-  final Map<int, Widget> children = const <int, Widget>{
+  final Map<int, Widget> _cupertinoSliderChildren = const <int, Widget>{
     0: Text(MyString.txt_dept_manager, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
     1: Text(MyString.txt_dept_engineer, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),)
   };
@@ -130,7 +130,7 @@ class _DepartmentListScreenState extends State<DepartmentListScreen> {
       width: double.maxFinite,
       margin: EdgeInsets.only(left: 20, right: 20),
       child: CupertinoSlidingSegmentedControl(
-        children: children,
+        children: _cupertinoSliderChildren,
         thumbColor: Colors.white,
         padding: EdgeInsets.all(3),
         onValueChanged: (i)async{

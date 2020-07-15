@@ -105,6 +105,13 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
     _tabController = new TabController(length: 3, vsync: this);
     _requestPermission();
     getUserData();
+    if (PlatformHelper.isAndroid()) {
+      _tabController.addListener(() {
+        if(_tabController.index != 0){
+          FocusScope.of(context).requestFocus(FocusNode());
+        }
+      });
+    }
   }
 
   initBadge()async{
@@ -325,63 +332,61 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   }
 
   Widget _iosTabBarNavigation(){
-    return CupertinoPageScaffold(
-        child: CupertinoTabScaffold(
-            controller: _cupertinoTabController,
-            tabBar: CupertinoTabBar(
-              activeColor: MyColor.colorPrimary,
-              inactiveColor: MyColor.colorGreyDark,
-              backgroundColor: Colors.white,
-              onTap: (i){
-                if(i == 0){
-                  _sharepreferenceshelper.setNewsFeedScrollTop(true);
-                  _notifier.notify('scroll_top', true);
-                }
-              },
-              items: [
-                BottomNavigationBarItem(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,)),
-                BottomNavigationBarItem(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
-                BottomNavigationBarItem(icon: Notifier.of(context).register<int>('noti_count', (value){
-                  //_noticount = value.data;
-                  if(value.data != null && value.data == 0){
-                    _isBadgeShow = false;
-                  }else if(value.data != null){
-                    _noticount = value.data;
-                    _isBadgeShow = true;
-                  }
-                  return Stack(
-                    alignment: _isBadgeShow?Alignment.topRight : Alignment.center,
-                    children: <Widget>[
-                      Icon(MyoTawCustomIcon.Notification_icon, size: 25,),
-                      _isBadgeShow?Container(
-                          alignment: Alignment.center,
-                          width: 13,
-                          height: 13,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.all(Radius.circular(10)),
-                            color: Colors.red,
-                          ),
-                          child: Text('${value.data??_noticount}', style: TextStyle(fontSize: 8, color: Colors.white),)
-                      ) : Container()
-                    ],
-                  );
-                })),
-              ],
-            ),
-            tabBuilder: (context, index){
-              switch (index){
-                case 0:
-                  return NewsFeedScreen();
-                  break;
-                case 1:
-                  return DashBoardScreen();
-                  break;
-                case 2:
-                  return NotificationScreen(_sharepreferenceshelper);
-              }
-              return null;
+    return CupertinoTabScaffold(
+        controller: _cupertinoTabController,
+        tabBar: CupertinoTabBar(
+          activeColor: MyColor.colorPrimary,
+          inactiveColor: MyColor.colorGreyDark,
+          backgroundColor: Colors.white,
+          onTap: (i){
+            if(i == 0){
+              _sharepreferenceshelper.setNewsFeedScrollTop(true);
+              _notifier.notify('scroll_top', true);
             }
-        )
+          },
+          items: [
+            BottomNavigationBarItem(icon: Icon(MyoTawCustomIcon.News_feed_icon, size: 25,)),
+            BottomNavigationBarItem(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
+            BottomNavigationBarItem(icon: Notifier.of(context).register<int>('noti_count', (value){
+              //_noticount = value.data;
+              if(value.data != null && value.data == 0){
+                _isBadgeShow = false;
+              }else if(value.data != null){
+                _noticount = value.data;
+                _isBadgeShow = true;
+              }
+              return Stack(
+                alignment: _isBadgeShow?Alignment.topRight : Alignment.center,
+                children: <Widget>[
+                  Icon(MyoTawCustomIcon.Notification_icon, size: 25,),
+                  _isBadgeShow?Container(
+                      alignment: Alignment.center,
+                      width: 13,
+                      height: 13,
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.all(Radius.circular(10)),
+                        color: Colors.red,
+                      ),
+                      child: Text('${value.data??_noticount}', style: TextStyle(fontSize: 8, color: Colors.white),)
+                  ) : Container()
+                ],
+              );
+            })),
+          ],
+        ),
+        tabBuilder: (context, index){
+          switch (index){
+            case 0:
+              return NewsFeedScreen();
+              break;
+            case 1:
+              return DashBoardScreen();
+              break;
+            case 2:
+              return NotificationScreen(_sharepreferenceshelper);
+          }
+          return null;
+        }
     );
   }
   @override
