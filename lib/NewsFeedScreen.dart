@@ -54,7 +54,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   TextEditingController _searchEditingController  = TextEditingController();
   bool _isSearchTextFieldEnable = true, _isSearchTextSelect = true, _isSearchContentTypeSelect = false, _isSearchDateSelect = false;
-  String _dropDownContentType = MyString.txt_no_selected;
+  String _dropDownContentType = MyString.txt_to_choose;
   List<String> _contentTypeList = List();
   int _searchContentTypePickerIndex = 0;
 
@@ -66,7 +66,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   int _currentSegment = 0;
   List<Widget> _searchContentTypeWidgetList = List();
-  String _fromDateToDate = MyString.txt_search;
+  String _fromDateToDate = MyString.txt_to_choose_date;
 
   @override
   // TODO: implement wantKeepAlive
@@ -77,7 +77,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     // TODO: implement initState
     super.initState();
     FireBaseAnalyticsHelper.trackCurrentScreen(ScreenName.NEWS_FEED_SCREEN);
-    _contentTypeList.add(MyString.txt_no_selected);
+    _contentTypeList.add(MyString.txt_to_choose);
     _contentTypeList.addAll(MyStringList.content_type_list);
     if (!PlatformHelper.isAndroid()) {
       _initSearchContentIosPickerWidgetList();
@@ -406,7 +406,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     onTap: (){
                       Navigator.of(context).pop();
                     },
-                    child: Padding(
+                    child: Container(
+                      color: Colors.transparent,
                       padding: const EdgeInsets.only(bottom: 10),
                       child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,color: Colors.black,size: 30,),
                     ),
@@ -431,6 +432,107 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
           ],
         ),
         Container(
+          margin: EdgeInsets.only(top: 5, bottom: 5),
+          child: PlatformHelper.isAndroid()?SizedBox(
+              height: 40,
+              child: ListView(
+                scrollDirection: Axis.horizontal,
+                children: <Widget>[
+                  GestureDetector(
+                    onTap: (){
+                      setState(() {
+                        _isSearchTextSelect = true;
+                        _isSearchContentTypeSelect = false;
+                        _isSearchDateSelect = false;
+                        _isSearchTextFieldEnable = true;
+                        _fromDateToDate = MyString.txt_to_choose_date;
+                      });
+                      _searchEditingController.clear();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(left: 5, right: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: _isSearchTextSelect?MyColor.colorPrimary : Colors.white,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10,),
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(Icons.text_fields, size: 17,color: _isSearchTextSelect?Colors.white : Colors.black,)
+                            ),
+                            Text(MyString.txt_search_text, style: TextStyle(color: _isSearchTextSelect?Colors.white : Colors.black, fontSize: FontSize.textSizeSmall),)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: (){
+                      setState(() {
+                        _isSearchTextSelect = false;
+                        _isSearchContentTypeSelect = true;
+                        _isSearchDateSelect = false;
+                        _isSearchTextFieldEnable = false;
+                        _fromDateToDate = MyString.txt_to_choose_date;
+                      });
+                      _searchEditingController.clear();
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(left: 5, right: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: _isSearchContentTypeSelect?MyColor.colorPrimary : Colors.white,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10,),
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(Icons.perm_media, size: 17,color: _isSearchContentTypeSelect?Colors.white : Colors.black,)),
+                            Text(MyString.txt_search_content_type, style: TextStyle(color: _isSearchContentTypeSelect?Colors.white : Colors.black,fontSize: FontSize.textSizeSmall),)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  GestureDetector(
+                    onTap: ()async{
+                      setState(() {
+                        _isSearchTextSelect = false;
+                        _isSearchContentTypeSelect = false;
+                        _isSearchDateSelect = true;
+                        _isSearchTextFieldEnable = false;
+                        _fromDateToDate = MyString.txt_to_choose_date;
+                      });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(left: 5, right: 5),
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(20),
+                        color: _isSearchDateSelect?MyColor.colorPrimary : Colors.white,
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.only(left: 10, right: 10,),
+                        child: Row(
+                          children: <Widget>[
+                            Padding(
+                                padding: EdgeInsets.only(right: 5),
+                                child: Icon(Icons.date_range, size: 17,color: _isSearchDateSelect?Colors.white : Colors.black,)),
+                            Text(MyString.txt_search_date, style: TextStyle(color: _isSearchDateSelect?Colors.white : Colors.black,fontSize: FontSize.textSizeSmall),)
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              )
+          ) : _cupertinoSliderControl(),
+        ),
+        Container(
           margin: EdgeInsets.only(top: 10),
           child: _isSearchContentTypeSelect? _contentTypeDropdown()
               : Container(
@@ -445,49 +547,51 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   )
                 ]
             ),
-            child: _isSearchDateSelect? Container(
-              margin: EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: <Widget>[
-                    Container(
-                        margin: EdgeInsets.only(right: 10),
-                        child: Icon(Icons.search, color: Colors.black,size: 20,)),
-                    Expanded(child: Text(_fromDateToDate,style: TextStyle(fontSize: FontSize.textSizeExtraSmall),)),
-                    GestureDetector(
-                      onTap: ()async{
-                        List dateTime = await DateRangePicker.showDatePicker(
-                        context: context,
-                        initialFirstDate: DateTime.now(),
-                        initialLastDate: DateTime.now().add(Duration(days: 7)),
-                        firstDate: DateTime(2019),
-                        lastDate: DateTime(2025),
-                        );
+            child: _isSearchDateSelect? GestureDetector(
+              onTap: ()async{
+                List dateTime = await DateRangePicker.showDatePicker(
+                  context: context,
+                  initialFirstDate: DateTime.now(),
+                  initialLastDate: DateTime.now().add(Duration(days: 7)),
+                  firstDate: DateTime(2019),
+                  lastDate: DateTime(2025),
+                );
 
-                        if (dateTime != null) {
-                            var fromDate = ShowDateTimeHelper.showDateTimeFromServer(dateTime[0].toString());
-                            var toDate = ShowDateTimeHelper.showDateTimeFromServer(dateTime[1].toString());
-                          setState(() {
-                             _fromDateToDate = '${fromDate} မှ ${toDate} အထိ';
-                           });
-                            print('from ${ShowDateTimeHelper.showDateTimeFromServer(dateTime[0].toString())} to ${ShowDateTimeHelper.showDateTimeFromServer(dateTime[1].toString())}');
-                          }
-                      },
-                      child: Container(
-                          margin: EdgeInsets.only(right: 5),
-                          child: Icon(Icons.date_range, color: Colors.black,size: 20,)),
-                    ),
-                    GestureDetector(
+                if (dateTime != null) {
+                  var fromDate = ShowDateTimeHelper.showDateTimeFromServer(dateTime[0].toString());
+                  var toDate = ShowDateTimeHelper.showDateTimeFromServer(dateTime[1].toString());
+                  setState(() {
+                    _fromDateToDate = '${fromDate} မှ ${toDate} အထိ';
+                  });
+                  print('from ${ShowDateTimeHelper.showDateTimeFromServer(dateTime[0].toString())} to ${ShowDateTimeHelper.showDateTimeFromServer(dateTime[1].toString())}');
+                }
+              },
+              child: Container(
+                  margin: EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Expanded(child: Text(_fromDateToDate,style: TextStyle(fontSize: FontSize.textSizeExtraSmall),)),
+                      /*GestureDetector(
                         onTap: (){
-                          setState(() {
-                            _fromDateToDate = MyString.txt_search;
-                          });
                           _handleRefresh();
                         },
-                        child: Icon(Icons.clear, color: Colors.black,size: 20,)
-                    )
-                  ],
-                )) : TextField(
+                        child: Container(
+                            margin: EdgeInsets.only(right: 10),
+                            child: Icon(Icons.search, color: Colors.black,size: 20,)),
+                      ),*/
+                      GestureDetector(
+                          onTap: (){
+                            setState(() {
+                              _fromDateToDate = MyString.txt_to_choose_date;
+                            });
+                            _handleRefresh();
+                          },
+                          child: Icon(Icons.refresh, color: Colors.black,size: 20,)
+                      )
+                    ],
+                  )),
+            ) : TextField(
               enabled: _isSearchTextFieldEnable,
               controller: _searchEditingController,
               style: TextStyle(fontSize: FontSize.textSizeExtraSmall,),
@@ -496,16 +600,33 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   hoverColor: Colors.red,
                   filled: true,
                   fillColor: Colors.transparent,
-                  hintText: MyString.txt_search,
+                  hintText: MyString.txt_to_search,
                   hintStyle: TextStyle(fontSize: FontSize.textSizeSmall),
-                  prefixIcon: Icon(Icons.search, color: Colors.black,size: 20,),
-                  suffixIcon: GestureDetector(
-                      onTap: (){
-                        _searchEditingController.clear();
-                        FocusScope.of(context).requestFocus(FocusNode());
-                        _handleRefresh();
-                      },
-                      child: Icon(Icons.clear, color: Colors.black,size: 20,)
+                  //prefixIcon: Icon(Icons.search, color: Colors.black,size: 20,),
+                  suffixIcon: Row(
+                    mainAxisSize: MainAxisSize.min,
+                    children: <Widget>[
+                      GestureDetector(
+                          onTap: (){
+                            _handleRefresh();
+                          },
+                          child: Container(
+                              margin: EdgeInsets.only(right: 10),
+                              child: Icon(Icons.search, color: Colors.black,size: 20,)
+                          )
+                      ),
+                      GestureDetector(
+                          onTap: (){
+                            _searchEditingController.clear();
+                            FocusScope.of(context).requestFocus(FocusNode());
+                            _handleRefresh();
+                          },
+                          child: Container(
+                              margin: EdgeInsets.only(right: 15),
+                              child: Icon(Icons.refresh, color: Colors.black,size: 20,)
+                          )
+                      ),
+                    ],
                   )
               ),
               textInputAction: TextInputAction.search,
@@ -518,111 +639,10 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             ),
           ),
         ),
-        Container(
+        /*Container(
             margin: EdgeInsets.only(top: 5, left: 10),
             child: Text(MyString.txt_search_type, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),)
-        ),
-        Container(
-          margin: EdgeInsets.only(top: 5),
-          child: PlatformHelper.isAndroid()?SizedBox(
-            height: 40,
-            child: ListView(
-              scrollDirection: Axis.horizontal,
-              children: <Widget>[
-                GestureDetector(
-                  onTap: (){
-                    setState(() {
-                      _isSearchTextSelect = true;
-                      _isSearchContentTypeSelect = false;
-                      _isSearchDateSelect = false;
-                      _isSearchTextFieldEnable = true;
-                      _fromDateToDate = MyString.txt_search;
-                    });
-                    _searchEditingController.clear();
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(left: 5, right: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: _isSearchTextSelect?MyColor.colorPrimary : Colors.white,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10,),
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.only(right: 5),
-                              child: Icon(Icons.text_fields, size: 17,color: _isSearchTextSelect?Colors.white : Colors.black,)
-                          ),
-                          Text(MyString.txt_search_text, style: TextStyle(color: _isSearchTextSelect?Colors.white : Colors.black, fontSize: FontSize.textSizeSmall),)
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: (){
-                    setState(() {
-                      _isSearchTextSelect = false;
-                      _isSearchContentTypeSelect = true;
-                      _isSearchDateSelect = false;
-                      _isSearchTextFieldEnable = false;
-                      _fromDateToDate = MyString.txt_search;
-                    });
-                    _searchEditingController.clear();
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(left: 5, right: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: _isSearchContentTypeSelect?MyColor.colorPrimary : Colors.white,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10,),
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.only(right: 5),
-                              child: Icon(Icons.perm_media, size: 17,color: _isSearchContentTypeSelect?Colors.white : Colors.black,)),
-                          Text(MyString.txt_search_content_type, style: TextStyle(color: _isSearchContentTypeSelect?Colors.white : Colors.black,fontSize: FontSize.textSizeSmall),)
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-                GestureDetector(
-                  onTap: ()async{
-                    setState(() {
-                      _isSearchTextSelect = false;
-                      _isSearchContentTypeSelect = false;
-                      _isSearchDateSelect = true;
-                      _isSearchTextFieldEnable = false;
-                      _fromDateToDate = MyString.txt_search;
-                    });
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(left: 5, right: 5),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(20),
-                      color: _isSearchDateSelect?MyColor.colorPrimary : Colors.white,
-                    ),
-                    child: Padding(
-                      padding: const EdgeInsets.only(left: 10, right: 10,),
-                      child: Row(
-                        children: <Widget>[
-                          Padding(
-                              padding: EdgeInsets.only(right: 5),
-                              child: Icon(Icons.date_range, size: 17,color: _isSearchDateSelect?Colors.white : Colors.black,)),
-                          Text(MyString.txt_search_date, style: TextStyle(color: _isSearchDateSelect?Colors.white : Colors.black,fontSize: FontSize.textSizeSmall),)
-                        ],
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            )
-          ) : _cupertinoSliderControl(),
-        ),
+        ),*/
       ],
     );
   }
@@ -630,7 +650,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   Widget _contentTypeDropdown(){
     return Container(
       height: 50,
-      padding: EdgeInsets.only(top: 5, bottom: 5, left: 10, right: 10),
+      padding: EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
       width: double.maxFinite,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
@@ -663,11 +683,11 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 FocusScope.of(context).requestFocus(FocusNode());
                 _handleRefresh();
                 setState(() {
-                  _dropDownContentType = MyString.txt_no_selected;
+                  _dropDownContentType = MyString.txt_to_choose;
                 });
               },
-              child: Icon(Icons.clear, color: Colors.black,size: 20,)
-          )
+              child: Icon(Icons.refresh, color: Colors.black,size: 20,)
+          ),
 
         ],
       ) :
@@ -703,19 +723,19 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               _isSearchContentTypeSelect = false;
               _isSearchDateSelect = false;
               _isSearchTextFieldEnable = true;
-              _fromDateToDate = MyString.txt_search;
+              _fromDateToDate = MyString.txt_to_choose_date;
             }else if(i == 1){
               _isSearchTextSelect = false;
               _isSearchContentTypeSelect = true;
               _isSearchDateSelect = false;
               _isSearchTextFieldEnable = false;
-              _fromDateToDate = MyString.txt_search;
+              _fromDateToDate = MyString.txt_to_choose_date;
             }else{
               _isSearchTextSelect = false;
               _isSearchContentTypeSelect = false;
               _isSearchDateSelect = true;
               _isSearchTextFieldEnable = false;
-              _fromDateToDate = MyString.txt_search;
+              _fromDateToDate = MyString.txt_to_choose_date;
             }
           });
 

@@ -266,7 +266,7 @@ class MyString{
   static const String txt_to_contribute = "အကြုံပြုမည်";
   static const String txt_contribute_fact = "အကြပြုချက်";
   static const String txt_send_contribution = "အကြံပြုစာပို့မည်";
-  static const String txt_ward_admin_feature = "Ward Admin ၏ ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
+  static const String txt_ward_admin_feature = "ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
   static const String txt_myotaw_channel = "ချန်နယ်";
   static const String txt_choose_feature = "ကဏ္ဍရွေးချယ်ပေးပါ";
   static const String txt_title_dashboard = "ကဏ္ဍများ";
@@ -310,9 +310,11 @@ class MyString{
   static const String txt_form = 'ဖောင်များ';
   static const String txt_search_type = 'ရှာဖွေမှု အမျိုးအစား';
   static const String txt_search_text = 'စာသား';
-  static const String txt_search_content_type = 'ပုံသို့မဟုတ်ဗွီဒီယို';
+  static const String txt_search_content_type = 'စိတ်ကြိုက်ရှာရန်';
   static const String txt_search_date = 'ရက်စွဲ';
-  static const String txt_search = 'ရှာမည်';
+  static const String txt_to_search = 'စာသားရိုက်ရှာရန်';
+  static const String txt_to_choose = 'ရွေးချယ်ပါ';
+  static const String txt_to_choose_date = 'ရက်စွဲရွေးပါ';
 
   static const String txt_first_grade = 'ပထမတန်းစား';
   static const String txt_second_grade = 'ဒုတိယတန်းစား';
