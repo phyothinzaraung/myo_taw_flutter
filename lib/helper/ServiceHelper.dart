@@ -332,6 +332,13 @@ class ServiceHelper{
   return response;
  }
 
+ getFormList<Response>() async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+ "Form/getFormList");
+  return response;
+ }
+
 }
 
 
