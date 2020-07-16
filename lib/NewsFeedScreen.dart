@@ -93,25 +93,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     }
   }
 
-  /*_initSearchType(){
-    SearchTypeModel _model1 = SearchTypeModel();
-    _model1.title = 'text';
-    _model1.icon = Icons.text_fields;
-    _model1.isSelect = true;
-
-    SearchTypeModel _model2 = SearchTypeModel();
-    _model2.title = 'content type';
-    _model2.icon = Icons.text_fields;
-    _model2.isSelect = false;
-
-    SearchTypeModel _model3 = SearchTypeModel();
-    _model3.title = 'date';
-    _model3.icon = Icons.text_fields;
-    _model3.isSelect = false;
-
-    _searchTypeModelList = [_model1, _model2, _model3];
-  }*/
-
 
   _checkCon()async{
     var conResult = await(Connectivity().checkConnectivity());
@@ -480,7 +461,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                         initialFirstDate: DateTime.now(),
                         initialLastDate: DateTime.now().add(Duration(days: 7)),
                         firstDate: DateTime(2019),
-                        lastDate: DateTime(2025)
+                        lastDate: DateTime(2025),
                         );
 
                         if (dateTime != null) {

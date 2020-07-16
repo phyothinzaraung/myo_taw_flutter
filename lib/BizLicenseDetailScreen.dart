@@ -31,42 +31,36 @@ class _BizLicenseDetailScreenState extends State<BizLicenseDetailScreen> {
     return ListView(
       children: <Widget>[
         Container(
-          child: Column(
+          margin: EdgeInsets.only(top: 15.0,left: 30.0, right: 30.0, bottom: 15.0),
+          //header
+          child: Row(
             children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(top: 15.0,left: 30.0, right: 30.0, bottom: 15.0),
-                //header
-                child: Row(
-                  children: <Widget>[
-                    Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/business_license_nocircle.png', width: 30.0, height: 30.0,)),
-                    Text(MyString.title_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall),)
-                  ],
-                ),
-              ),
-              Card(
-                margin: EdgeInsets.all(0.0),
-                elevation: 0.0,
-                //text requirements
-                child: Container(
-                    padding: EdgeInsets.all(30.0),
-                    child: Html(data: _bizLicenseModel.requirements, onLinkTap: (url) => _launchURL(url),linkStyle: TextStyle(color: Colors.redAccent, decoration: TextDecoration.underline),)
-                ),
-              ),
-              _bizLicenseModel.isApplyAllow==true?
-              Container(
-                width: double.maxFinite,
-                margin: EdgeInsets.all(20.0),
-                child: CustomButtonWidget(onPress: ()async{
-
-                  NavigatorHelper.myNavigatorPushReplacement(context, ApplyBizLicenseFormScreen(_bizLicenseModel), ScreenName.APPLY_BIZ_LICENSE_FORM_SCREEN);
-                }, child: Text(MyString.txt_apply_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
-                  color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-              ) : Container()
+              Container(margin: EdgeInsets.only(right: 10.0),child: Image.asset('images/business_license_nocircle.png', width: 30.0, height: 30.0,)),
+              Text(MyString.title_biz_license, style: TextStyle(fontSize: FontSize.textSizeSmall),)
             ],
           ),
         ),
+        Card(
+          margin: EdgeInsets.all(0.0),
+          elevation: 0.0,
+          //text requirements
+          child: Container(
+              padding: EdgeInsets.all(30.0),
+              child: Html(data: _bizLicenseModel.requirements, onLinkTap: (url) => _launchURL(url),linkStyle: TextStyle(color: Colors.redAccent, decoration: TextDecoration.underline),)
+          ),
+        ),
+        _bizLicenseModel.isApplyAllow?
+            Container(
+              width: double.maxFinite,
+              margin: EdgeInsets.all(20.0),
+              child: CustomButtonWidget(onPress: ()async{
+
+                NavigatorHelper.myNavigatorPushReplacement(context, ApplyBizLicenseFormScreen(_bizLicenseModel), ScreenName.APPLY_BIZ_LICENSE_FORM_SCREEN);
+              }, child: Text(MyString.txt_apply_license, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                color: MyColor.colorPrimary, shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ) : Container()
       ],
     );
   }
