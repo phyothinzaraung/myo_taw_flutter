@@ -66,8 +66,10 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         _photoWidgetList.add(
             GestureDetector(
               onTap: (){
-                NavigatorHelper.myNavigatorPush(context, NewsFeedPhotoDetailScreen(_list, null, _currentPhoto),
-                    ScreenName.PHOTO_DETAIL_SCREEN);
+                if (_list.isNotEmpty) {
+                  NavigatorHelper.myNavigatorPush(context, NewsFeedPhotoDetailScreen(_list, null, _currentPhoto),
+                      ScreenName.PHOTO_DETAIL_SCREEN);
+                }
               },
               child: Stack(
                 alignment: Alignment.bottomLeft,
@@ -149,7 +151,9 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
           :
       GestureDetector(
         onTap: (){
-          Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen([], _photo,_currentPhoto)));
+          if (_photo != null) {
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedPhotoDetailScreen([], _photo,_currentPhoto)));
+          }
         },
         child: CachedNetworkImage(
           width: double.maxFinite,
@@ -176,7 +180,10 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
     }else{
       return GestureDetector(
         onTap: (){
+          if(_videoUrl != null){
             Navigator.of(context).push(MaterialPageRoute(builder: (context) => NewsFeedVideoScreen(_videoUrl)));
+          }
+
         },
         child: Container(
           child: Stack(

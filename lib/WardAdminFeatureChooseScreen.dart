@@ -42,7 +42,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
     model3.title = MyString.txt_flood_level;
 
     DashBoardModel model4 = new DashBoardModel();
-    model4.image = 'images/profile_placeholder.png';
+    model4.image = 'images/form.png';
     model4.title = MyString.txt_form;
 
     _list = [model1,model3, model2, model4];
@@ -55,10 +55,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             String json = message['data']['notification'];
             Map<String, dynamic> temp = jsonDecode(json);
             NotificationModel model = NotificationModel.fromJson(temp);
-            if(message['data']['notification'] != null ){
-              _sharepreferenceshelper.setNotificationAdd(true);
-              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
-            }
+            NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
           }
         },
         onLaunch: (Map<String, dynamic> message) async {
@@ -68,10 +65,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             String json = message['data']['notification'];
             Map<String, dynamic> temp = jsonDecode(json);
             NotificationModel model = NotificationModel.fromJson(temp);
-            if(message['data']['notification'] != null){
-              _sharepreferenceshelper.setNotificationAdd(true);
-              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
-            }
+            NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
           }
         }
     );

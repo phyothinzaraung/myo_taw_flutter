@@ -53,6 +53,8 @@ void main() {
             appBarTheme: AppBarTheme(
               color: MyColor.colorPrimary,
             ),
+            buttonTheme: ButtonThemeData(textTheme: ButtonTextTheme.accent),
+            primarySwatch: Colors.teal,
             accentColor: MyColor.colorPrimaryDark,
             scaffoldBackgroundColor: MyColor.colorGrey,
           ),
@@ -90,7 +92,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   UserModel _userModel;
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
   UserDb _userDb = UserDb();
-  FirebaseMessaging _firebaseMesssaging = FirebaseMessaging();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   //NotificationDb _notificationDb = NotificationDb();
   bool _isBadgeShow = false;
   int _noticount = 0;
@@ -157,20 +159,18 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
      });
 
     if(_sharepreferenceshelper.isWardAdmin()){
-      _firebaseMesssaging.configure(
+      _firebaseMessaging.configure(
           onMessage: (Map<String, dynamic> message) async {
             print('on message $message');
 
             if(message.isNotEmpty){
               String json = message['data']['notification'];
               Map<String, dynamic> temp = jsonDecode(json);
-              if(message['data']['notification'] != null ){
-                _sharepreferenceshelper.setNotificationAdd(true);
-                var _count = _sharepreferenceshelper.getUnreadCount() + 1;
-                _sharepreferenceshelper.saveNotiUnreadCount(_count);
-                _notifier.notify('noti_count', _count);
-                _notifier.notify('noti_add', temp);
-              }
+              _sharepreferenceshelper.setNotificationAdd(true);
+              var _count = _sharepreferenceshelper.getUnreadCount() + 1;
+              _sharepreferenceshelper.saveNotiUnreadCount(_count);
+              _notifier.notify('noti_count', _count);
+              _notifier.notify('noti_add', temp);
             }
           },
           onResume: (Map<String, dynamic> message) async {
@@ -180,31 +180,27 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
               String json = message['data']['notification'];
               Map<String, dynamic> temp = jsonDecode(json);
               NotificationModel model = NotificationModel.fromJson(temp);
-              if(message['data']['notification'] != null ){
-                _sharepreferenceshelper.setNotificationAdd(true);
-                _notifier.notify('noti_add', temp);
-                NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
-              }
+              _sharepreferenceshelper.setNotificationAdd(true);
+              _notifier.notify('noti_add', temp);
+              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
             }
           },
       );
 
     }else{
-      _firebaseMesssaging.subscribeToTopic('all');
-      _firebaseMesssaging.configure(
+      _firebaseMessaging.subscribeToTopic('all');
+      _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
           print('on message $message');
 
           if(message.isNotEmpty){
             String json = message['data']['notification'];
             Map<String, dynamic> temp = jsonDecode(json);
-            if(message['data']['notification'] != null ){
-              _sharepreferenceshelper.setNotificationAdd(true);
-              var _count = _sharepreferenceshelper.getUnreadCount() + 1;
-              _sharepreferenceshelper.saveNotiUnreadCount(_count);
-              _notifier.notify('noti_count', _count);
-              _notifier.notify('noti_add', temp);
-            }
+            _sharepreferenceshelper.setNotificationAdd(true);
+            var _count = _sharepreferenceshelper.getUnreadCount() + 1;
+            _sharepreferenceshelper.saveNotiUnreadCount(_count);
+            _notifier.notify('noti_count', _count);
+            _notifier.notify('noti_add', temp);
           }
         },
         onResume: (Map<String, dynamic> message) async {
@@ -214,11 +210,9 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
             String json = message['data']['notification'];
             Map<String, dynamic> temp = jsonDecode(json);
             NotificationModel model = NotificationModel.fromJson(temp);
-            if(message['data']['notification'] != null ){
-              _sharepreferenceshelper.setNotificationAdd(true);
-              _notifier.notify('noti_add', temp);
-              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
-            }
+            _sharepreferenceshelper.setNotificationAdd(true);
+            _notifier.notify('noti_add', temp);
+            NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
           }
         },
         onLaunch: (Map<String, dynamic> message) async {
@@ -228,15 +222,13 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
               String json = message['data']['notification'];
               Map<String, dynamic> temp = jsonDecode(json);
               NotificationModel model = NotificationModel.fromJson(temp);
-              if(message['data']['notification'] != null){
-                _sharepreferenceshelper.setNotificationAdd(true);
-                NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
-              }
+              _sharepreferenceshelper.setNotificationAdd(true);
+              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
             }
           }
       );
 
-      _firebaseMesssaging.onTokenRefresh.listen((refreshToken)async{
+      _firebaseMessaging.onTokenRefresh.listen((refreshToken)async{
         await _sharepreferenceshelper.initSharePref();
         if(_sharepreferenceshelper.getToken() != refreshToken){
           try{
