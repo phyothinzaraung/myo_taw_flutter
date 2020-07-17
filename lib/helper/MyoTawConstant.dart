@@ -307,7 +307,7 @@ class MyString{
   static const String txt_select_all = 'အားလုံး';
   static const String txt_myotaw_app_policy = 'Login ဝင်ခြင်းသည် MyoTaw app ၏ Policy \n ကိုလက်ခံပြီးဖြစ်သည်။';
   static const String txt_noti_biz_license = 'Business License ';
-  static const String txt_form = 'ဖောင်များ';
+  static const String txt_form = 'ပုံစံများ';
   static const String txt_search_type = 'ရှာဖွေမှု အမျိုးအစား';
   static const String txt_search_text = 'စာသား';
   static const String txt_search_content_type = 'စိတ်ကြိုက်ရှာရန်';
@@ -730,7 +730,7 @@ class ScreenName{
   static const String FLOOD_REPORT_LIST_SCREEN = 'Flood report list screen';
   static const String NEWS_FLOOD_REPORT_SCREEN = 'New flood report screen';
   static const String GET_FLOOD_LEVEL_SCREEN = 'Get flood level screen';
-  static const String FORM_SCREEN = 'Form screen';
+  static const String FORM_LIST_SCREEN = 'Form list screen';
   static const String MYOTAW_CHANNEL = 'Channel';
 
   static const String NEWS_FEED_SCREEN = 'News feed screen';
@@ -779,6 +779,7 @@ class ScreenName{
   static const String PHOTO_DETAIL_SCREEN = 'Photo detail screen';
 
   static const String MYO_TAW_POLICY_SCREEN = 'Myo taw policy screen';
+  static const String FORM_SCREEN = 'Form screen';
 
 }
 

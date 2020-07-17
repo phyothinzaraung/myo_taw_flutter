@@ -1,11 +1,8 @@
 import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
-import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:webview_flutter/webview_flutter.dart';
-
 import 'myWidget/CustomProgressIndicator.dart';
 
 class FormWebViewScreen extends StatefulWidget {
@@ -31,6 +28,7 @@ class _FormWebViewScreenState extends State<FormWebViewScreen> {
         inAsyncCall: _isLoading,
         progressIndicator: CustomProgressIndicatorWidget(),
         child: WebView(
+          javascriptMode: JavascriptMode.unrestricted,
           initialUrl: widget._FormUrl.replaceAll("null", widget._uniqueKey),
           onWebViewCreated: (wv){
             _controller.complete(wv);

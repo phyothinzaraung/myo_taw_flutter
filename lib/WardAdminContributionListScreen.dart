@@ -21,6 +21,7 @@ import 'helper/MyLoadMore.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/PlatformHelper.dart';
 import 'helper/ShowDateTimeHelper.dart';
+import 'myWidget/CustomScaffoldWidget.dart';
 import 'myWidget/EmptyViewWidget.dart';
 import 'myWidget/NoConnectionWidget.dart';
 import 'WardAdminContributionScreen.dart';
@@ -79,6 +80,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
   }
 
   _getContributionList(int p)async{
+    await _sharepreferenceshelper.initSharePref();
     var response = await ServiceHelper().getContributionList(_sharepreferenceshelper.getRegionCode(), p, pageCount, _sharepreferenceshelper.getUserUniqueKey());
     var result = response.data['Results'];
     print(p);
@@ -102,19 +104,17 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
 
   Widget _renderLoad(){
     return Container(
-      margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
+      margin: EdgeInsets.only(top: 10.0),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          _headerContribution(),
-          Center(
-            child: NativeProgressIndicator(),
-          )
+          Row(mainAxisAlignment: MainAxisAlignment.center,children: <Widget>[NativeProgressIndicator()],)
         ],
       ),
     );
   }
 
-  Widget _headerContribution(){
+  /*Widget _headerContribution(){
     return Column(
       children: <Widget>[
         Row(
@@ -152,25 +152,13 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
         ),
       ],
     );
-  }
+  }*/
 
   Widget _listView(){
     return ListView.builder(
         itemCount: _contributionModelList.length,
         itemBuilder: (context, index){
-          return Column(
-            children: <Widget>[
-              index==0?Container(
-                margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
-                child: Column(
-                  children: <Widget>[
-                    _headerContribution(),
-                  ],
-                ),
-              ):Container(width: 0.0,height: 0.0,),
-              _contributionListWidget(index)
-            ],
-          );
+          return _contributionListWidget(index);
     });
   }
 
@@ -312,12 +300,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
   Widget _noConWidget(){
     return Container(
       margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
-      child: Column(
-        children: <Widget>[
-          _headerContribution(),
-          Expanded(child: noConnectionWidget(asyncLoaderState))
-        ],
-      ),
+      child: noConnectionWidget(asyncLoaderState)
     );
   }
 
@@ -344,40 +327,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
   Widget _emptyView(){
     return Container(
       margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _userModel!=null?_userModel.isWardAdmin?GestureDetector(
-                      onTap: (){
-                        Navigator.of(context).pop();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,color: Colors.black,size: 30,),
-                      ),
-                    ) : Container() : Container(),
-                    Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
-                    Text(MyString.txt_contributions, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
-                },
-                child: CircleAvatar(backgroundImage: _profilePhoto,
-                  backgroundColor: MyColor.colorGrey, radius: 25.0,),
-              )
-            ],
-          ),
-          Expanded(child: emptyView(asyncLoaderState,MyString.txt_empty_contribution))
-        ],
-      ),
+      child: emptyView(asyncLoaderState,MyString.txt_empty_contribution)
     );
   }
 
@@ -395,7 +345,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
   Widget build(BuildContext context) {
     var _asyncLoader = new AsyncLoader(
         key: asyncLoaderState,
-        initState: () async => await _getUser(),
+        initState: () async => await _getContributionList(page),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => _noConWidget(),
         renderSuccess: ({data}) => NativePullRefresh(
@@ -410,6 +360,20 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
           ) : _emptyView(),
         )
     );
+    return CustomScaffoldWidget(
+        title: Text(MyString.txt_contributions,maxLines: 1, overflow: TextOverflow.ellipsis,
+          style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),
+        ),
+        globalKey: _globalKey,
+        floatingActionButton: Container(
+          margin: EdgeInsets.only(bottom: 10),
+          child: FloatingActionButton.extended(
+            onPressed: (){
+              _navigateToWardAdminContributionScreen();
+            }, label: Text(MyString.txt_to_contribute, style: TextStyle(color: Colors.white),),
+            icon: Icon(Icons.create, color: Colors.white,), backgroundColor: MyColor.colorPrimary,),
+        ),
+        body: _asyncLoader);
     return Scaffold(
       key: _globalKey,
       body: SafeArea(child: _asyncLoader),

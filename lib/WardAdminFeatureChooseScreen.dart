@@ -2,7 +2,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/NewsFeedScreen.dart';
-import 'package:myotaw/FormScreen.dart';
+import 'package:myotaw/FormListScreen.dart';
 import 'package:myotaw/WardAdminContributionListScreen.dart';
 import 'package:myotaw/database/NotificationDb.dart';
 import 'package:myotaw/database/UserDb.dart';
@@ -34,7 +34,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
     model1.title = MyString.txt_ward_admin_feature;
 
     DashBoardModel model2 = new DashBoardModel();
-    model2.image = 'images/profile_placeholder.png';
+    model2.image = 'images/newsfeed_circle.png';
     model2.title = MyString.txt_myotaw_channel;
 
     DashBoardModel model3 = new DashBoardModel();
@@ -42,7 +42,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
     model3.title = MyString.txt_flood_level;
 
     DashBoardModel model4 = new DashBoardModel();
-    model4.image = 'images/form.png';
+    model4.image = 'images/form_nocirlce.png';
     model4.title = MyString.txt_form;
 
     _list = [model1,model3, model2, model4];
@@ -102,7 +102,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             NavigatorHelper.myNavigatorPush(context, FloodReportListScreen(), ScreenName.FLOOD_REPORT_LIST_SCREEN);
             break;
           case MyString.txt_form:
-            NavigatorHelper.myNavigatorPush(context, FormScreen(), ScreenName.FORM_SCREEN);
+            NavigatorHelper.myNavigatorPush(context, FormListScreen(), ScreenName.FORM_LIST_SCREEN);
             break;
         }
       },
@@ -125,7 +125,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             Flexible(
               flex: 1,
               child: Text(_list[i].title,textAlign: TextAlign.center,
-                style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack, height: 1.4),),
+                style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),),
             ),
           ],),
       ),

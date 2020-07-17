@@ -585,6 +585,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                             setState(() {
                               _fromDateToDate = MyString.txt_to_choose_date;
                             });
+                            _searchEditingController.clear();
+                            FocusScope.of(context).requestFocus(FocusNode());
                             _handleRefresh();
                           },
                           child: Icon(Icons.refresh, color: Colors.black,size: 20,)

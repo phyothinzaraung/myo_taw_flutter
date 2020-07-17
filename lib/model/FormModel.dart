@@ -1,4 +1,4 @@
-class FormListModel{
+class FormModel{
   int _ID;
   String _FormName;
   String _FormUrl;
@@ -21,7 +21,7 @@ class FormListModel{
     _FormUrl = value;
   }
 
-  FormListModel.fromJson(Map<String, dynamic> json) :
+  FormModel.fromJson(Map<String, dynamic> json) :
         _ID = json['ID'],
         _FormName = json['FormName'],
         _FormUrl = json['FormUrl'];
