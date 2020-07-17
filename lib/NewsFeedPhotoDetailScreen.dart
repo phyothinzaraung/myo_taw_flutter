@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:myotaw/model/NewsFeedPhotoModel.dart';
 import 'package:myotaw/model/NewsFeedViewModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:photo_view/photo_view.dart';
@@ -10,7 +11,7 @@ import 'package:image_downloader/image_downloader.dart';
 import 'package:flutter/services.dart';
 
 class NewsFeedPhotoDetailScreen extends StatelessWidget {
-  List<PhotoLink> _photoList = new List();
+  List<NewsFeedPhotoModel> _photoList = new List();
   String _photoUrl;
   PageController _pageController;
   List<Widget> _photoWidget = new List();

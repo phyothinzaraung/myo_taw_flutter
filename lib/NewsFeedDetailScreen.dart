@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:myotaw/model/NewsFeedViewModel.dart';
+import 'package:myotaw/model/NewsFeedPhotoModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'helper/NavigatorHelper.dart';
@@ -13,19 +13,21 @@ import 'helper/NumConvertHelper.dart';
 import 'NewsFeedVideoScreen.dart';
 import 'package:url_launcher/url_launcher.dart';
 
+import 'model/NewsFeedModel.dart';
+
 class NewsFeedDetailScreen extends StatefulWidget {
-  Article _model;
-  List<PhotoLink> _list = new List();
+  NewsFeedModel _model;
+  List<NewsFeedPhotoModel> _list = new List();
   NewsFeedDetailScreen(this._model, this._list);
   @override
   _NewsFeedDetailScreenState createState() => _NewsFeedDetailScreenState(this._model, this._list);
 }
 
 class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
-  Article _newsFeedModel;
+  NewsFeedModel _newsFeedModel;
   String _title,_photo,_date, _newsfeedBody,_type, _thumbNail, _videoUrl;
-  List<PhotoLink> _photoList = new List();
-  List<PhotoLink> _list = new List();
+  List<NewsFeedPhotoModel> _photoList = new List();
+  List<NewsFeedPhotoModel> _list = new List();
   int _currentPhoto = 0;
   List<Widget> _photoWidgetList = List();
   List<Widget> _indicatorWidgetList = List();
@@ -46,15 +48,15 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
     _photo = _newsFeedModel.photoUrl;
     _date = ShowDateTimeHelper.showDateTimeDifference(_newsFeedModel.accesstime);
     _newsfeedBody = _newsFeedModel.body;
-    _type = _newsFeedModel.uploadType=='Photo'?'Photo':'Video';
+    _type = _newsFeedModel.uploadType== MyString.NEWS_FEED_CONTENT_TYPE_PHOTO? MyString.NEWS_FEED_CONTENT_TYPE_PHOTO: MyString.NEWS_FEED_CONTENT_TYPE_VIDEO;
     _thumbNail = _newsFeedModel.thumbnail;
     _videoUrl = _newsFeedModel.videoUrl;
 
     _list.clear();
     if(_photo != null){
-      PhotoLink photoLink = PhotoLink();
-      photoLink.photoUrl = _photo;
-      _list.add(photoLink);
+      NewsFeedPhotoModel _newsfeedPhotoModel = NewsFeedPhotoModel();
+      _newsfeedPhotoModel.photoUrl = _photo;
+      _list.add(_newsfeedPhotoModel);
     }
     _list.addAll(_photoList);
   }
@@ -121,7 +123,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   Widget _isPhotoOrvideo(){
     _indicatorWidgetList.clear();
     _indicatorList();
-    if(_type == 'Photo'){
+    if(_type ==  MyString.NEWS_FEED_CONTENT_TYPE_PHOTO){
       return _photoList.isNotEmpty?
       Column(
         children: <Widget>[
