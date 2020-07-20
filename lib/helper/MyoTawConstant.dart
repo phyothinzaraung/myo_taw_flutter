@@ -103,8 +103,6 @@ class MyString{
   static const String title_save_nf = 'သိမ်းဆည်းထားသည်များ';
   static const String txt_delete = 'ဖျက်မည်';
   static const String txt_delete_cancel = 'မဖျက်ပါ';
-  static const String NEWS_FEED_CONTENT_TYPE_PHOTO = 'Photo';
-  static const String NEWS_FEED_CONTENT_TYPE_VIDEO = 'Video';
   static const String txt_user_name = 'အမည်';
   static const String txt_user_address = 'လိပ်စာ';
   static const String txt_user_state = 'တိုင်း/ဒေသကြီး';
@@ -333,6 +331,12 @@ class MyString{
   static const String BUILDING_GRADE_B = "building grade B";
   static const String BUILDING_GRADE_C = "building grade C";
   static const String GOV_BUILDING = "gov";
+
+
+  static const String NEWS_FEED_CONTENT_TYPE_AUDIO= "Audio";
+  static const String NEWS_FEED_CONTENT_TYPE_VIDEO= "Video";
+  static const String NEWS_FEED_CONTENT_TYPE_PDF= "PDF";
+  static const String NEWS_FEED_CONTENT_TYPE_PHOTO= "Photo";
 
   //contribution
   static const String FIX_ROAD_CONTRIBUTE = "လမ်းပြင်၊ လမ်းပျက်";

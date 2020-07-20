@@ -4,6 +4,7 @@ import 'package:firebase_analytics/observer.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_statusbarcolor/flutter_statusbarcolor.dart';
 import 'package:myotaw/customIcons/MyoTawCustomIcon.dart';
 import 'package:myotaw/database/NotificationDb.dart';
@@ -28,12 +29,13 @@ import 'helper/NavigatorHelper.dart';
 import 'NotificationDetailScreen.dart';
 
 
-void main() {
+void main() async{
   /*SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
     statusBarColor: MyColor.colorPrimaryDark,
     systemNavigationBarIconBrightness: Brightness.dark,
   ));*/
   WidgetsFlutterBinding.ensureInitialized();
+  await FlutterDownloader.initialize(debug: true);
   try {
     FlutterStatusbarcolor.setStatusBarColor(MyColor.colorPrimaryDark);
   }  catch (e) {
