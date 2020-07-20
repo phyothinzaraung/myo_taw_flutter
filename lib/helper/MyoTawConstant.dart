@@ -44,6 +44,7 @@ class OrganizationId{
   static const int MLM_ORGANIZATION_ID = 9;
   static const int LKW_ORGANIZATION_ID = 13;
   static const int MGY_ORGANIZATION_ID = 14;
+  static const int HLY_ORGANIZATION_ID = 15;
 }
 
 class MyString{
@@ -56,21 +57,25 @@ class MyString{
   static const String txt_welcome_mlm ='မော်လမြိုင်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String txt_welcome_lkw ='လွိုင်ကော်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String txt_welcome_mgy ='မကွေးမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
+  static const String txt_welcome_hly = 'လှိုင်သာယာမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
 
   static const String TGY_CITY = 'တောင်ကြီးမြို့';
   static const String MLM_CITY = 'မော်လမြိုင်မြို့';
   static const String LKW_CITY = 'လွိုင်ကော်မြို့';
   static const String MGY_CITY = 'မကွေးမြို့';
+  static const String HLY_CITY = 'လှိုင်သာယာမြို့';
 
   static const String TGY_STATE = 'ရှမ်းပြည်နယ်';
   static const String MLM_STATE = 'မွန်ပြည်နယ်';
   static const String LKW_STATE = 'ကယားပြည်နယ်';
   static const String MGY_STATE = 'မကွေးတိုင်း';
+  static const String HLY_STATE = 'ရန်ကုန်တိုင်းဒေသကြီး';
 
   static const String TGY_REGIONCODE = "TGY";
   static const String MLM_REGIONCODE = "MLM";
   static const String LKW_REGIONCODE = "LKW";
   static const String MGY_REGIONCODE = "MGY";
+  static const String HLY_REGIONCODE = "HLY";
 
   static const String txt_welcome = "မြို့တော်မှ ကြိုဆိုပါ၏။";
 
