@@ -250,6 +250,14 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   }
 
+  bool _isPhotoOrVideo(String type){
+    if(type == MyString.NEWS_FEED_CONTENT_TYPE_PHOTO || type == MyString.NEWS_FEED_CONTENT_TYPE_VIDEO){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
 
   Widget _newsFeedListWidget(int i){
     NewsFeedModel newsFeedModel = _newsFeedViewModelList[i].article;
@@ -276,7 +284,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.only(left: 10, right: 10, top: 10),
+                      padding: EdgeInsets.only(left: 10, right: 10, top: 15),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: <Widget>[
@@ -285,10 +293,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                               margin: EdgeInsets.only(right: 10),
                               child: Image.asset("images/calendar.png", width: 15, height: 15,)),
                           //calendar date
-                          Expanded(
-                              child: Text(date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),)
-                          ),
-                          Image.asset('images/${_newsfeedContentTypeIcon(contentType)}.png', width: 20, height: 20,)
+                          Text(date, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextGrey),),
+                          //Image.asset('images/${_newsfeedContentTypeIcon(contentType)}.png', width: 20, height: 20,)
                         ],
                       ),
                     ),
@@ -304,7 +310,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                         alignment: Alignment.bottomLeft,
                         children: <Widget>[
                           //newsfeed image
-                          CachedNetworkImage(
+                          _isPhotoOrVideo(contentType)?CachedNetworkImage(
                             imageUrl: photoOrThumbNail(newsFeedPhoto, newsFeedThumbNail, isPhoto),
                             imageBuilder: (context, image){
                               return Container(
@@ -321,6 +327,18 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                             errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg', width: double.maxFinite,
                               height: 180, fit: BoxFit.cover,
                             ),
+                          ) : Stack(
+                            alignment: Alignment.center,
+                            children: <Widget>[
+                              Container(
+                                width: double.maxFinite,
+                                height: 180,
+                                color: MyColor.colorGrey,
+                              ),
+                              Image.asset('images/${_newsfeedContentTypeIcon(contentType)}.png', width: 50,
+                                  height: 50
+                              ),
+                            ],
                           ),
                         ],
                       ),

@@ -16,12 +16,19 @@ class UserModel{
   String _currentRegionCode;
   int _pinCode;
   int _amount;
-  int _isDeletedDb;
   bool _isWardAdmin;
   String _wardName;
   String _meterNo;
+  String _memberType;
 
   UserModel();
+
+
+  String get memberType => _memberType;
+
+  set memberType(String value) {
+    _memberType = value;
+  }
 
   String get meterNo => _meterNo;
 
@@ -33,12 +40,6 @@ class UserModel{
 
   set isWardAdmin(bool value) {
     _isWardAdmin = value;
-  }
-
-  int get isDeletedDb => _isDeletedDb;
-
-  set isDeletedDb(int value) {
-    _isDeletedDb = value;
   }
 
   String get uniqueKey => _uniqueKey;
@@ -156,7 +157,8 @@ class UserModel{
         _amount = json['Amount'],
         _isWardAdmin = json['IsWardAdmin']??false,
         _wardName = json['WardName'],
-        _meterNo = json['MeterNo'];
+        _meterNo = json['MeterNo'],
+        _memberType = json['MemberType'];
 
   Map<String, dynamic> toJson(){
     Map<String, dynamic> json =new Map<String, dynamic>();
@@ -178,6 +180,7 @@ class UserModel{
       json['IsWardAdmin'] = _isWardAdmin;
       json['WardName'] = _wardName;
       json['MeterNo'] = _meterNo;
+      json['MemberType'] = _memberType;
 
      return json;
   }
@@ -191,7 +194,6 @@ class UserModel{
         _township = map[DbHelper.COLUMN_USER_TOWNSHIP],
         _address = map[DbHelper.COLUMN_USER_ADDRESS],
         _registeredDate = map[DbHelper.COLUMN_USER_REGISTERED_DATE],
-        _isDeletedDb = map[DbHelper.COLUMN_USER_ISDELETED],
         _accesstime = map[DbHelper.COLUMN_USER_ACCESSTIME],
         _resource = map[DbHelper.COLUMN_USER_RESOURCE],
         _androidToken = map[DbHelper.COLUMN_USER_ANDROID_TOKEN],
@@ -200,5 +202,6 @@ class UserModel{
         _amount = map[DbHelper.COLUMN_USER_AMOUNT],
         _isWardAdmin = map[DbHelper.COLUMN_USER_IS_WARD_ADMIN] ==1 ? true : false,
         _wardName = map[DbHelper.COLUMN_USER_WARD_NAME],
-        _meterNo = map[DbHelper.COLUMN_USER_METER_NO];
+        _meterNo = map[DbHelper.COLUMN_USER_METER_NO],
+        _memberType = map[DbHelper.COLUMN_USER_MEMBER_TYPE];
 }

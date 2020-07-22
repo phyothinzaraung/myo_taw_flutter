@@ -313,6 +313,7 @@ class MyString{
   static const String txt_to_search = 'စာသားရိုက်ရှာရန်';
   static const String txt_to_choose = 'ရွေးချယ်ပါ';
   static const String txt_to_choose_date = 'ရက်စွဲရွေးပါ';
+  static const String txt_already_download = 'ဒေါင်းလုဒ်ပြုလုပ်ထားပြီး။';
 
   static const String txt_first_grade = 'ပထမတန်းစား';
   static const String txt_second_grade = 'ဒုတိယတန်းစား';
