@@ -271,6 +271,9 @@ class MyString{
   static const String txt_send_contribution = "အကြံပြုစာပို့မည်";
   static const String txt_ward_admin_feature = "ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
   static const String txt_myotaw_channel = "ချန်နယ်";
+  static const String txt_myotaw_channel_chooser = "ချန်နယ်ရွေးချယ်ပါ";
+  static const String txt_myotaw_channel_general = "အထွေထွေသတင်း";
+  static const String txt_myotaw_channel_blocklevel = "သီးသန့်သတင်း";
   static const String txt_choose_feature = "ကဏ္ဍရွေးချယ်ပေးပါ";
   static const String txt_title_dashboard = "ကဏ္ဍများ";
   static const String txt_title_notification = "အသိပေးနှိုးဆော်ချက်";
