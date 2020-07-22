@@ -14,6 +14,7 @@ class UserDb {
     _database = await openDatabase(path,
         version: DbHelper.USER_DATABASE_VERSION,
         onCreate: _onCreate,
+        onUpgrade: _onUpgrade
       );
   }
 
@@ -46,7 +47,8 @@ class UserDb {
             ${DbHelper.COLUMN_USER_AMOUNT} INTEGER,
             ${DbHelper.COLUMN_USER_IS_WARD_ADMIN} INTEGER,
             ${DbHelper.COLUMN_USER_WARD_NAME} TEXT,
-            ${DbHelper.COLUMN_USER_METER_NO} TEXT)
+            ${DbHelper.COLUMN_USER_METER_NO} TEXT,
+            ${DbHelper.COLUMN_USER_MEMBER_TYPE} TEXT)
           ''');
   }
 
@@ -69,7 +71,8 @@ class UserDb {
       DbHelper.COLUMN_USER_AMOUNT : model.amount,
       DbHelper.COLUMN_USER_IS_WARD_ADMIN : model.isWardAdmin?1:0,
       DbHelper.COLUMN_USER_WARD_NAME : model.wardName,
-      DbHelper.COLUMN_USER_METER_NO : model.meterNo
+      DbHelper.COLUMN_USER_METER_NO : model.meterNo,
+      DbHelper.COLUMN_USER_MEMBER_TYPE : model.memberType
     };
     print('sqlInsert: ${row}');
     return await _database.insert(DbHelper.TABLE_NAME_USER, row, conflictAlgorithm: ConflictAlgorithm.replace);
@@ -135,7 +138,9 @@ class UserDb {
           DbHelper.COLUMN_USER_AMOUNT,
           DbHelper.COLUMN_USER_WARD_NAME,
           DbHelper.COLUMN_USER_IS_WARD_ADMIN,
-          DbHelper.COLUMN_USER_METER_NO],
+          DbHelper.COLUMN_USER_METER_NO,
+          DbHelper.COLUMN_USER_MEMBER_TYPE
+        ],
         where: '${DbHelper.COLUMN_USER_UNIQUE} = ?', whereArgs: ['$uniqueKey']);
     if (result.length == 0) return null;
     for(var i in result){
@@ -145,9 +150,9 @@ class UserDb {
     return userModel;
   }
 
- /* _onUpgrade(Database db, int oldVersion, int newVersion) async{
+  _onUpgrade(Database db, int oldVersion, int newVersion) async{
     if (oldVersion < newVersion) {
-       await db.execute('ALTER TABLE $TABLE_NAME_USER ADD COLUMN $columnAddress TEXT');
+       await db.execute('ALTER TABLE ${DbHelper.TABLE_NAME_USER} ADD COLUMN ${DbHelper.COLUMN_USER_MEMBER_TYPE} TEXT');
     }
-  }*/
+  }
 }
