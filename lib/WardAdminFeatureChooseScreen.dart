@@ -100,9 +100,9 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             //NavigatorHelper.myNavigatorPush(context, MainScreen(), ScreenName.MYOTAW_CHANNEL);
             CustomDialogWidget().customChannelChooserDialog(
               context: context,
-              title: "Choose Channel",
-              generalText: "General",
-              blockText: "Block Level",
+              title: MyString.txt_myotaw_channel_chooser,
+              generalText: MyString.txt_myotaw_channel_general,
+              blockText: MyString.txt_myotaw_channel_blocklevel,
               onPressGeneral: (){
                 Navigator.of(context).pop();
                 NavigatorHelper.myNavigatorPush(context, MainScreen(), ScreenName.MYOTAW_CHANNEL);
