@@ -12,6 +12,7 @@ import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/main.dart';
 import 'package:myotaw/model/DashBoardModel.dart';
 import 'package:myotaw/model/UserModel.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:notifier/main_notifier.dart';
 import 'FloodReportListScreen.dart';
@@ -96,7 +97,21 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             NavigatorHelper.myNavigatorPush(context, WardAdminContributionListScreen(), ScreenName.WARD_ADMIN_CONTRIBUTION_LIST_SCREEN);
             break;
           case MyString.txt_myotaw_channel:
-            NavigatorHelper.myNavigatorPush(context, MainScreen(), ScreenName.MYOTAW_CHANNEL);
+            //NavigatorHelper.myNavigatorPush(context, MainScreen(), ScreenName.MYOTAW_CHANNEL);
+            CustomDialogWidget().customChannelChooserDialog(
+              context: context,
+              title: "Choose Channel",
+              generalText: "General",
+              blockText: "Block Level",
+              onPressGeneral: (){
+                Navigator.of(context).pop();
+                NavigatorHelper.myNavigatorPush(context, MainScreen(), ScreenName.MYOTAW_CHANNEL);
+              },
+              onPressBlockLevel: (){
+              Navigator.of(context).pop();
+              NavigatorHelper.myNavigatorPush(context, MainScreen(), ScreenName.MYOTAW_CHANNEL);
+            }
+            );
             break;
           case MyString.txt_flood_level:
             NavigatorHelper.myNavigatorPush(context, FloodReportListScreen(), ScreenName.FLOOD_REPORT_LIST_SCREEN);

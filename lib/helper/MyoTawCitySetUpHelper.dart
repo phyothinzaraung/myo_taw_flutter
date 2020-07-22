@@ -28,6 +28,8 @@ class MyoTawCitySetUpHelper{
       case MyString.MGY_REGIONCODE:
         _city = MyString.MGY_CITY;
         break;
+      case MyString.HLY_REGIONCODE:
+        _city = MyString.HLY_CITY;
     }
     return _city;
   }
@@ -47,6 +49,8 @@ class MyoTawCitySetUpHelper{
       case MyString.MGY_REGIONCODE:
         _state = MyString.MGY_STATE;
         break;
+      case MyString.HLY_REGIONCODE:
+        _state = MyString.HLY_STATE;
     }
     return _state;
   }
@@ -66,6 +70,9 @@ class MyoTawCitySetUpHelper{
       case MyString.MGY_REGIONCODE:
         _organizationId = OrganizationId.MGY_ORGANIZATION_ID;
         break;
+      case MyString.HLY_REGIONCODE:
+        _organizationId = OrganizationId.HLY_ORGANIZATION_ID;
+        break;
     }
     return _organizationId;
   }
@@ -79,6 +86,9 @@ class MyoTawCitySetUpHelper{
       case MyString.MLM_REGIONCODE:
         _logo = 'images/mlm_logo.png';
         break;
+//      case MyString.HLY_REGIONCODE:
+//        _logo = 'images/mlm_logo.png';
+//        break;
     }
     return _logo;
   }
@@ -98,12 +108,15 @@ class MyoTawCitySetUpHelper{
       case MyString.MGY_REGIONCODE:
         _title = MyString.txt_welcome_mgy;
         break;
+      case MyString.HLY_REGIONCODE:
+        _title = MyString.txt_welcome_hly;
+        break;
     }
     return _title;
   }
 
   static List<String> getCityList(){
-    return [MyString.TGY_CITY,MyString.MLM_CITY];
+    return [MyString.TGY_CITY,MyString.MLM_CITY, MyString.HLY_CITY];
   }
 
   static String getRegionCode(String city){
@@ -121,6 +134,8 @@ class MyoTawCitySetUpHelper{
       case MyString.MGY_CITY:
         _regionCode = MyString.MGY_REGIONCODE;
         break;
+      case MyString.HLY_CITY:
+        _regionCode = MyString.HLY_REGIONCODE;
     }
     return _regionCode;
   }
