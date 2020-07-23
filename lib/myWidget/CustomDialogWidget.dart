@@ -166,7 +166,8 @@ class CustomDialogWidget {
           );
         }) :
     showCupertinoDialog(
-        context: context, builder: (context){
+        context: context,
+        builder: (context){
           return _iosCustomChannelChooserDialog(
             context: context,
             title: title,
@@ -590,64 +591,62 @@ class CustomDialogWidget {
     VoidCallback onPressGeneral,
     VoidCallback onPressBlockLevel,
   }) {
-    return WillPopScope(
-        child: SimpleDialog(
-          contentPadding: EdgeInsets.all(20.0),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+    return SimpleDialog(
+      contentPadding: EdgeInsets.all(20.0),
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
+      children: <Widget>[
+        Column(
           children: <Widget>[
-            Column(
-              children: <Widget>[
-                Container(
-                  margin: EdgeInsets.only(bottom: 10.0),
-                  child: Text(title,
-                    style: TextStyle(fontSize: FontSize.textSizeExtraNormal,
-                      color: MyColor.colorTextBlack,),
-                    textAlign: TextAlign.center,),
+            Container(
+              margin: EdgeInsets.only(bottom: 20.0),
+              child: Text(title,
+                style: TextStyle(fontSize: FontSize.textSizeExtraNormal,
+                  color: MyColor.colorTextBlack,),
+                textAlign: TextAlign.center,),
+            ),
+            GestureDetector(
+              onTap: onPressGeneral,
+              child: Container(
+                margin: EdgeInsets.only(bottom: 20),
+                color: Colors.transparent,
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(right: 20.0,),
+                      child: Image.asset('images/newsfeed.png',
+                        width: 25.0,
+                        height: 25.0,),
+                    ),
+                    Text(generalText,
+                      style: TextStyle(fontSize: FontSize.textSizeSmall,
+                          color: MyColor.colorTextBlack),)
+                  ],
                 ),
-                CustomButtonWidget(
-                  onPress: onPressGeneral,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(right: 10.0, bottom: 10.0),
-                        child: Image.asset('images/newsfeed.png',
-                          width: 30.0,
-                          height: 30.0,),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(bottom: 10.0),
-                        child: Text(generalText,
-                          style: TextStyle(fontSize: FontSize.textSizeSmall,
-                              color: MyColor.colorTextBlack),),
-                      )
-                    ],
-                  ),),
-                Container(
-                  height: 1.0,
-                  color: Colors.grey,
+              ),
+            ),
+            GestureDetector(
+              onTap: onPressBlockLevel,
+              child: Container(
+                margin: EdgeInsets.only(bottom: 15),
+                color: Colors.transparent,
+                child: Row(
+                  children: <Widget>[
+                    Container(
+                      margin: EdgeInsets.only(right: 20.0),
+                      child: Image.asset('images/newsfeed.png',
+                        width: 25.0,
+                        height: 25.0,),
+                    ),
+                    Text(blockText,
+                      style: TextStyle(fontSize: FontSize.textSizeSmall,
+                          color: MyColor.colorTextBlack),)
+                  ],
                 ),
-                CustomButtonWidget(
-                  onPress: onPressBlockLevel,
-                  child: Row(
-                    children: <Widget>[
-                      Container(
-                        margin: EdgeInsets.only(right: 10.0, top: 10.0),
-                        child: Image.asset('images/newsfeed.png',
-                          width: 30.0,
-                          height: 30.0,),
-                      ),
-                      Container(
-                        margin: EdgeInsets.only(top: 10.0),
-                        child: Text(blockText,
-                          style: TextStyle(fontSize: FontSize.textSizeSmall,
-                              color: MyColor.colorTextBlack),),
-                      )
-                    ],
-                  ),
-                ),
-              ],
-            )
-          ],), onWillPop: (){});
+              ),
+            ),
+          ],
+        )
+      ],);
   }
 
   Widget _iosCustomChannelChooserDialog({
@@ -658,62 +657,63 @@ class CustomDialogWidget {
     VoidCallback onPressGeneral,
     VoidCallback onPressBlockLevel,
   }) {
-    return WillPopScope(
-        child: CupertinoAlertDialog(
-          content:
-          Column(
-            children: <Widget>[
-              Container(
-                margin: EdgeInsets.only(bottom: 10.0),
-                child: Text(title,
-                  style: TextStyle(fontSize: FontSize.textSizeExtraNormal,
-                    color: MyColor.colorTextBlack,),
-                  textAlign: TextAlign.center,),
+    return CupertinoAlertDialog(
+      content: Column(
+        children: <Widget>[
+          Container(
+            margin: EdgeInsets.only(top: 15,bottom: 20.0),
+            child: Text(title,
+              style: TextStyle(fontSize: FontSize.textSizeExtraNormal,
+                color: MyColor.colorTextBlack,),
+              textAlign: TextAlign.center,),
+          ),
+          GestureDetector(
+            onTap: onPressGeneral,
+            child: Container(
+              margin: EdgeInsets.only(bottom: 20),
+              color: Colors.transparent,
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(right: 20.0,),
+                    child: Image.asset('images/newsfeed.png',
+                      width: 25.0,
+                      height: 25.0,),
+                  ),
+                  Text(generalText,
+                    style: TextStyle(fontSize: FontSize.textSizeSmall,
+                        color: MyColor.colorTextBlack),)
+                ],
               ),
-              CustomButtonWidget(
-                onPress: onPressGeneral,
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(right: 10.0, bottom: 10.0),
-                      child: Image.asset('images/newsfeed.png',
-                        width: 30.0,
-                        height: 30.0,),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 10.0),
-                      child: Text(generalText,
-                        style: TextStyle(fontSize: FontSize.textSizeSmall,
-                            color: MyColor.colorTextBlack),),
-                    )
-                  ],
-                ),),
-              Container(
-                height: 1.0,
-                color: Colors.grey,
+            ),
+          ),
+          GestureDetector(
+            onTap: onPressBlockLevel,
+            child: Container(
+              color: Colors.transparent,
+              child: Row(
+                children: <Widget>[
+                  Container(
+                    margin: EdgeInsets.only(right: 20.0),
+                    child: Image.asset('images/newsfeed.png',
+                      width: 25.0,
+                      height: 25.0,),
+                  ),
+                  Text(blockText,
+                    style: TextStyle(fontSize: FontSize.textSizeSmall,
+                        color: MyColor.colorTextBlack),)
+                ],
               ),
-              CustomButtonWidget(
-                onPress: onPressBlockLevel,
-                child: Row(
-                  children: <Widget>[
-                    Container(
-                      margin: EdgeInsets.only(right: 10.0, top: 10.0),
-                      child: Image.asset('images/newsfeed.png',
-                        width: 30.0,
-                        height: 30.0,),
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(top: 10.0),
-                      child: Text(blockText,
-                        style: TextStyle(fontSize: FontSize.textSizeSmall,
-                            color: MyColor.colorTextBlack),),
-                    )
-                  ],
-                ),
-              ),
-            ],
-          )
-        ), onWillPop: () {});
+            ),
+          ),
+        ],
+      ),
+      actions: <Widget>[
+        CupertinoDialogAction(child: Text(MyString.txt_close, style: TextStyle(
+            fontSize: FontSize.textSizeSmall, color: Colors.red),),
+          onPressed: () => Navigator.of(context).pop(),),
+      ],
+    );
   }
 }
 

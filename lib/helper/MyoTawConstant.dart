@@ -71,11 +71,11 @@ class MyString{
   static const String MGY_STATE = 'မကွေးတိုင်း';
   static const String HLY_STATE = 'ရန်ကုန်တိုင်းဒေသကြီး';
 
-  static const String TGY_REGIONCODE = "TGY";
-  static const String MLM_REGIONCODE = "MLM";
-  static const String LKW_REGIONCODE = "LKW";
-  static const String MGY_REGIONCODE = "MGY";
-  static const String HLY_REGIONCODE = "HLY";
+  static const String TGY_REGION_CODE = "TGY";
+  static const String MLM_REGION_CODE = "MLM";
+  static const String LKW_REGION_CODE = "LKW";
+  static const String MGY_REGION_CODE = "MGY";
+  static const String HLY_REGION_CODE = "HLY";
 
   static const String txt_welcome = "မြို့တော်မှ ကြိုဆိုပါ၏။";
 
@@ -322,13 +322,23 @@ class MyString{
   static const String txt_to_choose = 'ရွေးချယ်ပါ';
   static const String txt_to_choose_date = 'ရက်စွဲရွေးပါ';
   static const String txt_already_download = 'ဒေါင်းလုဒ်ပြုလုပ်ထားပြီး။';
+  static const String NEWS_FEED_CHANNEL_TYPE_GENERAL = 'WardAdmin';
+  static const String NEWS_FEED_CHANNEL_TYPE_BLOCK = 'Block';
+
+  static const String NEWS_FEED_UPLOAD_TYPE_AUDIO= "AudioUpload";
+  static const String NEWS_FEED_UPLOAD_TYPE_VIDEO= "VideoUpload";
+  static const String NEWS_FEED_UPLOAD_TYPE_PDF= "PDFUpload";
+  static const String NEWS_FEED_UPLOAD_TYPE_PHOTO= "PhotoUpload";
 
   static const String txt_first_grade = 'ပထမတန်းစား';
   static const String txt_second_grade = 'ဒုတိယတန်းစား';
   static const String txt_third_grade = 'တတိယတန်းစား';
   static const String txt_fourth_grade = 'စတုတ္ထတန်းစား';
 
-
+  static const String txt_content_type_photo = 'ပုံ';
+  static const String txt_content_type_audio = 'အသံဖိုင်';
+  static const String txt_content_type_video = 'ဗွီဒီယို';
+  static const String txt_content_type_pdf = 'pdf';
 
 
   static const String BUILDING_GRADE_A = "building grade A";

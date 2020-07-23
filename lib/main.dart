@@ -84,6 +84,8 @@ void main() async{
 }
 
 class MainScreen extends StatefulWidget {
+  String channelType;
+  MainScreen({this.channelType});
 
   @override
   _mainState createState() => _mainState();
@@ -264,7 +266,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
     return Scaffold(
       body: TabBarView(
         children: [
-          NewsFeedScreen(),
+          NewsFeedScreen(channelType: widget.channelType,),
           DashBoardScreen(),
           NotificationScreen(_sharepreferenceshelper),
         ],
@@ -371,7 +373,7 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
         tabBuilder: (context, index){
           switch (index){
             case 0:
-              return NewsFeedScreen();
+              return NewsFeedScreen(channelType: widget.channelType,);
               break;
             case 1:
               return DashBoardScreen();

@@ -33,6 +33,8 @@ import 'myWidget/NoConnectionWidget.dart';
 import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
 class NewsFeedScreen extends StatefulWidget {
+  String channelType;
+  NewsFeedScreen({this.channelType});
   @override
   _NewsFeedScreenState createState() => _NewsFeedScreenState();
 }
@@ -55,7 +57,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   TextEditingController _searchEditingController  = TextEditingController();
   bool _isSearchTextFieldEnable = true, _isSearchTextSelect = true, _isSearchContentTypeSelect = false, _isSearchDateSelect = false;
-  String _dropDownContentType = MyString.txt_to_choose;
+  String _dropDownContentType = MyString.txt_to_choose, _keyWord = '';
   List<String> _contentTypeList = List();
   int _searchContentTypePickerIndex = 0;
 
@@ -173,7 +175,15 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
-    response = await ServiceHelper().getNewsFeed(MyoTawCitySetUpHelper.getNewsFeedCityId(_sharepreferenceshelper.getRegionCode()),p,pageCount,_userUniqueKey);
+    var _newsFeedType = widget.channelType??MyString.NEWS_FEED_CHANNEL_TYPE_GENERAL;
+    if(_userModel.isWardAdmin){
+      response = await ServiceHelper().getNewsFeedForWardAdmin(MyoTawCitySetUpHelper.getNewsFeedCityId(_sharepreferenceshelper.getRegionCode()),p,pageCount,_userUniqueKey,
+          _keyWord, widget.channelType, _userModel.wardName);
+      print('channel type : ${widget.channelType}');
+    }else{
+      response = await ServiceHelper().getNewsFeed(MyoTawCitySetUpHelper.getNewsFeedCityId(_sharepreferenceshelper.getRegionCode()),p,pageCount,_userUniqueKey);
+    }
+
     var result = response.data['Results'];
     //var result = [];
     print('loadmore: ${p}');
@@ -247,6 +257,27 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     }
 
     return icon;
+
+  }
+
+  String _newsfeedContentType(String type){
+    var contentType = '';
+    switch (type){
+      case MyString.txt_content_type_photo:
+        contentType = MyString.NEWS_FEED_UPLOAD_TYPE_PHOTO;
+        break;
+      case MyString.txt_content_type_video:
+        contentType = MyString.NEWS_FEED_UPLOAD_TYPE_VIDEO;
+        break;
+      case MyString.txt_content_type_audio:
+        contentType = MyString.NEWS_FEED_UPLOAD_TYPE_AUDIO;
+        break;
+      case MyString.txt_content_type_pdf:
+        contentType = MyString.NEWS_FEED_UPLOAD_TYPE_PDF;
+        break;
+    }
+
+    return contentType;
 
   }
 
@@ -473,6 +504,14 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             )
           ],
         ),
+        _userModel != null?_userModel.isWardAdmin?_searchBarForAdmin() : Container() : Container()
+      ],
+    );
+  }
+
+  Widget _searchBarForAdmin(){
+    return Column(
+      children: <Widget>[
         Container(
           margin: EdgeInsets.only(top: 5, bottom: 5),
           child: PlatformHelper.isAndroid()?SizedBox(
@@ -600,12 +639,14 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 );
 
                 if (dateTime != null) {
-                  var fromDate = ShowDateTimeHelper.showDateTimeFromServer(dateTime[0].toString());
-                  var toDate = ShowDateTimeHelper.showDateTimeFromServer(dateTime[1].toString());
+                  var _fromDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime[0].toString());
+                  var _toDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime[1].toString());
                   setState(() {
-                    _fromDateToDate = '${fromDate} မှ ${toDate} အထိ';
+                    _fromDateToDate = '${_fromDate}  မှ  ${_toDate}  အထိ';
+                    _keyWord = _fromDate+','+_toDate;
                   });
-                  print('from ${ShowDateTimeHelper.showDateTimeFromServer(dateTime[0].toString())} to ${ShowDateTimeHelper.showDateTimeFromServer(dateTime[1].toString())}');
+                  _handleRefresh();
+                  print('dateformat: $_keyWord');
                 }
               },
               child: Container(
@@ -614,21 +655,14 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     crossAxisAlignment: CrossAxisAlignment.center,
                     children: <Widget>[
                       Expanded(child: Text(_fromDateToDate,style: TextStyle(fontSize: FontSize.textSizeExtraSmall),)),
-                      /*GestureDetector(
-                        onTap: (){
-                          _handleRefresh();
-                        },
-                        child: Container(
-                            margin: EdgeInsets.only(right: 10),
-                            child: Icon(Icons.search, color: Colors.black,size: 20,)),
-                      ),*/
                       GestureDetector(
                           onTap: (){
                             setState(() {
                               _fromDateToDate = MyString.txt_to_choose_date;
                             });
+                            _keyWord = '';
                             _searchEditingController.clear();
-                            FocusScope.of(context).requestFocus(FocusNode());
+                            //FocusScope.of(context).requestFocus(FocusNode());
                             _handleRefresh();
                           },
                           child: Icon(Icons.refresh, color: Colors.black,size: 20,)
@@ -652,6 +686,9 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     children: <Widget>[
                       GestureDetector(
                           onTap: (){
+                            setState(() {
+                              _keyWord = _searchEditingController.text;
+                            });
                             _handleRefresh();
                           },
                           child: Container(
@@ -662,7 +699,10 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       GestureDetector(
                           onTap: (){
                             _searchEditingController.clear();
-                            FocusScope.of(context).requestFocus(FocusNode());
+                            setState(() {
+                              _keyWord = '';
+                            });
+                            //FocusScope.of(context).requestFocus(FocusNode());
                             _handleRefresh();
                           },
                           child: Container(
@@ -676,17 +716,16 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               textInputAction: TextInputAction.search,
               onSubmitted: (str){
                 print('keyword : ${str}');
-                _searchEditingController.clear();
+                //_searchEditingController.clear();
+                setState(() {
+                  _keyWord = _searchEditingController.text;
+                });
                 _handleRefresh();
               },
               cursorColor: MyColor.colorPrimary,
             ),
           ),
         ),
-        /*Container(
-            margin: EdgeInsets.only(top: 5, left: 10),
-            child: Text(MyString.txt_search_type, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),)
-        ),*/
       ],
     );
   }
@@ -717,14 +756,17 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               onChange: (value){
                 setState(() {
                   _dropDownContentType = value;
+                  _keyWord = _newsfeedContentType(value);
                 });
+                _handleRefresh();
               },
               list: _contentTypeList,
             ),
           ),GestureDetector(
               onTap: (){
                 _searchEditingController.clear();
-                FocusScope.of(context).requestFocus(FocusNode());
+                _keyWord = '';
+                //FocusScope.of(context).requestFocus(FocusNode());
                 _handleRefresh();
                 setState(() {
                   _dropDownContentType = MyString.txt_to_choose;
@@ -791,46 +833,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     );
   }
 
-  Widget _emptyView(){
-    return Container(
-      margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _userModel!=null?_userModel.isWardAdmin?GestureDetector(
-                      onTap: (){
-                        Navigator.of(context).pop();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,color: Colors.black,size: 30,),
-                      ),
-                    ) : Container() : Container(),
-                    Text(_city??'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
-                    Text(MyString.txt_newsfeed, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
-                  ],
-                ),
-              ),
-              GestureDetector(
-                onTap: (){
-                  Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileScreen()));
-                },
-                child: CircleAvatar(backgroundImage:_profilePhoto,
-                  backgroundColor: MyColor.colorGrey, radius: 25.0,),
-              )
-            ],
-          ),
-          Expanded(child: emptyView(asyncLoaderState,MyString.txt_no_newsFeed_data))
-        ],
-      ),
-    );
-  }
-
   Widget _listView(){
     return ListView.builder(
         itemCount: _newsFeedViewModelList.length,
@@ -854,13 +856,29 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     );
   }
 
-  Widget _noConWidget(){
+  Widget _emptyView(){
     return Container(
-      margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
-      child: Column(
+      margin: EdgeInsets.only(top: 24.0,left: 15.0, right: 15.0),
+      child: ListView(
         children: <Widget>[
           _headerNewsFeed(),
-          Expanded(child: noConnectionWidget(asyncLoaderState))
+          Container(
+              margin: EdgeInsets.only(top: 70),
+              child: emptyView(asyncLoaderState,MyString.txt_no_newsFeed_data))
+        ],
+      ),
+    );
+  }
+
+  Widget _noConWidget(){
+    return Container(
+      margin: EdgeInsets.only(top: 24.0, left: 15.0, right: 15.0),
+      child: ListView(
+        children: <Widget>[
+          _headerNewsFeed(),
+          Container(
+              margin: EdgeInsets.only(top: 70),
+              child: noConnectionWidget(asyncLoaderState))
         ],
       ),
     );

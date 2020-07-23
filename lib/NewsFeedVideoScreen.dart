@@ -46,11 +46,12 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
       videoPlayerController: _videoPlayerController,
       autoPlay: true,
       aspectRatio: 16/9,
-      allowFullScreen: false,
+      allowFullScreen: true,
       looping: false,
+      autoInitialize: true,
       errorBuilder: (context, errormessage){
         return Center(
-          child: Text('Need internet connection to watch video', style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),
+          child: Text(MyString.txt_no_internet, style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),
         );
       }
     );
@@ -114,6 +115,12 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
           _startDownload();
         }) : Container()
       ],
+      trailing: GestureDetector(
+          onTap: (){
+            _startDownload();
+          },
+          child: Icon(Icons.cloud_download, size: 30,)
+      ),
       body: Container(
         color: Colors.black,
         child: Center(

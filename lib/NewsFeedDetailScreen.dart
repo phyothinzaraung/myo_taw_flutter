@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
 
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_html/flutter_html.dart';
@@ -403,6 +404,12 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
           _startDownload();
         }) : Container()
       ],
+      trailing: _isDownloadIconShown()?GestureDetector(
+        onTap: (){
+          _startDownload();
+        },
+          child: Icon(Icons.cloud_download, size: 30,)
+      ) : Container(width: 0, height: 0,),
     );
   }
 

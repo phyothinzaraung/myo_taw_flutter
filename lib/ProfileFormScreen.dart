@@ -166,7 +166,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     _userModel.state = _dropDownState;
     _userModel.township = _dropDownTownship;
     /*_userModel.isWardAdmin = true;// ---change ward admin and user
-    _sharepreferenceshelper.setIsWardAdmin(true); // change ward admin and user*/
+    _sharepreferenceshelper.setIsWardAdmin(true);*/ // change ward admin and user
     print('${_userModel.toJson()}');
     try{
       _response = await ServiceHelper().updateUserInfo(_userModel);
