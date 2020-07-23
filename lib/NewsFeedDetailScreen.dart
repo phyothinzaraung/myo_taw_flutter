@@ -6,10 +6,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:myotaw/helper/PlatformHelper.dart';
 import 'package:myotaw/model/NewsFeedPhotoModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
+import 'package:path_provider/path_provider.dart';
 import 'helper/NavigatorHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -350,31 +353,35 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   }
 
   _startDownload()async{
-    final _directoryPath = Directory('/storage/emulated/0/');
+    try{
+      final _directoryPath = PlatformHelper.isAndroid()? Directory('/storage/emulated/0/') : await getApplicationDocumentsDirectory();
 
-    _localPath = _directoryPath.path + 'Myotaw download';
-    final dir = Directory(_localPath);
-    bool hasExist = await dir.exists();
-    if (!hasExist) {
-      dir.create();
-    }
-    print('download dir : ${dir.path}, url : ${BaseUrl.NEWS_FEED_CONTENT_URL+ _pdfOrAudio(_contentType)}');
+      _localPath = _directoryPath.path + 'Myotaw download';
+      final dir = Directory(_localPath);
+      bool hasExist = await dir.exists();
+      if (!hasExist) {
+        dir.create();
+      }
+      print('download dir : ${dir.path}, url : ${BaseUrl.NEWS_FEED_CONTENT_URL+ _pdfOrAudio(_contentType)}');
 
-    var fileName = _pdfOrAudio(_contentType);
-    var savePath = dir.path + Platform.pathSeparator + fileName;
-    if(!await File(savePath).exists()){
-      print('downloading');
-      await FlutterDownloader.enqueue(
-        url: BaseUrl.NEWS_FEED_CONTENT_URL+ _pdfOrAudio(_contentType),
-        savedDir:  _localPath,
-        showNotification: true,
-        openFileFromNotification: true
-    );
+      var fileName = _pdfOrAudio(_contentType);
+      var savePath = dir.path + Platform.pathSeparator + fileName;
+      if(!await File(savePath).exists()){
+        print('downloading');
+        await FlutterDownloader.enqueue(
+            url: BaseUrl.NEWS_FEED_CONTENT_URL+ _pdfOrAudio(_contentType),
+            savedDir:  _localPath,
+            showNotification: true,
+            openFileFromNotification: true
+        );
 
-    FlutterDownloader.loadTasks();
-    }else{
-      print('already download');
-      PrimaryColorSnackBarWidget(_globalKey, MyString.txt_already_download);
+        FlutterDownloader.loadTasks();
+      }else{
+        print('already download');
+        PrimaryColorSnackBarWidget(_globalKey, MyString.txt_already_download);
+      }
+    }catch(e){
+      WarningSnackBar(_globalKey, 'download fail');
     }
   }
 

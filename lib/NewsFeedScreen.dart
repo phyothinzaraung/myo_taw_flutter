@@ -693,7 +693,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                           },
                           child: Container(
                               margin: EdgeInsets.only(right: 10),
-                              child: Icon(Icons.search, color: Colors.black,size: 20,)
+                              child: Icon(PlatformHelper.isAndroid()? Icons.search : CupertinoIcons.search, color: Colors.black,size: 25,)
                           )
                       ),
                       GestureDetector(
@@ -707,7 +707,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                           },
                           child: Container(
                               margin: EdgeInsets.only(right: 15),
-                              child: Icon(Icons.refresh, color: Colors.black,size: 20,)
+                              child: Icon(PlatformHelper.isAndroid()? Icons.refresh : CupertinoIcons.refresh, color: Colors.black,size: 25,)
                           )
                       ),
                     ],
@@ -756,13 +756,16 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               onChange: (value){
                 setState(() {
                   _dropDownContentType = value;
-                  _keyWord = _newsfeedContentType(value);
+                  if(_dropDownContentType != MyString.txt_to_choose){
+                    _keyWord = _newsfeedContentType(value);
+                  }
                 });
                 _handleRefresh();
               },
               list: _contentTypeList,
             ),
-          ),GestureDetector(
+          ),
+          GestureDetector(
               onTap: (){
                 _searchEditingController.clear();
                 _keyWord = '';
@@ -777,19 +780,45 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
         ],
       ) :
-      IosPickerWidget(
-        onPress: (){
-          setState(() {
-            _dropDownContentType = _contentTypeList[_searchContentTypePickerIndex];
-          });
-        },
-        onSelectedItemChanged: (index){
-          _searchContentTypePickerIndex = index;
-        },
-        fixedExtentScrollController: FixedExtentScrollController(initialItem: _searchContentTypePickerIndex),
-        text: _dropDownContentType,
-        children: _searchContentTypeWidgetList,
-      ),
+      Row(
+        children: <Widget>[
+          Expanded(
+            child: IosPickerWidget(
+              onPress: (){
+                setState(() {
+                  _dropDownContentType = _contentTypeList[_searchContentTypePickerIndex];
+                  if(_dropDownContentType != MyString.txt_to_choose){
+                    _keyWord = _newsfeedContentType(_dropDownContentType);
+                  }
+                });
+                if(_dropDownContentType != MyString.txt_to_choose){
+                  Navigator.pop(context);
+                  _handleRefresh();
+                }
+              },
+              onSelectedItemChanged: (index){
+                _searchContentTypePickerIndex = index;
+              },
+              fixedExtentScrollController: FixedExtentScrollController(initialItem: _searchContentTypePickerIndex),
+              text: _dropDownContentType,
+              children: _searchContentTypeWidgetList,
+            ),
+          ),
+          GestureDetector(
+              onTap: (){
+                _searchEditingController.clear();
+                _keyWord = '';
+                //FocusScope.of(context).requestFocus(FocusNode());
+                _handleRefresh();
+                setState(() {
+                  _dropDownContentType = MyString.txt_to_choose;
+                  _searchContentTypePickerIndex = 0;
+                });
+              },
+              child: Icon(PlatformHelper.isAndroid()? Icons.refresh : CupertinoIcons.refresh, color: Colors.black,size: 25,)
+          ),
+        ],
+      )
     );
   }
 
