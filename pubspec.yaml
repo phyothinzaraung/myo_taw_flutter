@@ -64,6 +64,7 @@ dependencies:
   image_downloader: ^0.19.2
   date_range_picker: ^1.0.6
   flutter_downloader: ^1.4.4
+  flutter_cupertino_date_picker: ^1.0.26+2
 
 dev_dependencies:
   flutter_test:

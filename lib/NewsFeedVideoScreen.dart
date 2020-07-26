@@ -12,6 +12,7 @@ import 'package:video_player/video_player.dart';
 import 'dart:io';
 
 import 'myWidget/PrimaryColorSnackBarWidget.dart';
+import 'myWidget/WarningSnackBarWidget.dart';
 
 class NewsFeedVideoScreen extends StatefulWidget {
   String url;
@@ -55,7 +56,7 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
         );
       }
     );
-    _initDownload();
+    //_initDownload();
   }
 
   _initDownload(){
@@ -77,29 +78,34 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
   }
 
   _startDownload()async{
-    final _directoryPath = Directory('/storage/emulated/0/');
+    try{
+      final _directoryPath = Directory('/storage/emulated/0/');
 
-    _localPath = _directoryPath.path + 'Myotaw download';
-    final dir = Directory(_localPath);
-    bool hasExist = await dir.exists();
-    if (!hasExist) {
-      dir.create();
-    }
-    print('download dir : ${dir.path}');
-    var fileName = _videoUrl;
-    var savePath = dir.path + Platform.pathSeparator + fileName;
+      _localPath = _directoryPath.path + 'Myotaw download';
+      final dir = Directory(_localPath);
+      bool hasExist = await dir.exists();
+      if (!hasExist) {
+        dir.create();
+      }
+      print('download dir : ${dir.path}');
+      var fileName = _videoUrl;
+      var savePath = dir.path + Platform.pathSeparator + fileName;
 
-    if(!await File(savePath).exists()){
-      _downloadVideo = await FlutterDownloader.enqueue(
-          url: BaseUrl.NEWS_FEED_CONTENT_URL+_videoUrl,
-          savedDir:  _localPath,
-          showNotification: true,
-          openFileFromNotification: true
-      );
+      if(!await File(savePath).exists()){
+        _downloadVideo = await FlutterDownloader.enqueue(
+            url: BaseUrl.NEWS_FEED_CONTENT_URL+_videoUrl,
+            savedDir:  _localPath,
+            showNotification: true,
+            openFileFromNotification: true
+        );
 
-      FlutterDownloader.loadTasks();
-    }else{
-      PrimaryColorSnackBarWidget(_globalKey, MyString.txt_already_download);
+        FlutterDownloader.loadTasks();
+      }else{
+        PrimaryColorSnackBarWidget(_globalKey, MyString.txt_already_download);
+      }
+    }catch(e){
+      print(e);
+      WarningSnackBar(_globalKey, MyString.txt_download_fail);
     }
 
   }

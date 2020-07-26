@@ -54,7 +54,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
     super.initState();
     initNewsFeedData();
     addPhoto();
-    _initDownload();
+    //_initDownload();
   }
 
   initNewsFeedData(){
@@ -362,7 +362,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
       if (!hasExist) {
         dir.create();
       }
-      print('download dir : ${dir.path}, url : ${BaseUrl.NEWS_FEED_CONTENT_URL+ _pdfOrAudio(_contentType)}');
+      //print('download dir : ${dir.path}, url : ${BaseUrl.NEWS_FEED_CONTENT_URL+ _pdfOrAudio(_contentType)}');
 
       var fileName = _pdfOrAudio(_contentType);
       var savePath = dir.path + Platform.pathSeparator + fileName;
@@ -381,7 +381,8 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         PrimaryColorSnackBarWidget(_globalKey, MyString.txt_already_download);
       }
     }catch(e){
-      WarningSnackBar(_globalKey, 'download fail');
+      print(e);
+      WarningSnackBar(_globalKey, MyString.txt_download_fail);
     }
   }
 

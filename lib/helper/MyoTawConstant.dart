@@ -320,10 +320,11 @@ class MyString{
   static const String txt_search_date = 'ရက်စွဲ';
   static const String txt_to_search = 'စာသားရိုက်ရှာရန်';
   static const String txt_to_choose = 'ရွေးချယ်ပါ';
-  static const String txt_to_choose_date = 'ရက်စွဲရွေးပါ';
+  static const String txt_to_choose_date = 'ရက်စွဲရွေးပါ  ... မှ ... အထိ';
   static const String txt_already_download = 'ဒေါင်းလုဒ်ပြုလုပ်ထားပြီး။';
   static const String NEWS_FEED_CHANNEL_TYPE_GENERAL = 'WardAdmin';
   static const String NEWS_FEED_CHANNEL_TYPE_BLOCK = 'Block';
+  static const String txt_download_fail = 'ဒေါင်းလုဒ်မအောင်မြင်ပါ။';
 
   static const String NEWS_FEED_UPLOAD_TYPE_AUDIO= "AudioUpload";
   static const String NEWS_FEED_UPLOAD_TYPE_VIDEO= "VideoUpload";

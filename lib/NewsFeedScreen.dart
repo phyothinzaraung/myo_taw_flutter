@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:async_loader/async_loader.dart';
+import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:html/parser.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
@@ -60,6 +61,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   String _dropDownContentType = MyString.txt_to_choose, _keyWord = '';
   List<String> _contentTypeList = List();
   int _searchContentTypePickerIndex = 0;
+  var _fromDate ='', _toDate ='';
 
   final Map<int, Widget> _cupertinoSliderChildren = const <int, Widget>{
     0: Text(MyString.txt_search_text, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
@@ -630,7 +632,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             ),
             child: _isSearchDateSelect? GestureDetector(
               onTap: ()async{
-                List dateTime = await DateRangePicker.showDatePicker(
+                /*List dateTime = await DateRangePicker.showDatePicker(
                   context: context,
                   initialFirstDate: DateTime.now(),
                   initialLastDate: DateTime.now().add(Duration(days: 7)),
@@ -639,15 +641,47 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 );
 
                 if (dateTime != null) {
-                  var _fromDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime[0].toString());
-                  var _toDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime[1].toString());
+                  _fromDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime[0].toString());
+                  _toDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime[1].toString());
                   setState(() {
                     _fromDateToDate = '${_fromDate}  မှ  ${_toDate}  အထိ';
                     _keyWord = _fromDate+','+_toDate;
                   });
                   _handleRefresh();
                   print('dateformat: $_keyWord');
-                }
+                }*/
+
+                DatePicker.showDatePicker(context,
+                    pickerTheme: DateTimePickerTheme(
+                      confirm: Text(MyString.txt_confirm, style: TextStyle(color: Colors.blue),),
+                      cancel: Text(MyString.txt_close, style: TextStyle(color: Colors.red),),
+                    ),
+                    minDateTime: DateTime(2019),
+                    maxDateTime: DateTime(2025),
+                    initialDateTime: DateTime.now(),
+                    onConfirm: (dateTime1, List<int> date){
+                        print('datepicker : ${ShowDateTimeHelper.formatDateTimeForSearch(dateTime1.toIso8601String())}');
+                        //Navigator.pop(context);
+                        Future.delayed(Duration(milliseconds: 200),(){
+                          DatePicker.showDatePicker(context,
+                              minDateTime: DateTime(2019),
+                              maxDateTime: DateTime(2025),
+                              initialDateTime: DateTime.now(),
+                              onConfirm: (dateTime2, List<int> date){
+                                print('datepicker : ${ShowDateTimeHelper.formatDateTimeForSearch(dateTime2.toIso8601String())}');
+                                setState(() {
+                                  _fromDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime1.toIso8601String());
+                                  _toDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime2.toIso8601String());
+                                  _fromDateToDate = '${_fromDate}  မှ  ${_toDate}  အထိ';
+                                  _keyWord = _fromDate+','+_toDate;
+                                });
+                                _handleRefresh();
+                              }
+                          );
+                        });
+                    }
+                );
+
               },
               child: Container(
                   margin: EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
@@ -665,7 +699,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                             //FocusScope.of(context).requestFocus(FocusNode());
                             _handleRefresh();
                           },
-                          child: Icon(Icons.refresh, color: Colors.black,size: 20,)
+                          child: Icon(PlatformHelper.isAndroid()? Icons.refresh : CupertinoIcons.refresh, color: Colors.black,size: 25,)
                       )
                     ],
                   )),
@@ -724,7 +758,56 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               },
               cursorColor: MyColor.colorPrimary,
             ),
-          ),
+          )
+          /*GestureDetector(
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: Colors.white,
+                  boxShadow: [
+                    BoxShadow(
+                        color: Colors.grey,
+                        offset: Offset(0, 0.5),
+                        blurRadius: 3
+                    )
+                  ]
+              ),
+              margin: EdgeInsets.only(top: 10),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: <Widget>[
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(right: 10, left: 10),
+                      height: 50,
+                      child: Container(
+                          margin: EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
+                          child: Text(_fromDate)
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: Container(
+                      alignment: Alignment.center,
+                      margin: EdgeInsets.only(left: 10, right: 10),
+                      height: 50,
+                      child: Container(
+                          margin: EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
+                          child: Text(_toDate)
+                      ),
+                    ),
+                  ),
+                  Icon(CupertinoIcons.search, size: 25, color: Colors.black,),
+                  Container(
+                      margin: EdgeInsets.only(right: 10, left: 5),
+                      child: Icon(CupertinoIcons.refresh, size: 25, color: Colors.black,)
+                  ),
+
+                ],
+              ),
+            ),
+          ),*/
         ),
       ],
     );
