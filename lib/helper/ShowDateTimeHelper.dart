@@ -41,4 +41,14 @@ class ShowDateTimeHelper{
     dateFormat = DateFormat('dd MMMM yyyy').format(DateTime.parse(dateList[0])).toString();
     return dateFormat;
   }
+
+  static String formatDateTimeForSearch(String date){
+    var list = date.split('.');
+    var dateTime = DateTime.parse(list[0]);
+    var timeDiff = DateTime.now().difference(dateTime);
+    var dateList = date.split('T');
+    var dateFormat;
+    dateFormat = DateFormat('yyyy/MM/dd').format(DateTime.parse(dateList[0])).toString();
+    return dateFormat;
+  }
 }

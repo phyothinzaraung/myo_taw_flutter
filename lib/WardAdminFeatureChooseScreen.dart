@@ -12,6 +12,7 @@ import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/main.dart';
 import 'package:myotaw/model/DashBoardModel.dart';
 import 'package:myotaw/model/UserModel.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:notifier/main_notifier.dart';
 import 'FloodReportListScreen.dart';
@@ -22,13 +23,14 @@ import 'helper/PlatformHelper.dart';
 import 'model/NotificationModel.dart';
 
 class WardAdminFeatureChooseScreen extends StatelessWidget {
+  bool isHly = false;
   List<DashBoardModel> _list = List();
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
-  Notifier _notifier;
+  WardAdminFeatureChooseScreen({this.isHly});
 
-  _init(BuildContext context){
+  _init(BuildContext context)async{
     DashBoardModel model1 = new DashBoardModel();
     model1.image = 'images/suggestion.png';
     model1.title = MyString.txt_ward_admin_feature;
@@ -41,11 +43,15 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
     model3.image = 'images/flood_report.png';
     model3.title = MyString.txt_flood_level;
 
-    DashBoardModel model4 = new DashBoardModel();
-    model4.image = 'images/form_nocirlce.png';
-    model4.title = MyString.txt_form;
+    if(isHly){
+      DashBoardModel model4 = new DashBoardModel();
+      model4.image = 'images/form_circle.png';
+      model4.title = MyString.txt_form;
+      _list = [model1,model3, model2, model4];
+    }else{
+      _list = [model1,model3, model2];
+    }
 
-    _list = [model1,model3, model2, model4];
     _firebaseMessaging.subscribeToTopic('all');
     _firebaseMessaging.configure(
         onResume: (Map<String, dynamic> message) async {
@@ -96,7 +102,21 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             NavigatorHelper.myNavigatorPush(context, WardAdminContributionListScreen(), ScreenName.WARD_ADMIN_CONTRIBUTION_LIST_SCREEN);
             break;
           case MyString.txt_myotaw_channel:
-            NavigatorHelper.myNavigatorPush(context, MainScreen(), ScreenName.MYOTAW_CHANNEL);
+            //NavigatorHelper.myNavigatorPush(context, MainScreen(), ScreenName.MYOTAW_CHANNEL);
+            CustomDialogWidget().customChannelChooserDialog(
+              context: context,
+              title: MyString.txt_myotaw_channel_chooser,
+              generalText: MyString.txt_myotaw_channel_general,
+              blockText: MyString.txt_myotaw_channel_blocklevel,
+              onPressGeneral: (){
+                Navigator.of(context).pop();
+                NavigatorHelper.myNavigatorPush(context, isHly?NewsFeedScreen(channelType: MyString.NEWS_FEED_CHANNEL_TYPE_GENERAL) : MainScreen(channelType: MyString.NEWS_FEED_CHANNEL_TYPE_GENERAL), ScreenName.MYOTAW_CHANNEL);
+              },
+              onPressBlockLevel: (){
+              Navigator.of(context).pop();
+              NavigatorHelper.myNavigatorPush(context, isHly?NewsFeedScreen(channelType: MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK) : MainScreen(channelType: MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK), ScreenName.MYOTAW_CHANNEL);
+            }
+            );
             break;
           case MyString.txt_flood_level:
             NavigatorHelper.myNavigatorPush(context, FloodReportListScreen(), ScreenName.FLOOD_REPORT_LIST_SCREEN);

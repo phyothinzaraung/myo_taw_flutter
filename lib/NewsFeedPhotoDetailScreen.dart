@@ -1,5 +1,10 @@
+import 'dart:io';
+import 'dart:isolate';
+import 'dart:ui';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/model/NewsFeedPhotoModel.dart';
 import 'package:myotaw/model/NewsFeedViewModel.dart';
@@ -10,12 +15,19 @@ import 'helper/PlatformHelper.dart';
 import 'package:image_downloader/image_downloader.dart';
 import 'package:flutter/services.dart';
 
+import 'myWidget/PrimaryColorSnackBarWidget.dart';
+import 'myWidget/WarningSnackBarWidget.dart';
+
 class NewsFeedPhotoDetailScreen extends StatelessWidget {
   List<NewsFeedPhotoModel> _photoList = new List();
   String _photoUrl;
   PageController _pageController;
   List<Widget> _photoWidget = new List();
   int _initialPage = 0;
+  ReceivePort _port = ReceivePort();
+  var _localPath;
+  var _downloadVideo;
+  GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   NewsFeedPhotoDetailScreen(this._photoList, this._photoUrl, this._initialPage);
 
   void addPhoto() {
@@ -39,6 +51,57 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
             ));
   }
 
+  _initDownload(){
+    IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_send_port');
+    /*_port.listen((dynamic data) {
+      String id = data[0];
+      DownloadTaskStatus status = data[1];
+      int progress = data[2];
+      setState((){ });
+    });*/
+
+    FlutterDownloader.registerCallback(downloadCallback);
+  }
+
+
+  static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
+    final SendPort send = IsolateNameServer.lookupPortByName('downloader_send_port');
+    send.send([id, status, progress]);
+  }
+
+  _startDownload()async{
+    try{
+      final _directoryPath = Directory('/storage/emulated/0/');
+
+      _localPath = _directoryPath.path + 'Myotaw download';
+      final dir = Directory(_localPath);
+      bool hasExist = await dir.exists();
+      if (!hasExist) {
+        dir.create();
+      }
+      print('download dir : ${dir.path}');
+      var fileName = _photoList.isNotEmpty?_photoList[_initialPage].photoUrl : _photoUrl;
+      var savePath = dir.path + Platform.pathSeparator + fileName;
+
+      if(!await File(savePath).exists()){
+        _downloadVideo = await FlutterDownloader.enqueue(
+            url: BaseUrl.NEWS_FEED_CONTENT_URL+'${_photoList.isNotEmpty?_photoList[_initialPage].photoUrl : _photoUrl}',
+            savedDir:  _localPath,
+            showNotification: true,
+            openFileFromNotification: true
+        );
+
+        FlutterDownloader.loadTasks();
+      }else{
+        PrimaryColorSnackBarWidget(_globalKey, MyString.txt_already_download);
+      }
+    }catch(e){
+      print(e);
+      WarningSnackBar(_globalKey, MyString.txt_download_fail);
+    }
+
+  }
+
   @override
   Widget build(BuildContext context) {
     _pageController = new PageController(initialPage: _initialPage);
@@ -47,10 +110,12 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
       _initialPage = _pageController.page.toInt();
     });
     return CustomScaffoldWidget(
+      globalKey: _globalKey,
       title: null,
       action: <Widget>[
         IconButton(icon: Icon(Icons.file_download), onPressed: ()async{
-          try {
+          _startDownload();
+          /*try {
             var imageId =
             await ImageDownloader.downloadImage(BaseUrl.NEWS_FEED_CONTENT_URL + '${_photoList.isNotEmpty?_photoList[_initialPage].photoUrl : _photoUrl}',);
             Fluttertoast.showToast(
@@ -62,7 +127,7 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
             }
           } on PlatformException catch (error) {
             print(error);
-          }
+          }*/
         })
       ],
       body: Container(

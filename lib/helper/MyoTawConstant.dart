@@ -44,6 +44,7 @@ class OrganizationId{
   static const int MLM_ORGANIZATION_ID = 9;
   static const int LKW_ORGANIZATION_ID = 13;
   static const int MGY_ORGANIZATION_ID = 14;
+  static const int HLY_ORGANIZATION_ID = 15;
 }
 
 class MyString{
@@ -56,21 +57,25 @@ class MyString{
   static const String txt_welcome_mlm ='မော်လမြိုင်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String txt_welcome_lkw ='လွိုင်ကော်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String txt_welcome_mgy ='မကွေးမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
+  static const String txt_welcome_hly = 'လှိုင်သာယာမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
 
   static const String TGY_CITY = 'တောင်ကြီးမြို့';
   static const String MLM_CITY = 'မော်လမြိုင်မြို့';
   static const String LKW_CITY = 'လွိုင်ကော်မြို့';
   static const String MGY_CITY = 'မကွေးမြို့';
+  static const String HLY_CITY = 'လှိုင်သာယာမြို့';
 
   static const String TGY_STATE = 'ရှမ်းပြည်နယ်';
   static const String MLM_STATE = 'မွန်ပြည်နယ်';
   static const String LKW_STATE = 'ကယားပြည်နယ်';
   static const String MGY_STATE = 'မကွေးတိုင်း';
+  static const String HLY_STATE = 'ရန်ကုန်တိုင်းဒေသကြီး';
 
-  static const String TGY_REGIONCODE = "TGY";
-  static const String MLM_REGIONCODE = "MLM";
-  static const String LKW_REGIONCODE = "LKW";
-  static const String MGY_REGIONCODE = "MGY";
+  static const String TGY_REGION_CODE = "TGY";
+  static const String MLM_REGION_CODE = "MLM";
+  static const String LKW_REGION_CODE = "LKW";
+  static const String MGY_REGION_CODE = "MGY";
+  static const String HLY_REGION_CODE = "HLY";
 
   static const String txt_welcome = "မြို့တော်မှ ကြိုဆိုပါ၏။";
 
@@ -266,6 +271,9 @@ class MyString{
   static const String txt_send_contribution = "အကြံပြုစာပို့မည်";
   static const String txt_ward_admin_feature = "ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
   static const String txt_myotaw_channel = "ချန်နယ်";
+  static const String txt_myotaw_channel_chooser = "ချန်နယ်ရွေးချယ်ပါ";
+  static const String txt_myotaw_channel_general = "အထွေထွေသတင်း";
+  static const String txt_myotaw_channel_blocklevel = "သီးသန့်သတင်း";
   static const String txt_choose_feature = "ကဏ္ဍရွေးချယ်ပေးပါ";
   static const String txt_title_dashboard = "ကဏ္ဍများ";
   static const String txt_title_notification = "အသိပေးနှိုးဆော်ချက်";
@@ -312,14 +320,26 @@ class MyString{
   static const String txt_search_date = 'ရက်စွဲ';
   static const String txt_to_search = 'စာသားရိုက်ရှာရန်';
   static const String txt_to_choose = 'ရွေးချယ်ပါ';
-  static const String txt_to_choose_date = 'ရက်စွဲရွေးပါ';
+  static const String txt_to_choose_date = 'ရက်စွဲရွေးပါ  ... မှ ... အထိ';
+  static const String txt_already_download = 'ဒေါင်းလုဒ်ပြုလုပ်ထားပြီး။';
+  static const String NEWS_FEED_CHANNEL_TYPE_GENERAL = 'WardAdmin';
+  static const String NEWS_FEED_CHANNEL_TYPE_BLOCK = 'Block';
+  static const String txt_download_fail = 'ဒေါင်းလုဒ်မအောင်မြင်ပါ။';
+
+  static const String NEWS_FEED_UPLOAD_TYPE_AUDIO= "AudioUpload";
+  static const String NEWS_FEED_UPLOAD_TYPE_VIDEO= "VideoUpload";
+  static const String NEWS_FEED_UPLOAD_TYPE_PDF= "PDFUpload";
+  static const String NEWS_FEED_UPLOAD_TYPE_PHOTO= "PhotoUpload";
 
   static const String txt_first_grade = 'ပထမတန်းစား';
   static const String txt_second_grade = 'ဒုတိယတန်းစား';
   static const String txt_third_grade = 'တတိယတန်းစား';
   static const String txt_fourth_grade = 'စတုတ္ထတန်းစား';
 
-
+  static const String txt_content_type_photo = 'ပုံ';
+  static const String txt_content_type_audio = 'အသံဖိုင်';
+  static const String txt_content_type_video = 'ဗွီဒီယို';
+  static const String txt_content_type_pdf = 'pdf';
 
 
   static const String BUILDING_GRADE_A = "building grade A";

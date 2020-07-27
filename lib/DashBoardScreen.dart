@@ -136,7 +136,7 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AutomaticKeepAli
               NavigatorHelper.myNavigatorPush(context, BizLicenseScreen(), ScreenName.BIZ_LICENSE_SCREEN);
               break;
             case MyString.txt_online_tax:
-              _regionCode == MyString.TGY_REGIONCODE?
+              _regionCode == MyString.TGY_REGION_CODE?
 
               NavigatorHelper.myNavigatorPush(context, OnlineTaxChooseScreen(), ScreenName.ONLINE_TAX_CHOOSE_SCREEN)
               :

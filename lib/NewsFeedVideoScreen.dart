@@ -11,6 +11,9 @@ import 'package:chewie/chewie.dart';
 import 'package:video_player/video_player.dart';
 import 'dart:io';
 
+import 'myWidget/PrimaryColorSnackBarWidget.dart';
+import 'myWidget/WarningSnackBarWidget.dart';
+
 class NewsFeedVideoScreen extends StatefulWidget {
   String url;
   NewsFeedVideoScreen(this.url);
@@ -22,10 +25,11 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
   String _videoUrl;
   VideoPlayerController _videoPlayerController;
   ChewieController _chewieController;
-  bool _isLoading;
   var _downloadVideo;
   ReceivePort _port = ReceivePort();
   var _localPath;
+  bool _isDownloadReady = false;
+  GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   _NewsFeedVideoScreenState(this._videoUrl);
 
   @override
@@ -36,22 +40,26 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
     _videoPlayerController = VideoPlayerController.network(BaseUrl.NEWS_FEED_CONTENT_URL+_videoUrl)
     ..initialize().then((_){
         setState(() {
-
+          _isDownloadReady = true;
         });
     });
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       autoPlay: true,
       aspectRatio: 16/9,
-      allowFullScreen: false,
+      allowFullScreen: true,
       looping: false,
+      autoInitialize: true,
       errorBuilder: (context, errormessage){
         return Center(
-          child: Text('Need internet connection to watch video', style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),
+          child: Text(MyString.txt_no_internet, style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),
         );
       }
     );
+    //_initDownload();
+  }
 
+  _initDownload(){
     IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_send_port');
     _port.listen((dynamic data) {
       String id = data[0];
@@ -63,47 +71,62 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
     FlutterDownloader.registerCallback(downloadCallback);
   }
 
-  /*_initDownload()async{
-    await FlutterDownloader.initialize(debug: true);
-  }*/
-
 
   static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
     final SendPort send = IsolateNameServer.lookupPortByName('downloader_send_port');
     send.send([id, status, progress]);
   }
 
+  _startDownload()async{
+    try{
+      final _directoryPath = Directory('/storage/emulated/0/');
+
+      _localPath = _directoryPath.path + 'Myotaw download';
+      final dir = Directory(_localPath);
+      bool hasExist = await dir.exists();
+      if (!hasExist) {
+        dir.create();
+      }
+      print('download dir : ${dir.path}');
+      var fileName = _videoUrl;
+      var savePath = dir.path + Platform.pathSeparator + fileName;
+
+      if(!await File(savePath).exists()){
+        _downloadVideo = await FlutterDownloader.enqueue(
+            url: BaseUrl.NEWS_FEED_CONTENT_URL+_videoUrl,
+            savedDir:  _localPath,
+            showNotification: true,
+            openFileFromNotification: true
+        );
+
+        FlutterDownloader.loadTasks();
+      }else{
+        PrimaryColorSnackBarWidget(_globalKey, MyString.txt_already_download);
+      }
+    }catch(e){
+      print(e);
+      WarningSnackBar(_globalKey, MyString.txt_download_fail);
+    }
+
+  }
+
 
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
+      globalKey: _globalKey,
       title: null,
       action: <Widget>[
-        GestureDetector(
-          onTap: ()async{
-            final _directoryPath = Directory('/storage/emulated/0/');
-
-            _localPath = _directoryPath.path + 'Myotaw download';
-            final dir = Directory(_localPath);
-            bool hasExist = await dir.exists();
-            if (!hasExist) {
-              dir.create();
-            }
-            print('download dir : ${dir.path}');
-
-            _downloadVideo = await FlutterDownloader.enqueue(
-                url: BaseUrl.NEWS_FEED_CONTENT_URL+_videoUrl,
-                savedDir:  _localPath,
-              showNotification: true,
-              openFileFromNotification: true
-            );
-
-            FlutterDownloader.loadTasks();
-          },
-
-            child: Icon(Icons.file_download)
-        ),
+        _isDownloadReady?IconButton(icon: Icon(Icons.file_download), onPressed: (){
+          _startDownload();
+        }) : Container()
       ],
+      trailing: GestureDetector(
+          onTap: (){
+            _startDownload();
+          },
+          child: Icon(Icons.cloud_download, size: 30,)
+      ),
       body: Container(
         color: Colors.black,
         child: Center(

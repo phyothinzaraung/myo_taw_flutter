@@ -11,6 +11,14 @@ class ServiceHelper{
  final Dio dio = new Dio();
  int conTimeOut = 60000;
 
+ getNewsFeedForWardAdmin<Response>(int organizationId, int page, int pageSize, String userUniqueKey, String keyWord, String nfType, String blockName) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_NEWSFEED+"newsfeedposted/getcitynewsfeedver4",
+      queryParameters: {"OrganizationID": organizationId, "page": page, "pageSize": pageSize, "UserUniqueKey": userUniqueKey, "keyword" : keyWord, "nftype" : nfType, "blockname" : blockName});
+  return response;
+ }
+
  getNewsFeed<Response>(int organizationId, int page, int pageSize, String userUniqueKey) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;

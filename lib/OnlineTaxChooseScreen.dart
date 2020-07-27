@@ -93,7 +93,7 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
                 delegate: SliverChildBuilderDelegate((context, index){
                   return GestureDetector(
                     onTap: (){
-                      if(_userModel.currentRegionCode == MyString.TGY_REGIONCODE){
+                      if(_userModel.currentRegionCode == MyString.TGY_REGION_CODE){
                         if(_userModel.pinCode != null){
                           _dialogPinRequest(index==0?'OnlineTax':'SmartWm');
                           OnlineTaxPinRequestDialogWidget(index==0?'OnlineTax':'SmartWm', _userModel);
