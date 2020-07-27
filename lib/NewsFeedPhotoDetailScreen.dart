@@ -114,15 +114,8 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
       globalKey: _globalKey,
       title: null,
       trailing: GestureDetector(
-          onTap: (){
-            _startDownload();
-          },
-          child: Icon(Icons.cloud_download, size: 30,)
-      ),
-      action: <Widget>[
-        IconButton(icon: Icon(Icons.file_download), onPressed: ()async{
-          _startDownload();
-          /*try {
+          onTap: ()async{
+            try {
             var imageId =
             await ImageDownloader.downloadImage(BaseUrl.NEWS_FEED_CONTENT_URL + '${_photoList.isNotEmpty?_photoList[_initialPage].photoUrl : _photoUrl}',);
             Fluttertoast.showToast(
@@ -134,7 +127,13 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
             }
           } on PlatformException catch (error) {
             print(error);
-          }*/
+          }
+          },
+          child: Icon(Icons.cloud_download, size: 30,)
+      ),
+      action: <Widget>[
+        IconButton(icon: Icon(Icons.file_download), onPressed: ()async{
+          _startDownload();
         })
       ],
       body: Container(
