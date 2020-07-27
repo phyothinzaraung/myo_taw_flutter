@@ -759,6 +759,7 @@ class ScreenName{
 
   static const String NEWS_FEED_SCREEN = 'News feed screen';
   static const String NEWS_FEED_DETAIL_SCREEN = 'News feed detail screen';
+  static const String NEWS_FEED_WEBVIEW_SCREEN = 'News feed webview screen';
 
 
   static const String DASHBOARD_SCREEN = 'Dashboard screen';
