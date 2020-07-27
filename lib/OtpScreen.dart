@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
+import 'package:myotaw/NewsFeedScreen.dart';
 import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
@@ -99,7 +100,7 @@ class _OtpScreenState extends State<OtpScreen> {
           NavigatorHelper.myNavigatorPushReplacement(context, WardAdminFeatureChooseScreen(isHly: _userModel.currentRegionCode == MyString.HLY_REGION_CODE?true:false), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{
 
-          NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);
+          NavigatorHelper.myNavigatorPushReplacement(context, _userModel.currentRegionCode == MyString.HLY_REGION_CODE? NewsFeedScreen() : MainScreen(), null);
         }
 
       }else{

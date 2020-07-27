@@ -6,6 +6,7 @@ import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:package_info/package_info.dart';
+import 'NewsFeedScreen.dart';
 import 'database/NotificationDb.dart';
 import 'helper/MyoTawConstant.dart';
 import 'main.dart';
@@ -99,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         if(_sharepreferenceshelper.isWardAdmin()){
           NavigatorHelper.myNavigatorPushReplacement(context, WardAdminFeatureChooseScreen(isHly: _sharepreferenceshelper.getRegionCode() == MyString.HLY_REGION_CODE?true:false), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{
-          NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);
+          NavigatorHelper.myNavigatorPushReplacement(context, _sharepreferenceshelper.getRegionCode() == MyString.HLY_REGION_CODE? NewsFeedScreen() : MainScreen(), null);
         }
       });
     }else{
