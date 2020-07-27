@@ -9,6 +9,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/model/NewsFeedPhotoModel.dart';
 import 'package:myotaw/model/NewsFeedViewModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/PlatformHelper.dart';
@@ -71,7 +72,7 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
 
   _startDownload()async{
     try{
-      final _directoryPath = Directory('/storage/emulated/0/');
+      final _directoryPath = PlatformHelper.isAndroid()? Directory('/storage/emulated/0/') : await getApplicationDocumentsDirectory();
 
       _localPath = _directoryPath.path + 'Myotaw download';
       final dir = Directory(_localPath);
@@ -112,6 +113,12 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
     return CustomScaffoldWidget(
       globalKey: _globalKey,
       title: null,
+      trailing: GestureDetector(
+          onTap: (){
+            _startDownload();
+          },
+          child: Icon(Icons.cloud_download, size: 30,)
+      ),
       action: <Widget>[
         IconButton(icon: Icon(Icons.file_download), onPressed: ()async{
           _startDownload();
