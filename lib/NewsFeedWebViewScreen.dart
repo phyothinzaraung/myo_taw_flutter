@@ -19,7 +19,7 @@ class NewsFeedWebViewScreenState extends State<NewsFeedWebViewScreen> {
 
   Completer<WebViewController> _controller = Completer<WebViewController>();
   WebViewController _webViewController;
-  bool _isLoading = true;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -35,9 +35,11 @@ class NewsFeedWebViewScreenState extends State<NewsFeedWebViewScreen> {
             _webViewController = wv;
           },
           onPageFinished: (finish){
-            setState(() {
-              _isLoading = false;
-            });
+            if(_controller.isCompleted){
+              setState(() {
+                _isLoading = false;
+              });
+            }
           },
         ),
       ),
