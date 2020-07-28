@@ -215,8 +215,8 @@ class MyString{
   static const String txt_license_type = "လိုင်စင်အမျိုးအစား";
   static const String txt_site_area = "အဆောက်အဦး (အလျား × အနံ)";
   static const String txt_grade = "အတန်းအစား";
-  static const String title_smart_water_meter = "Smart ရေမီတာမှ \n အခွန်ဆောင်ခြင်း";
-  static const String txt_smart_water_meter = "Smart ရေမီတာမှ အခွန်ဆောင်ခြင်း";
+  static const String title_smart_water_meter = "Smart ရေမီတာအတွက် \n အခွန်ဆောင်ခြင်း";
+  static const String txt_smart_water_meter = "Smart ရေမီတာအတွက် အခွန်ဆောင်ခြင်း";
   static const String title_online_tax_payment = "အွန်လိုင်းမှ \n အခွန်ဆောင်ခြင်း";
   static const String txt_water_meter_unit = "သုံးစွဲယူနစ်";
   static const String txt_water_meter_no = "ရေမီတာနံပါတ်";
@@ -263,11 +263,11 @@ class MyString{
   static const String txt_top_up_already = "ငွေဖြည့်ကုဒ်မှာအသုံးပြုပြီပါပြီး။";
   static const String txt_no_photo = "ဓာတ်ပုံများမရှိပါ";
   static const String txt_newsfeed = "သတင်းများ";
-  static const String txt_contributions = "အကြပြုစာများ";
+  static const String txt_contributions = "အကြံပြုစာများ";
   static const String txt_profile_complete = "ကိုယ်ရေးအချက်အလက်ဖြည့်သွင်းမှု အောင်မြင်သည်။";
   static const String txt_empty_contribution = "အကြံပြုစာများ မရှိသေးပါ။";
   static const String txt_to_contribute = "အကြုံပြုမည်";
-  static const String txt_contribute_fact = "အကြပြုချက်";
+  static const String txt_contribute_fact = "အကြံပြုချက်";
   static const String txt_send_contribution = "အကြံပြုစာပို့မည်";
   static const String txt_ward_admin_feature = "ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
   static const String txt_myotaw_channel = "ချန်နယ်";
@@ -282,7 +282,7 @@ class MyString{
   static const String txt_top_up_amount = 'ငွေဖြည့်ကဒ်တန်ဖိုး';
   static const String txt_top_up_amount_before = 'ငွေမဖြည့်ရသေးသည့်တန်ဖိုး';
   static const String txt_top_up_amount_after = 'ငွေဖြည့်ပြီးတန်ဖိုး';
-  static const String txt_flood_level = 'ရေကြီးခြင်းမှတ်တမ်း \n ';
+  static const String txt_flood_level = 'ရေကြီးခြင်းမှတ်တမ်း';
   static const String txt_flood_level_inch = 'ရေကြီးခြင်း (အမြင့်)';
   static const String txt_add_flood_level_record = 'မှတ်တမ်းတင်မည်';
   static const String txt_flood_level_height = 'ရေကြီးခြင်းအတိုင်းအတာ';
@@ -322,9 +322,10 @@ class MyString{
   static const String txt_to_choose = 'ရွေးချယ်ပါ';
   static const String txt_to_choose_date = 'ရက်စွဲရွေးပါ  ... မှ ... အထိ';
   static const String txt_already_download = 'ဒေါင်းလုဒ်ပြုလုပ်ထားပြီး။';
-  static const String NEWS_FEED_CHANNEL_TYPE_GENERAL = 'WardAdmin';
   static const String NEWS_FEED_CHANNEL_TYPE_BLOCK = 'Block';
   static const String txt_download_fail = 'ဒေါင်းလုဒ်မအောင်မြင်ပါ။';
+  static const String txt_need_from_date = 'စရက် ရွေးပါ';
+  static const String txt_need_to_date = 'ဆုံးရက် ရွေးပါ';
 
   static const String NEWS_FEED_UPLOAD_TYPE_AUDIO= "AudioUpload";
   static const String NEWS_FEED_UPLOAD_TYPE_VIDEO= "VideoUpload";
@@ -336,10 +337,18 @@ class MyString{
   static const String txt_third_grade = 'တတိယတန်းစား';
   static const String txt_fourth_grade = 'စတုတ္ထတန်းစား';
 
-  static const String txt_content_type_photo = 'ပုံ';
+  static const String txt_content_type_photo = 'ဓါတ်ပုံ';
   static const String txt_content_type_audio = 'အသံဖိုင်';
   static const String txt_content_type_video = 'ဗွီဒီယို';
   static const String txt_content_type_pdf = 'pdf';
+
+  static const String MEMBER_TYPE_WARD_ADMIN = 'WardAdmin';
+  static const String MEMBER_TYPE_WARD_MP = 'MP';
+  static const String MEMBER_TYPE_WARD_MUNICIPAL = 'Municipal';
+
+  static const String MEMBER_TYPE_WARD_ADMIN_TITLE = 'ရပ်/ကျေးအုပ်ချုပ်ရေးမှူး';
+  static const String MEMBER_TYPE_WARD_MP_TITLE = 'လွှတ်တော်';
+  static const String MEMBER_TYPE_WARD_MUNICIPAL_TITLE = 'စည်ပင်';
 
 
   static const String BUILDING_GRADE_A = "building grade A";
@@ -365,6 +374,9 @@ class MyString{
   static const String TRAFFIC_CONTRIBUTE = "မော်တော်ယာဉ်ဆိုင်ရာ";
   static const String CRIME_CONTRIBUTE = "မှုခင်း";
   static const String OTHER_CONTRIBUTE = "အခြား";
+  static const String ROAD_HOLD_CONTRIBUTE = "လမ်းအပေါက်၊ချိုင့်များ";
+  static const String COVID_19_CONTRIBUTE = "Covid-19ဆိုင်ရာ";
+  static const String LOCK_DOWN_AREA_CONTRIBUTE = "လော့ဒေါင်းဧရိယာများ";
 
   static const String FIX_ROAD_ICON = "fix_road_nocircle";
   static const String GARBAGE_ICON = "cleaning_nocircle";
@@ -377,6 +389,9 @@ class MyString{
   static const String TRAFFIC_ICON = "traffic_nocircle";
   static const String CRIME_ICON = "criminal_nocircle";
   static const String OTHER_ICON= "other_nocircle";
+  static const String ROAD_HOLE_ICON= "road_hole";
+  static const String COVID_19_ICON= "covid";
+  static const String LOCK_DOWN_ICON= "lockdown";
 
 
   static const double PHOTO_MAX_WIDTH= 1024;
@@ -524,9 +539,9 @@ class MyStringList{
     'အများပိုင်နေရာ',
     'မော်တော်ယာဉ်ဆိုင်ရာ',
     'အခြား',
-    'လမ်းအပေါက်များ၊ချိုင့်များ (pothole)',
-    'လော့ဒေါင်းဧရိယာများ (lockdown)',
-    'Covid -19 နှင့်သက်ဆိုင်သော (covid)'
+    'လမ်းအပေါက်၊ချိုင့်များ',
+    'Covid-19ဆိုင်ရာ',
+    'လော့ဒေါင်းဧရိယာများ'
   ];
 
   static const List<String> content_type_list = [

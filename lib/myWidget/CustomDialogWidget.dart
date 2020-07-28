@@ -618,7 +618,7 @@ class CustomDialogWidget {
                         height: 25.0,),
                     ),
                     Text(generalText,
-                      style: TextStyle(fontSize: FontSize.textSizeSmall,
+                      style: TextStyle(fontSize: FontSize.textSizeExtraSmall,
                           color: MyColor.colorTextBlack),)
                   ],
                 ),
@@ -638,7 +638,7 @@ class CustomDialogWidget {
                         height: 25.0,),
                     ),
                     Text(blockText,
-                      style: TextStyle(fontSize: FontSize.textSizeSmall,
+                      style: TextStyle(fontSize: FontSize.textSizeExtraSmall,
                           color: MyColor.colorTextBlack),)
                   ],
                 ),
@@ -681,7 +681,7 @@ class CustomDialogWidget {
                       height: 25.0,),
                   ),
                   Text(generalText,
-                    style: TextStyle(fontSize: FontSize.textSizeSmall,
+                    style: TextStyle(fontSize: FontSize.textSizeExtraSmall,
                         color: MyColor.colorTextBlack),)
                 ],
               ),
@@ -700,7 +700,7 @@ class CustomDialogWidget {
                       height: 25.0,),
                   ),
                   Text(blockText,
-                    style: TextStyle(fontSize: FontSize.textSizeSmall,
+                    style: TextStyle(fontSize: FontSize.textSizeExtraSmall,
                         color: MyColor.colorTextBlack),)
                 ],
               ),

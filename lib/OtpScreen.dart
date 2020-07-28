@@ -278,16 +278,21 @@ class _OtpScreenState extends State<OtpScreen> {
                                   children: <Widget>[
                                     Container(
                                         margin: EdgeInsets.only(right: PlatformHelper.isAndroid()? 20 : 0),
-                                        child: Text(_isExpire?MyString.txt_get_otp:MyString.txt_login,style: TextStyle(color: Colors.white),)),
+                                        child: Text(_isExpire?MyString.txt_get_otp:MyString.txt_login,
+                                          style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeSmall),
+                                        )
+                                    ),
                                     PlatformHelper.isAndroid()?_showLoading?ButtonLoadingIndicatorWidget():Image.asset('images/get_otp.png', width: 25, height: 25,) :
                                     Container()
                                   ],
                                 ),
                                 color: MyColor.colorPrimary,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),),
+                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0),),
+                                borderRadius: BorderRadius.circular(8),
+                              ),
                             ),
                             _isExpire? Container() :
-                            Text('OTP expire in - $_minute : $_sec min', style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)
+                            Text('OTP will expire in - $_minute : $_sec min', style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorPrimary),)
                           ],
                         ),
                       ),
@@ -297,7 +302,8 @@ class _OtpScreenState extends State<OtpScreen> {
                     padding: EdgeInsets.only(bottom: 20.0),
                     child: Align(
                         alignment: Alignment.bottomCenter,
-                        child: Text(_appVersion, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextGrey),)),
+                        child: Text(_appVersion, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextGrey),)
+                    ),
                   ),
                 ],
               ),

@@ -121,9 +121,9 @@ class _FormListScreenState extends State<FormListScreen> with AutomaticKeepAlive
       child: ListTile(
         contentPadding: EdgeInsets.only(left: 20, right: 20, top: 15, bottom: 15),
         leading: Image.asset("images/form.png", width: 30.0, height: 30.0,),
-        title: Container(
-            margin: EdgeInsets.only(bottom: 10),
-            child: Text(_formName, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorBlackSemiTransparent), maxLines: 2,overflow: TextOverflow.ellipsis,)),
+        title: Text(_formName,
+          style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorBlackSemiTransparent), maxLines: 2,
+          overflow: TextOverflow.ellipsis,),
         onTap: (){
           NavigatorHelper.myNavigatorPush(context, FormWebViewScreen(_formURL, _uniquekey), ScreenName.FORM_SCREEN);
         },
