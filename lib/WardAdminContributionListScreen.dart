@@ -156,6 +156,7 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
 
   Widget _listView(){
     return ListView.builder(
+        padding: EdgeInsets.only(top: 20),
         itemCount: _contributionModelList.length,
         itemBuilder: (context, index){
           return _contributionListWidget(index);
@@ -197,6 +198,18 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
         break;
       case MyString.OTHER_CONTRIBUTE:
         icon = MyString.OTHER_ICON;
+        break;
+      case MyString.ROAD_HOLD_CONTRIBUTE:
+        icon = MyString.ROAD_HOLE_ICON;
+        break;
+      case MyString.COVID_19_CONTRIBUTE:
+        icon = MyString.COVID_19_ICON;
+        break;
+      case MyString.LOCK_DOWN_AREA_CONTRIBUTE:
+        icon = MyString.LOCK_DOWN_ICON;
+        break;
+      default:
+        icon = 'suggestion';
         break;
     }
     return icon;

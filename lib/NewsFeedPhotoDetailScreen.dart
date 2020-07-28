@@ -7,7 +7,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:myotaw/model/NewsFeedPhotoModel.dart';
-import 'package:myotaw/model/NewsFeedViewModel.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:photo_view/photo_view.dart';
@@ -72,7 +71,7 @@ class NewsFeedPhotoDetailScreen extends StatelessWidget {
 
   _startDownload()async{
     try{
-      final _directoryPath = PlatformHelper.isAndroid()? Directory('/storage/emulated/0/') : await getApplicationDocumentsDirectory();
+      final _directoryPath = Directory('/storage/emulated/0/');
 
       _localPath = _directoryPath.path + 'Myotaw download';
       final dir = Directory(_localPath);

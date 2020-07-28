@@ -108,14 +108,18 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
               title: MyString.txt_myotaw_channel_chooser,
               generalText: MyString.txt_myotaw_channel_general,
               blockText: MyString.txt_myotaw_channel_blocklevel,
-              onPressGeneral: (){
+              onPressGeneral: ()async{
+                await _sharepreferenceshelper.initSharePref();
+                await _userDb.openUserDb();
+                UserModel userModel = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
+                _userDb.closeUserDb();
                 Navigator.of(context).pop();
-                NavigatorHelper.myNavigatorPush(context, isHly?NewsFeedScreen(channelType: MyString.NEWS_FEED_CHANNEL_TYPE_GENERAL) : MainScreen(channelType: MyString.NEWS_FEED_CHANNEL_TYPE_GENERAL), ScreenName.MYOTAW_CHANNEL);
+                NavigatorHelper.myNavigatorPush(context, isHly?NewsFeedScreen(channelType: userModel.memberType) : MainScreen(channelType: userModel.memberType), ScreenName.MYOTAW_CHANNEL);
               },
-              onPressBlockLevel: (){
+              onPressBlockLevel: ()async{
               Navigator.of(context).pop();
               NavigatorHelper.myNavigatorPush(context, isHly?NewsFeedScreen(channelType: MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK) : MainScreen(channelType: MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK), ScreenName.MYOTAW_CHANNEL);
-            }
+              }
             );
             break;
           case MyString.txt_flood_level:
@@ -145,7 +149,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             Flexible(
               flex: 1,
               child: Text(_list[i].title,textAlign: TextAlign.center,
-                style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack,),),
+                style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),),
             ),
           ],),
       ),
@@ -160,10 +164,8 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
                 delegate: SliverChildBuilderDelegate((context, index){
                   return _widget(context, index);
                 },childCount: _list.length),
-                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                    maxCrossAxisExtent: 200.0,
-                    crossAxisSpacing: 0.0,
-                    mainAxisSpacing: 0
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2,
                 ))
           ],
         )

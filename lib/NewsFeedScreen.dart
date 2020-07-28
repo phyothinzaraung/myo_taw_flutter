@@ -12,6 +12,7 @@ import 'package:myotaw/model/NewsFeedModel.dart';
 import 'package:myotaw/model/NewsFeedViewModel.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/NativePullRefresh.dart';
+import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'package:notifier/main_notifier.dart';
 import 'helper/PlatformHelper.dart';
 import 'helper/ServiceHelper.dart';
@@ -27,6 +28,7 @@ import 'Database/SaveNewsFeedDb.dart';
 import 'model/SaveNewsFeedModel.dart';
 import 'ProfileScreen.dart';
 import 'Database/UserDb.dart';
+import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/DropDownWidget.dart';
 import 'myWidget/EmptyViewWidget.dart';
 import 'myWidget/IosPickerWidget.dart';
@@ -61,7 +63,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   String _dropDownContentType = MyString.txt_to_choose, _keyWord = '';
   List<String> _contentTypeList = List();
   int _searchContentTypePickerIndex = 0;
-  var _fromDate ='', _toDate ='';
+  var _fromDate ='', _toDate ='', _memeberTypeTitle = '';
 
   final Map<int, Widget> _cupertinoSliderChildren = const <int, Widget>{
     0: Text(MyString.txt_search_text, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
@@ -177,7 +179,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
-    var _newsFeedType = widget.channelType??MyString.NEWS_FEED_CHANNEL_TYPE_GENERAL;
     if(_userModel.isWardAdmin){
       response = await ServiceHelper().getNewsFeedForWardAdmin(MyoTawCitySetUpHelper.getNewsFeedCityId(_sharepreferenceshelper.getRegionCode()),p,pageCount,_userUniqueKey,
           _keyWord, widget.channelType, _userModel.wardName);
@@ -238,7 +239,24 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     _profilePhoto = _userModel.photoUrl!=null?
     new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl) :
     AssetImage('images/profile_placeholder.png');
-    _city = _userModel.isWardAdmin?MyoTawCitySetUpHelper.getCity(_userModel.currentRegionCode)+' '+'(Ward admin)' : MyoTawCitySetUpHelper.getCity(_userModel.currentRegionCode);
+    _city = MyoTawCitySetUpHelper.getCity(_userModel.currentRegionCode);
+    _memeberTypeTitle = _memberType().isNotEmpty? '(${_memberType()})' : '';
+  }
+
+  String _memberType(){
+    var _title = '';
+    switch(_userModel.memberType){
+      case MyString.MEMBER_TYPE_WARD_ADMIN:
+        _title = MyString.MEMBER_TYPE_WARD_ADMIN_TITLE;
+        break;
+      case MyString.MEMBER_TYPE_WARD_MP:
+        _title = MyString.MEMBER_TYPE_WARD_MP_TITLE;
+        break;
+      case MyString.MEMBER_TYPE_WARD_MUNICIPAL:
+        _title = MyString.MEMBER_TYPE_WARD_MUNICIPAL_TITLE;
+        break;
+    }
+    return _title;
   }
 
   String _newsfeedContentTypeIcon(String type){
@@ -487,7 +505,17 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,color: Colors.black,size: 30,),
                     ),
                   ) : Container() : Container(),
-                  Text(_city??'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                 // Text(_city??'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal)),
+                  RichText(text: TextSpan(
+                    text: _city,
+                    style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge),
+                    children: [
+                      TextSpan(
+                        text: _memeberTypeTitle,
+                        style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraSmall),
+                      ),
+                    ]
+                  )),
                   Text(MyString.txt_newsfeed, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
                 ],
               ),
@@ -632,29 +660,37 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             ),
             child: _isSearchDateSelect? GestureDetector(
               onTap: ()async{
-                /*List dateTime = await DateRangePicker.showDatePicker(
+                if(PlatformHelper.isAndroid()){
+                  List dateTime = await DateRangePicker.showDatePicker(
                   context: context,
                   initialFirstDate: DateTime.now(),
                   initialLastDate: DateTime.now().add(Duration(days: 7)),
                   firstDate: DateTime(2019),
                   lastDate: DateTime(2025),
                 );
-
-                if (dateTime != null) {
-                  _fromDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime[0].toString());
-                  _toDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime[1].toString());
-                  setState(() {
-                    _fromDateToDate = '${_fromDate}  မှ  ${_toDate}  အထိ';
-                    _keyWord = _fromDate+','+_toDate;
-                  });
-                  _handleRefresh();
-                  print('dateformat: $_keyWord');
-                }*/
-
-                DatePicker.showDatePicker(context,
+                  if(dateTime != null){
+                    if (dateTime.length == 2) {
+                      _fromDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime[0].toString());
+                      _toDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime[1].toString());
+                      setState(() {
+                        _fromDateToDate = '${_fromDate}  မှ  ${_toDate}  အထိ';
+                        _keyWord = _fromDate+','+_toDate;
+                      });
+                      _handleRefresh();
+                      print('dateformat: $_keyWord');
+                    }/*else{
+                      WarningSnackBar(_globalKey, MyString.txt_need_from_date_to_date);
+                    }*/
+                  }
+                }else{
+                  _fromDateCupertinoCalendarPicker();
+                  /*DatePicker.showDatePicker(context,
                     pickerTheme: DateTimePickerTheme(
                       confirm: Text(MyString.txt_confirm, style: TextStyle(color: Colors.blue),),
                       cancel: Text(MyString.txt_close, style: TextStyle(color: Colors.red),),
+                      title: Text('title', style: TextStyle(color: Colors.red),),
+                      showTitle: true,
+                      titleHeight: 70
                     ),
                     minDateTime: DateTime(2019),
                     maxDateTime: DateTime(2025),
@@ -680,8 +716,8 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                           );
                         });
                     }
-                );
-
+                );*/
+                }
               },
               child: Container(
                   margin: EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
@@ -693,13 +729,15 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                           onTap: (){
                             setState(() {
                               _fromDateToDate = MyString.txt_to_choose_date;
+                              _keyWord = '';
+                              _fromDate = '';
+                              _toDate = '';
+                              _searchEditingController.clear();
                             });
-                            _keyWord = '';
-                            _searchEditingController.clear();
                             //FocusScope.of(context).requestFocus(FocusNode());
                             _handleRefresh();
                           },
-                          child: Icon(PlatformHelper.isAndroid()? Icons.refresh : CupertinoIcons.refresh, color: Colors.black,size: 25,)
+                          child: Icon(PlatformHelper.isAndroid()? Icons.refresh : CupertinoIcons.refresh, color: Colors.black,size: PlatformHelper.isAndroid()? 23 : 25,)
                       )
                     ],
                   )),
@@ -727,7 +765,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                           },
                           child: Container(
                               margin: EdgeInsets.only(right: 10),
-                              child: Icon(PlatformHelper.isAndroid()? Icons.search : CupertinoIcons.search, color: Colors.black,size: 25,)
+                              child: Icon(PlatformHelper.isAndroid()? Icons.search : CupertinoIcons.search, color: Colors.black,size: PlatformHelper.isAndroid()? 23 : 25,)
                           )
                       ),
                       GestureDetector(
@@ -741,7 +779,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                           },
                           child: Container(
                               margin: EdgeInsets.only(right: 15),
-                              child: Icon(PlatformHelper.isAndroid()? Icons.refresh : CupertinoIcons.refresh, color: Colors.black,size: 25,)
+                              child: Icon(PlatformHelper.isAndroid()? Icons.refresh : CupertinoIcons.refresh, color: Colors.black,size: PlatformHelper.isAndroid()? 23 : 25,)
                           )
                       ),
                     ],
@@ -759,57 +797,144 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               cursorColor: MyColor.colorPrimary,
             ),
           )
-          /*GestureDetector(
-            child: Container(
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10),
-                  color: Colors.white,
-                  boxShadow: [
-                    BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset(0, 0.5),
-                        blurRadius: 3
-                    )
-                  ]
-              ),
-              margin: EdgeInsets.only(top: 10),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(right: 10, left: 10),
-                      height: 50,
-                      child: Container(
-                          margin: EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
-                          child: Text(_fromDate)
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    child: Container(
-                      alignment: Alignment.center,
-                      margin: EdgeInsets.only(left: 10, right: 10),
-                      height: 50,
-                      child: Container(
-                          margin: EdgeInsets.only(left: 15, right: 15, top: 11, bottom: 11),
-                          child: Text(_toDate)
-                      ),
-                    ),
-                  ),
-                  Icon(CupertinoIcons.search, size: 25, color: Colors.black,),
-                  Container(
-                      margin: EdgeInsets.only(right: 10, left: 5),
-                      child: Icon(CupertinoIcons.refresh, size: 25, color: Colors.black,)
-                  ),
-
-                ],
-              ),
-            ),
-          ),*/
         ),
       ],
+    );
+  }
+
+  Future _fromDateCupertinoCalendarPicker(){
+    return showCupertinoModalPopup(
+        context: context,
+        builder: (context){
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    CustomButtonWidget(onPress: (){
+                      Navigator.pop(context);
+                      setState(() {
+                        _fromDate = '';
+                        _toDate = '';
+                        _keyWord = '';
+                        _fromDateToDate = MyString.txt_to_choose_date;
+                      });
+                    }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.red),),
+                      color: Colors.white,
+                      isFlatButton: true,
+                    ),
+                    Text(MyString.txt_need_from_date,
+                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                    ),
+                    CustomButtonWidget(onPress: (){
+                      setState(() {
+                        _fromDate = _fromDate.isNotEmpty? _fromDate : ShowDateTimeHelper.formatDateTimeForSearch(DateTime.now().toString());
+                      });
+                      print('fromDate : $_fromDate');
+                      Navigator.pop(context);
+                      Future.delayed(Duration(milliseconds: 250),(){
+                        _toDateCupertinoCalendarPicker();
+                      });
+                    },
+                      child: Text(MyString.txt_confirm,style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.blue)),
+                      color: Colors.white,
+                      isFlatButton: true,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 250,
+                child: CupertinoDatePicker(
+                  onDateTimeChanged: (dateTime){
+                    _fromDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime.toString());
+                  },
+                  mode: CupertinoDatePickerMode.date,
+                  initialDateTime: DateTime.now(),
+                  minimumDate: DateTime(2019),
+                  maximumDate: DateTime(2025),
+                  minimumYear: 2019,
+                  maximumYear: 2025,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+            ],
+          );
+        }
+    );
+  }
+  Future _toDateCupertinoCalendarPicker(){
+    return showCupertinoModalPopup(
+        context: context,
+        builder: (context){
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              Container(
+                color: Colors.white,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    CustomButtonWidget(onPress: (){
+                      Navigator.pop(context);
+                      setState(() {
+                        _fromDate = '';
+                        _toDate = '';
+                        _keyWord = '';
+                        _fromDateToDate = MyString.txt_to_choose_date;
+                      });
+                    }, child: Text(MyString.txt_close, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.red),),
+                      color: Colors.white,
+                      isFlatButton: true,
+                    ),
+                    Text(MyString.txt_need_to_date,
+                      style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
+                    ),
+                    CustomButtonWidget(onPress: (){
+                      print('fromDate : $_fromDate / todate: $_toDate');
+                      if(_fromDate.isNotEmpty && _toDate.isNotEmpty){
+                        setState(() {
+                          _fromDateToDate = '${_fromDate}  မှ  ${_toDate}  အထိ';
+                          _keyWord = _fromDate+','+_toDate;
+                        });
+                        Navigator.pop(context);
+                        //print('ios date picker : $_keyWord');
+                        _handleRefresh();
+                      }
+                    },
+                      child: Text(MyString.txt_confirm,style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.blue)),
+                      color: Colors.white,
+                      isFlatButton: true,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: 250,
+                child: CupertinoDatePicker(
+                  onDateTimeChanged: (dateTime){
+                    if(_fromDate.isEmpty){
+                      _fromDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime.toString());
+                    }else{
+                      _toDate =ShowDateTimeHelper.formatDateTimeForSearch(dateTime.toString());
+                    }
+
+                  },
+                  mode: CupertinoDatePickerMode.date,
+                  initialDateTime: DateTime.now(),
+                  minimumDate: DateTime(2019),
+                  maximumDate: DateTime(2025),
+                  minimumYear: 2019,
+                  maximumYear: 2025,
+                  backgroundColor: Colors.white,
+                ),
+              ),
+            ],
+          );
+        }
     );
   }
 
@@ -858,7 +983,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   _dropDownContentType = MyString.txt_to_choose;
                 });
               },
-              child: Icon(Icons.refresh, color: Colors.black,size: 20,)
+              child: Icon(Icons.refresh, color: Colors.black,size: 23,)
           ),
 
         ],
@@ -887,6 +1012,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
               children: _searchContentTypeWidgetList,
             ),
           ),
+
           GestureDetector(
               onTap: (){
                 _searchEditingController.clear();
@@ -898,7 +1024,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   _searchContentTypePickerIndex = 0;
                 });
               },
-              child: Icon(PlatformHelper.isAndroid()? Icons.refresh : CupertinoIcons.refresh, color: Colors.black,size: 25,)
+              child: Icon(CupertinoIcons.refresh, color: Colors.black,size: 25,)
           ),
         ],
       )

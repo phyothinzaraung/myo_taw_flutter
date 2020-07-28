@@ -1,11 +1,9 @@
-import 'dart:io';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/LoginScreen.dart';
 import 'package:myotaw/PhotoDetailScreen.dart';
-import 'package:myotaw/database/NotificationDb.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/myWidget/CustomDialogWidget.dart';
@@ -25,7 +23,6 @@ import 'Database/SaveNewsFeedDb.dart';
 import 'package:async_loader/async_loader.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:connectivity/connectivity.dart';
-import 'helper/MyLoadMore.dart';
 import 'model/TaxRecordModel.dart';
 import 'helper/ShowDateTimeHelper.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
@@ -66,9 +63,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
   }
 
   _getAllTaxRecord(int p)async{
-    _profilePhoto = _userModel.photoUrl!=null?
-    new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl) :
-    AssetImage('images/profile_placeholder.png');
     response = await ServiceHelper().getAllTaxRecord(p, pageCount, _userModel.currentRegionCode, _userModel.uniqueKey);
     var result = response.data['Results'];
     //var result = [];
@@ -107,7 +101,15 @@ class _ProfileScreenState extends State<ProfileScreen> {
     setState(() {
       _userModel = model;
     });
-    await _getAllTaxRecord(page);
+    _profilePhoto = _userModel.photoUrl!=null?
+    new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl) :
+    AssetImage('images/profile_placeholder.png');
+    if(_userModel != null){
+      if(_userModel.currentRegionCode != MyString.HLY_REGION_CODE){
+        await _getAllTaxRecord(page);
+      }
+    }
+
   }
 
   _checkCon()async{
@@ -318,7 +320,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     Divider(color: MyColor.colorPrimary,),
-                    GestureDetector(
+                    _userModel != null?
+                    _userModel.currentRegionCode != MyString.HLY_REGION_CODE?GestureDetector(
                       onTap: (){
 
                         NavigatorHelper.myNavigatorPush(context, ApplyBizLicenseListScreen(), ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN);
@@ -331,8 +334,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ],
                         ),
                       ),
-                    ),
-                    Divider(color: MyColor.colorPrimary,),
+                    ) : Container() : Container(),
+                    _userModel !=null?
+                    _userModel.currentRegionCode != MyString.HLY_REGION_CODE?Divider(color: MyColor.colorPrimary,) : Container() : Container(),
                     GestureDetector(
                       onTap: (){
                         //_dialogLogOut();
@@ -366,7 +370,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-        Container(
+        /*Container(
           margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
           child: Column(
             children: <Widget>[
@@ -394,7 +398,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               )
             ],
           ),
-        ),
+        ),*/
       ],
     );
   }
@@ -477,7 +481,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         renderError: ([error]) => getNoConnectionWidget(),
         renderSuccess: ({data}) => NativePullRefresh(
           onRefresh: _handleRefresh,
-          child: _taxRecordModelList.isNotEmpty?
+          child: _userModel.currentRegionCode != MyString.HLY_REGION_CODE?_taxRecordModelList.isNotEmpty?
           CustomScrollView(
             slivers: <Widget>[
               SliverList(delegate: SliverChildBuilderDelegate((context, i){
@@ -487,7 +491,17 @@ class _ProfileScreenState extends State<ProfileScreen> {
                 return _taxRecordList(_taxRecordModelList[i], animation, i);
               }, initialItemCount: _taxRecordModelList.length,key: _animatedListKey,)
             ],
-          ) : ListView(children: <Widget>[_headerProfile(), emptyView(asyncLoaderState, MyString.txt_no_data)],)
+          ) : ListView(children: <Widget>[_headerProfile(), emptyView(asyncLoaderState, MyString.txt_no_data)],) :
+          CustomScrollView(
+            slivers: <Widget>[
+              SliverList(delegate: SliverChildBuilderDelegate((context, i){
+                return _headerProfile();
+              }, childCount: 1)),
+              /*SliverAnimatedList(itemBuilder: (context, i, animation){
+                return _taxRecordList(_taxRecordModelList[i], animation, i);
+              }, initialItemCount: _taxRecordModelList.length,key: _animatedListKey,)*/
+            ],
+          )
         )
     );
     return CustomScaffoldWidget(

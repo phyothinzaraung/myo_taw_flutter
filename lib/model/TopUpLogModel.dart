@@ -62,9 +62,9 @@ class TopUpLogModel {
     _phoneNo = json['PhoneNo'];
     _prepaidCode = json['PrepaidCode'];
     _date = json['Date'];
-    _amount = json['Amount'];
-    _leftAmount = json['LeftAmount'];
-    _totalAmount = json['TotalAmount'];
+    _amount = json['Amount']??0;
+    _leftAmount = json['LeftAmount']??0;
+    _totalAmount = json['TotalAmount']??0;
   }
 
   Map<String, dynamic> toJson() {
