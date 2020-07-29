@@ -37,12 +37,7 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
     // TODO: implement initState
     super.initState();
     //_initDownload();
-    _videoPlayerController = VideoPlayerController.network(BaseUrl.NEWS_FEED_CONTENT_URL+_videoUrl)
-    ..initialize().then((_){
-        setState(() {
-          _isDownloadReady = true;
-        });
-    });
+    _videoPlayerController = VideoPlayerController.network(BaseUrl.NEWS_FEED_CONTENT_URL+_videoUrl);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       autoPlay: true,
@@ -57,6 +52,7 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
       }
     );
     //_initDownload();
+
   }
 
   _initDownload(){
@@ -121,12 +117,6 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
           _startDownload();
         }) : Container()
       ],
-      trailing: GestureDetector(
-          onTap: (){
-            _startDownload();
-          },
-          child: Icon(Icons.cloud_download, size: 30,)
-      ),
       body: Container(
         color: Colors.black,
         child: Center(

@@ -1,7 +1,6 @@
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
-
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -386,7 +385,9 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
           PrimaryColorSnackBarWidget(_globalKey, MyString.txt_already_download);
         }
       }else {
-        NavigatorHelper.myNavigatorPush(context, NewsFeedWebViewScreen(BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType)), ScreenName.NEWS_FEED_WEBVIEW_SCREEN);
+          NavigatorHelper.myNavigatorPush(context, NewsFeedWebViewScreen(
+              BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType)),
+              ScreenName.NEWS_FEED_WEBVIEW_SCREEN);
       }
     }catch(e){
       WarningSnackBar(_globalKey, 'download fail');
@@ -424,7 +425,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         onTap: (){
           _startDownload();
         },
-          child: Icon(Icons.cloud_download, size: 30,)
+          child: Icon(Icons.open_in_browser, size: 30,)
       ) : Container(width: 0, height: 0,),
     );
   }
