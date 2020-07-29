@@ -94,7 +94,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
     });
   }
 
-  String _buildingGrade(){
+  /*String _buildingGrade(){
     if(_dropDownBuildingType == "တိုက်" || _dropDownBuildingType == "RC" || _dropDownBuildingType == "Steel structure"){
       return MyString.BUILDING_GRADE_A;
     }else if(_dropDownBuildingType == "နံကပ်"){
@@ -104,7 +104,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
     }else {
       return MyString.BUILDING_GRADE_C;
     }
-  }
+  }*/
 
   int _roadType(){
     if(_dropDownRoad == "လမ်းမကြီး"){
@@ -195,7 +195,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                           style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
                       ),
                       Container(
-                        margin: EdgeInsets.only(right: 10.0, bottom: 20),
+                        margin: EdgeInsets.only( bottom: 20),
                         padding: EdgeInsets.only(left: 10.0, right: 10.0),
                         decoration: BoxDecoration(
                             borderRadius: BorderRadius.circular(7.0),
@@ -365,9 +365,32 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                                       child: Text(MyString.txt_unit_feet, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),))
                                 ],
                               ),
-                            )
+                            ),
                           ],
                         ),
+                      ),
+                      /*Container(
+                        margin: EdgeInsets.only(bottom: 10),
+                        child: Divider(
+                          color: MyColor.colorPrimary,
+                        ),
+                      ),*/
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Text(MyString.BUILDING_GRADE_A_HINT,
+                            style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack, fontWeight: FontWeight.bold),
+                          ),
+                          Text(MyString.BUILDING_GRADE_B_HINT,
+                            style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack, fontWeight: FontWeight.bold),
+                          ),
+                          Text(MyString.BUILDING_GRADE_C_HINT,
+                            style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack, fontWeight: FontWeight.bold),
+                          ),
+                          Text(MyString.GOV_BUILDING,
+                            style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack, fontWeight: FontWeight.bold),
+                          ),
+                        ],
                       ),
                       Container(
                         margin: EdgeInsets.only(top: 40.0),
@@ -382,7 +405,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                                 context: context,
                                 titleTax: MyString.txt_biz_tax_property,
                                 taxValue: TgyPropertyTax.getArv(
-                                  buildingGrade: _buildingGrade(),
+                                  buildingGrade: _dropDownBuildingType,
                                   roadType: _roadType(),
                                   zone: _zone(),
                                   length: _lengthContorller.text,

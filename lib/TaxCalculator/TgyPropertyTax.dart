@@ -59,7 +59,7 @@ class TgyPropertyTax{
       finalArv = arv.round() - lastTwoDigit;
     }
     buildingGrade == MyString.GOV_BUILDING? tax = 0.04 : tax = 0.02;
-    print('rentalRate : ${rentalRate} : $tax');
+    print('rentalRate : ${rentalRate} , tax : $tax, buildingValue : $buildingValue');
     var _finalValue = (finalArv * tax + finalArv * tax).round();
     _finalValue < 1000 ? _finalValue = 1000 : _finalValue = _finalValue;
 

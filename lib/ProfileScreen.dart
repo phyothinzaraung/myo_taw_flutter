@@ -370,7 +370,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-        /*Container(
+        _userModel != null? _userModel.currentRegionCode != MyString.HLY_REGION_CODE? Container(
           margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
           child: Column(
             children: <Widget>[
@@ -398,7 +398,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               )
             ],
           ),
-        ),*/
+        ) : Container() : Container(),
       ],
     );
   }

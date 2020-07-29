@@ -75,7 +75,7 @@ class MyString{
   static const String MLM_REGION_CODE = "MLM";
   static const String LKW_REGION_CODE = "LKW";
   static const String MGY_REGION_CODE = "MGY";
-  static const String HLY_REGION_CODE = "HLY";
+  static const String HLY_REGION_CODE = "HTY";
 
   static const String txt_welcome = "မြို့တော်မှ ကြိုဆိုပါ၏။";
 
@@ -202,7 +202,7 @@ class MyString{
   static const String title_property_tax_calculate = "ပစ္စည်းခွန် တွက်ချက်ရန်အတွက်";
   static const String title_biz_tax_calculate = "လုပ်ငန်းလိုင်စင်ခွန် တွက်ချက်ရန်အတွက်";
   static const String txt_biz_tax = "လုပ်ငန်းလိုင်စင်ခွန်";
-  static const String txt_building_type = "အဆောက်အဦးအမျိုးအစား";
+  static const String txt_building_type = "အဆောက်အဦအမျိုးအစား";
   static const String txt_story = "အထပ်အရေအတွက်";
   static const String txt_road = "လမ်းဥပစာ";
   static const String txt_blockNo = "ရပ်ကွက်";
@@ -213,7 +213,7 @@ class MyString{
   static const String txt_thanks = "အခွန်ပေးဆောင်မှုအတွက် \n ကျေးဇူးတင်ပါသည်။";
   static const String txt_choose_biz_license_type = "လိုင်စင်အမျိုးအစားရွေးပါ";
   static const String txt_license_type = "လိုင်စင်အမျိုးအစား";
-  static const String txt_site_area = "အဆောက်အဦး (အလျား × အနံ)";
+  static const String txt_site_area = "အဆောက်အဦ (အလျား × အနံ)";
   static const String txt_grade = "အတန်းအစား";
   static const String title_smart_water_meter = "Smart ရေမီတာအတွက် \n အခွန်ဆောင်ခြင်း";
   static const String txt_smart_water_meter = "Smart ရေမီတာအတွက် အခွန်ဆောင်ခြင်း";
@@ -244,7 +244,7 @@ class MyString{
   static const String txt_save_newsFeed_success = "သိမ်းဆည်းပြီး။";
   static const String txt_check_internet= "ကွန်နက်ရှင်ကိုစစ်ဆေးပါ။";
   static const String txt_need_apply_biz_photo_name= "ဓာတ်ပုံအမည် ရေးပေးပါ။";
-  static const String txt_choose_building_type= "အဆောက်အဦး အမျိုးအစားရွေးပေးပါ။";
+  static const String txt_choose_building_type= "အဆောက်အဦ အမျိုးအစားရွေးပေးပါ။";
   static const String txt_choose_story= "အထပ် အရေအတွက်ရွေးပေးပါ။";
   static const String txt_choose_blockNo= "ရပ်ကွက် အမျိုးအစားရွေးပေးပါ။";
   static const String txt_type_length= "အလျား လိုအပ်သည်။";
@@ -266,7 +266,7 @@ class MyString{
   static const String txt_contributions = "အကြံပြုစာများ";
   static const String txt_profile_complete = "ကိုယ်ရေးအချက်အလက်ဖြည့်သွင်းမှု အောင်မြင်သည်။";
   static const String txt_empty_contribution = "အကြံပြုစာများ မရှိသေးပါ။";
-  static const String txt_to_contribute = "အကြုံပြုမည်";
+  static const String txt_to_contribute = "အကြံပြုမည်";
   static const String txt_contribute_fact = "အကြံပြုချက်";
   static const String txt_send_contribution = "အကြံပြုစာပို့မည်";
   static const String txt_ward_admin_feature = "ပူးပေါင်းပါဝင်မှုကဏ္ဍ";
@@ -351,10 +351,14 @@ class MyString{
   static const String MEMBER_TYPE_WARD_MUNICIPAL_TITLE = 'စည်ပင်';
 
 
-  static const String BUILDING_GRADE_A = "building grade A";
-  static const String BUILDING_GRADE_B = "building grade B";
-  static const String BUILDING_GRADE_C = "building grade C";
-  static const String GOV_BUILDING = "gov";
+  static const String BUILDING_GRADE_A = "အမျိုးအစား (က)";
+  static const String BUILDING_GRADE_B = "အမျိုးအစား (ခ)";
+  static const String BUILDING_GRADE_C = "အမျိုးအစား (ဂ)";
+  static const String GOV_BUILDING = "အစိုးရအဆောက်အဦများ";
+
+  static const String BUILDING_GRADE_A_HINT = "အမျိုးအစား (က) = တိုက်နှင့် Steel Structure";
+  static const String BUILDING_GRADE_B_HINT = "အမျိုးအစား (ခ) = နံကပ်";
+  static const String BUILDING_GRADE_C_HINT = "အမျိုးအစား (ဂ) = သစ်၊ ပျဉ်၊ ဝါး၊ ဓနိ";
 
 
   static const String NEWS_FEED_CONTENT_TYPE_AUDIO= "Audio";
@@ -462,7 +466,7 @@ class MyStringList{
     '(၂)ယောက်ခန်းတစ်ခန်းလျှင်',
     'မိသားစုတစ်ခန်းလျှင်'];
 
-  static const List<String> property_tgy_building_type = [
+  /*static const List<String> property_tgy_building_type = [
     'သက်ကယ်မိုးထရံကာ',
     'သွပ်မိုးထရံကာ',
     'ပျဉ်',
@@ -476,7 +480,13 @@ class MyStringList{
     'အုတ်ညှပ်',
     'RC',
     'Steel structure',
-    'အစိုးရအဆောက်အဦးများ'];
+    'အစိုးရအဆောက်အဦများ'];*/
+
+  static const List<String> property_tgy_building_type = [
+    'အမျိုးအစား (က)',
+    'အမျိုးအစား (ခ)',
+    'အမျိုးအစား (ဂ)',
+    'အစိုးရအဆောက်အဦများ'];
 
   static const List<String> property_old_tgy_building_type = [
     'သက်ကယ်မိုးထရံကာ',
@@ -545,7 +555,7 @@ class MyStringList{
   ];
 
   static const List<String> content_type_list = [
-    'ပုံ',
+    'ဓါတ်ပုံ',
     'ဗွီဒီယို',
     'အသံဖိုင်',
     'pdf'
@@ -859,6 +869,13 @@ class ClickEvent{
   static const String USER_LOG_OUT_CLICK_EVENT = 'User log out click event';
   static const String TAX_RECORD_DELETE_CLICK_EVENT = 'Tax record delete click event';
   static const String NEW_TAX_RECORD_UPLOAD_CLICK_EVENT = 'New tax record upload click event';
+  static const String UPDATE_USER_PROFILE_CLICK_EVENT = 'Update user profile click event';
+  /*static const String NEWS_FEED_SEARCH_TYPE_TEXT_CLICK_EVENT = 'News feed search type text click event';
+  static const String NEWS_FEED_SEARCH_TYPE_CONTENT_TYPE_CLICK_EVENT = 'News feed search type content type click event';
+  static const String NEWS_FEED_SEARCH_TYPE_DATE_CLICK_EVENT = 'News feed search type date click event';*/
+  static const String NEWS_FEED_TEXT_SEARCH_CLICK_EVENT = 'News feed text search click event';
+  static const String NEWS_FEED_CONTENT_TYPE_SEARCH_CLICK_EVENT = 'news feed content type search click event';
+  static const String NEWS_FEED_DATE_SEARCH_CLICK_EVENT = 'news feed date click event';
 
 
 

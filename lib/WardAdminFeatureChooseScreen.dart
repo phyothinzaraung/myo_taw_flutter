@@ -139,7 +139,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             //image dao
             //i!=0?Divider(thickness: 2, color: MyColor.colorPrimary,) : Container(),
             Flexible(
-              flex: 3,
+              flex: 2,
               child: Image.asset(_list[i].image,),
             ),
             SizedBox(
@@ -149,7 +149,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             Flexible(
               flex: 1,
               child: Text(_list[i].title,textAlign: TextAlign.center,
-                style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack,),),
+                style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack,),),
             ),
           ],),
       ),

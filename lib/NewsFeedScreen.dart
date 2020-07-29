@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:async_loader/async_loader.dart';
-import 'package:flutter_cupertino_date_picker/flutter_cupertino_date_picker.dart';
 import 'package:html/parser.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
@@ -12,7 +11,6 @@ import 'package:myotaw/model/NewsFeedModel.dart';
 import 'package:myotaw/model/NewsFeedViewModel.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/NativePullRefresh.dart';
-import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'package:notifier/main_notifier.dart';
 import 'helper/PlatformHelper.dart';
 import 'helper/ServiceHelper.dart';
@@ -181,11 +179,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   _getNewsFeed(int p) async{
     if(_userModel.isWardAdmin){
       response = await ServiceHelper().getNewsFeedForWardAdmin(MyoTawCitySetUpHelper.getNewsFeedCityId(_sharepreferenceshelper.getRegionCode()),p,pageCount,_userUniqueKey,
-          _keyWord, widget.channelType, _userModel.wardName);
+          _keyWord, widget.channelType != MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK? '' : widget.channelType, _userModel.wardName);
       print('channel type : ${widget.channelType}');
     }else{
       response = await ServiceHelper().getNewsFeed(MyoTawCitySetUpHelper.getNewsFeedCityId(_sharepreferenceshelper.getRegionCode()),p,pageCount,_userUniqueKey);
     }
+
+    print('newsfeed para : ${widget.channelType} : ${_userModel.wardName}');
 
     var result = response.data['Results'];
     //var result = [];
@@ -647,6 +647,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
           margin: EdgeInsets.only(top: 10),
           child: _isSearchContentTypeSelect? _contentTypeDropdown()
               : Container(
+            height: 50,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
@@ -678,45 +679,10 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       });
                       _handleRefresh();
                       print('dateformat: $_keyWord');
-                    }/*else{
-                      WarningSnackBar(_globalKey, MyString.txt_need_from_date_to_date);
-                    }*/
+                    }
                   }
                 }else{
                   _fromDateCupertinoCalendarPicker();
-                  /*DatePicker.showDatePicker(context,
-                    pickerTheme: DateTimePickerTheme(
-                      confirm: Text(MyString.txt_confirm, style: TextStyle(color: Colors.blue),),
-                      cancel: Text(MyString.txt_close, style: TextStyle(color: Colors.red),),
-                      title: Text('title', style: TextStyle(color: Colors.red),),
-                      showTitle: true,
-                      titleHeight: 70
-                    ),
-                    minDateTime: DateTime(2019),
-                    maxDateTime: DateTime(2025),
-                    initialDateTime: DateTime.now(),
-                    onConfirm: (dateTime1, List<int> date){
-                        print('datepicker : ${ShowDateTimeHelper.formatDateTimeForSearch(dateTime1.toIso8601String())}');
-                        //Navigator.pop(context);
-                        Future.delayed(Duration(milliseconds: 200),(){
-                          DatePicker.showDatePicker(context,
-                              minDateTime: DateTime(2019),
-                              maxDateTime: DateTime(2025),
-                              initialDateTime: DateTime.now(),
-                              onConfirm: (dateTime2, List<int> date){
-                                print('datepicker : ${ShowDateTimeHelper.formatDateTimeForSearch(dateTime2.toIso8601String())}');
-                                setState(() {
-                                  _fromDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime1.toIso8601String());
-                                  _toDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime2.toIso8601String());
-                                  _fromDateToDate = '${_fromDate}  မှ  ${_toDate}  အထိ';
-                                  _keyWord = _fromDate+','+_toDate;
-                                });
-                                _handleRefresh();
-                              }
-                          );
-                        });
-                    }
-                );*/
                 }
               },
               child: Container(
@@ -741,60 +707,69 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                       )
                     ],
                   )),
-            ) : TextField(
-              enabled: _isSearchTextFieldEnable,
-              controller: _searchEditingController,
-              style: TextStyle(fontSize: FontSize.textSizeExtraSmall,),
-              decoration: InputDecoration(
-                  border: InputBorder.none,
-                  hoverColor: Colors.red,
-                  filled: true,
-                  fillColor: Colors.transparent,
-                  hintText: MyString.txt_to_search,
-                  hintStyle: TextStyle(fontSize: FontSize.textSizeSmall),
-                  //prefixIcon: Icon(Icons.search, color: Colors.black,size: 20,),
-                  suffixIcon: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: <Widget>[
-                      GestureDetector(
-                          onTap: (){
-                            setState(() {
-                              _keyWord = _searchEditingController.text;
-                            });
-                            _handleRefresh();
-                          },
-                          child: Container(
-                              margin: EdgeInsets.only(right: 10),
-                              child: Icon(PlatformHelper.isAndroid()? Icons.search : CupertinoIcons.search, color: Colors.black,size: PlatformHelper.isAndroid()? 23 : 25,)
-                          )
-                      ),
-                      GestureDetector(
-                          onTap: (){
-                            _searchEditingController.clear();
-                            setState(() {
-                              _keyWord = '';
-                            });
-                            //FocusScope.of(context).requestFocus(FocusNode());
-                            _handleRefresh();
-                          },
-                          child: Container(
-                              margin: EdgeInsets.only(right: 15),
-                              child: Icon(PlatformHelper.isAndroid()? Icons.refresh : CupertinoIcons.refresh, color: Colors.black,size: PlatformHelper.isAndroid()? 23 : 25,)
-                          )
-                      ),
-                    ],
-                  )
-              ),
-              textInputAction: TextInputAction.search,
-              onSubmitted: (str){
-                print('keyword : ${str}');
-                //_searchEditingController.clear();
-                setState(() {
-                  _keyWord = _searchEditingController.text;
-                });
-                _handleRefresh();
-              },
-              cursorColor: MyColor.colorPrimary,
+            ) : Stack(
+              alignment: Alignment.center,
+              children: <Widget>[
+                TextField(
+                  enabled: _isSearchTextFieldEnable,
+                  controller: _searchEditingController,
+                  style: TextStyle(fontSize: FontSize.textSizeNormal,),
+                  textAlignVertical: TextAlignVertical.center,
+                  decoration: InputDecoration(
+                      border: InputBorder.none,
+                      hoverColor: Colors.red,
+                      filled: true,
+                      fillColor: Colors.transparent,
+                      hintText: MyString.txt_to_search,
+                      hintStyle: TextStyle(fontSize: FontSize.textSizeSmall,),
+                      //prefixIcon: Icon(Icons.search, color: Colors.black,size: 20,),
+                      suffixIcon: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: <Widget>[
+                          GestureDetector(
+                              onTap: (){
+                                setState(() {
+                                  _keyWord = _searchEditingController.text;
+                                });
+                                _handleRefresh();
+                                FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_TEXT_SEARCH_CLICK_EVENT, _userUniqueKey);
+
+                              },
+                              child: Container(
+                                  margin: EdgeInsets.only(right: 10),
+                                  child: Icon(PlatformHelper.isAndroid()? Icons.search : CupertinoIcons.search, color: Colors.black,size: PlatformHelper.isAndroid()? 23 : 25,)
+                              )
+                          ),
+                          GestureDetector(
+                              onTap: (){
+                                _searchEditingController.clear();
+                                setState(() {
+                                  _keyWord = '';
+                                });
+                                //FocusScope.of(context).requestFocus(FocusNode());
+                                _handleRefresh();
+                              },
+                              child: Container(
+                                  margin: EdgeInsets.only(right: 15),
+                                  child: Icon(PlatformHelper.isAndroid()? Icons.refresh : CupertinoIcons.refresh, color: Colors.black,size: PlatformHelper.isAndroid()? 23 : 25,)
+                              )
+                          ),
+                        ],
+                      )
+                  ),
+                  textInputAction: TextInputAction.search,
+                  onSubmitted: (str){
+                    print('keyword : ${str}');
+                    //_searchEditingController.clear();
+                    setState(() {
+                      _keyWord = _searchEditingController.text;
+                    });
+                    _handleRefresh();
+                    FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_TEXT_SEARCH_CLICK_EVENT, _userUniqueKey);
+                  },
+                  cursorColor: MyColor.colorPrimary,
+                ),
+              ],
             ),
           )
         ),
@@ -903,6 +878,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                         Navigator.pop(context);
                         //print('ios date picker : $_keyWord');
                         _handleRefresh();
+                        FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_DATE_SEARCH_CLICK_EVENT, _userUniqueKey);
                       }
                     },
                       child: Text(MyString.txt_confirm,style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.blue)),
@@ -961,6 +937,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
           Expanded(
             child: DropDownWidget(
               value: _dropDownContentType,
+              fontSize: FontSize.textSizeExtraSmall,
               onChange: (value){
                 setState(() {
                   _dropDownContentType = value;
@@ -969,6 +946,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   }
                 });
                 _handleRefresh();
+                FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_CONTENT_TYPE_SEARCH_CLICK_EVENT, _userUniqueKey);
               },
               list: _contentTypeList,
             ),
@@ -1002,6 +980,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 if(_dropDownContentType != MyString.txt_to_choose){
                   Navigator.pop(context);
                   _handleRefresh();
+                  FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FEED_SCREEN, ClickEvent.NEWS_FEED_CONTENT_TYPE_SEARCH_CLICK_EVENT, _userUniqueKey);
                 }
               },
               onSelectedItemChanged: (index){

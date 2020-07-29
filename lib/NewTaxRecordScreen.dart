@@ -79,7 +79,6 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
             onPress: ()async{
               FocusScope.of(context).requestFocus(FocusNode());
               await _sharepreferenceshelper.initSharePref();
-              FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.NEW_TAX_RECORD_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
               Navigator.of(context).pop();
               Navigator.of(context).pop({'isNeedRefresh' : true});
             }
@@ -198,6 +197,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
                     _isLoading = true;
                   });
                   _uploadTaxRecord();
+                  FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEW_TAX_RECORD_SCREEN, ClickEvent.NEW_TAX_RECORD_UPLOAD_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
                 } else if(_recordNameController.text == ''){
                   WarningSnackBar(_globalKey, MyString.txt_need_tax_record_name);
                 }else{

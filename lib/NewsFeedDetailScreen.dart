@@ -6,6 +6,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_html/flutter_html.dart';
+import 'package:myotaw/AudioPlayerScreen.dart';
 import 'package:myotaw/NewsFeedWebViewScreen.dart';
 import 'package:myotaw/helper/PlatformHelper.dart';
 import 'package:myotaw/model/NewsFeedPhotoModel.dart';
@@ -415,7 +416,8 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
       body: _body(context),
       action: <Widget>[
         _isDownloadIconShown()?IconButton(icon: Icon(Icons.file_download), onPressed: (){
-          _startDownload();
+          //_startDownload();
+          Navigator.push(context, MaterialPageRoute(builder: (context) => AudioPlayerScreen(url: BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType),)));
         }) : Container()
       ],
       trailing: _isDownloadIconShown()?GestureDetector(

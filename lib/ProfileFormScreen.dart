@@ -376,6 +376,8 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                               _dropDownTownship != MyString.txt_choose_state_township
                                           ){
                                             _updateUser();
+                                            FireBaseAnalyticsHelper.trackClickEvent(ScreenName.PROFILE_FORM_SCREEN, ClickEvent.UPDATE_USER_PROFILE_CLICK_EVENT,
+                                                _sharepreferenceshelper.getUserUniqueKey());
                                           }else{
                                             WarningSnackBar(_scaffoldState, MyString.txt_need_user_information);
                                           }
