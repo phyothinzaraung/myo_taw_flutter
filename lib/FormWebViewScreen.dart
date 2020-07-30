@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:webview_flutter/webview_flutter.dart';
+import 'helper/MyoTawConstant.dart';
 import 'myWidget/CustomProgressIndicator.dart';
 
 class FormWebViewScreen extends StatefulWidget {
 
-  String _FormUrl, _uniqueKey;
+  String _FormUrl, _uniqueKey, _title;
 
-  FormWebViewScreen(this._FormUrl, this._uniqueKey);
+  FormWebViewScreen(this._FormUrl, this._uniqueKey, this._title);
 
   @override
   _FormWebViewScreenState createState() => _FormWebViewScreenState();
@@ -24,6 +25,9 @@ class _FormWebViewScreenState extends State<FormWebViewScreen> {
   @override
   Widget build(BuildContext context) {
     return CustomScaffoldWidget(
+      title: Text(widget._title, maxLines: 1, overflow: TextOverflow.ellipsis,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),
+      ),
       body: ModalProgressHUD(
         inAsyncCall: _isLoading,
         progressIndicator: CustomProgressIndicatorWidget(),

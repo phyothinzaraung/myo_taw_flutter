@@ -292,8 +292,9 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(margin: EdgeInsets.only(bottom: 10.0),
-                                child: Text(_userModel!=null?_userModel.name!=null?_userModel.name:'':'', style: TextStyle(fontSize: FontSize.textSizeSmall,color: MyColor.colorTextBlack),)),
-                            Text(NumConvertHelper.getMyanNumString(_userModel!=null?_userModel.phoneNo!=null?_userModel.phoneNo:'':''), style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
+                                child: Text(_userModel!=null?_userModel.name!=null?_userModel.name:'':'', style: TextStyle(fontSize: FontSize.textSizeExtraSmall,color: MyColor.colorTextBlack),)),
+                            Text(NumConvertHelper.getMyanNumString(_userModel!=null?_userModel.phoneNo!=null?_userModel.phoneNo:'':''),
+                              style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),),
                           ],
                         ),
                       )

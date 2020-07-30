@@ -125,7 +125,7 @@ class _FormListScreenState extends State<FormListScreen> with AutomaticKeepAlive
           style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorBlackSemiTransparent), maxLines: 2,
           overflow: TextOverflow.ellipsis,),
         onTap: (){
-          NavigatorHelper.myNavigatorPush(context, FormWebViewScreen(_formURL, _uniquekey), ScreenName.FORM_SCREEN);
+          NavigatorHelper.myNavigatorPush(context, FormWebViewScreen(_formURL, _uniquekey, _formName), ScreenName.FORM_SCREEN);
         },
       ),
     );

@@ -12,6 +12,7 @@ import 'package:myotaw/model/NewsFeedViewModel.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'package:notifier/main_notifier.dart';
+import 'ProfileFormScreen.dart';
 import 'helper/PlatformHelper.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -27,6 +28,7 @@ import 'model/SaveNewsFeedModel.dart';
 import 'ProfileScreen.dart';
 import 'Database/UserDb.dart';
 import 'myWidget/CustomButtonWidget.dart';
+import 'myWidget/CustomDialogWidget.dart';
 import 'myWidget/DropDownWidget.dart';
 import 'myWidget/EmptyViewWidget.dart';
 import 'myWidget/IosPickerWidget.dart';
@@ -173,19 +175,40 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       });
     }
     _initHeaderTitle();
+    Future.delayed(Duration(milliseconds: 100)).whenComplete((){
+      if(_userModel.name == null){
+        CustomDialogWidget().customSuccessDialog(
+            context: context,
+            content: MyString.txt_profile_set_up_need,
+            img: 'logout_icon.png',
+            buttonText: MyString.txt_profile_set_up,
+            onPress: (){
+              _navigateToProfileFormScreen();
+            }
+        );
+      }
+    });
     await _getNewsFeed(page);
+  }
+
+  _navigateToProfileFormScreen()async{
+    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_userModel.isWardAdmin)));
+    if(result != null && result.containsKey('isNeedRefresh') == true){
+      Navigator.of(context).pop();
+    }
   }
 
   _getNewsFeed(int p) async{
     if(_userModel.isWardAdmin){
+      var _blockName =  widget.channelType != MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK? '' : _userModel.wardName;
       response = await ServiceHelper().getNewsFeedForWardAdmin(MyoTawCitySetUpHelper.getNewsFeedCityId(_sharepreferenceshelper.getRegionCode()),p,pageCount,_userUniqueKey,
-          _keyWord, widget.channelType != MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK? '' : widget.channelType, _userModel.wardName);
-      print('channel type : ${widget.channelType}');
+          _keyWord, widget.channelType, _blockName);
+      print('UserKey : ${_userUniqueKey} - keyword : ${_keyWord} - channelType : ${widget.channelType} - blockName : ${_blockName}');
     }else{
       response = await ServiceHelper().getNewsFeed(MyoTawCitySetUpHelper.getNewsFeedCityId(_sharepreferenceshelper.getRegionCode()),p,pageCount,_userUniqueKey);
     }
 
-    print('newsfeed para : ${widget.channelType} : ${_userModel.wardName}');
+
 
     var result = response.data['Results'];
     //var result = [];
@@ -193,6 +216,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     if(result != null && result.length > 0){
       for(var i in result){
         NewsFeedViewModel _newsFeedViewModel = NewsFeedViewModel.fromJson(i);
+        //print(_newsFeedViewModel.toJson());
         await _saveNewsFeedDb.openSaveNfDb();
         bool isSaved = await _saveNewsFeedDb.isNewsFeedSaved(_newsFeedViewModel.article.uniqueKey);
         _saveNewsFeedDb.closeSaveNfDb();
@@ -506,6 +530,12 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     ),
                   ) : Container() : Container(),
                  // Text(_city??'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal)),
+                  /*Row(
+                    children: <Widget>[
+                      Text(_city, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge),),
+                      Text(_memeberTypeTitle, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraSmall),)
+                    ],
+                  ),*/
                   RichText(text: TextSpan(
                     text: _city,
                     style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge),
@@ -647,7 +677,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
           margin: EdgeInsets.only(top: 10),
           child: _isSearchContentTypeSelect? _contentTypeDropdown()
               : Container(
-            height: 50,
+            height: 55,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(10),
                 color: Colors.white,
@@ -714,7 +744,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                   enabled: _isSearchTextFieldEnable,
                   controller: _searchEditingController,
                   style: TextStyle(fontSize: FontSize.textSizeNormal,),
-                  textAlignVertical: TextAlignVertical.center,
                   decoration: InputDecoration(
                       border: InputBorder.none,
                       hoverColor: Colors.red,
@@ -916,7 +945,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   Widget _contentTypeDropdown(){
     return Container(
-      height: 50,
+      height: 55,
       padding: EdgeInsets.only(top: 5, bottom: 5, left: 15, right: 15),
       width: double.maxFinite,
       decoration: BoxDecoration(
