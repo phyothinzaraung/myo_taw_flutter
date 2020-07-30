@@ -8,6 +8,7 @@ import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/helper/ShowDateTimeHelper.dart';
 import 'package:myotaw/model/UserModel.dart';
 import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
+import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'package:notifier/main_notifier.dart';
@@ -158,7 +159,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
       itemBuilder: (BuildContext context, int i){
         return Column(
           children: <Widget>[
-            i==0? _headerNotification():Container(),
+            i==0? widget._sharepreferenceshelper.isWardAdmin()? Container() : _headerNotification():Container(),
             _notificationListWidget(i)
           ],
         );
@@ -184,7 +185,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => Column(
           children: <Widget>[
-            _headerNotification(),
+            widget._sharepreferenceshelper.isWardAdmin()? Container() :_headerNotification(),
             Expanded(child: noConnectionWidget(asyncLoaderState))
           ],
         ),
@@ -202,14 +203,25 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
             }) :
             Column(
               children: <Widget>[
-                _headerNotification(),
+                widget._sharepreferenceshelper.isWardAdmin()? Container() :_headerNotification(),
                 Expanded(child: emptyView(asyncLoaderState, MyString.txt_no_notification))
               ],
             ),
             onRefresh: _handleRefresh
         )
     );
-    return Scaffold(
+    return widget._sharepreferenceshelper.isWardAdmin()?
+        CustomScaffoldWidget(
+          title: Text(MyString.txt_title_notification,maxLines: 1, overflow: TextOverflow.ellipsis,
+            style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
+          body:  ModalProgressHUD(
+              inAsyncCall: _isLoading,
+              progressIndicator: CustomProgressIndicatorWidget(),
+              child: _asyncLoader
+          ),
+        )
+        :
+    Scaffold(
       body: ModalProgressHUD(
           inAsyncCall: _isLoading,
           progressIndicator: CustomProgressIndicatorWidget(),
@@ -223,7 +235,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
         child: Column(
           mainAxisAlignment: MainAxisAlignment.start,
           children: <Widget>[
-            _headerNotification(),
+            widget._sharepreferenceshelper.isWardAdmin()? Container() :_headerNotification(),
             Container(margin: EdgeInsets.only(top: 10.0),child: NativeProgressIndicator())
           ],
         )

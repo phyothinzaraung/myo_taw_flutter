@@ -5,7 +5,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
 import 'package:flutter_html/flutter_html.dart';
-import 'package:myotaw/AudioPlayerScreen.dart';
 import 'package:myotaw/NewsFeedWebViewScreen.dart';
 import 'package:myotaw/helper/PlatformHelper.dart';
 import 'package:myotaw/model/NewsFeedPhotoModel.dart';
@@ -13,7 +12,6 @@ import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
-import 'package:path_provider/path_provider.dart';
 import 'helper/NavigatorHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -425,8 +423,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
       body: _body(context),
       action: <Widget>[
         _isDownloadIconShown()?IconButton(icon: Icon(Icons.file_download), onPressed: (){
-          //_startDownload();
-          Navigator.push(context, MaterialPageRoute(builder: (context) => AudioPlayerScreen(url: BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType),)));
+          _startDownload();
         }) : Container()
       ],
       trailing: _isDownloadIconShown()?GestureDetector(

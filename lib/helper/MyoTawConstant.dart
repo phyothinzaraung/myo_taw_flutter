@@ -57,13 +57,13 @@ class MyString{
   static const String txt_welcome_mlm ='မော်လမြိုင်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String txt_welcome_lkw ='လွိုင်ကော်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String txt_welcome_mgy ='မကွေးမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
-  static const String txt_welcome_hly = 'လှိုင်သာယာမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
+  static const String txt_welcome_hty = 'လှိုင်သာယာမြို့ တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
 
   static const String TGY_CITY = 'တောင်ကြီးမြို့';
   static const String MLM_CITY = 'မော်လမြိုင်မြို့';
   static const String LKW_CITY = 'လွိုင်ကော်မြို့';
   static const String MGY_CITY = 'မကွေးမြို့';
-  static const String HLY_CITY = 'လှိုင်သာယာမြို့နယ်';
+  static const String HLY_CITY = 'လှိုင်သာယာမြို့';
 
   static const String TGY_STATE = 'ရှမ်းပြည်နယ်';
   static const String MLM_STATE = 'မွန်ပြည်နယ်';

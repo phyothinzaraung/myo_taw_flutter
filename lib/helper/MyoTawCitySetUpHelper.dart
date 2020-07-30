@@ -109,7 +109,7 @@ class MyoTawCitySetUpHelper{
         _title = MyString.txt_welcome_mgy;
         break;
       case MyString.HLY_REGION_CODE:
-        _title = MyString.txt_welcome_hly;
+        _title = MyString.txt_welcome_hty;
         break;
     }
     return _title;

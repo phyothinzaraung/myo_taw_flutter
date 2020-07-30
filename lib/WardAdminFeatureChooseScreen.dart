@@ -3,6 +3,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/NewsFeedScreen.dart';
 import 'package:myotaw/FormListScreen.dart';
+import 'package:myotaw/NotificationScreen.dart';
+import 'package:myotaw/ProfileScreen.dart';
 import 'package:myotaw/WardAdminContributionListScreen.dart';
 import 'package:myotaw/database/NotificationDb.dart';
 import 'package:myotaw/database/UserDb.dart';
@@ -43,13 +45,21 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
     model3.image = 'images/flood_report.png';
     model3.title = MyString.txt_flood_level;
 
+    DashBoardModel model5 = new DashBoardModel();
+    model5.image = 'images/profile_placeholder.png';
+    model5.title = MyString.txt_profile;
+
+    DashBoardModel model6 = new DashBoardModel();
+    model6.image = 'images/noti_circle.png';
+    model6.title = MyString.txt_title_notification;
+
     if(isHly){
       DashBoardModel model4 = new DashBoardModel();
       model4.image = 'images/form_circle.png';
       model4.title = MyString.txt_form;
-      _list = [model1,model3, model2, model4];
+      _list = [model1,model3, model2, model4, model5, model6];
     }else{
-      _list = [model1,model3, model2];
+      _list = [model1,model3, model2, model5, model6];
     }
 
     _firebaseMessaging.subscribeToTopic('all');
@@ -114,11 +124,11 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
                 UserModel userModel = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
                 _userDb.closeUserDb();
                 Navigator.of(context).pop();
-                NavigatorHelper.myNavigatorPush(context, isHly?NewsFeedScreen(channelType: userModel.memberType) : MainScreen(channelType: userModel.memberType), ScreenName.MYOTAW_CHANNEL);
+                NavigatorHelper.myNavigatorPush(context, NewsFeedScreen(channelType: userModel.memberType), ScreenName.MYOTAW_CHANNEL);
               },
               onPressBlockLevel: ()async{
               Navigator.of(context).pop();
-              NavigatorHelper.myNavigatorPush(context, isHly?NewsFeedScreen(channelType: MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK) : MainScreen(channelType: MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK), ScreenName.MYOTAW_CHANNEL);
+              NavigatorHelper.myNavigatorPush(context, NewsFeedScreen(channelType: MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK), ScreenName.MYOTAW_CHANNEL);
               }
             );
             break;
@@ -127,6 +137,12 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             break;
           case MyString.txt_form:
             NavigatorHelper.myNavigatorPush(context, FormListScreen(), ScreenName.FORM_LIST_SCREEN);
+            break;
+          case MyString.txt_profile:
+            NavigatorHelper.myNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
+            break;
+          case MyString.txt_title_notification:
+            NavigatorHelper.myNavigatorPush(context, NotificationScreen(_sharepreferenceshelper), ScreenName.NOTIFICATION_SCREEN);
             break;
         }
       },
@@ -139,7 +155,7 @@ class WardAdminFeatureChooseScreen extends StatelessWidget {
             //image dao
             //i!=0?Divider(thickness: 2, color: MyColor.colorPrimary,) : Container(),
             Flexible(
-              flex: 2,
+              flex: 3,
               child: Image.asset(_list[i].image,),
             ),
             SizedBox(

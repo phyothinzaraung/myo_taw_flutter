@@ -63,7 +63,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   String _dropDownContentType = MyString.txt_to_choose, _keyWord = '';
   List<String> _contentTypeList = List();
   int _searchContentTypePickerIndex = 0;
-  var _fromDate ='', _toDate ='', _memeberTypeTitle = '';
+  var _fromDate ='', _toDate ='', _memeberTypeTitle = '', _newsFeedType = '';
 
   final Map<int, Widget> _cupertinoSliderChildren = const <int, Widget>{
     0: Text(MyString.txt_search_text, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
@@ -175,27 +175,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
       });
     }
     _initHeaderTitle();
-    Future.delayed(Duration(milliseconds: 100)).whenComplete((){
-      if(_userModel.name == null){
-        CustomDialogWidget().customSuccessDialog(
-            context: context,
-            content: MyString.txt_profile_set_up_need,
-            img: 'logout_icon.png',
-            buttonText: MyString.txt_profile_set_up,
-            onPress: (){
-              _navigateToProfileFormScreen();
-            }
-        );
-      }
-    });
     await _getNewsFeed(page);
-  }
-
-  _navigateToProfileFormScreen()async{
-    Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => ProfileFormScreen(_userModel.isWardAdmin)));
-    if(result != null && result.containsKey('isNeedRefresh') == true){
-      Navigator.of(context).pop();
-    }
   }
 
   _getNewsFeed(int p) async{
@@ -530,19 +510,13 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                     ),
                   ) : Container() : Container(),
                  // Text(_city??'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal)),
-                  /*Row(
-                    children: <Widget>[
-                      Text(_city, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge),),
-                      Text(_memeberTypeTitle, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraSmall),)
-                    ],
-                  ),*/
                   RichText(text: TextSpan(
                     text: _city,
                     style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge),
                     children: [
                       TextSpan(
                         text: _memeberTypeTitle,
-                        style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraSmall),
+                        style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeNormal),
                       ),
                     ]
                   )),
@@ -550,7 +524,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 ],
               ),
             ),
-            GestureDetector(
+            _userModel != null?_userModel.isWardAdmin? Container() : GestureDetector(
               onTap: (){
                 FocusScope.of(context).requestFocus(FocusNode());
                 NavigatorHelper.myNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
@@ -561,7 +535,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 child: CircleAvatar(backgroundImage: _profilePhoto,
                   backgroundColor: MyColor.colorGrey, radius: 25.0,),
               ),
-            )
+            ) : Container()
           ],
         ),
         _userModel != null?_userModel.isWardAdmin?_searchBarForAdmin() : Container() : Container()
