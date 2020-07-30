@@ -385,9 +385,17 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
           PrimaryColorSnackBarWidget(_globalKey, MyString.txt_already_download);
         }
       }else {
+        if(_contentType == MyString.NEWS_FEED_CONTENT_TYPE_PDF) {
           NavigatorHelper.myNavigatorPush(context, NewsFeedWebViewScreen(
               BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType)),
               ScreenName.NEWS_FEED_WEBVIEW_SCREEN);
+        }else{
+          if (await canLaunch(BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType))) {
+            await launch(BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType));
+          } else {
+            throw 'Could not launch $BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType)';
+          }
+        }
       }
     }catch(e){
       WarningSnackBar(_globalKey, 'download fail');
