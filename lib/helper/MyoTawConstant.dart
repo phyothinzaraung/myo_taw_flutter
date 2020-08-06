@@ -322,7 +322,6 @@ class MyString{
   static const String txt_to_choose = 'ရွေးချယ်ပါ';
   static const String txt_to_choose_date = 'ရက်စွဲရွေးပါ  ... မှ ... အထိ';
   static const String txt_already_download = 'ဒေါင်းလုဒ်ပြုလုပ်ထားပြီး။';
-  static const String NEWS_FEED_CHANNEL_TYPE_BLOCK = 'Block';
   static const String txt_download_fail = 'ဒေါင်းလုဒ်မအောင်မြင်ပါ။';
   static const String txt_need_from_date = 'စရက် ရွေးပါ';
   static const String txt_need_to_date = 'ဆုံးရက် ရွေးပါ';
@@ -331,6 +330,9 @@ class MyString{
   static const String NEWS_FEED_UPLOAD_TYPE_VIDEO= "VideoUpload";
   static const String NEWS_FEED_UPLOAD_TYPE_PDF= "PDFUpload";
   static const String NEWS_FEED_UPLOAD_TYPE_PHOTO= "PhotoUpload";
+
+  static const String NEWS_FEED_CHANNEL_TYPE_BLOCK = 'Block';
+  static const String NEWS_FEED_CHANNEL_TYPE_PUBLIC = 'Public';
 
   static const String txt_first_grade = 'ပထမတန်းစား';
   static const String txt_second_grade = 'ဒုတိယတန်းစား';

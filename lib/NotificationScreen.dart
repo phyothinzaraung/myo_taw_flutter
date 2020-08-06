@@ -34,7 +34,6 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
   UserDb _userDb = UserDb();
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   String _city, _regionCode;
-  bool _isLoading = false;
   var response;
   List<NotificationModel> _notificationList = new List<NotificationModel>();
   Notifier _notifier;
@@ -70,7 +69,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
   _getNotifications() async{
     await widget._sharepreferenceshelper.initSharePref();
     _regionCode = widget._sharepreferenceshelper.getRegionCode();
-      response = await ServiceHelper().getNotification(_regionCode,widget._sharepreferenceshelper.getUserUniqueKey());
+      response = await ServiceHelper().getNotification(_regionCode,widget._sharepreferenceshelper.getUserUniqueKey(), _userModel.isWardAdmin? _userModel.wardName : '');
       if(response.data != null) {
         var resultList = response.data['ReadNotiVM'];
         _unreadCount = response.data['unReadCount'];
@@ -78,18 +77,6 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
           for(var i in resultList){
             _notificationList.add(NotificationModel.fromJson(i));
           }
-          //await _notificationDb.openNotificationDb();
-          //_notificationDb.deleteNotification();
-          /*for(var i in resultList){
-          bool isSave = await _notificationDb.isNotificationSaved(NotificationModel.fromJson(i).iD);
-          if(!isSave){
-            _notificationDb.insert(NotificationModel.fromJson(i));
-          }
-        }*/
-          /*var list = await _notificationDb.getNotification();
-        _notificationList.addAll(list);
-        var count = await _notificationDb.getUnReadNotificationCount();
-        _notificationDb.closeSaveNotificationDb();*/
           widget._sharepreferenceshelper.saveNotiUnreadCount(_unreadCount);
           _notifier.notify('noti_count', _unreadCount);
         }
@@ -117,7 +104,9 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
           onTap: ()async{
 
             if(!model.isRead){
-              model.isRead = true;
+              setState(() {
+                model.isRead = true;
+              });
               if(widget._sharepreferenceshelper.getUnreadCount() > 0){
                 var _count = widget._sharepreferenceshelper.getUnreadCount() - 1;
                 _notifier.notify('noti_count', _count);
@@ -132,7 +121,7 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
 
   Widget _headerNotification(){
     return Container(
-        margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
+        margin: EdgeInsets.only(top: 20, bottom: 20.0, left: 15.0, right: 15.0),
         child: Column(
           children: <Widget>[
             Row(
@@ -204,7 +193,12 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
             Column(
               children: <Widget>[
                 widget._sharepreferenceshelper.isWardAdmin()? Container() :_headerNotification(),
-                Expanded(child: emptyView(asyncLoaderState, MyString.txt_no_notification))
+                Expanded(
+                    child: Container(
+                      margin: EdgeInsets.only(top: 20),
+                    child: emptyView(asyncLoaderState, MyString.txt_no_notification)
+                )
+                )
               ],
             ),
             onRefresh: _handleRefresh
@@ -214,19 +208,11 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
         CustomScaffoldWidget(
           title: Text(MyString.txt_title_notification,maxLines: 1, overflow: TextOverflow.ellipsis,
             style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
-          body:  ModalProgressHUD(
-              inAsyncCall: _isLoading,
-              progressIndicator: CustomProgressIndicatorWidget(),
-              child: _asyncLoader
-          ),
+          body:  _asyncLoader,
         )
         :
     Scaffold(
-      body: ModalProgressHUD(
-          inAsyncCall: _isLoading,
-          progressIndicator: CustomProgressIndicatorWidget(),
-          child: _asyncLoader
-      ),
+      body: _asyncLoader,
     );
   }
 

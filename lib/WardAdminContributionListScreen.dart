@@ -48,7 +48,6 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
   void initState() {
     // TODO: implement initState
     super.initState();
-    _requestPermission();
   }
 
   _checkCon()async{
@@ -58,10 +57,6 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
     }else{
       _isCon = true;
     }
-  }
-
-  _requestPermission()async{
-    await PermissionHandler().requestPermissions([PermissionGroup.camera, PermissionGroup.storage,PermissionGroup.photos, PermissionGroup.location]);
   }
 
   _getUser() async{

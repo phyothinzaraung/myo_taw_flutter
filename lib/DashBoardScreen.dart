@@ -185,44 +185,42 @@ class _DashBoardScreenState extends State<DashBoardScreen> with AutomaticKeepAli
     super.build(context);
     return Scaffold(
       key: _globalKey,
-      body: SafeArea(
-        child: Container(
-          child: CustomScrollView(
-            slivers: <Widget>[
-              SliverList(
-              delegate: SliverChildListDelegate([
-                Container(
-                  margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: <Widget>[
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Text(_city??'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
-                                Text(MyString.txt_title_dashboard, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
-                              ],
-                            ),
+      body: Container(
+        child: CustomScrollView(
+          slivers: <Widget>[
+            SliverList(
+            delegate: SliverChildListDelegate([
+              Container(
+                margin: EdgeInsets.only(top: 20, bottom: 20.0, left: 15.0, right: 15.0),
+                child: Column(
+                  children: <Widget>[
+                    Row(
+                      children: <Widget>[
+                        Expanded(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: <Widget>[
+                              Text(_city??'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
+                              Text(MyString.txt_title_dashboard, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
+                            ],
                           ),
-                        ],
-                      ),
-                    ],
-                  ),
-                )
-              ])),
-              SliverGrid(
-                  delegate: SliverChildBuilderDelegate((context, index){
-                    return _widget[index];
-                  },childCount: _widget.length),
-                  gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
-                      maxCrossAxisExtent: 200.0,
-                      crossAxisSpacing: 30.0,
-                      mainAxisSpacing: 10))
-            ],
-          )
-        ),
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              )
+            ])),
+            SliverGrid(
+                delegate: SliverChildBuilderDelegate((context, index){
+                  return _widget[index];
+                },childCount: _widget.length),
+                gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+                    maxCrossAxisExtent: 200.0,
+                    crossAxisSpacing: 30.0,
+                    mainAxisSpacing: 10))
+          ],
+        )
       )
     );
   }
