@@ -782,7 +782,8 @@ class ScreenName{
   static const String NEWS_FLOOD_REPORT_SCREEN = 'New flood report screen';
   static const String GET_FLOOD_LEVEL_SCREEN = 'Get flood level screen';
   static const String FORM_LIST_SCREEN = 'Form list screen';
-  static const String MYOTAW_CHANNEL = 'Channel';
+  static const String MYO_TAW_GENERAL_CHANNEL = 'General channel';
+  static const String MYO_TAW_BLOCK_CHANNEL = 'Block channel';
 
   static const String NEWS_FEED_SCREEN = 'News feed screen';
   static const String NEWS_FEED_DETAIL_SCREEN = 'News feed detail screen';

@@ -184,11 +184,11 @@ class _WardAdminFeatureChooseScreenState extends State<WardAdminFeatureChooseScr
                   UserModel userModel = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
                   _userDb.closeUserDb();
                   Navigator.of(context).pop();
-                  NavigatorHelper.myNavigatorPush(context, NewsFeedScreen(channelType: userModel.memberType, isWardAdmin: true,), ScreenName.MYOTAW_CHANNEL);
+                  NavigatorHelper.myNavigatorPush(context, NewsFeedScreen(channelType: userModel.memberType, isWardAdmin: true,), ScreenName.MYO_TAW_GENERAL_CHANNEL);
                 },
                 onPressBlockLevel: ()async{
                   Navigator.of(context).pop();
-                  NavigatorHelper.myNavigatorPush(context, NewsFeedScreen(channelType: MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK, isWardAdmin: true,), ScreenName.MYOTAW_CHANNEL);
+                  NavigatorHelper.myNavigatorPush(context, NewsFeedScreen(channelType: MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK, isWardAdmin: true,), ScreenName.MYO_TAW_BLOCK_CHANNEL);
                 }
             );
             break;
@@ -205,7 +205,7 @@ class _WardAdminFeatureChooseScreenState extends State<WardAdminFeatureChooseScr
             NavigatorHelper.myNavigatorPush(context, NotificationScreen(_sharepreferenceshelper), ScreenName.NOTIFICATION_SCREEN);
             break;
           case MyString.txt_save_newsFeed:
-            NavigatorHelper.myNavigatorPush(context, SaveNewsFeedScreen(), ScreenName.NOTIFICATION_SCREEN);
+            NavigatorHelper.myNavigatorPush(context, SaveNewsFeedScreen(), ScreenName.SAVED_NEWS_FEED_SCREEN);
             break;
         }
       },
