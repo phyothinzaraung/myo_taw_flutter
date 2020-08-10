@@ -11,7 +11,7 @@ class ServiceHelper{
  final Dio dio = new Dio();
  int conTimeOut = 60000;
 
- getNewsFeedForWardAdmin<Response>(int organizationId, int page, int pageSize, String userUniqueKey, String keyWord, String nfType, String blockName) async{
+ getNewsFeed<Response>(int organizationId, int page, int pageSize, String userUniqueKey, String keyWord, String nfType, String blockName) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_NEWSFEED+"newsfeedposted/getcitynewsfeedver4",
@@ -19,13 +19,13 @@ class ServiceHelper{
   return response;
  }
 
- getNewsFeed<Response>(int organizationId, int page, int pageSize, String userUniqueKey) async{
+ /*getNewsFeed<Response>(int organizationId, int page, int pageSize, String userUniqueKey) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS_NEWSFEED+"newsfeedposted/getcitynewsfeedver3",
       queryParameters: {"OrganizationID": organizationId, "page": page, "pageSize": pageSize, "UserUniqueKey": userUniqueKey});
   return response;
- }
+ }*/
 
  likeReact<Response>(String userUniqueKey, String newsFeedId, String react) async{
    dio.options.connectTimeout = conTimeOut;
@@ -324,11 +324,11 @@ class ServiceHelper{
   return response;
  }
 
- getNotification<Response>(String regionCode,String uniqueKey) async{
+ getNotification<Response>(String regionCode,String uniqueKey, String wardName) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
-  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Notification/GetReadNotiListForAndroid",
-      queryParameters: {"RegionCode":regionCode, "UniqueKey":uniqueKey});
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Notification/GetNotificationListAndroid",
+      queryParameters: {"RegionCode":regionCode, "UniqueKey":uniqueKey, "WardName" : wardName});
   return response;
  }
 

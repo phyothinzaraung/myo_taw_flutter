@@ -28,7 +28,6 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
   var _downloadVideo;
   ReceivePort _port = ReceivePort();
   var _localPath;
-  bool _isDownloadReady = false;
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
   _NewsFeedVideoScreenState(this._videoUrl);
 
@@ -113,9 +112,9 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
       globalKey: _globalKey,
       title: null,
       action: <Widget>[
-        _isDownloadReady?IconButton(icon: Icon(Icons.file_download), onPressed: (){
+        IconButton(icon: Icon(Icons.file_download), onPressed: (){
           _startDownload();
-        }) : Container()
+        })
       ],
       body: Container(
         color: Colors.black,

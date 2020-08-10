@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
+import 'package:flutter_webview_plugin/flutter_webview_plugin.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -20,7 +21,7 @@ class _FormWebViewScreenState extends State<FormWebViewScreen> {
 
   Completer<WebViewController> _controller = Completer<WebViewController>();
   WebViewController _webViewController;
-  bool _isLoading = true;
+  bool _isLoading = false;
 
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,12 @@ class _FormWebViewScreenState extends State<FormWebViewScreen> {
       body: ModalProgressHUD(
         inAsyncCall: _isLoading,
         progressIndicator: CustomProgressIndicatorWidget(),
-        child: WebView(
+        child: WebviewScaffold(
+            url: widget._FormUrl.replaceAll("null", widget._uniqueKey),
+            withJavascript: true,
+            hidden: false,
+            initialChild: Center(child: CustomProgressIndicatorWidget()),
+        )/*WebView(
           javascriptMode: JavascriptMode.unrestricted,
           initialUrl: widget._FormUrl.replaceAll("null", widget._uniqueKey),
           onWebViewCreated: (wv){
@@ -43,7 +49,7 @@ class _FormWebViewScreenState extends State<FormWebViewScreen> {
               _isLoading = false;
             });
           },
-        ),
+        ),*/
       ),
     );
   }

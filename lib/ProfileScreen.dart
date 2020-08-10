@@ -35,6 +35,8 @@ import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/CustomProgressIndicator.dart';
 
 class ProfileScreen extends StatefulWidget {
+  bool isWardAdmin;
+  ProfileScreen({this.isWardAdmin: false});
   @override
   _ProfileScreenState createState() => _ProfileScreenState();
 }
@@ -104,10 +106,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _profilePhoto = _userModel.photoUrl!=null?
     new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl) :
     AssetImage('images/profile_placeholder.png');
-    if(_userModel != null){
-      if(_userModel.currentRegionCode != MyString.HLY_REGION_CODE){
-        await _getAllTaxRecord(page);
-      }
+    if(!widget.isWardAdmin){
+      await _getAllTaxRecord(page);
     }
 
   }
@@ -321,8 +321,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       ),
                     ),
                     Divider(color: MyColor.colorPrimary,),
-                    _userModel != null?
-                    _userModel.currentRegionCode != MyString.HLY_REGION_CODE?GestureDetector(
+                    !widget.isWardAdmin?GestureDetector(
                       onTap: (){
 
                         NavigatorHelper.myNavigatorPush(context, ApplyBizLicenseListScreen(), ScreenName.APPLY_BIZ_LICENSE_LIST_SCREEN);
@@ -335,9 +334,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           ],
                         ),
                       ),
-                    ) : Container() : Container(),
-                    _userModel !=null?
-                    _userModel.currentRegionCode != MyString.HLY_REGION_CODE?Divider(color: MyColor.colorPrimary,) : Container() : Container(),
+                    ) : Container(),
+                    !widget.isWardAdmin?Divider(color: MyColor.colorPrimary,) : Container(),
                     GestureDetector(
                       onTap: (){
                         //_dialogLogOut();
@@ -371,7 +369,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
             ],
           ),
         ),
-        _userModel != null? _userModel.currentRegionCode != MyString.HLY_REGION_CODE? Container(
+        !widget.isWardAdmin? Container(
           margin: EdgeInsets.only(top: 10.0, left: 30.0, right: 30.0, bottom: 10.0),
           child: Column(
             children: <Widget>[
@@ -399,7 +397,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
               )
             ],
           ),
-        ) : Container() : Container(),
+        ) : Container(),
       ],
     );
   }
@@ -416,28 +414,6 @@ class _ProfileScreenState extends State<ProfileScreen> {
       ],
     );
   }
-
-
-  /*Widget _listView(){
-    return ListView.builder(
-        itemCount: _taxRecordModelList.length,
-        itemBuilder: (context, i){
-          return Column(
-            children: <Widget>[
-              i==0?Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    _headerProfile(),
-                  ],
-                ),
-              ): Container(width: 0.0, height: 0.0,),
-              _taxRecordList(i)
-            ],
-          );
-        });
-
-  }*/
 
   Widget getNoConnectionWidget(){
     return ListView(
@@ -482,7 +458,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
         renderError: ([error]) => getNoConnectionWidget(),
         renderSuccess: ({data}) => NativePullRefresh(
           onRefresh: _handleRefresh,
-          child: _userModel.currentRegionCode != MyString.HLY_REGION_CODE?_taxRecordModelList.isNotEmpty?
+          child: !widget.isWardAdmin?_taxRecordModelList.isNotEmpty?
           CustomScrollView(
             slivers: <Widget>[
               SliverList(delegate: SliverChildBuilderDelegate((context, i){

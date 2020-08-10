@@ -30,12 +30,12 @@ import 'NotificationDetailScreen.dart';
 
 
 void main() async{
+  WidgetsFlutterBinding.ensureInitialized();
   /*SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light.copyWith(
     statusBarColor: MyColor.colorPrimaryDark,
     systemNavigationBarIconBrightness: Brightness.dark,
   ));*/
-  WidgetsFlutterBinding.ensureInitialized();
-  await FlutterDownloader.initialize(debug: true);
+  await FlutterDownloader.initialize();
   try {
     FlutterStatusbarcolor.setStatusBarColor(MyColor.colorPrimaryDark);
   }  catch (e) {
@@ -123,7 +123,8 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   initBadge()async{
     await _sharepreferenceshelper.initSharePref();
     try{
-      var response = await ServiceHelper().getNotification(_sharepreferenceshelper.getRegionCode(),_sharepreferenceshelper.getUserUniqueKey());
+      //for unRead count
+      var response = await ServiceHelper().getNotification(_sharepreferenceshelper.getRegionCode(),_sharepreferenceshelper.getUserUniqueKey(),'');
       if(response.data != null) {
         _count = response.data['unReadCount'];
         if(_count != 0){
@@ -162,38 +163,8 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
        }
      });
 
-    if(_sharepreferenceshelper.isWardAdmin()){
-      _firebaseMessaging.configure(
-          onMessage: (Map<String, dynamic> message) async {
-            print('on message $message');
-
-            if(message.isNotEmpty){
-              String json = message['data']['notification'];
-              Map<String, dynamic> temp = jsonDecode(json);
-              _sharepreferenceshelper.setNotificationAdd(true);
-              var _count = _sharepreferenceshelper.getUnreadCount() + 1;
-              _sharepreferenceshelper.saveNotiUnreadCount(_count);
-              _notifier.notify('noti_count', _count);
-              _notifier.notify('noti_add', temp);
-            }
-          },
-          onResume: (Map<String, dynamic> message) async {
-            print('on resume ${message['data']['notification']}');
-
-            if(message.isNotEmpty){
-              String json = message['data']['notification'];
-              Map<String, dynamic> temp = jsonDecode(json);
-              NotificationModel model = NotificationModel.fromJson(temp);
-              _sharepreferenceshelper.setNotificationAdd(true);
-              _notifier.notify('noti_add', temp);
-              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
-            }
-          },
-      );
-
-    }else{
-      _firebaseMessaging.subscribeToTopic('all');
-      _firebaseMessaging.configure(
+    _firebaseMessaging.subscribeToTopic('all');
+    _firebaseMessaging.configure(
         onMessage: (Map<String, dynamic> message) async {
           print('on message $message');
 
@@ -220,35 +191,34 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
           }
         },
         onLaunch: (Map<String, dynamic> message) async {
-            print('on launch ${message['data']['notification']}');
+          print('on launch ${message['data']['notification']}');
 
-            if (message.isNotEmpty) {
-              String json = message['data']['notification'];
-              Map<String, dynamic> temp = jsonDecode(json);
-              NotificationModel model = NotificationModel.fromJson(temp);
-              _sharepreferenceshelper.setNotificationAdd(true);
-              NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
-            }
+          if (message.isNotEmpty) {
+            String json = message['data']['notification'];
+            Map<String, dynamic> temp = jsonDecode(json);
+            NotificationModel model = NotificationModel.fromJson(temp);
+            _sharepreferenceshelper.setNotificationAdd(true);
+            NavigatorHelper.myNavigatorPush(context, NotificationDetailScreen(model.iD), ScreenName.NOTIFICATION_DETAIL_SCREEN);
           }
-      );
-
-      _firebaseMessaging.onTokenRefresh.listen((refreshToken)async{
-        await _sharepreferenceshelper.initSharePref();
-        if(_sharepreferenceshelper.getToken() != refreshToken){
-          try{
-            var response = await ServiceHelper().updateUserToken(_sharepreferenceshelper.getUserUniqueKey(), refreshToken, PlatformHelper.isAndroid()?'Android' : 'Ios');
-            await _userDb.openUserDb();
-            await _userDb.insert(UserModel.fromJson(response.data));
-            _userDb.closeUserDb();
-            _sharepreferenceshelper.setUserToken(refreshToken);
-          }catch(e){
-            print(e);
-          }
-          print('update user token');
         }
-        print('Token refresh : ' + refreshToken);
-      });
-    }
+    );
+
+    _firebaseMessaging.onTokenRefresh.listen((refreshToken)async{
+      await _sharepreferenceshelper.initSharePref();
+      if(_sharepreferenceshelper.getToken() != refreshToken){
+        try{
+          var response = await ServiceHelper().updateUserToken(_sharepreferenceshelper.getUserUniqueKey(), refreshToken, PlatformHelper.isAndroid()?'Android' : 'Ios');
+          await _userDb.openUserDb();
+          await _userDb.insert(UserModel.fromJson(response.data));
+          _userDb.closeUserDb();
+          _sharepreferenceshelper.setUserToken(refreshToken);
+        }catch(e){
+          print(e);
+        }
+        print('update user token');
+      }
+      print('Token refresh : ' + refreshToken);
+    });
   }
 
   _navigateToProfileFormScreen()async{
@@ -259,7 +229,22 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
   }
 
   _requestPermission()async{
-    await PermissionHandler().requestPermissions([PermissionGroup.camera, PermissionGroup.storage,PermissionGroup.photos, PermissionGroup.location]);
+    var _isCamera = await Permission.camera.isGranted;
+    var _isStorage = await Permission.storage.isGranted;
+    var _isPhoto = await Permission.photos.isGranted;
+    var _isLocation = await Permission.location.isGranted;
+    if(!_isCamera) {
+      await Permission.camera.request();
+    }
+    if(!_isStorage) {
+      await Permission.storage.request();
+    }
+    if(!_isPhoto){
+      await Permission.photos.request();
+    }
+    if(!_isLocation){
+      await Permission.location.request();
+    }
   }
 
   Widget _androidBottomNavigation(){
@@ -345,11 +330,12 @@ class _mainState extends State<MainScreen> with TickerProviderStateMixin {
             BottomNavigationBarItem(icon: Icon(MyoTawCustomIcon.Dash_board_icon, size: 25,)),
             BottomNavigationBarItem(icon: Notifier.of(context).register<int>('noti_count', (value){
               //_noticount = value.data;
-              if(value.data != null && value.data == 0){
-                _isBadgeShow = false;
-              }else if(value.data != null){
-                _noticount = value.data;
-                _isBadgeShow = true;
+              if(value.data != null){
+                if(value.data == 0){
+                  _isBadgeShow = false;
+                }else{
+                  _isBadgeShow = true;
+                }
               }
               return Stack(
                 alignment: _isBadgeShow?Alignment.topRight : Alignment.center,

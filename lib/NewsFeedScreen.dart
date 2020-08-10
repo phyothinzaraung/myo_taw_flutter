@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:html/parser.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
@@ -29,6 +30,7 @@ import 'ProfileScreen.dart';
 import 'Database/UserDb.dart';
 import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/CustomDialogWidget.dart';
+import 'myWidget/CustomScaffoldWidget.dart';
 import 'myWidget/DropDownWidget.dart';
 import 'myWidget/EmptyViewWidget.dart';
 import 'myWidget/IosPickerWidget.dart';
@@ -37,7 +39,8 @@ import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
 class NewsFeedScreen extends StatefulWidget {
   String channelType;
-  NewsFeedScreen({this.channelType});
+  bool isWardAdmin;
+  NewsFeedScreen({this.channelType, this.isWardAdmin: false});
   @override
   _NewsFeedScreenState createState() => _NewsFeedScreenState();
 }
@@ -179,16 +182,12 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   }
 
   _getNewsFeed(int p) async{
-    if(_userModel.isWardAdmin){
-      var _blockName =  widget.channelType != MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK? '' : _userModel.wardName;
-      response = await ServiceHelper().getNewsFeedForWardAdmin(MyoTawCitySetUpHelper.getNewsFeedCityId(_sharepreferenceshelper.getRegionCode()),p,pageCount,_userUniqueKey,
-          _keyWord, widget.channelType, _blockName);
-      print('UserKey : ${_userUniqueKey} - keyword : ${_keyWord} - channelType : ${widget.channelType} - blockName : ${_blockName}');
-    }else{
-      response = await ServiceHelper().getNewsFeed(MyoTawCitySetUpHelper.getNewsFeedCityId(_sharepreferenceshelper.getRegionCode()),p,pageCount,_userUniqueKey);
-    }
 
-
+    var _blockName =  widget.channelType != MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK? '' : _userModel.wardName;
+    var _nfType = widget.isWardAdmin? widget.channelType : MyString.NEWS_FEED_CHANNEL_TYPE_PUBLIC;
+    response = await ServiceHelper().getNewsFeed(MyoTawCitySetUpHelper.getNewsFeedCityId(_sharepreferenceshelper.getRegionCode()),p,pageCount,_userUniqueKey,
+        _keyWord, _nfType, _blockName);
+    print('UserKey : ${_userUniqueKey} - keyword : ${_keyWord} - channelType : ${widget.channelType} - blockName : ${_blockName}');
 
     var result = response.data['Results'];
     //var result = [];
@@ -493,52 +492,47 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        Row(
-          children: <Widget>[
-            Expanded(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  _userModel!=null?_userModel.isWardAdmin?GestureDetector(
-                    onTap: (){
-                      Navigator.of(context).pop();
-                    },
-                    child: Container(
-                      color: Colors.transparent,
-                      padding: const EdgeInsets.only(bottom: 10),
-                      child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back,color: Colors.black,size: 30,),
-                    ),
-                  ) : Container() : Container(),
-                 // Text(_city??'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal)),
-                  RichText(text: TextSpan(
-                    text: _city,
-                    style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge),
-                    children: [
-                      TextSpan(
-                        text: _memeberTypeTitle,
-                        style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeNormal),
-                      ),
-                    ]
-                  )),
-                  Text(MyString.txt_newsfeed, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
-                ],
+        Container(
+          margin: EdgeInsets.only(bottom: widget.isWardAdmin? 25 : 0),
+          child: Row(
+            children: <Widget>[
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: <Widget>[
+                    RichText(text: TextSpan(
+                      text: _city,
+                      style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge),
+                      children: [
+                        widget.isWardAdmin?TextSpan(
+                          text: _memeberTypeTitle,
+                          style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeNormal),
+                        ) : TextSpan(
+                          text: '',
+                          style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeNormal),
+                        ),
+                      ]
+                    )),
+                    widget.isWardAdmin? Container() : Text(MyString.txt_newsfeed, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeExtraNormal),),
+                  ],
+                ),
               ),
-            ),
-            _userModel != null?_userModel.isWardAdmin? Container() : GestureDetector(
-              onTap: (){
-                FocusScope.of(context).requestFocus(FocusNode());
-                NavigatorHelper.myNavigatorPush(context, ProfileScreen(), ScreenName.PROFILE_SCREEN);
+              widget.isWardAdmin? Container() : GestureDetector(
+                onTap: (){
+                  FocusScope.of(context).requestFocus(FocusNode());
+                  NavigatorHelper.myNavigatorPush(context, ProfileScreen(isWardAdmin: widget.isWardAdmin,), ScreenName.PROFILE_SCREEN);
 
-              },
-              child: Hero(
-                tag: 'profile',
-                child: CircleAvatar(backgroundImage: _profilePhoto,
-                  backgroundColor: MyColor.colorGrey, radius: 25.0,),
-              ),
-            ) : Container()
-          ],
+                },
+                child: Hero(
+                  tag: 'profile',
+                  child: CircleAvatar(backgroundImage: _profilePhoto,
+                    backgroundColor: MyColor.colorGrey, radius: 25.0,),
+                ),
+              )
+            ],
+          ),
         ),
-        _userModel != null?_userModel.isWardAdmin?_searchBarForAdmin() : Container() : Container()
+        widget.isWardAdmin?_searchBarForAdmin() : Container()
       ],
     );
   }
@@ -1016,7 +1010,6 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   Widget _cupertinoSliderControl(){
     return Container(
       width: double.maxFinite,
-      margin: EdgeInsets.only(left: 10, right: 10),
       child: CupertinoSlidingSegmentedControl(
         children: _cupertinoSliderChildren,
         thumbColor: Colors.white,
@@ -1062,7 +1055,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
           return Column(
             children: <Widget>[
               i==0?Container(
-                margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
+                margin: EdgeInsets.only(top: 20, bottom: 20.0, left: 15.0, right: 15.0),
                 child: Column(
                   children: <Widget>[
                     _headerNewsFeed(),
@@ -1078,7 +1071,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   Widget _emptyView(){
     return Container(
-      margin: EdgeInsets.only(top: 24.0,left: 15.0, right: 15.0),
+      margin: EdgeInsets.only(top: 20,left: 15.0, right: 15.0),
       child: ListView(
         children: <Widget>[
           _headerNewsFeed(),
@@ -1092,7 +1085,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   Widget _noConWidget(){
     return Container(
-      margin: EdgeInsets.only(top: 24.0, left: 15.0, right: 15.0),
+      margin: EdgeInsets.only(top: 20, left: 15.0, right: 15.0),
       child: ListView(
         children: <Widget>[
           _headerNewsFeed(),
@@ -1106,7 +1099,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   Widget _renderLoad(){
     return Container(
-      margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
+      margin: EdgeInsets.only(top: 20, bottom: 20.0, left: 15.0, right: 15.0),
       child: ListView(
         children: <Widget>[
           _headerNewsFeed(),
@@ -1153,12 +1146,16 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
           ),
         )
     );
-    return SafeArea(
-      top: true,
-      child: Scaffold(
-        key: _globalKey,
-        body: _asyncLoader,
-      ),
+    return widget.isWardAdmin?
+    CustomScaffoldWidget(
+      title: Text( widget.channelType != MyString.NEWS_FEED_CHANNEL_TYPE_BLOCK? MyString.txt_myotaw_channel_general : MyString.txt_myotaw_channel_blocklevel,maxLines: 1, overflow: TextOverflow.ellipsis,
+        style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
+      body:  _asyncLoader,
+    )
+        :
+    Scaffold(
+      key: _globalKey,
+      body: _asyncLoader,
     );
   }
 
