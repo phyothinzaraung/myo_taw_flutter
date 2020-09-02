@@ -163,7 +163,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
               await _sharepreferenceshelper.initSharePref();
               FireBaseAnalyticsHelper.trackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
               Navigator.of(context).pop();
-              Navigator.of(context).pop({'isNeedRefresh' : true});
+              Navigator.of(context).pop({'data' : _response.data});
             }
         );
       }else{

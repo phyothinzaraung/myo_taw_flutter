@@ -45,6 +45,7 @@ class OrganizationId{
   static const int LKW_ORGANIZATION_ID = 13;
   static const int MGY_ORGANIZATION_ID = 14;
   static const int HLY_ORGANIZATION_ID = 15;
+  static const int HPA_ORGANIZATION_ID = 11;
 }
 
 class MyString{
@@ -57,6 +58,7 @@ class MyString{
   static const String txt_welcome_mlm ='မော်လမြိုင်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String txt_welcome_lkw ='လွိုင်ကော်မြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String txt_welcome_mgy ='မကွေးမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
+  static const String txt_welcome_hpa ='ဘားအံမြို့စည်ပင်သာယာရေး တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
   static const String txt_welcome_hty = 'လှိုင်သာယာမြို့ တရားဝင် မြို့တော် အပ်ပလီကေးရှင်းမှ ကြိုဆိုပါသည်။';
 
   static const String TGY_CITY = 'တောင်ကြီးမြို့';
@@ -64,18 +66,21 @@ class MyString{
   static const String LKW_CITY = 'လွိုင်ကော်မြို့';
   static const String MGY_CITY = 'မကွေးမြို့';
   static const String HLY_CITY = 'လှိုင်သာယာမြို့';
+  static const String HPA_CITY = 'ဘားအံမြို့';
 
   static const String TGY_STATE = 'ရှမ်းပြည်နယ်';
   static const String MLM_STATE = 'မွန်ပြည်နယ်';
   static const String LKW_STATE = 'ကယားပြည်နယ်';
   static const String MGY_STATE = 'မကွေးတိုင်း';
   static const String HLY_STATE = 'ရန်ကုန်တိုင်းဒေသကြီး';
+  static const String HPA_STATE = 'ကရင်ပြည်နယ်';
 
   static const String TGY_REGION_CODE = "TGY";
   static const String MLM_REGION_CODE = "MLM";
   static const String LKW_REGION_CODE = "LKW";
   static const String MGY_REGION_CODE = "MGY";
   static const String HLY_REGION_CODE = "HTY";
+  static const String HPA_REGION_CODE = "HPA";
 
   static const String txt_welcome = "မြို့တော်မှ ကြိုဆိုပါ၏။";
 
@@ -325,6 +330,8 @@ class MyString{
   static const String txt_download_fail = 'ဒေါင်းလုဒ်မအောင်မြင်ပါ။';
   static const String txt_need_from_date = 'စရက် ရွေးပါ';
   static const String txt_need_to_date = 'ဆုံးရက် ရွေးပါ';
+  static const String txt_date_range_picker_help_text = 'စရက်ဆုံးရက် ရွေးချယ်ပေးပါ';
+  static const String txt_date_range_picker_save_text = 'ရွေးမည်';
 
   static const String NEWS_FEED_UPLOAD_TYPE_AUDIO= "AudioUpload";
   static const String NEWS_FEED_UPLOAD_TYPE_VIDEO= "VideoUpload";

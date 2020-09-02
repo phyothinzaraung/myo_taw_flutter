@@ -118,7 +118,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
             await _sharepreferenceshelper.initSharePref();
             FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
             Navigator.of(context).pop();
-            Navigator.of(context).pop({'isNeedRefresh' : true});
+            Navigator.of(context).pop({'data' : response.data});
           }
         );
       }

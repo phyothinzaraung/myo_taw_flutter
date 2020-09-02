@@ -36,6 +36,7 @@ class _FormWebViewScreenState extends State<FormWebViewScreen> {
             url: widget._FormUrl.replaceAll("null", widget._uniqueKey),
             withJavascript: true,
             hidden: false,
+            clearCache: true,
             initialChild: Center(child: CustomProgressIndicatorWidget()),
         )/*WebView(
           javascriptMode: JavascriptMode.unrestricted,
