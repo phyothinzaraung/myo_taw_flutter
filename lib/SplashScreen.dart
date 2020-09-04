@@ -100,7 +100,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
         if(_sharepreferenceshelper.isWardAdmin()){
 
           NavigatorHelper.myNavigatorPushReplacement(context,
-              WardAdminFeatureChooseScreen(isHly: _sharepreferenceshelper.getRegionCode() == MyString.HLY_REGION_CODE?true:false), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
+              WardAdminFeatureChooseScreen(isForm: _sharepreferenceshelper.getRegionCode() == MyString.HLY_REGION_CODE?true:false), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{
           NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);
         }

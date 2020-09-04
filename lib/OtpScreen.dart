@@ -43,6 +43,7 @@ class _OtpScreenState extends State<OtpScreen> {
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   String _appVersion = '';
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  List _isFormRegionCode = [MyString.HLY_REGION_CODE];
 
   _OtpScreenState(this._phNo, this._regionCode);
   @override
@@ -73,6 +74,10 @@ class _OtpScreenState extends State<OtpScreen> {
     });
   }
 
+  bool isForm(){
+
+  }
+
   void _logIn()async{
     setState(() {
       PlatformHelper.isAndroid()? _showLoading = true : _isCupertinoLoading = true;
@@ -98,7 +103,7 @@ class _OtpScreenState extends State<OtpScreen> {
         if(_userModel.isWardAdmin){
 
           NavigatorHelper.myNavigatorPushReplacement(context,
-              WardAdminFeatureChooseScreen(isHly: _userModel.currentRegionCode == MyString.HLY_REGION_CODE?true:false), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
+              WardAdminFeatureChooseScreen(isForm: _userModel.currentRegionCode == MyString.HLY_REGION_CODE?true:false), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{
 
           NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);
