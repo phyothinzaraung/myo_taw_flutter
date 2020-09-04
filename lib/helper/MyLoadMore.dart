@@ -236,7 +236,7 @@ class DefaultLoadMoreView extends StatefulWidget {
   DefaultLoadMoreViewState createState() => DefaultLoadMoreViewState();
 }
 
-const _defaultLoadMoreHeight = 80.0;
+const _defaultLoadMoreHeight = 60.0;
 const _loadmoreIndicatorSize = 33.0;
 const _loadMoreDelay = 16;
 
@@ -295,7 +295,7 @@ abstract class LoadMoreDelegate {
   const LoadMoreDelegate();
 
   /// the loadmore widget height
-  double widgetHeight(LoadMoreStatus status) => _defaultLoadMoreHeight;
+  double widgetHeight(LoadMoreStatus status) => status==LoadMoreStatus.nomore? 0 : _defaultLoadMoreHeight;
 
   /// build loadmore delay
   Duration loadMoreDelay() => Duration(milliseconds: _loadMoreDelay);

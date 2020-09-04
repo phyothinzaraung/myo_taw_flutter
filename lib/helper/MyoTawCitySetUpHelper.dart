@@ -30,6 +30,10 @@ class MyoTawCitySetUpHelper{
         break;
       case MyString.HLY_REGION_CODE:
         _city = MyString.HLY_CITY;
+        break;
+      case MyString.HPA_REGION_CODE:
+        _city = MyString.HPA_CITY;
+        break;
     }
     return _city;
   }
@@ -51,6 +55,10 @@ class MyoTawCitySetUpHelper{
         break;
       case MyString.HLY_REGION_CODE:
         _state = MyString.HLY_STATE;
+        break;
+      case MyString.HPA_REGION_CODE:
+        _state = MyString.HPA_STATE;
+        break;
     }
     return _state;
   }
@@ -72,6 +80,9 @@ class MyoTawCitySetUpHelper{
         break;
       case MyString.HLY_REGION_CODE:
         _organizationId = OrganizationId.HLY_ORGANIZATION_ID;
+        break;
+      case MyString.HPA_REGION_CODE:
+        _organizationId = OrganizationId.HPA_ORGANIZATION_ID;
         break;
     }
     return _organizationId;
@@ -111,12 +122,15 @@ class MyoTawCitySetUpHelper{
       case MyString.HLY_REGION_CODE:
         _title = MyString.txt_welcome_hty;
         break;
+      case MyString.HPA_REGION_CODE:
+        _title = MyString.txt_welcome_hpa;
+        break;
     }
     return _title;
   }
 
   static List<String> getCityList(){
-    return [MyString.TGY_CITY,MyString.MLM_CITY, MyString.HLY_CITY];
+    return [MyString.TGY_CITY,MyString.MLM_CITY, MyString.HLY_CITY, MyString.HPA_CITY];
   }
 
   static String getRegionCode(String city){
@@ -136,6 +150,10 @@ class MyoTawCitySetUpHelper{
         break;
       case MyString.HLY_CITY:
         _regionCode = MyString.HLY_REGION_CODE;
+        break;
+      case MyString.HPA_CITY:
+        _regionCode = MyString.HPA_REGION_CODE;
+        break;
     }
     return _regionCode;
   }

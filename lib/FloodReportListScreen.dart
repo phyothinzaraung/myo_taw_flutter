@@ -147,8 +147,11 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
 
   _navigateToNewFloodReportScreen()async{
     Map result = await NavigatorHelper.myNavigatorPush(context, NewFloodReportScreen(), ScreenName.NEWS_FLOOD_REPORT_SCREEN);
-    if(result != null && result.containsKey('isNeedRefresh')){
-      _handleRefresh();
+    if(result != null && result.containsKey('data')){
+      //_handleRefresh();
+      setState(() {
+        _floodLevelReportModelList.insert(0, ContributionModel.fromJson(result['data']));
+      });
     }
   }
 

@@ -4,16 +4,15 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:html/parser.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/model/NewsFeedModel.dart';
 import 'package:myotaw/model/NewsFeedViewModel.dart';
+import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'package:notifier/main_notifier.dart';
-import 'ProfileFormScreen.dart';
 import 'helper/PlatformHelper.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -29,13 +28,12 @@ import 'model/SaveNewsFeedModel.dart';
 import 'ProfileScreen.dart';
 import 'Database/UserDb.dart';
 import 'myWidget/CustomButtonWidget.dart';
-import 'myWidget/CustomDialogWidget.dart';
 import 'myWidget/CustomScaffoldWidget.dart';
 import 'myWidget/DropDownWidget.dart';
 import 'myWidget/EmptyViewWidget.dart';
 import 'myWidget/IosPickerWidget.dart';
 import 'myWidget/NoConnectionWidget.dart';
-import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
+//import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
 class NewsFeedScreen extends StatefulWidget {
   String channelType;
@@ -67,6 +65,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
   List<String> _contentTypeList = List();
   int _searchContentTypePickerIndex = 0;
   var _fromDate ='', _toDate ='', _memeberTypeTitle = '', _newsFeedType = '';
+  OverlayEntry _popUp;
 
   final Map<int, Widget> _cupertinoSliderChildren = const <int, Widget>{
     0: Text(MyString.txt_search_text, style: TextStyle(fontSize: FontSize.textSizeSmall, color: MyColor.colorTextBlack),),
@@ -660,25 +659,30 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
             child: _isSearchDateSelect? GestureDetector(
               onTap: ()async{
                 if(PlatformHelper.isAndroid()){
-                  List dateTime = await DateRangePicker.showDatePicker(
+                  /*List dateTime = await DateRangePicker.showDatePicker(
                   context: context,
                   initialFirstDate: DateTime.now(),
                   initialLastDate: DateTime.now().add(Duration(days: 7)),
                   firstDate: DateTime(2019),
                   lastDate: DateTime(2025),
-                );
-                  if(dateTime != null){
-                    if (dateTime.length == 2) {
-                      _fromDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime[0].toString());
-                      _toDate = ShowDateTimeHelper.formatDateTimeForSearch(dateTime[1].toString());
-                      setState(() {
-                        _fromDateToDate = '${_fromDate}  မှ  ${_toDate}  အထိ';
-                        _keyWord = _fromDate+','+_toDate;
-                      });
-                      _handleRefresh();
-                      print('dateformat: $_keyWord');
-                    }
-                  }
+                );*/
+                  var dateRange = await showDateRangePicker(
+                    context: context,
+                    firstDate: DateTime(2019),
+                    lastDate: DateTime.now().add(Duration(days: 5)),
+                    initialDateRange: DateTimeRange(start: DateTime.now(), end: DateTime.now().add(Duration(days: 5))),
+                    helpText: MyString.txt_date_range_picker_help_text,
+                    useRootNavigator: false,
+                    saveText: MyString.txt_date_range_picker_save_text,
+                  );
+                  _fromDate = ShowDateTimeHelper.formatDateTimeForSearch(dateRange.start.toIso8601String());
+                  _toDate = ShowDateTimeHelper.formatDateTimeForSearch(dateRange.end.toIso8601String());
+                  setState(() {
+                    _fromDateToDate = '${_fromDate}  မှ  ${_toDate}  အထိ';
+                    _keyWord = _fromDate+','+_toDate;
+                  });
+                  _handleRefresh();
+                  print('dateformat: $_keyWord');
                 }else{
                   _fromDateCupertinoCalendarPicker();
                 }

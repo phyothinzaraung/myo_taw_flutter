@@ -252,42 +252,28 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
                             style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack), maxLines: 1, overflow: TextOverflow.ellipsis,)
                         ],),
                     ),
-                    Container(
-                      child: Stack(
-                        alignment: Alignment.bottomLeft,
-                        children: <Widget>[
-                          //contribute image
-                          Hero(
-                            tag: _contributionModelList[i].photoUrl,
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.only(bottomLeft: Radius.circular(7), bottomRight: Radius.circular(7)),
-                              child: CachedNetworkImage(
-                                imageUrl: BaseUrl.CONTRIBUTE_PHOTO_URL+_contributionModelList[i].photoUrl,
-                                imageBuilder: (context, image){
-                                  return Container(
-                                    width: double.maxFinite,
-                                    height: 180.0,
-                                    decoration: BoxDecoration(
-                                      image: DecorationImage(
-                                          image: image,
-                                          fit: BoxFit.cover),
-                                    ),);
-                                },
-                                placeholder: (context, url) => Center(child: Container(
-                                  child: Center(child: NativeProgressIndicator()), width: double.maxFinite, height: 150.0,)),
-                                errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
-                              ),
-                            ),
-                          ),
-                        ],
+                    Hero(
+                      tag: _contributionModelList[i].photoUrl,
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.only(bottomLeft: Radius.circular(7), bottomRight: Radius.circular(7)),
+                        child: CachedNetworkImage(
+                          imageUrl: BaseUrl.CONTRIBUTE_PHOTO_URL+_contributionModelList[i].photoUrl,
+                          imageBuilder: (context, image){
+                            return Container(
+                              width: double.maxFinite,
+                              height: 180.0,
+                              decoration: BoxDecoration(
+                                image: DecorationImage(
+                                    image: image,
+                                    fit: BoxFit.cover),
+                              ),);
+                          },
+                          placeholder: (context, url) => Center(child: Container(
+                            child: Center(child: NativeProgressIndicator()), width: double.maxFinite, height: 150.0,)),
+                          errorWidget: (context, url, error)=> Image.asset('images/placeholder_newsfeed.jpg'),
+                        ),
                       ),
                     ),
-                    /*Container(
-                      padding: EdgeInsets.all(20),
-                      //contribute body
-                      child: Text(_contributionModelList[i].message, maxLines: 2, overflow: TextOverflow.ellipsis,
-                        style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
-                    ),*/
                   ],
                 ),
               ),
@@ -340,12 +326,12 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
   }
 
   _navigateToWardAdminContributionScreen()async{
-    /*Map result = await Navigator.push(context, MaterialPageRoute(builder: (context) => WardAdminContributionScreen(),
-      settings: RouteSettings(name: ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN)
-    ));*/
     Map result = await NavigatorHelper.myNavigatorPush(context, WardAdminContributionScreen(), ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN);
-    if(result != null && result.containsKey('isNeedRefresh') == true){
-      await _handleRefresh();
+    if(result != null && result.containsKey('data') != null){
+      //await _handleRefresh();
+      setState(() {
+        _contributionModelList.insert(0, ContributionModel.fromJson(result['data']));
+      });
     }
   }
 

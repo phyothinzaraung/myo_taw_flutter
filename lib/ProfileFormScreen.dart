@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
+import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
@@ -165,8 +166,16 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     _userModel.address = _addressController.text;
     _userModel.state = _dropDownState;
     _userModel.township = _dropDownTownship;
+
+    //change ward admin
     /*_userModel.isWardAdmin = true;// ---change ward admin and user
-    _sharepreferenceshelper.setIsWardAdmin(true); // change ward admin and user*/
+    _sharepreferenceshelper.setIsWardAdmin(true); // ---change ward admin and user*/
+
+    //change region code
+    /*_userModel.currentRegionCode = MyString.HLY_REGION_CODE;// --- change region code
+    _sharepreferenceshelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, MyString.HLY_REGION_CODE,
+        _userModel.isWardAdmin, _userModel.wardName, _userModel.androidToken);// ---change region code*/
+
     print('${_userModel.toJson()}');
     try{
       _response = await ServiceHelper().updateUserInfo(_userModel);
@@ -180,7 +189,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
           img: 'isvalid.png',
           onPress: (){
             Navigator.of(context).pop();
-            Navigator.of(context).pop({'isNeedRefresh' : true});
+            Navigator.of(context).pop({'userName' : UserModel.fromJson(_response.data).name});
           },
         );
       }else{

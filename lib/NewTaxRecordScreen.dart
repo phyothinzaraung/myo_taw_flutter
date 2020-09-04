@@ -80,7 +80,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
               FocusScope.of(context).requestFocus(FocusNode());
               await _sharepreferenceshelper.initSharePref();
               Navigator.of(context).pop();
-              Navigator.of(context).pop({'isNeedRefresh' : true});
+              Navigator.of(context).pop({'data' : _response.data});
             }
         );
       }else{

@@ -223,7 +223,7 @@ class _WardAdminFeatureChooseScreenState extends State<WardAdminFeatureChooseScr
                   //i!=0?Divider(thickness: 2, color: MyColor.colorPrimary,) : Container(),
                   Flexible(
                     flex: 4,
-                    child: Image.asset(_list[i].image,),
+                    child: Image.asset(_list[i].title == MyString.txt_title_notification? _isBadgeShow? 'images/noti_alert.png' : _list[i].image : _list[i].image,),
                   ),
                   SizedBox(
                     height: 5,
@@ -237,7 +237,7 @@ class _WardAdminFeatureChooseScreenState extends State<WardAdminFeatureChooseScr
                   ),
                 ],
               ),
-              _list[i].title == MyString.txt_title_notification?Container(
+              /*_list[i].title == MyString.txt_title_notification?Container(
                 margin: EdgeInsets.only(bottom: 70, left: 35),
                 alignment: Alignment.center,
                 width: 12,
@@ -246,7 +246,7 @@ class _WardAdminFeatureChooseScreenState extends State<WardAdminFeatureChooseScr
                   borderRadius: BorderRadius.all(Radius.circular(10)),
                   color: _isBadgeShow? Colors.red : Colors.transparent,
                 ),
-              ) : Container(),
+              ) : Container(),*/
             ],
           )
       ),

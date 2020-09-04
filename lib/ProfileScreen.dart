@@ -56,6 +56,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   GlobalKey<SliverAnimatedListState> _animatedListKey = GlobalKey();
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
+  String _userName, _phNo;
 
   @override
   void initState() {
@@ -102,14 +103,21 @@ class _ProfileScreenState extends State<ProfileScreen> {
     _userDb.closeUserDb();
     setState(() {
       _userModel = model;
+      _userName = _userModel.name;
+      _phNo = _userModel.phoneNo;
     });
-    _profilePhoto = _userModel.photoUrl!=null?
-    new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+_userModel.photoUrl) :
-    AssetImage('images/profile_placeholder.png');
+    _profilePhoto = _profileImageProvider(_userModel.photoUrl);
     if(!widget.isWardAdmin){
       await _getAllTaxRecord(page);
     }
+  }
 
+  ImageProvider _profileImageProvider(String url){
+    var profileProvider = url!=null?
+    new CachedNetworkImageProvider(BaseUrl.USER_PHOTO_URL+url) :
+    AssetImage('images/profile_placeholder.png');
+
+    return profileProvider;
   }
 
   _checkCon()async{
@@ -230,23 +238,32 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _navigateToProfileScreen()async{
     Map result = await NavigatorHelper.myNavigatorPush(context, ProfileFormScreen(_sharepreferenceshelper.isWardAdmin()), ScreenName.PROFILE_FORM_SCREEN);
-    if(result != null && result.containsKey('isNeedRefresh') == true){
-      await _handleRefresh();
+    if(result != null && result.containsKey('userName') == true){
+      //await _handleRefresh();
+      setState(() {
+        _userName = result['userName'];
+      });
     }
   }
 
   _navigateToProfilePhotoScreen()async{
     Map result = await NavigatorHelper.myNavigatorPush(context, ProfilePhotoUploadScreen(), ScreenName.PROFILE_PHOTO_SCREEN);
-    if(result != null && result.containsKey('isNeedRefresh') == true){
+    if(result != null && result.containsKey('photoUrl') == true){
       //await _getUser();
-      await _handleRefresh();
+      //await _handleRefresh();
+      setState(() {
+        _profilePhoto = _profileImageProvider(result['photoUrl']);
+      });
     }
   }
 
   _navigateToNewTaxRecordScreen()async{
     Map result = await NavigatorHelper.myNavigatorPush(context, NewTaxRecordScreen(), ScreenName.NEW_TAX_RECORD_SCREEN);
-    if(result != null && result.containsKey('isNeedRefresh') == true){
-      await _handleRefresh();
+    if(result != null && result.containsKey('data') == true){
+      //await _handleRefresh();
+      setState(() {
+        _taxRecordModelList.insert(0, TaxRecordModel.fromJson(result['data']));
+      });
     }
   }
 
@@ -292,8 +309,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             Container(margin: EdgeInsets.only(bottom: 10.0),
-                                child: Text(_userModel!=null?_userModel.name!=null?_userModel.name:'':'', style: TextStyle(fontSize: FontSize.textSizeExtraSmall,color: MyColor.colorTextBlack),)),
-                            Text(NumConvertHelper.getMyanNumString(_userModel!=null?_userModel.phoneNo!=null?_userModel.phoneNo:'':''),
+                                child: Text(_userModel!=null?_userName!=null?_userName:'':'', style: TextStyle(fontSize: FontSize.textSizeExtraSmall,color: MyColor.colorTextBlack),)),
+                            Text(NumConvertHelper.getMyanNumString(_userModel!=null?_phNo!=null?_phNo:'':''),
                               style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),),
                           ],
                         ),
