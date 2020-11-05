@@ -81,10 +81,10 @@ class _WardAdminFeatureChooseScreenState extends State<WardAdminFeatureChooseScr
     model7.image = 'images/save_file.png';
     model7.title = MyString.txt_save_newsFeed;
 
-    _list = [model1,model3, model2, model4, model5, model6, model7];
+    _list = [model1,model3, model2, model5, model6, model7];
 
-    if(!widget.isForm){
-      _list.remove(model4);
+    if(widget.isForm){
+      _list.insert(3, model4);
     }
 
     _firebaseMessaging.subscribeToTopic('all');

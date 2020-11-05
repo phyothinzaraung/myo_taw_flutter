@@ -24,7 +24,7 @@ import 'myWidget/DropDownWidget.dart';
 import 'myWidget/IosPickerWidget.dart';
 
 class ProfileFormScreen extends StatefulWidget {
-  bool isAdmin;
+  final bool isAdmin;
 
   ProfileFormScreen(this.isAdmin);
   @override
@@ -168,13 +168,13 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     _userModel.township = _dropDownTownship;
 
     //change ward admin
-    /*_userModel.isWardAdmin = true;// ---change ward admin and user
-    _sharepreferenceshelper.setIsWardAdmin(true); // ---change ward admin and user*/
+    /*_userModel.isWardAdmin = false;// ---change ward admin and user
+    _sharepreferenceshelper.setIsWardAdmin(false);*/ // ---change ward admin and user
 
     //change region code
     /*_userModel.currentRegionCode = MyString.HLY_REGION_CODE;// --- change region code
     _sharepreferenceshelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, MyString.HLY_REGION_CODE,
-        _userModel.isWardAdmin, _userModel.wardName, _userModel.androidToken);// ---change region code*/
+        _userModel.isWardAdmin, _userModel.wardName, _userModel.androidToken);*/// ---change region code
 
     print('${_userModel.toJson()}');
     try{
@@ -189,7 +189,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
           img: 'isvalid.png',
           onPress: (){
             Navigator.of(context).pop();
-            Navigator.of(context).pop({'userName' : UserModel.fromJson(_response.data).name});
+            Navigator.of(context).pop({'isRefresh' : true});
           },
         );
       }else{

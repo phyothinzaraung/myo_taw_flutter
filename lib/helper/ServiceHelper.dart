@@ -35,11 +35,11 @@ class ServiceHelper{
    return response;
  }
 
- userLogin<Response>(String PhoneNo, String RegionCode, String Token, String Resource) async{
+ userLogin<Response>(String phoneNo, String regionCode, String token, String resource) async{
    dio.options.connectTimeout = conTimeOut;
    dio.options.receiveTimeout = conTimeOut;
    response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/LoginForAndroid",
-       queryParameters: {"PhoneNO": PhoneNo, "RegionCode": RegionCode, "Token": Token, "Resource": Resource});
+       queryParameters: {"PhoneNO": phoneNo, "RegionCode": regionCode, "Token": token, "Resource": resource});
    return response;
  }
 

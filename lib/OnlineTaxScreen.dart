@@ -116,7 +116,7 @@ class _OnlineTaxScreenState extends State<OnlineTaxScreen> {
 
   _navigateToPaymentScreen()async{
     Map result = await NavigatorHelper.myNavigatorPush(context, PaymentScreen(), ScreenName.ONLINE_TAX_PAYMENT_SCREEN);
-    if(result != null && result.containsKey('isNeedRefresh') == true){
+    if(result != null && result['isRefresh'] == true){
       _handleRefresh();
     }
   }

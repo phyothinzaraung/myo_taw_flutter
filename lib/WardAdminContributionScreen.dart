@@ -72,24 +72,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
       if(!isEnable){
         _location.requestService().then((value){
           if(value){
-            _streamSubscription = _location.onLocationChanged().listen((currentLocation){
-              _lat = currentLocation.latitude;
-              _lng = currentLocation.longitude;
-              if(mounted){
-                setState(() {
-                  _cameraPosition = CameraPosition(
-                    target: LatLng(currentLocation.latitude, currentLocation.longitude),
-                    zoom: 17,
-                  );
-                  Marker _resultMarker = Marker(
-                    markerId: MarkerId(currentLocation.toString()),
-                    position: LatLng(currentLocation.latitude, currentLocation.longitude),
-                  );
-                  _markers.add(_resultMarker);
-                });
-              }
-            });
-            //Navigator.of(context).pop();
+            _locationInit();
           }else{
             Navigator.of(context).pop();
           }
@@ -142,6 +125,9 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   }
 
   _sendSuggestion()async{
+    setState(() {
+      _isLoading = true;
+    });
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
@@ -163,7 +149,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
               await _sharepreferenceshelper.initSharePref();
               FireBaseAnalyticsHelper.trackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
               Navigator.of(context).pop();
-              Navigator.of(context).pop({'data' : _response.data});
+              Navigator.of(context).pop({'isRefresh' : true});
             }
         );
       }else{
@@ -184,7 +170,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
       settings: RouteSettings(name: ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN)
     ));*/
     Map result = await NavigatorHelper.myNavigatorPush(context, WardAdminLocationUpdateScreen(), ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN);
-    if(result != null && result.containsKey('latLng') != null){
+    if(result != null && result['latLng'] != null){
       setState(() {
         LatLng latLng = result['latLng'];
         _lat = latLng.latitude;
@@ -420,13 +406,15 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                               await _checkCon();
                               if(_isCon){
                                 if(_messController.text.isNotEmpty && _image != null && _dropDownSubject != MyString.txt_choose_subject){
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
-                                  await _sharepreferenceshelper.initSharePref();
-                                  FireBaseAnalyticsHelper.trackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT,
-                                      _sharepreferenceshelper.getUserUniqueKey());
-                                  _sendSuggestion();
+                                  if(_lat != null && _lng != null){
+                                    _sendSuggestion();
+                                    FireBaseAnalyticsHelper.trackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT,
+                                        _sharepreferenceshelper.getUserUniqueKey());
+                                  }else{
+                                    WarningSnackBar(_globalKey, MyString.txt_try_again_no_location);
+                                    _locationInit();
+                                  }
+
                                 }else if(_image == null){
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
                                 }else if(_dropDownSubject == MyString.txt_choose_subject){
@@ -471,6 +459,8 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     // TODO: implement dispose
     super.dispose();
     //stop listen location
-    _streamSubscription.cancel();
+    if(_streamSubscription != null){
+      _streamSubscription.cancel();
+    }
   }
 }

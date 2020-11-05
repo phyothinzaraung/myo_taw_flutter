@@ -94,7 +94,7 @@ class _PaymentScreenState extends State<PaymentScreen> {
           img: 'payment_success.png',
           onPress: (){
             Navigator.of(context).pop();
-            Navigator.of(context).pop({'isNeedRefresh' : true});
+            Navigator.of(context).pop({'isRefresh' : true});
           }
         );
       }else{

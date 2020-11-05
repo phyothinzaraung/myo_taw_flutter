@@ -56,7 +56,6 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
     }else{
       _isCon = true;
     }
-    //print('isCon : ${_isCon}');
   }
 
   _uploadPhoto()async{
@@ -68,8 +67,7 @@ class _ProfilePhotoUploadScreenState extends State<ProfilePhotoUploadScreen> {
         await _userDb.openUserDb();
         await _userDb.insert(_userModel);
         _userDb.closeUserDb();
-        Navigator.of(context).pop({'photoUrl' : _userModel.photoUrl});
-        print('uploadprofile: ${_response.data}');
+        Navigator.of(context).pop({'isRefresh' : true});
       }else{
         WarningSnackBar(_globalKey, MyString.txt_try_again);
       }

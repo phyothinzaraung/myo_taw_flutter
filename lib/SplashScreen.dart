@@ -6,7 +6,6 @@ import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:package_info/package_info.dart';
-import 'NewsFeedScreen.dart';
 import 'database/NotificationDb.dart';
 import 'helper/MyoTawConstant.dart';
 import 'main.dart';
@@ -94,13 +93,21 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     }
   }
 
+  bool _isForm(){
+    if(MyStringList.isFormRegionCode.contains(_sharepreferenceshelper.getRegionCode())){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   navigateMainScreen() {
     if(_sharepreferenceshelper.isLogin()){
       Future.delayed(Duration(seconds: 2), (){
         if(_sharepreferenceshelper.isWardAdmin()){
 
           NavigatorHelper.myNavigatorPushReplacement(context,
-              WardAdminFeatureChooseScreen(isForm: _sharepreferenceshelper.getRegionCode() == MyString.HLY_REGION_CODE?true:false), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
+              WardAdminFeatureChooseScreen(isForm: _isForm()), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{
           NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);
         }
@@ -111,6 +118,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -146,8 +154,8 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
                   margin: EdgeInsets.only(bottom: 30),
                   child: SpinKitCircle(
                     size: 80,
-                    controller: AnimationController(vsync: this, duration: Duration(seconds: 2),
-                  ), color: Colors.white,),
+                    controller: AnimationController(vsync: this,duration: Duration(seconds: 2),
+                  ), color: Colors.white),
                 ),
               ) : Container(),
               Flexible(

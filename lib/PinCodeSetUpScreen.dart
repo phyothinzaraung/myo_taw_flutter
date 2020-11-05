@@ -65,7 +65,7 @@ class _PinCodeSetUpScreenState extends State<PinCodeSetUpScreen> {
             img: 'pin_lock.png',
             onPress: (){
               Navigator.of(context).pop();
-              Navigator.of(context).pop({'isNeedRefresh' : true});
+              Navigator.of(context).pop({'isRefresh' : true});
             }
           );
         }else{

@@ -13,7 +13,6 @@ import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'Database/UserDb.dart';
 import 'package:myotaw/model/UserModel.dart';
-import 'helper/PlatformHelper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'FormWebViewScreen.dart';
@@ -26,15 +25,11 @@ class FormListScreen extends StatefulWidget{
 
 }
 
-class _FormListScreenState extends State<FormListScreen> with AutomaticKeepAliveClientMixin<FormListScreen>, TickerProviderStateMixin{
+class _FormListScreenState extends State<FormListScreen> with AutomaticKeepAliveClientMixin<FormListScreen>{
 
   List<FormModel> _formList = new List<FormModel>();
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
-  AnimationController _animatinController;
   bool _isLoading = false;
-  UserModel _userModel;
-  UserDb _userDb = UserDb();
-  String _city;
   Sharepreferenceshelper _sharepreferenceshelper = new Sharepreferenceshelper();
 
 
@@ -42,22 +37,10 @@ class _FormListScreenState extends State<FormListScreen> with AutomaticKeepAlive
   void initState() {
     // TODO: implement initState
     super.initState();
-    _animatinController = AnimationController(duration: const Duration(milliseconds: 700), vsync: this);
-  }
-
-  _getUser()async{
-    await _sharepreferenceshelper.initSharePref();
-    await _userDb.openUserDb();
-    var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    _userDb.closeUserDb();
-    setState(() {
-      _userModel = model;
-    });
-    _city = _userModel.isWardAdmin? MyoTawCitySetUpHelper.getCity(_userModel.currentRegionCode) +' '+'(Ward admin)': MyoTawCitySetUpHelper.getCity(_userModel.currentRegionCode);
-    await _getAllForm();
   }
 
   _getAllForm() async {
+    await _sharepreferenceshelper.initSharePref();
     var response = await ServiceHelper().getFormList();
     if(response.data != null || response.data.length > 0){
       for(var i in response.data) {
@@ -74,38 +57,6 @@ class _FormListScreenState extends State<FormListScreen> with AutomaticKeepAlive
         }
     );
   }
-
- /* Widget _headerForm(){
-    return Container(
-      margin: EdgeInsets.only(top: 24.0, bottom: 20.0, left: 15.0, right: 15.0),
-      child: Column(
-        children: <Widget>[
-          Row(
-            children: <Widget>[
-              Expanded(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    GestureDetector(
-                      onTap: (){
-                        Navigator.of(context).pop();
-                      },
-                      child: Padding(
-                        padding: const EdgeInsets.only(bottom: 10),
-                        child: Icon(PlatformHelper.isAndroid()?Icons.arrow_back: CupertinoIcons.back, color: Colors.black,size: 30,),
-                      ),
-                    ),
-                    Text(_city!=null?_city:'', style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeLarge)),
-                    Text(MyString.txt_form, style: TextStyle(color: MyColor.colorTextBlack, fontSize: FontSize.textSizeNormal),),
-                  ],
-                ),
-              ),
-            ],
-          )
-        ],
-      ),
-    );
-  }*/
 
   Widget _formListWidget(int i){
     FormModel model = _formList[i];
@@ -136,7 +87,7 @@ class _FormListScreenState extends State<FormListScreen> with AutomaticKeepAlive
     super.build(context);
     var _asyncLoader = new AsyncLoader(
         key: asyncLoaderState,
-        initState: () async => _getUser(),
+        initState: () async => _getAllForm(),
         renderLoad: () => _renderLoad(),
         renderError: ([error]) => noConnectionWidget(asyncLoaderState),
         renderSuccess: ({data}) => NativePullRefresh(
@@ -177,8 +128,6 @@ class _FormListScreenState extends State<FormListScreen> with AutomaticKeepAlive
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _animatinController.stop();
-    _animatinController.dispose();
   }
 
   @override

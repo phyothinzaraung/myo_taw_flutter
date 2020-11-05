@@ -66,12 +66,9 @@ class _ContributionScreenState extends State<ContributionScreen> {
       if(!isEnable){
         _location.requestService().then((value){
           if(value){
-            _streamSubscription = _location.onLocationChanged().listen((currentLocation){
-              _lat = currentLocation.latitude;
-              _lng = currentLocation.longitude;
-            });
+            _locationInit();
           }else{
-            Navigator.of(context).pop();
+            Navigator.pop(context);
           }
         });
       }else{
@@ -100,6 +97,10 @@ class _ContributionScreenState extends State<ContributionScreen> {
   }
 
   _sendSuggestion()async{
+    print('sendsuggest: ${_dropDownSubject} ${_lat} ${_lng}');
+    setState(() {
+      _isLoading = true;
+    });
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
@@ -108,7 +109,6 @@ class _ContributionScreenState extends State<ContributionScreen> {
     try{
       _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
           _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, false, _sharepreferenceshelper.getWardName(),0);
-      //print('sendsuggest: ${_mess} ${_dropDownSubject} ${_lat} ${_lng}');
       if(_response.data != null){
         CustomDialogWidget().customSuccessDialog(
             context: context,
@@ -255,14 +255,15 @@ class _ContributionScreenState extends State<ContributionScreen> {
                             await _checkCon();
                             if(_isCon){
                               if(_messController.text.isNotEmpty && _image != null && _dropDownSubject != MyString.txt_choose_subject){
-                                setState(() {
-                                  _isLoading = true;
-                                });
-                                _sendSuggestion();
-                                await _sharepreferenceshelper.initSharePref();
-                                FireBaseAnalyticsHelper.trackClickEvent(ScreenName.CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_CLICK_EVENT,
-                                    _sharepreferenceshelper.getUserUniqueKey());
-                                print('latlng: ${_lat} ${_lng}');
+                                if(_lat != null && _lng !=null){
+                                  _sendSuggestion();
+                                  await _sharepreferenceshelper.initSharePref();
+                                  FireBaseAnalyticsHelper.trackClickEvent(ScreenName.CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_CLICK_EVENT,
+                                      _sharepreferenceshelper.getUserUniqueKey());
+                                }else{
+                                  WarningSnackBar(_globalKey, MyString.txt_try_again_no_location);
+                                  _locationInit();
+                                }
                               }else if(_image == null){
                                 WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
 
@@ -310,6 +311,8 @@ class _ContributionScreenState extends State<ContributionScreen> {
     // TODO: implement dispose
     super.dispose();
     //stop listen location
-    _streamSubscription.cancel();
+    if(_streamSubscription != null){
+      _streamSubscription.cancel();
+    }
   }
 }

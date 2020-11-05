@@ -243,6 +243,7 @@ class MyString{
   static const String txt_need_suggestion_photo = "ဓာတ်ပုံတင်ရန် လိုအပ်ပါသည်။";
   static const String txt_need_suggestion_location = "တည်နေရာ မရ ရှိပါ။";
   static const String txt_try_again = "နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ";
+  static const String txt_try_again_no_location = "တည်ေနရာမရရှိသဖြင့် နောက်တစ်ကြိမ်လုပ်ဆောင်ပါ";
   static const String txt_fill_phno = "ဖုန်းနံပါတ်ရိုက်ထည့်ပါ။";
   static const String txt_choose_city = "မြို့ရွေးချယ်ပေးပါ။";
   static const String txt_wrong_phNo= "ဖုန်းနံပါတ် မှားယွင်းနေပါသည်။";
@@ -416,6 +417,7 @@ class MyString{
 
 class MyStringList{
 
+  static const List isFormRegionCode = [MyString.HLY_REGION_CODE, MyString.HPA_REGION_CODE];
   //Tgy
   static const List<String> biz_tgy_food = [
     'ကုန်စုံဆိုင်/မုန့်ဆိုင်',

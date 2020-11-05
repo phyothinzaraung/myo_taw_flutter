@@ -327,11 +327,8 @@ class _WardAdminContributionListScreenState extends State<WardAdminContributionL
 
   _navigateToWardAdminContributionScreen()async{
     Map result = await NavigatorHelper.myNavigatorPush(context, WardAdminContributionScreen(), ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN);
-    if(result != null && result.containsKey('data') != null){
-      //await _handleRefresh();
-      setState(() {
-        _contributionModelList.insert(0, ContributionModel.fromJson(result['data']));
-      });
+    if(result != null && result['isRefresh'] == true){
+      await _handleRefresh();
     }
   }
 

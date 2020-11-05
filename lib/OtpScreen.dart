@@ -43,7 +43,6 @@ class _OtpScreenState extends State<OtpScreen> {
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   String _appVersion = '';
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
-  List _isFormRegionCode = [MyString.HLY_REGION_CODE];
 
   _OtpScreenState(this._phNo, this._regionCode);
   @override
@@ -74,8 +73,12 @@ class _OtpScreenState extends State<OtpScreen> {
     });
   }
 
-  bool isForm(){
-
+  bool _isForm(){
+    if(MyStringList.isFormRegionCode.contains(_userModel.currentRegionCode)){
+      return true;
+    }else{
+      return false;
+    }
   }
 
   void _logIn()async{
@@ -89,7 +92,7 @@ class _OtpScreenState extends State<OtpScreen> {
       _platForm = 'Ios';
     }
     try{
-      print('$_phNo $_regionCode $fcmToken $_platForm' );
+      print('$_phNo $_regionCode $fcmToken $_platForm');
       response = await ServiceHelper().userLogin(_phNo, _regionCode, fcmToken, _platForm);
       var result = response.data;
       print('user : $result');
@@ -103,7 +106,7 @@ class _OtpScreenState extends State<OtpScreen> {
         if(_userModel.isWardAdmin){
 
           NavigatorHelper.myNavigatorPushReplacement(context,
-              WardAdminFeatureChooseScreen(isForm: _userModel.currentRegionCode == MyString.HLY_REGION_CODE?true:false), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
+              WardAdminFeatureChooseScreen(isForm: _isForm()), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
         }else{
 
           NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);

@@ -61,10 +61,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
       if(!isEnable){
         _location.requestService().then((value){
           if(value){
-            _streamSubscription = _location.onLocationChanged().listen((currentLocation){
-              _lat = currentLocation.latitude;
-              _lng = currentLocation.longitude;
-            });
+            _locationInit();
           }else{
             Navigator.of(context).pop();
           }
@@ -85,7 +82,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
 
   _navigateToGetFloodLevelScreen() async{
     Map result = await NavigatorHelper.myNavigatorPush(context, GetFloodLevelScreen(), ScreenName.GET_FLOOD_LEVEL_SCREEN);
-    if(result != null && result.containsKey('FloodLevel')){
+    if(result != null && result['FloodLevel'] != null){
       setState(() {
         _floodLevel = result['FloodLevel'];
       });
@@ -118,7 +115,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
             await _sharepreferenceshelper.initSharePref();
             FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
             Navigator.of(context).pop();
-            Navigator.of(context).pop({'data' : response.data});
+            Navigator.of(context).pop({'isRefresh' : true});
           }
         );
       }
@@ -211,9 +208,14 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                       await _checkCon();
                       if(_isCon){
                         if(_image != null && _floodLevel != 0){
-                          await _sharepreferenceshelper.initSharePref();
-                          FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_FLOOD_LEVEL_REPORT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-                          _reportFloodLevel();
+                          if(_lat != null && _lng != null){
+                            _reportFloodLevel();
+                            FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_FLOOD_LEVEL_REPORT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                          }else{
+                            WarningSnackBar(_globalKey, MyString.txt_try_again_no_location);
+                            _locationInit();
+                          }
+
                         }else if(_image == null){
                           WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
                         }else if(_floodLevel == 0){
@@ -254,6 +256,8 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _streamSubscription.cancel();
+    if(_streamSubscription != null){
+      _streamSubscription.cancel();
+    }
   }
 }
