@@ -205,7 +205,11 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
   }
 
   Widget _body(){
-    return Center(
+    return Theme(
+      data: ThemeData(
+        textSelectionColor: Colors.black
+      ),
+      child: Center(
       child: ModalProgressHUD(
         inAsyncCall: _isLoading,
         progressIndicator: CustomProgressIndicatorWidget(),
@@ -271,6 +275,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                   ),
                                   child: TextField(
                                     maxLines: null,
+                                    autofocus: true,
                                     decoration: InputDecoration(
                                         border: InputBorder.none
                                     ),
@@ -420,7 +425,7 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
           ],
         ),
       ),
-    );
+    ));
   }
 
   @override
