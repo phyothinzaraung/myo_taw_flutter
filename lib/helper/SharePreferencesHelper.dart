@@ -67,11 +67,7 @@ class Sharepreferenceshelper{
   }
 
   bool isWardAdmin(){
-    if(_sharedPreferences.getBool(USER_IS_WARD_ADMIN)){
-      return true;
-    }else{
-      return false;
-    }
+    return _sharedPreferences.getBool(USER_IS_WARD_ADMIN)??false;
   }
 
   bool isLogin(){

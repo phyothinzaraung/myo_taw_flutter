@@ -258,6 +258,9 @@ class _OtpScreenState extends State<OtpScreen> {
                               margin: EdgeInsets.only(bottom: 20),
                               child: CustomButtonWidget(onPress: () async{
                                 //_logIn();
+
+
+
                                 await _checkCon();
                                 if(_isCon){
                                   if(_isExpire){
@@ -281,6 +284,9 @@ class _OtpScreenState extends State<OtpScreen> {
                                 }else{
                                   WarningSnackBar(_globalKey, MyString.txt_no_internet);
                                 }
+
+
+
                               },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,

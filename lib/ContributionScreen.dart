@@ -38,7 +38,6 @@ class _ContributionScreenState extends State<ContributionScreen> {
   UserDb _userDb = UserDb();
   UserModel _userModel;
   var _response;
-  StreamSubscription<LocationData> _streamSubscription;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   TextEditingController _messController = TextEditingController();
   List<Widget> _subjectWidgetList = List();
@@ -60,23 +59,26 @@ class _ContributionScreenState extends State<ContributionScreen> {
     _isLoading = false;
   }
 
-  void _locationInit(){
-    _location.changeSettings(accuracy: LocationAccuracy.HIGH, interval: 3000, distanceFilter: 0);
-    _location.serviceEnabled().then((isEnable){
-      if(!isEnable){
-        _location.requestService().then((value){
-          if(value){
-            _locationInit();
-          }else{
-            Navigator.pop(context);
-          }
-        });
+  void _locationInit()async{
+    _location.changeSettings(accuracy: LocationAccuracy.high, interval: 3000, distanceFilter: 0);
+    var isServiceEnable = await _location.serviceEnabled();
+    if(!isServiceEnable){
+      var isSuccess = await _location.requestService();
+      if(isSuccess){
+        _getLocation();
       }else{
-        _streamSubscription = _location.onLocationChanged().listen((currentLocation){
-          _lat = currentLocation.latitude;
-          _lng = currentLocation.longitude;
-        });
+       _locationInit();
       }
+    }else{
+     _getLocation();
+    }
+  }
+
+  _getLocation()async{
+    var location = await _location.getLocation();
+    setState(() {
+      _lat = location.latitude;
+      _lng = location.longitude;
     });
   }
 
@@ -90,9 +92,9 @@ class _ContributionScreenState extends State<ContributionScreen> {
   }
 
   Future camera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
+    var image = await ImagePicker().getImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
     setState(() {
-      _image = image;
+      _image = File(image.path);
     });
   }
 
@@ -304,15 +306,5 @@ class _ContributionScreenState extends State<ContributionScreen> {
       body: _body(context),
       globalKey: _globalKey,
     );
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    //stop listen location
-    if(_streamSubscription != null){
-      _streamSubscription.cancel();
-    }
   }
 }

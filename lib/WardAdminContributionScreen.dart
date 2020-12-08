@@ -43,7 +43,6 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   var _response;
   Completer<GoogleMapController> _controller = Completer();
   CameraPosition _cameraPosition;
-  StreamSubscription<LocationData> _streamSubscription;
   Set<Marker> _markers = Set();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   TextEditingController _messController = TextEditingController();
@@ -66,35 +65,36 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     _isLoading = false;
   }
 
-  void _locationInit(){
-    _location.changeSettings(accuracy: LocationAccuracy.HIGH, interval: 3000, distanceFilter: 0);
-    _location.serviceEnabled().then((isEnable){
-      if(!isEnable){
-        _location.requestService().then((value){
-          if(value){
-            _locationInit();
-          }else{
-            Navigator.of(context).pop();
-          }
-        });
+  void _locationInit()async{
+    _location.changeSettings(accuracy: LocationAccuracy.high, interval: 3000, distanceFilter: 0);
+    var isServiceEnable = await _location.serviceEnabled();
+    if(!isServiceEnable){
+      var isSuccess = await _location.requestService();
+      if(!isSuccess){
+        _locationInit();
       }else{
-        _streamSubscription = _location.onLocationChanged().listen((currentLocation){
-          _lat = currentLocation.latitude;
-          _lng = currentLocation.longitude;
-          if(mounted){
-            setState(() {
-              _cameraPosition = CameraPosition(
-                  target: LatLng(currentLocation.latitude, currentLocation.longitude),
-                  zoom: 17.0
-              );
-              Marker _resultMarker = Marker(
-                markerId: MarkerId(currentLocation.toString()),
-                position: LatLng(currentLocation.latitude, currentLocation.longitude),
-              );
-              _markers.add(_resultMarker);
-            });
-          }
-        });
+        _getLocation();
+      }
+    }else{
+      _getLocation();
+    }
+  }
+
+  _getLocation()async{
+    var location = await _location.getLocation();
+    setState(() {
+      _lat = location.latitude;
+      _lng = location.longitude;
+      if(mounted){
+        _cameraPosition = CameraPosition(
+            target: LatLng(_lat, _lng),
+            zoom: 17.0
+        );
+        Marker _resultMarker = Marker(
+          markerId: MarkerId(location.toString()),
+          position: LatLng(_lat, _lng),
+        );
+        _markers.add(_resultMarker);
       }
     });
   }
@@ -110,17 +110,17 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   }
 
   Future camera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
+    var image = await ImagePicker().getImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
     setState(() {
-      _image = image;
+      _image = File(image.path);
     });
   }
 
   Future gallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
+    var image = await ImagePicker().getImage(source: ImageSource.gallery, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
 
     setState(() {
-      _image = image;
+      _image = File(image.path);
     });
   }
 
@@ -452,15 +452,5 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
       body: _body(),
       globalKey: _globalKey,
     );
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    //stop listen location
-    if(_streamSubscription != null){
-      _streamSubscription.cancel();
-    }
   }
 }

@@ -1,5 +1,6 @@
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
 import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
@@ -29,19 +30,23 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   String _logo, _title;
   bool _isDbSetup = true;
   String _appVersion = '';
-  FirebaseMessaging _firebaseMesssaging = FirebaseMessaging();
+  FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   NotificationDb _notificationDb = new NotificationDb();
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+  bool _isAdmin = false;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
     _init();
+    _createNotificationChannel();
     _updateUserActiveTime();
-    _firebaseMesssaging.subscribeToTopic('all');
+    _firebaseMessaging.subscribeToTopic('all');
   }
   _init()async{
     await _sharepreferenceshelper.initSharePref();
+    _isAdmin = _sharepreferenceshelper.isWardAdmin();
     PackageInfo.fromPlatform().then((info){
       _appVersion = info.version;
     });
@@ -49,7 +54,11 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
       //await getUserData();
       setState(() {
         _logo = MyoTawCitySetUpHelper.getCityLogo(_sharepreferenceshelper.getRegionCode());
-        _title = MyoTawCitySetUpHelper.getCityWelcomeTitle(_sharepreferenceshelper.getRegionCode());
+        if(_isAdmin){
+          _title = MyoTawCitySetUpHelper.getCityWelcomeTitle(_sharepreferenceshelper.getRegionCode()).replaceAll('စည်ပင်သာယာရေး', '');
+        }else{
+          _title = MyoTawCitySetUpHelper.getCityWelcomeTitle(_sharepreferenceshelper.getRegionCode());
+        }
       });
     }
     await _notificationDb.openNotificationDb();
@@ -62,6 +71,14 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     _notificationDb.closeSaveNotificationDb();
     await _locationInit();
     navigateMainScreen();
+  }
+
+  _createNotificationChannel(){
+    var androidPlatformChannelSpecifics = AndroidNotificationChannel(
+        'Myotaw app channel id', 'Myotaw app', 'Myotaw notification', importance: Importance.max);
+    flutterLocalNotificationsPlugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
+        ?.createNotificationChannel(androidPlatformChannelSpecifics);
+    print('create notification channel');
   }
 
   _updateUserActiveTime() async{
@@ -120,6 +137,26 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   }
 
 
+  Widget _logoWidget(){
+    if(_logo == null || _isAdmin){
+      return Flexible(
+          flex: 2,
+          child: Container(
+              margin: EdgeInsets.only(bottom: 20, top: 20),
+              child: Hero(
+                  tag: 'myotaw',
+                  child: Image.asset('images/myo_taw_logo_eng.png', width: 100.0, height: 100.0,))
+          )
+      );
+    }else{
+      return Flexible(
+        flex: 1,
+        child: Container(margin: EdgeInsets.only(bottom: 20.0),child: Image.asset(_logo, width: 150.0, height: 150.0,)),
+      );
+    }
+  }
+
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -130,37 +167,26 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
+              _logoWidget(),
               Flexible(
                 flex: 1,
-                child: _logo!=null?
-                Container(margin: EdgeInsets.only(bottom: 20.0),child: Image.asset(_logo, width: 150.0, height: 150.0,)):Container(width: 0.0,height: 0.0,),
+                child: _title!=null?Text(_title,
+                  style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal,),
+                  softWrap: true,maxLines: 3, textAlign: TextAlign.center,) : Container(width: 0,height: 0,),
               ),
-              Flexible(
-                flex: 1,
-                child: _title!=null?Container(
-                  child: Text(_title,
-                    style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal,),softWrap: true,maxLines: 3, textAlign: TextAlign.center,),
-                ):Container(width: 0.0,height: 0.0,),
-              ),
-              _logo==null?Flexible(flex: 2,
-                  child: Container(
-                      margin: EdgeInsets.only(bottom: 30, top: 20),
-                      child: Hero(
-                          tag: 'myotaw',
-                          child: Image.asset('images/myo_taw_logo_eng.png', width: 100.0, height: 100.0,)))) : Container(),
               !_isDbSetup?Flexible(
                 flex: 1,
-                child: Container(
-                  margin: EdgeInsets.only(bottom: 30),
-                  child: SpinKitCircle(
-                    size: 80,
-                    controller: AnimationController(vsync: this,duration: Duration(seconds: 2),
-                  ), color: Colors.white),
-                ),
+                child: SpinKitCircle(
+                  size: 80,
+                  controller: AnimationController(vsync: this,duration: Duration(seconds: 2),
+                ), color: Colors.white),
               ) : Container(),
               Flexible(
                   flex: 1,
-                  child: Text(_appVersion, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.white),)),
+                  child: Container(
+                      margin: EdgeInsets.only(top: 20),
+                      child: Text(_appVersion, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.white),))
+              ),
             ],
           ),
         ),

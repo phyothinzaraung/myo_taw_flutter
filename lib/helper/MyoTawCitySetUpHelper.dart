@@ -130,7 +130,7 @@ class MyoTawCitySetUpHelper{
   }
 
   static List<String> getCityList(){
-    return [MyString.TGY_CITY,MyString.MLM_CITY, MyString.HLY_CITY, MyString.HPA_CITY];
+    return [ MyString.TGY_CITY,MyString.MLM_CITY, MyString.HLY_CITY];
   }
 
   static String getRegionCode(String city){

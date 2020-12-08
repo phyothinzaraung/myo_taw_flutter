@@ -333,6 +333,7 @@ class MyString{
   static const String txt_need_to_date = 'ဆုံးရက် ရွေးပါ';
   static const String txt_date_range_picker_help_text = 'စရက်ဆုံးရက် ရွေးချယ်ပေးပါ';
   static const String txt_date_range_picker_save_text = 'ရွေးမည်';
+  static const String txt_is_gov_building = 'အစိုးရအဆောက်အဦးဖြစ်သည်';
 
   static const String NEWS_FEED_UPLOAD_TYPE_AUDIO= "AudioUpload";
   static const String NEWS_FEED_UPLOAD_TYPE_VIDEO= "VideoUpload";
@@ -417,7 +418,7 @@ class MyString{
 
 class MyStringList{
 
-  static const List isFormRegionCode = [MyString.HLY_REGION_CODE, MyString.HPA_REGION_CODE];
+  static const List isFormRegionCode = [MyString.HLY_REGION_CODE, MyString.HPA_REGION_CODE, MyString.TGY_REGION_CODE];
   //Tgy
   static const List<String> biz_tgy_food = [
     'ကုန်စုံဆိုင်/မုန့်ဆိုင်',
@@ -497,7 +498,8 @@ class MyStringList{
     'အမျိုးအစား (က)',
     'အမျိုးအစား (ခ)',
     'အမျိုးအစား (ဂ)',
-    'အစိုးရအဆောက်အဦများ'];
+    /*'အစိုးရအဆောက်အဦများ'*/
+  ];
 
   static const List<String> property_old_tgy_building_type = [
     'သက်ကယ်မိုးထရံကာ',

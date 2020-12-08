@@ -28,8 +28,8 @@ import 'helper/PlatformHelper.dart';
 import 'model/NotificationModel.dart';
 
 class WardAdminFeatureChooseScreen extends StatefulWidget {
-  bool isForm = false;
-  WardAdminFeatureChooseScreen({this.isForm});
+  final bool isForm;
+  WardAdminFeatureChooseScreen({this.isForm:false});
   @override
   _WardAdminFeatureChooseScreenState createState() => _WardAdminFeatureChooseScreenState();
 }

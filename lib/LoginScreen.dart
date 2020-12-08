@@ -216,7 +216,11 @@ class _LoginScreenState extends State<LoginScreen> {
                                         }else{
                                           WarningSnackBar(_globalKey, MyString.txt_fill_phno);
                                         }
-                                    //Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
+
+                                    //pass otp login for testing purpose
+                                    /*_regionCode = MyoTawCitySetUpHelper.getRegionCode(_dropDownCity);
+                                    _normalizedPhNo = await PhoneNumberUtil.normalizePhoneNumber(phoneNumber: _phoneNoController.text, isoCode: 'MM');
+                                    Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));*/
                                     },
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,

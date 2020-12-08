@@ -145,21 +145,24 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         children: <Widget>[
           CarouselSlider(
             items: _photoWidgetList,
-            height: 200.0,
-            initialPage: 0,
-            autoPlay: true,
-            autoPlayInterval: Duration(seconds: 3),
-            autoPlayAnimationDuration: Duration(milliseconds: 1000),
-            autoPlayCurve: Curves.decelerate,
-            pauseAutoPlayOnTouch: Duration(seconds: 1),
-            scrollDirection: Axis.horizontal,
-            enlargeCenterPage: true,
-            viewportFraction: 1.0,
-            onPageChanged: (i){
-              setState(() {
-                _currentPhoto = i;
-              });
-            },),
+            options: CarouselOptions(
+              height: 200.0,
+              initialPage: 0,
+              autoPlay: true,
+              autoPlayInterval: Duration(seconds: 3),
+              autoPlayAnimationDuration: Duration(milliseconds: 1000),
+              autoPlayCurve: Curves.decelerate,
+              pauseAutoPlayOnTouch: true,
+              scrollDirection: Axis.horizontal,
+              enlargeCenterPage: true,
+              viewportFraction: 1.0,
+              onPageChanged: (i, str){
+                setState(() {
+                  _currentPhoto = i;
+                });
+              },
+            ),
+          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: _indicatorWidgetList,
