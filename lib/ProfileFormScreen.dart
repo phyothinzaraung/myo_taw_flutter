@@ -168,13 +168,13 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     _userModel.township = _dropDownTownship;
 
     //change ward admin
-    /*_userModel.isWardAdmin = false;// ---change ward admin and user
-    _sharepreferenceshelper.setIsWardAdmin(false);*/ // ---change ward admin and user
+    /*_userModel.isWardAdmin = true;// ---change ward admin and user
+    _sharepreferenceshelper.setIsWardAdmin(true);*/             // ---change ward admin and user
 
     //change region code
-    /*_userModel.currentRegionCode = MyString.HLY_REGION_CODE;// --- change region code
-    _sharepreferenceshelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, MyString.HLY_REGION_CODE,
-        _userModel.isWardAdmin, _userModel.wardName, _userModel.androidToken);*/// ---change region code
+    /*_userModel.currentRegionCode = MyString.TGY_REGION_CODE;// --- change region code
+    _sharepreferenceshelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, MyString.TGY_REGION_CODE,
+        _userModel.isWardAdmin, _userModel.wardName, _userModel.androidToken); */         // ---change region code
 
     print('${_userModel.toJson()}');
     try{
@@ -275,7 +275,6 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
                                   ),
                                   child: TextField(
                                     maxLines: null,
-                                    autofocus: true,
                                     decoration: InputDecoration(
                                         border: InputBorder.none
                                     ),

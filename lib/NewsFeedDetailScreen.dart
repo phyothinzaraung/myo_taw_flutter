@@ -1,6 +1,8 @@
+
 import 'dart:io';
 import 'dart:isolate';
 import 'dart:ui';
+import 'package:chewie/chewie.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
@@ -12,6 +14,7 @@ import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/PrimaryColorSnackBarWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
+import 'package:video_player/video_player.dart';
 import 'helper/NavigatorHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -41,9 +44,11 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   List<Widget> _photoWidgetList = List();
   List<Widget> _indicatorWidgetList = List();
   int index = 0;
-  ReceivePort _port = ReceivePort();
   var _localPath;
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
+  VideoPlayerController _videoPlayerController;
+  ChewieController _chewieController;
+  Duration duration = Duration();
 
   _NewsFeedDetailScreenState(this._newsFeedModel, this._photoList);
 
@@ -51,12 +56,31 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    initNewsFeedData();
+    _initNewsFeedData();
     addPhoto();
-    _initDownload();
+    if(_audioUrl != null){
+      _initAudioPlayer();
+    }
   }
 
-  initNewsFeedData(){
+  _initAudioPlayer(){
+    _videoPlayerController = VideoPlayerController.network(BaseUrl.NEWS_FEED_CONTENT_URL+ _audioUrl);
+    _chewieController = ChewieController(
+        videoPlayerController: _videoPlayerController,
+        autoPlay: false,
+        aspectRatio: 16/9,
+        allowFullScreen: false,
+        looping: false,
+        autoInitialize: true,
+        errorBuilder: (context, errorMsg){
+          return Center(
+            child: Text(MyString.txt_no_internet, style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),
+          );
+        }
+    );
+  }
+
+  _initNewsFeedData(){
     _title = _newsFeedModel.title;
     _photo = _newsFeedModel.photoUrl;
     _date = ShowDateTimeHelper.showDateTimeDifference(_newsFeedModel.accesstime);
@@ -235,8 +259,12 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
           ),
         ),
       );
-    }else{
-      return Container(
+    }else if(_contentType == MyString.NEWS_FEED_CONTENT_TYPE_AUDIO){
+      return PlatformHelper.isAndroid()?
+      Chewie(
+        controller: _chewieController,
+      ) :
+      Container(
         child: Stack(
           alignment: Alignment.center,
           children: <Widget>[
@@ -245,10 +273,48 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
               height: 200,
               color: Colors.white,
             ),
-            Image.asset('images/${_newsfeedContentTypeIcon(_contentType)}.png', width: 50,
-                height: 50
-            ),
+            Image.asset('images/${_newsfeedContentTypeIcon(_contentType)}.png', width: 50, height: 50),
           ],
+        ),
+      );
+    }else{
+      return GestureDetector(
+        onTap: ()async{
+          if (await canLaunch(BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType))) {
+          await launch(BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType));
+          } else {
+          throw 'Could not launch $BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType)';
+          }
+        },
+        child: Container(
+          child: Stack(
+            alignment: Alignment.bottomCenter,
+            children: <Widget>[
+              Container(
+                width: double.maxFinite,
+                height: 200,
+                color: Colors.white,
+              ),
+              Container(
+                  height: 200,
+                  alignment: Alignment.center,
+                  child: Image.asset('images/${_newsfeedContentTypeIcon(_contentType)}.png', width: 50, height: 50)
+              ),
+              PlatformHelper.isAndroid()?Container(
+                color: MyColor.colorBlackSemiTransparent,
+                width: double.maxFinite,
+                padding: EdgeInsets.only(left: 20, right: 20),
+                height: 35,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(MyString.txt_to_read, style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: Colors.white),),
+                    Icon(Icons.arrow_forward_ios, color: Colors.white, size: 20,)
+                  ],
+                ),
+              ) : Container()
+            ],
+          ),
         ),
       );
     }
@@ -334,18 +400,6 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
     );
   }
 
-  _initDownload(){
-    IsolateNameServer.registerPortWithName(_port.sendPort, 'downloader_send_port');
-    _port.listen((dynamic data) {
-      String id = data[0];
-      DownloadTaskStatus status = data[1];
-      int progress = data[2];
-      setState((){ });
-    });
-
-    FlutterDownloader.registerCallback(downloadCallback);
-  }
-
   String _pdfOrAudio(String type){
     if (type == MyString.NEWS_FEED_CONTENT_TYPE_PDF){
       return _pdfUrl;
@@ -356,47 +410,33 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
 
   _startDownload()async{
     try{
-      if(PlatformHelper.isAndroid()) {
-        final _directoryPath = Directory('/storage/emulated/0/');
+      final _directoryPath = Directory('/storage/emulated/0/');
 
-        _localPath = _directoryPath.path + 'Myotaw download';
-        final dir = Directory(_localPath);
-        bool hasExist = await dir.exists();
-        if (!hasExist) {
-          dir.create();
-        }
-        print(
-            'download dir : ${dir.path}, url : ${BaseUrl.NEWS_FEED_CONTENT_URL +
-                _pdfOrAudio(_contentType)}');
+      _localPath = _directoryPath.path + 'Myotaw download';
+      final dir = Directory(_localPath);
+      bool hasExist = await dir.exists();
+      if (!hasExist) {
+        dir.create();
+      }
+      print(
+          'download dir : ${dir.path}, url : ${BaseUrl.NEWS_FEED_CONTENT_URL +
+              _pdfOrAudio(_contentType)}');
 
-        var fileName = _pdfOrAudio(_contentType);
-        var savePath = dir.path + Platform.pathSeparator + fileName;
-        if (!await File(savePath).exists()) {
-          print('downloading');
-          await FlutterDownloader.enqueue(
-              url: BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType),
-              savedDir: _localPath,
-              showNotification: true,
-              openFileFromNotification: true
-          );
+      var fileName = _pdfOrAudio(_contentType);
+      var savePath = dir.path + Platform.pathSeparator + fileName;
+      if (!await File(savePath).exists()) {
+        print('downloading');
+        await FlutterDownloader.enqueue(
+            url: BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType),
+            savedDir: _localPath,
+            showNotification: true,
+            openFileFromNotification: true
+        );
 
-          FlutterDownloader.loadTasks();
-        } else {
-          print('already download');
-          PrimaryColorSnackBarWidget(_globalKey, MyString.txt_already_download);
-        }
-      }else {
-        if(_contentType == MyString.NEWS_FEED_CONTENT_TYPE_PDF) {
-          NavigatorHelper.myNavigatorPush(context, NewsFeedWebViewScreen(
-              BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType)),
-              ScreenName.NEWS_FEED_WEBVIEW_SCREEN);
-        }else{
-          if (await canLaunch(BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType))) {
-            await launch(BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType));
-          } else {
-            throw 'Could not launch $BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType)';
-          }
-        }
+        FlutterDownloader.loadTasks();
+      } else {
+        print('already download');
+        PrimaryColorSnackBarWidget(_globalKey, MyString.txt_already_download);
       }
     }catch(e){
       WarningSnackBar(_globalKey, 'download fail');
@@ -404,13 +444,8 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   }
 
 
-  static void downloadCallback(String id, DownloadTaskStatus status, int progress) {
-    final SendPort send = IsolateNameServer.lookupPortByName('downloader_send_port');
-    send.send([id, status, progress]);
-  }
-
   bool _isDownloadIconShown(){
-    if(_contentType == MyString.NEWS_FEED_CONTENT_TYPE_PDF || _contentType == MyString.NEWS_FEED_CONTENT_TYPE_AUDIO){
+    if(_contentType == MyString.NEWS_FEED_CONTENT_TYPE_AUDIO || _contentType == MyString.NEWS_FEED_CONTENT_TYPE_PDF){
       return true;
     }else{
       return false;
@@ -430,12 +465,30 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
         }) : Container()
       ],
       trailing: _isDownloadIconShown()?GestureDetector(
-        onTap: (){
-          _startDownload();
+        onTap: ()async{
+          if(_contentType == MyString.NEWS_FEED_CONTENT_TYPE_PDF) {
+            NavigatorHelper.myNavigatorPush(context, NewsFeedWebViewScreen(
+                BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType)),
+                ScreenName.NEWS_FEED_WEBVIEW_SCREEN);
+          }else{
+              if (await canLaunch(BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType))) {
+                await launch(BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType));
+              } else {
+                throw 'Could not launch $BaseUrl.NEWS_FEED_CONTENT_URL + _pdfOrAudio(_contentType)';
+              }
+          }
         },
           child: Icon(Icons.open_in_browser, size: 30,)
       ) : Container(width: 0, height: 0,),
     );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _videoPlayerController.dispose();
+    _chewieController.dispose();
   }
 
 }

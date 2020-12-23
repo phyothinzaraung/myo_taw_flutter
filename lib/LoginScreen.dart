@@ -202,25 +202,26 @@ class _LoginScreenState extends State<LoginScreen> {
                                   width: double.maxFinite,
                                   child: CustomButtonWidget(onPress: () async{
                                     if(_dropDownCity != 'နေရပ်ရွေးပါ' && _phoneNoController.text.isNotEmpty){
-                                      await _checkCon();
-                                      if(_isCon){
-                                        _regionCode = MyoTawCitySetUpHelper.getRegionCode(_dropDownCity);
-                                        //bool _isValid = await _checkPhNoValid();
-                                        FocusScope.of(context).requestFocus(FocusNode());
-                                        _getOtp();
-                                      }else{
-                                        WarningSnackBar(_globalKey, MyString.txt_no_internet);
-                                        }
-                                      }else if (_dropDownCity == 'နေရပ်ရွေးပါ'){
-                                        WarningSnackBar(_globalKey, MyString.txt_choose_city);
+                                        await _checkCon();
+                                        if(_isCon){
+                                          _regionCode = MyoTawCitySetUpHelper.getRegionCode(_dropDownCity);
+                                          FocusScope.of(context).requestFocus(FocusNode());
+                                          _getOtp();
                                         }else{
-                                          WarningSnackBar(_globalKey, MyString.txt_fill_phno);
-                                        }
+                                            WarningSnackBar(_globalKey, MyString.txt_no_internet);
+                                          }
+                                        }else if (_dropDownCity == 'နေရပ်ရွေးပါ'){
+                                            WarningSnackBar(_globalKey, MyString.txt_choose_city);
+                                          }else{
+                                            WarningSnackBar(_globalKey, MyString.txt_fill_phno);
+                                    }
 
                                     //pass otp login for testing purpose
                                     /*_regionCode = MyoTawCitySetUpHelper.getRegionCode(_dropDownCity);
                                     _normalizedPhNo = await PhoneNumberUtil.normalizePhoneNumber(phoneNumber: _phoneNoController.text, isoCode: 'MM');
                                     Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));*/
+
+
                                     },
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,

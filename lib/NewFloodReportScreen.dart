@@ -97,7 +97,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
     });
     await _sharepreferenceshelper.initSharePref();
     var phNo = _sharepreferenceshelper.getUserPhoneNo();
-    var subject = MyString.FLOOD_CONTRIBUTE;
+    var subject = MyString.FLOOD_REPORT;
     var uniqueKey = _sharepreferenceshelper.getUserUniqueKey();
     var regionCode = _sharepreferenceshelper.getRegionCode();
     var isAdmin = _sharepreferenceshelper.isWardAdmin();

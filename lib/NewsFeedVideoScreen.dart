@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_downloader/flutter_downloader.dart';
+import 'package:flutter_xlider/flutter_xlider.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:path_provider/path_provider.dart';
 import 'helper/MyoTawConstant.dart';
@@ -15,28 +16,25 @@ import 'myWidget/PrimaryColorSnackBarWidget.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
 
 class NewsFeedVideoScreen extends StatefulWidget {
-  String url;
+  final String url;
   NewsFeedVideoScreen(this.url);
   @override
-  _NewsFeedVideoScreenState createState() => _NewsFeedVideoScreenState(this.url);
+  _NewsFeedVideoScreenState createState() => _NewsFeedVideoScreenState();
 }
 
 class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
-  String _videoUrl;
   VideoPlayerController _videoPlayerController;
   ChewieController _chewieController;
   var _downloadVideo;
   ReceivePort _port = ReceivePort();
   var _localPath;
   GlobalKey<ScaffoldState> _globalKey = GlobalKey();
-  _NewsFeedVideoScreenState(this._videoUrl);
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
-    //_initDownload();
-    _videoPlayerController = VideoPlayerController.network(BaseUrl.NEWS_FEED_CONTENT_URL+_videoUrl);
+    _videoPlayerController = VideoPlayerController.network(BaseUrl.NEWS_FEED_CONTENT_URL+widget.url);
     _chewieController = ChewieController(
       videoPlayerController: _videoPlayerController,
       autoPlay: true,
@@ -44,13 +42,12 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
       allowFullScreen: true,
       looping: false,
       autoInitialize: true,
-      errorBuilder: (context, errormessage){
+      errorBuilder: (context, errorMsg){
         return Center(
           child: Text(MyString.txt_no_internet, style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),),
         );
       }
     );
-    //_initDownload();
 
   }
 
@@ -83,12 +80,12 @@ class _NewsFeedVideoScreenState extends State<NewsFeedVideoScreen> {
         dir.create();
       }
       print('download dir : ${dir.path}');
-      var fileName = _videoUrl;
+      var fileName = widget.url;
       var savePath = dir.path + Platform.pathSeparator + fileName;
 
       if(!await File(savePath).exists()){
         _downloadVideo = await FlutterDownloader.enqueue(
-            url: BaseUrl.NEWS_FEED_CONTENT_URL+_videoUrl,
+            url: BaseUrl.NEWS_FEED_CONTENT_URL+widget.url,
             savedDir:  _localPath,
             showNotification: true,
             openFileFromNotification: true

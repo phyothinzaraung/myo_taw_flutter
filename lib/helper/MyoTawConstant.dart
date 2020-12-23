@@ -334,6 +334,7 @@ class MyString{
   static const String txt_date_range_picker_help_text = 'စရက်ဆုံးရက် ရွေးချယ်ပေးပါ';
   static const String txt_date_range_picker_save_text = 'ရွေးမည်';
   static const String txt_is_gov_building = 'အစိုးရအဆောက်အဦးဖြစ်သည်';
+  static const String txt_to_read = 'ဖတ်မည်';
 
   static const String NEWS_FEED_UPLOAD_TYPE_AUDIO= "AudioUpload";
   static const String NEWS_FEED_UPLOAD_TYPE_VIDEO= "VideoUpload";
@@ -382,6 +383,7 @@ class MyString{
   static const String GARBAGE_CONTRIBUTE = "အမှိုက်";
   static const String DRAINAGE_CONTRIBUTE = "ရေမြောင်း";
   static const String FLOOD_CONTRIBUTE = "ရေကြီး၊ ရေလျှံ";
+  static const String FLOOD_REPORT = "ရေကြီးခြင်းအစီရင်ခံစာ";
   static const String ELECTRIC_CONTRIBUTE = "မီးကြိုး";
   static const String ANIMAL_CONTRIBUTE = "တိရိစ္ဆာန်အရေး";
   static const String WATER_DISTRIBUTION_CONTRIBUTE = "ရေပေးဝေရေး";
