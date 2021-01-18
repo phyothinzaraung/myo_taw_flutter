@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/NewsFeedScreen.dart';
@@ -257,36 +258,32 @@ class _OtpScreenState extends State<OtpScreen> {
                               width: double.maxFinite,
                               margin: EdgeInsets.only(bottom: 20),
                               child: CustomButtonWidget(onPress: () async{
-                                //_logIn();
-
-
-
-                                await _checkCon();
-                                if(_isCon){
-                                  if(_isExpire){
-                                    _getOtp();
-
-                                  }else{
-                                    if(_otpCodeController.text.isNotEmpty && _otpCodeController.text != null){
-                                      if(_otpCodeController.text.length == 4){
-                                        FocusScope.of(context).requestFocus(FocusNode());
-                                        _verifyOtp(_otpCodeController.text);
-                                        //_logIn();
-                                      }else{
-                                        WarningSnackBar(_globalKey, MyString.txt_otp_not_exceed_4);
-                                      }
+                                if(MyString.For_Testing){
+                                  _logIn();
+                                }else{
+                                    await _checkCon();
+                                    if(_isCon){
+                                        if(_isExpire){
+                                        _getOtp();
 
                                     }else{
-                                      WarningSnackBar(_globalKey, MyString.txt_enter_otp);
+                                      if(_otpCodeController.text.isNotEmpty && _otpCodeController.text != null){
+                                        if(_otpCodeController.text.length == 4){
+                                          FocusScope.of(context).requestFocus(FocusNode());
+                                          _verifyOtp(_otpCodeController.text);
+                                        }else{
+                                          WarningSnackBar(_globalKey, MyString.txt_otp_not_exceed_4);
+                                        }
+
+                                      }else{
+                                        WarningSnackBar(_globalKey, MyString.txt_enter_otp);
+                                      }
                                     }
+
+                                  }else{
+                                    WarningSnackBar(_globalKey, MyString.txt_no_internet);
                                   }
-
-                                }else{
-                                  WarningSnackBar(_globalKey, MyString.txt_no_internet);
                                 }
-
-
-
                               },
                                 child: Row(
                                   mainAxisAlignment: MainAxisAlignment.center,

@@ -42,7 +42,6 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    _locationInit();
   }
 
   _checkCon()async{
@@ -60,12 +59,16 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
     if(!isServiceEnable){
       var isSuccess = await _location.requestService();
       if(isSuccess){
-       _getLocation();
+        if(_lat == null && _lng == null){
+          _getLocation();
+        }
       }else{
         _locationInit();
       }
     }else{
-      _getLocation();
+      if(_lat == null && _lng == null){
+        _getLocation();
+      }
     }
   }
 
@@ -246,6 +249,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _locationInit();
     return CustomScaffoldWidget(
       title: Text(MyString.txt_add_flood_level_record,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),

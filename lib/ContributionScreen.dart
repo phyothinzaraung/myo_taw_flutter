@@ -31,7 +31,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
   List<String> _subjectList = new List<String>();
   String _dropDownSubject = MyString.txt_choose_subject;
   double _lat, _lng;
-  bool _isCon, _isLoading;
+  bool _isCon, _isLoading = false;
   File _image;
   var _location = new Location();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
@@ -49,14 +49,12 @@ class _ContributionScreenState extends State<ContributionScreen> {
     super.initState();
     _subjectList = [_dropDownSubject,];
     _subjectList.addAll(MyStringList.suggestion_subject);
-    _locationInit();
     for(var i in _subjectList){
       _subjectWidgetList.add(Padding(
         padding: const EdgeInsets.only(left: 5),
         child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
       ));
     }
-    _isLoading = false;
   }
 
   void _locationInit()async{
@@ -65,12 +63,16 @@ class _ContributionScreenState extends State<ContributionScreen> {
     if(!isServiceEnable){
       var isSuccess = await _location.requestService();
       if(isSuccess){
-        _getLocation();
+        if(_lat == null && _lng == null){
+          _getLocation();
+        }
       }else{
        _locationInit();
       }
     }else{
-     _getLocation();
+      if(_lat == null && _lng == null){
+        _getLocation();
+      }
     }
   }
 
@@ -300,6 +302,7 @@ class _ContributionScreenState extends State<ContributionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _locationInit();
     return CustomScaffoldWidget(
       title: Text(MyString.txt_suggestion,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),

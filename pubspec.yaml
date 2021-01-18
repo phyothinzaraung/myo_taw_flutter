@@ -37,7 +37,7 @@ dependencies:
   permission_handler: 5.0.1+1
   image_picker: ^0.6.7+14
   flutter_statusbarcolor: ^0.2.3
-  location: 3.1.0
+  location: 3.2.1
   google_maps_flutter: 1.0.6
   flutter_html: ^0.10.4
   pie_chart: 4.0.1

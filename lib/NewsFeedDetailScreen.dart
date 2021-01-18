@@ -83,7 +83,7 @@ class _NewsFeedDetailScreenState extends State<NewsFeedDetailScreen> {
   _initNewsFeedData(){
     _title = _newsFeedModel.title;
     _photo = _newsFeedModel.photoUrl;
-    _date = ShowDateTimeHelper.showDateTimeDifference(_newsFeedModel.accesstime);
+    _date = ShowDateTimeHelper.showDateTimeDifference(_newsFeedModel.createdDate);
     _newsfeedBody = _newsFeedModel.body;
     _thumbNail = _newsFeedModel.thumbnail;
     _videoUrl = _newsFeedModel.videoUrl;

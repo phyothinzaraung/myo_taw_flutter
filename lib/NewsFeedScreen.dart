@@ -316,7 +316,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     String newsFeedThumbNail = newsFeedModel.thumbnail;
     String title = newsFeedModel.title;
     String body = newsFeedModel.body;
-    String date = ShowDateTimeHelper.showDateTimeDifference(newsFeedModel.accesstime);
+    String date = ShowDateTimeHelper.showDateTimeDifference(newsFeedModel.createdDate);
     bool isPhoto = _isPhoto(newsFeedModel.uploadType);
     String contentType = newsFeedModel.uploadType;
     return Card(

@@ -1,3 +1,4 @@
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -7,12 +8,10 @@ import 'package:myotaw/NotificationScreen.dart';
 import 'package:myotaw/ProfileScreen.dart';
 import 'package:myotaw/SaveNewsFeedScreen.dart';
 import 'package:myotaw/WardAdminContributionListScreen.dart';
-import 'package:myotaw/database/NotificationDb.dart';
 import 'package:myotaw/database/UserDb.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
-import 'package:myotaw/main.dart';
 import 'package:myotaw/model/DashBoardModel.dart';
 import 'package:myotaw/model/UserModel.dart';
 import 'package:myotaw/myWidget/CustomDialogWidget.dart';

@@ -49,6 +49,9 @@ class OrganizationId{
 }
 
 class MyString{
+  //for login without otp pass code
+  static const bool For_Testing = true;
+
   static const String API_KEY = "B93979A51C8C46712DD2C8271587B262";
 
   static const String txt_like = "နှစ်သက်";
@@ -370,7 +373,7 @@ class MyString{
 
   static const String BUILDING_GRADE_A_HINT = "အမျိုးအစား (က) = တိုက်နှင့် Steel Structure";
   static const String BUILDING_GRADE_B_HINT = "အမျိုးအစား (ခ) = နံကပ်";
-  static const String BUILDING_GRADE_C_HINT = "အမျိုးအစား (ဂ) = သစ်၊ ပျဉ်၊ ဝါး၊ ဓနိ";
+  static const String BUILDING_GRADE_C_HINT = "အမျိုးအစား (ဂ) = သစ်၊ ပျဉ်၊ ဝါး၊ ဓနိ၊ ထရံ";
 
 
   static const String NEWS_FEED_CONTENT_TYPE_AUDIO= "Audio";
