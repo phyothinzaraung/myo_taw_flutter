@@ -143,6 +143,37 @@ class ServiceHelper{
    return response;
  }
 
+ sendWardAdminSuggestion<Response>(String file, String phoneNo, String subject, String message,
+     String uniqueKey, String userName, double lat, double lng, String regionCode, bool isAdmin, String wardName, double floodLevel,
+     String houseNo, String streetName, String remark, String blockNo) async{
+  FormData formData = new FormData.fromMap({
+   'file' : await MultipartFile.fromFile(file,filename: subject),
+   'UserPhoneNo' : phoneNo,
+   'Subject' : subject,
+   'Message' : message,
+   'UniqueKey' : uniqueKey,
+   'UserName' : userName,
+   'Latitude' : lat,
+   'Longitude' : lng,
+   'RegionCode' : regionCode,
+   'IsRead' : false,
+   'Fixed' : false,
+   'Source' : 'app',
+   'IsWardAdmin' : isAdmin,
+   'WardName' : wardName,
+   'FloodLevel' : floodLevel,
+   'HouseNo': houseNo,
+   'StreetName': streetName,
+   'Remark': remark,
+   'BlockNo': blockNo
+  });
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Contribute/UpSertContributeWithPhoto",
+      data: formData);
+  return response;
+ }
+
  getBizLicense<Response>(String regionCode, int page, int pageSize) async{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
@@ -344,6 +375,14 @@ class ServiceHelper{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+ "Form/getFormList");
+  return response;
+ }
+ 
+ getWards<Response>(String township) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+ "Custom/GetWards",
+  queryParameters: {"Township": township});
   return response;
  }
 

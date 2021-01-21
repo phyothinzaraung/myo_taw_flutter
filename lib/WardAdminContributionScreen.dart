@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
 import 'package:connectivity/connectivity.dart';
@@ -13,6 +14,7 @@ import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
 import 'package:myotaw/myWidget/DropDownWidget.dart';
 import 'package:myotaw/myWidget/IosPickerWidget.dart';
+import 'helper/MyoTawCitySetUpHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'helper/PlatformHelper.dart';
@@ -22,10 +24,12 @@ import 'model/UserModel.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'WardAdminLocationUpdateScreen.dart';
+import 'model/WardModel.dart';
 import 'myWidget/NativeProgressIndicator.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
 
 class WardAdminContributionScreen extends StatefulWidget {
+
   @override
   _WardAdminContributionScreenState createState() => _WardAdminContributionScreenState();
 }
@@ -40,7 +44,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
   UserModel _userModel;
-  var _response;
+  Response _response;
   Completer<GoogleMapController> _controller = Completer();
   CameraPosition _cameraPosition;
   Set<Marker> _markers = Set();
@@ -48,6 +52,14 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   TextEditingController _messController = TextEditingController();
   List<Widget> _subjectWidgetList = List();
   int _pickerIndex = 0;
+  List<String> _wardList = List<String>();
+  TextEditingController _remarkController = TextEditingController();
+  TextEditingController _houseNoController = TextEditingController();
+  TextEditingController _streetController = TextEditingController();
+  String _selectedWard;
+  List<DropdownMenuItem<String>> _dropDownMenuWard;
+  var dialogResponse;
+  String houseNo, blockNo, streetName, remark;
 
   @override
   void initState() {
@@ -61,6 +73,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
         child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
       ));
     }
+    _getWard();
   }
 
   void _locationInit()async{
@@ -99,6 +112,41 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
         _markers.add(_resultMarker);
       }
     });
+  }
+
+  _getWard() async{
+    String _townsip;
+    await _sharepreferenceshelper.initSharePref();
+    String regionCode = _sharepreferenceshelper.getRegionCode();
+    switch(regionCode){
+      case MyString.TGY_REGION_CODE:
+        _townsip = MyString.TGY_CITY;
+        break;
+      case MyString.MLM_REGION_CODE:
+        _townsip = MyString.MLM_CITY;
+        break;
+      case MyString.LKW_REGION_CODE:
+        _townsip = MyString.LKW_CITY;
+        break;
+      case MyString.MGY_REGION_CODE:
+        _townsip = MyString.MGY_CITY;
+        break;
+      case MyString.HLY_REGION_CODE:
+        _townsip = MyString.HLY_CITY;
+        break;
+      case MyString.HPA_REGION_CODE:
+        _townsip = MyString.HPA_CITY;
+        break;
+    }
+    _response = await ServiceHelper().getWards(_townsip);
+    if(_response!=null){
+      var result = _response.data;
+      for(var i in result){
+        setState(() {
+          _wardList.add(WardModel.fromJson(i).wardName);
+        });
+      }
+    }
   }
 
   _checkCon()async{
@@ -161,6 +209,46 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
       print(e);
       WarningSnackBar(_globalKey, MyString.txt_try_again);
     }
+    setState(() {
+      _isLoading = false;
+    });
+  }
+
+  _sendWardAdminSuggestion(String houseNumber, String street, String block, String rmk)async{
+    setState(() {
+      _isLoading = true;
+    });
+    await _sharepreferenceshelper.initSharePref();
+    await _userDb.openUserDb();
+    var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
+    _userDb.closeUserDb();
+    setState(() {
+      _userModel = model;
+    });
+    try{
+      _response = await ServiceHelper().sendWardAdminSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
+          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, true, _userModel.wardName,0, houseNumber, street, rmk, block);
+      //print('sendsuggest: ${_sharepreferenceshelper.isWardAdmin()} ${_userModel.wardName}');
+      if(_response.data != null){
+        CustomDialogWidget().customSuccessDialog(
+            context: context,
+            content: MyString.txt_suggestion_finish,
+            img: 'suggestion_no_circle.png',
+            onPress: ()async{
+              FocusScope.of(context).requestFocus(FocusNode());
+              await _sharepreferenceshelper.initSharePref();
+              FireBaseAnalyticsHelper.trackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+              Navigator.of(context).pop();
+              Navigator.of(context).pop({'isRefresh' : true});
+            }
+        );
+      }else{
+        WarningSnackBar(_globalKey, MyString.txt_try_again);
+      }
+    }catch(e){
+      print(e);
+      WarningSnackBar(_globalKey, MyString.txt_try_again);
+    }
 
     setState(() {
       _isLoading = false;
@@ -197,7 +285,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
-  Widget _body(){
+  Widget _body(String _houseNo, String _blockNo, String _remark, String _streetName ){
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
       progressIndicator: CustomProgressIndicatorWidget(),
@@ -392,6 +480,9 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                           ),
                           child: TextField(
                             maxLines: null,
+                            showCursor: true,
+                            cursorColor: MyColor.colorPrimary,
+                            autocorrect: false,
                             controller: _messController,
                             decoration: InputDecoration(
                                 border: InputBorder.none
@@ -413,8 +504,14 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                                     FireBaseAnalyticsHelper.trackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT,
                                         _sharepreferenceshelper.getUserUniqueKey());
                                   }else{
-                                    WarningSnackBar(_globalKey, MyString.txt_try_again_no_location);
-                                    _locationInit();
+                                    // WarningSnackBar(_globalKey, MyString.txt_try_again_no_location);
+                                    // _locationInit();
+                                    print("no location");
+                                    if(_blockNo!= null){
+                                      _sendWardAdminSuggestion(_houseNo, _streetName, _blockNo, _remark);
+                                    }else {
+                                      showAddressDialog(context, _wardList);
+                                    }
                                   }
 
                                 }else if(_image == null){
@@ -452,8 +549,186 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     return CustomScaffoldWidget(
       title: Text(MyString.txt_suggestion,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
-      body: _body(),
+      body: _body(houseNo, blockNo, remark, streetName),
       globalKey: _globalKey,
     );
+  }
+
+  Future<void> showAddressDialog(BuildContext context, List<String> wardList) async {
+    _dropDownMenuWard = getDropDownMenuWard(wardList);
+    dialogResponse = showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius:
+                  BorderRadius.circular(8.0)), //this right here
+              child: Container(
+                height: 480,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ListView(
+                    children: [
+                      Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(bottom: 4.0),
+                          child: Text(MyString.txt_fill_address,
+                            style: TextStyle(fontSize: FontSize.textSizeExtraNormal,
+                                fontWeight: FontWeight.bold,
+                                color: MyColor.colorPrimary),)),
+                      Container(
+                          margin: EdgeInsets.only(top: 4.0),
+                          child: Text(MyString.txt_house_no,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      Container(
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                        ),
+                        child: TextField(
+                          maxLines: null,
+                          decoration: InputDecoration(
+                              border: InputBorder.none
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              houseNo = value;
+                            });
+                          },
+                          showCursor: true,
+                          cursorColor: MyColor.colorPrimary,
+                          autocorrect: false,
+                          controller: _houseNoController,
+                          style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),
+                        ),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 8.0),
+                          child: Text(MyString.txt_owner_street_name,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      Container(
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                        ),
+                        child: TextField(
+                          maxLines: null,
+                          decoration: InputDecoration(
+                              border: InputBorder.none
+                          ),
+                          showCursor: true,
+                          cursorColor: MyColor.colorPrimary,
+                          autocorrect: false,
+                          controller: _streetController,
+                          style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),
+                        ),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 8.0),
+                          child: Text(MyString.txt_blockNo,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      Container(
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                        ),
+                        child: FormField(builder: (FormFieldState state){
+                          return InputDecorator(
+                            decoration: InputDecoration(
+                                border: InputBorder.none),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                hint: Text("ရပ်ကွက်ရွေးချယ်ပါ",
+                                  style: TextStyle(
+                                      fontSize: FontSize.textSizeExtraSmall
+                                  ),),
+                                value: _selectedWard,
+                                isDense: true,
+                                onChanged: (value){
+                                  setState(() {
+                                    _selectedWard = value;
+                                  });
+                                },
+                                items: _dropDownMenuWard,
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 8.0),
+                          child: Text(MyString.txt_remark,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      Container(
+                        margin: EdgeInsets.only(bottom: 20.0),
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        height: 80.0,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(color: MyColor.colorPrimary,
+                                style: BorderStyle.solid,
+                                width: 0.80)
+                        ),
+                        child: TextField(
+                          maxLines: null,
+                          controller: _remarkController,
+                          showCursor: true,
+                          cursorColor: MyColor.colorPrimary,
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                              border: InputBorder.none
+                          ),
+                          style: TextStyle(fontSize: FontSize.textSizeNormal),
+                        ),
+                      ),
+                      Container(
+                        width: double.maxFinite,
+                        margin: EdgeInsets.only(bottom: 10.0),
+                        child: CustomButtonWidget(
+                          onPress: (){
+                            if(_selectedWard == null){
+                              WarningSnackBar(_globalKey, MyString.txt_select_block);
+                            }else {
+                              setState(() {
+                                houseNo = _houseNoController.text;
+                                streetName = _streetController.text;
+                                blockNo = _selectedWard;
+                                remark = _remarkController.text;
+                                Navigator.pop(context);
+                              });
+                            }
+                          },
+                          child: Text(MyString.txt_save, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                          color: MyColor.colorPrimary,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    ).then((value){
+      setState(() {
+        dialogResponse = value;
+      });
+    });
+  }
+
+  List<DropdownMenuItem<String>> getDropDownMenuWard(List<String> wardList) {
+    List<DropdownMenuItem<String>> _ward = List();
+    for (String ward in wardList) {
+      _ward.add(DropdownMenuItem(value: ward, child: Text(ward)));
+    }
+    return _ward;
   }
 }

@@ -50,7 +50,7 @@ class OrganizationId{
 
 class MyString{
   //for login without otp pass code
-  static const bool For_Testing = true;
+  static const bool For_Testing = false;
 
   static const String API_KEY = "B93979A51C8C46712DD2C8271587B262";
 
@@ -189,6 +189,8 @@ class MyString{
   static const String txt_send = 'ပို့မည်';
   static const String txt_not_send = 'မပို့ပါ';
   static const String txt_pin_set_up_success = 'ပင်ကုဒ်ပြုလုပ်မှု အောင်မြင်သည်။';
+  static const String txt_house_no = "အိမ်နံပါတ်";
+  static const String txt_fill_address = "နေရပ်လိပ်စာ ဖြည့်သွင်းမည်";
 
   static const String PROPERTY_TAX = "PropertyTax";
   static const String BIZ_LICENSE = "BizLicense";
@@ -338,6 +340,7 @@ class MyString{
   static const String txt_date_range_picker_save_text = 'ရွေးမည်';
   static const String txt_is_gov_building = 'အစိုးရအဆောက်အဦးဖြစ်သည်';
   static const String txt_to_read = 'ဖတ်မည်';
+  static const String txt_select_block = 'ရပ်ကွက်ရွေးချယ်ပါ';
 
   static const String NEWS_FEED_UPLOAD_TYPE_AUDIO= "AudioUpload";
   static const String NEWS_FEED_UPLOAD_TYPE_VIDEO= "VideoUpload";
