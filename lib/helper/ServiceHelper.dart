@@ -117,7 +117,7 @@ class ServiceHelper{
   return response;
  }
 
- sendSuggestion<Response>(String file, String phoneNo, String subject, String message,
+ /*sendSuggestion<Response>(String file, String phoneNo, String subject, String message,
      String uniqueKey, String userName, double lat, double lng, String regionCode, bool isAdmin, String wardName, double floodLevel) async{
   FormData formData = new FormData.fromMap({
    'file' : await MultipartFile.fromFile(file,filename: subject),
@@ -141,11 +141,25 @@ class ServiceHelper{
    response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Contribute/UpSertContributeWithPhoto",
        data: formData);
    return response;
- }
+ }*/
 
- sendWardAdminSuggestion<Response>(String file, String phoneNo, String subject, String message,
-     String uniqueKey, String userName, double lat, double lng, String regionCode, bool isAdmin, String wardName, double floodLevel,
-     String houseNo, String streetName, String remark, String blockNo) async{
+ sendWardAdminSuggestion<Response>(
+     {String file,
+      String phoneNo,
+      String subject,
+      String message,
+      String uniqueKey,
+      String userName,
+      double lat,
+      double lng,
+      String regionCode,
+      bool isAdmin,
+      String wardName,
+      double floodLevel,
+      String houseNo,
+      String streetName,
+      String remark,
+      String blockNo}) async{
   FormData formData = new FormData.fromMap({
    'file' : await MultipartFile.fromFile(file,filename: subject),
    'UserPhoneNo' : phoneNo,
@@ -383,6 +397,14 @@ class ServiceHelper{
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+ "Custom/GetWards",
   queryParameters: {"Township": township});
+  return response;
+ }
+
+ isWardAdminActive<Response>(String unique) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+ "Account/WardAdminIsActiveOrNot",
+      queryParameters: {"UniqueKey": unique});
   return response;
  }
 

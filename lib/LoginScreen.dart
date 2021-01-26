@@ -207,7 +207,7 @@ class _LoginScreenState extends State<LoginScreen> {
                                       //pass otp login for testing purpose
                                       _regionCode = MyoTawCitySetUpHelper.getRegionCode(_dropDownCity);
                                       _normalizedPhNo = await PhoneNumberUtil.normalizePhoneNumber(phoneNumber: _phoneNoController.text, isoCode: 'MM');
-                                      Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
                                     }else{
                                       if(_dropDownCity != 'နေရပ်ရွေးပါ' && _phoneNoController.text.isNotEmpty){
                                         await _checkCon();

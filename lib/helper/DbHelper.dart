@@ -6,7 +6,7 @@ class DbHelper{
   static final TABLE_NAME_USER = 'UserTable';
 
   static final USER_DATABASE_NAME = "User.db";
-  static final USER_DATABASE_VERSION = 2;
+  static final USER_DATABASE_VERSION = 3;
 
   static final COLUMN_USER_UNIQUE = 'uniqueKey';
   static final COLUMN_USER_NAME = 'name';
@@ -27,6 +27,7 @@ class DbHelper{
   static final COLUMN_USER_WARD_NAME = 'wardName';
   static final COLUMN_USER_METER_NO = 'meterNo';
   static final COLUMN_USER_MEMBER_TYPE = 'memberType';
+  static final COLUMN_USER_IS_ACTIVE = 'isActive';
   //---------------------------------------------------------------------------------------------------------------------//
 
   //SaveNewsFeedTable

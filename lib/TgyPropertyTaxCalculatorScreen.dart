@@ -1,14 +1,19 @@
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/TaxCalculator/TgyPropertyTax.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/CustomDialogWidget.dart';
+import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/PlatformHelper.dart';
+import 'helper/ServiceHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
+import 'model/WardModel.dart';
 import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/DropDownWidget.dart';
 import 'myWidget/IosPickerWidget.dart';
@@ -24,7 +29,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
   String _dropDownRoad = MyString.txt_no_selected;
   List<String> _roadList;
   String _dropDownBlockNo = MyString.txt_no_selected;
-  List<String> _blockNoList;
+  List<String> _blockNoList = List();
   TextEditingController _lengthController = new TextEditingController();
   TextEditingController _widthController = new TextEditingController();
   TextEditingController _storyController = new TextEditingController();
@@ -46,7 +51,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
     _buildingTypeList.addAll(MyStringList.property_tgy_building_type);
     _roadList = [_dropDownRoad];
     _roadList.addAll(MyStringList.property_tgy_road);
-    _blockNoList = [_dropDownRoad];
+    _blockNoList = [_dropDownBlockNo];
     _blockNoList.addAll(MyStringList.property_tgy_block_no);
 
     _buildingTypePickerIndex = 0;

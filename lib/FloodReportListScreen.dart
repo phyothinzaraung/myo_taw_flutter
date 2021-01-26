@@ -2,6 +2,7 @@ import 'package:async_loader/async_loader.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:myotaw/NewFloodReportScreen.dart';
+import 'package:myotaw/WardAdminContributionDetailScreen.dart';
 import 'package:myotaw/helper/FloodLevelFtInHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
@@ -50,7 +51,7 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
           return GestureDetector(
             onTap: (){
               Navigator.of(context).push(MaterialPageRoute(builder: (context) =>
-                  PhotoDetailScreen(BaseUrl.CONTRIBUTE_PHOTO_URL+_floodLevelReportModelList[index].photoUrl)));
+                  WardAdminContributionDetailScreen(_floodLevelReportModelList[index])));
             },
             child: Container(
               child: Card(
@@ -106,7 +107,8 @@ class _FloodReportListScreenState extends State<FloodReportListScreen> {
                                         image: DecorationImage(
                                             image: image,
                                             fit: BoxFit.cover),
-                                      ),);
+                                      ),
+                                    );
                                   },
                                   placeholder: (context, url) => Center(child: Container(
                                     child: Center(child: NativeProgressIndicator()), width: 90, height: 90.0,)),

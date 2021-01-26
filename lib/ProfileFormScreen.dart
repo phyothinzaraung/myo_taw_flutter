@@ -176,6 +176,9 @@ class _ProfileFormScreenState extends State<ProfileFormScreen> {
     _sharepreferenceshelper.setLoginSharePreference(_userModel.uniqueKey, _userModel.phoneNo, MyString.TGY_REGION_CODE,
         _userModel.isWardAdmin, _userModel.wardName, _userModel.androidToken); */         // ---change region code
 
+    //wardadmin is active or not
+    //_userModel.isActive = true;
+
     print('${_userModel.toJson()}');
     try{
       _response = await ServiceHelper().updateUserInfo(_userModel);

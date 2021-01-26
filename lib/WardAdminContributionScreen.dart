@@ -60,6 +60,8 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   List<DropdownMenuItem<String>> _dropDownMenuWard;
   var dialogResponse;
   String houseNo, blockNo, streetName, remark;
+  FocusNode _remarkFocusNode = FocusNode();
+  FocusNode _streetNameFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -115,30 +117,30 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   }
 
   _getWard() async{
-    String _townsip;
+    String _township;
     await _sharepreferenceshelper.initSharePref();
     String regionCode = _sharepreferenceshelper.getRegionCode();
     switch(regionCode){
       case MyString.TGY_REGION_CODE:
-        _townsip = MyString.TGY_CITY;
+        _township = MyString.TGY_CITY;
         break;
       case MyString.MLM_REGION_CODE:
-        _townsip = MyString.MLM_CITY;
+        _township = MyString.MLM_CITY;
         break;
       case MyString.LKW_REGION_CODE:
-        _townsip = MyString.LKW_CITY;
+        _township = MyString.LKW_CITY;
         break;
       case MyString.MGY_REGION_CODE:
-        _townsip = MyString.MGY_CITY;
+        _township = MyString.MGY_CITY;
         break;
       case MyString.HLY_REGION_CODE:
-        _townsip = MyString.HLY_CITY;
+        _township = MyString.HLY_CITY;
         break;
       case MyString.HPA_REGION_CODE:
-        _townsip = MyString.HPA_CITY;
+        _township = MyString.HPA_CITY;
         break;
     }
-    _response = await ServiceHelper().getWards(_townsip);
+    _response = await ServiceHelper().getWards(_township);
     if(_response!=null){
       var result = _response.data;
       for(var i in result){
@@ -186,49 +188,25 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
       _userModel = model;
     });
     try{
-      _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
-          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, true, _userModel.wardName,0);
-      //print('sendsuggest: ${_sharepreferenceshelper.isWardAdmin()} ${_userModel.wardName}');
-      if(_response.data != null){
-        CustomDialogWidget().customSuccessDialog(
-            context: context,
-            content: MyString.txt_suggestion_finish,
-            img: 'suggestion_no_circle.png',
-            onPress: ()async{
-              FocusScope.of(context).requestFocus(FocusNode());
-              await _sharepreferenceshelper.initSharePref();
-              FireBaseAnalyticsHelper.trackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-              Navigator.of(context).pop();
-              Navigator.of(context).pop({'isRefresh' : true});
-            }
-        );
-      }else{
-        WarningSnackBar(_globalKey, MyString.txt_try_again);
-      }
-    }catch(e){
-      print(e);
-      WarningSnackBar(_globalKey, MyString.txt_try_again);
-    }
-    setState(() {
-      _isLoading = false;
-    });
-  }
-
-  _sendWardAdminSuggestion(String houseNumber, String street, String block, String rmk)async{
-    setState(() {
-      _isLoading = true;
-    });
-    await _sharepreferenceshelper.initSharePref();
-    await _userDb.openUserDb();
-    var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
-    _userDb.closeUserDb();
-    setState(() {
-      _userModel = model;
-    });
-    try{
-      _response = await ServiceHelper().sendWardAdminSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
-          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, true, _userModel.wardName,0, houseNumber, street, rmk, block);
-      //print('sendsuggest: ${_sharepreferenceshelper.isWardAdmin()} ${_userModel.wardName}');
+      _response = await ServiceHelper().sendWardAdminSuggestion(
+        file: _image.path,
+        phoneNo: _userModel.phoneNo,
+        subject: _dropDownSubject,
+        message: _messController.text,
+        uniqueKey: _userModel.uniqueKey,
+        userName: _userModel.name,
+        lat: _lat,
+        lng: _lng,
+        regionCode: _userModel.currentRegionCode,
+        isAdmin: true,
+        wardName: _userModel.wardName,
+        floodLevel: 0,
+        houseNo: houseNo,
+        streetName: streetName,
+        remark: remark,
+        blockNo: blockNo
+      );
+      print('sendsuggest: ${_response.data}');
       if(_response.data != null){
         CustomDialogWidget().customSuccessDialog(
             context: context,
@@ -256,9 +234,6 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   }
 
   _navigateToAdminLocationUpdateScreen()async{
-    /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => WardAdminLocationUpdateScreen(),
-      settings: RouteSettings(name: ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN)
-    ));*/
     Map result = await NavigatorHelper.myNavigatorPush(context, WardAdminLocationUpdateScreen(), ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN);
     if(result != null && result['latLng'] != null){
       setState(() {
@@ -285,7 +260,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     controller.animateCamera(CameraUpdate.newCameraPosition(cameraPosition));
   }
 
-  Widget _body(String _houseNo, String _blockNo, String _remark, String _streetName ){
+  Widget _body(){
     return ModalProgressHUD(
       inAsyncCall: _isLoading,
       progressIndicator: CustomProgressIndicatorWidget(),
@@ -507,9 +482,10 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                                     // WarningSnackBar(_globalKey, MyString.txt_try_again_no_location);
                                     // _locationInit();
                                     print("no location");
-                                    if(_blockNo!= null){
-                                      _sendWardAdminSuggestion(_houseNo, _streetName, _blockNo, _remark);
+                                    if(blockNo!= null){
+                                      _sendSuggestion();
                                     }else {
+                                      FocusScope.of(context).requestFocus(FocusNode());
                                       showAddressDialog(context, _wardList);
                                     }
                                   }
@@ -549,7 +525,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     return CustomScaffoldWidget(
       title: Text(MyString.txt_suggestion,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
-      body: _body(houseNo, blockNo, remark, streetName),
+      body: _body(),
       globalKey: _globalKey,
     );
   }
@@ -621,6 +597,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                               border: InputBorder.none
                           ),
                           showCursor: true,
+                          focusNode: _streetNameFocusNode,
                           cursorColor: MyColor.colorPrimary,
                           autocorrect: false,
                           controller: _streetController,
@@ -653,6 +630,8 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                                   setState(() {
                                     _selectedWard = value;
                                   });
+                                  _streetNameFocusNode.unfocus();
+                                  FocusScope.of(context).requestFocus(_remarkFocusNode);
                                 },
                                 items: _dropDownMenuWard,
                               ),
@@ -675,6 +654,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                                 width: 0.80)
                         ),
                         child: TextField(
+                          focusNode: _remarkFocusNode,
                           maxLines: null,
                           controller: _remarkController,
                           showCursor: true,

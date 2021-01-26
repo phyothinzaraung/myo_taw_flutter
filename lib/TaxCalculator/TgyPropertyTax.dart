@@ -58,12 +58,11 @@ class TgyPropertyTax{
     }else {
       finalArv = arv.round() - lastTwoDigit;
     }
-    isGov? tax = 0.04 : tax = 0.02;
+    //isGov? tax = 0.04 : tax = 0.02;
+    tax = 0.04;
     var _finalValue = (finalArv * tax + finalArv * tax).round();
-    if(isGov && _finalValue < 2000){
+    if(_finalValue < 2000){
       _finalValue = 2000;
-    }else if(!isGov && _finalValue < 1000){
-      _finalValue = 1000;
     }
     print('rentalRate : $rentalRate , tax : $tax, buildingValue : $buildingValue, finalvalue: $_finalValue');
 

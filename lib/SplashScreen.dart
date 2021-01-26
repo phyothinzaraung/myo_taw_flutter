@@ -3,9 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:myotaw/WardAdminFeatureChooseScreen.dart';
+import 'package:myotaw/database/UserDb.dart';
 import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
+import 'package:myotaw/model/UserModel.dart';
 import 'package:package_info/package_info.dart';
 import 'database/NotificationDb.dart';
 import 'helper/MyoTawConstant.dart';
@@ -34,6 +36,7 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
   NotificationDb _notificationDb = new NotificationDb();
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
   bool _isAdmin = false;
+  UserDb _userDb = UserDb();
 
   @override
   void initState() {
@@ -118,13 +121,22 @@ class _SplashScreenState extends State<SplashScreen> with TickerProviderStateMix
     }
   }
 
-  navigateMainScreen() {
+  navigateMainScreen(){
     if(_sharepreferenceshelper.isLogin()){
-      Future.delayed(Duration(seconds: 2), (){
+      Future.delayed(Duration(milliseconds: 1500), ()async{
         if(_sharepreferenceshelper.isWardAdmin()){
 
-          NavigatorHelper.myNavigatorPushReplacement(context,
-              WardAdminFeatureChooseScreen(isForm: _isForm()), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
+          await _userDb.openUserDb();
+          UserModel _model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
+          _userDb.closeUserDb();
+
+          if(_model.isActive){
+            NavigatorHelper.myNavigatorPushReplacement(context,
+                WardAdminFeatureChooseScreen(isForm: _isForm()), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
+          }else{
+            NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);
+          }
+
         }else{
           NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);
         }

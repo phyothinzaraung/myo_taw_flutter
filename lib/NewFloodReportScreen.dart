@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:connectivity/connectivity.dart';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -20,6 +21,7 @@ import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'dart:io';
 import 'helper/MyoTawConstant.dart';
 import 'helper/PlatformHelper.dart';
+import 'model/WardModel.dart';
 import 'myWidget/CustomButtonWidget.dart';
 
 class NewFloodReportScreen extends StatefulWidget {
@@ -37,11 +39,22 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   bool _showLoading = false;
   bool _isCon = false;
+  List<String> _wardList = List();
+  String houseNo, blockNo, streetName, remark;
+  List<DropdownMenuItem<String>> _dropDownMenuWard;
+  var dialogResponse;
+  TextEditingController _remarkController = TextEditingController();
+  TextEditingController _houseNoController = TextEditingController();
+  TextEditingController _streetController = TextEditingController();
+  String _selectedWard;
+  FocusNode _remarkFocusNode = FocusNode();
+  FocusNode _streetNameFocusNode = FocusNode();
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _getWard();
   }
 
   _checkCon()async{
@@ -95,6 +108,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
   }
 
   _reportFloodLevel()async{
+    var response;
     setState(() {
       _showLoading = true;
     });
@@ -109,8 +123,41 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
     UserModel _userModel = await _userDb.getUserById(uniqueKey);
     _userDb.closeUserDb();
     try{
-      var response = await ServiceHelper().sendSuggestion(_image.path, phNo, subject, '', uniqueKey, _userModel.name,
-          _lat, _lng, regionCode, isAdmin, wardName, _floodLevel);
+      if(isAdmin){
+        response = await ServiceHelper().sendWardAdminSuggestion(
+            file: _image.path,
+            phoneNo: phNo,
+            subject: subject,
+            uniqueKey: _userModel.uniqueKey,
+            userName: _userModel.name,
+            lat: _lat,
+            lng: _lng,
+            regionCode: regionCode,
+            isAdmin: true,
+            wardName: wardName,
+            floodLevel: _floodLevel,
+            houseNo: houseNo,
+            streetName: streetName,
+            remark: remark,
+            blockNo: blockNo
+        );
+      }else{
+        response = await ServiceHelper().sendWardAdminSuggestion(
+            file: _image.path,
+            phoneNo: _userModel.phoneNo,
+            subject: subject,
+            uniqueKey: _userModel.uniqueKey,
+            userName: _userModel.name,
+            lat: _lat,
+            lng: _lng,
+            regionCode: _userModel.currentRegionCode,
+            isAdmin: false,
+            wardName: _userModel.wardName,
+            floodLevel: _floodLevel
+        );
+      }
+
+
       if(response.data != null){
         CustomDialogWidget().customSuccessDialog(
           context: context,
@@ -135,7 +182,7 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
   }
 
 
-  Widget _body(BuildContext context){
+  Widget _body(){
     return ModalProgressHUD(
       inAsyncCall: _showLoading,
       progressIndicator: CustomProgressIndicatorWidget(),
@@ -213,13 +260,28 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
                       await _checkCon();
                       if(_isCon){
                         if(_image != null && _floodLevel != 0){
-                          if(_lat != null && _lng != null){
-                            _reportFloodLevel();
-                            FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_FLOOD_LEVEL_REPORT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
-                          }else{
-                            WarningSnackBar(_globalKey, MyString.txt_try_again_no_location);
+                          if(!_sharepreferenceshelper.isWardAdmin()){
+                            if(_lat != null && _lng != null){
+                              _reportFloodLevel();
+                              FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_FLOOD_LEVEL_REPORT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                            }else{
+                              WarningSnackBar(_globalKey, MyString.txt_try_again_no_location);
                             _locationInit();
+                            }
+                          }else{
+                            if(_lat != null && _lng != null){
+                              _reportFloodLevel();
+                              FireBaseAnalyticsHelper.trackClickEvent(ScreenName.NEWS_FLOOD_REPORT_SCREEN, ClickEvent.SEND_FLOOD_LEVEL_REPORT_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
+                            }else{
+                              if(blockNo!= null){
+                                _reportFloodLevel();
+                              }else {
+                                FocusScope.of(context).requestFocus(FocusNode());
+                                showAddressDialog(context, _wardList);
+                              }
+                            }
                           }
+
 
                         }else if(_image == null){
                           WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
@@ -247,13 +309,231 @@ class _NewFloodReportScreenState extends State<NewFloodReportScreen> {
     );
   }
 
+  Future<void> showAddressDialog(BuildContext context, List<String> wardList) async {
+    _dropDownMenuWard = getDropDownMenuWard(wardList);
+    dialogResponse = showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius:
+                  BorderRadius.circular(8.0)), //this right here
+              child: Container(
+                height: 480,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ListView(
+                    children: [
+                      Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(bottom: 4.0),
+                          child: Text(MyString.txt_fill_address,
+                            style: TextStyle(fontSize: FontSize.textSizeExtraNormal,
+                                fontWeight: FontWeight.bold,
+                                color: MyColor.colorPrimary),)),
+                      Container(
+                          margin: EdgeInsets.only(top: 4.0),
+                          child: Text(MyString.txt_house_no,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      Container(
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                        ),
+                        child: TextField(
+                          maxLines: null,
+                          decoration: InputDecoration(
+                              border: InputBorder.none
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              houseNo = value;
+                            });
+                          },
+                          showCursor: true,
+                          cursorColor: MyColor.colorPrimary,
+                          autocorrect: false,
+                          controller: _houseNoController,
+                          style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),
+                        ),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 8.0),
+                          child: Text(MyString.txt_owner_street_name,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      Container(
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                        ),
+                        child: TextField(
+                          maxLines: null,
+                          decoration: InputDecoration(
+                              border: InputBorder.none
+                          ),
+                          showCursor: true,
+                          focusNode: _streetNameFocusNode,
+                          cursorColor: MyColor.colorPrimary,
+                          autocorrect: false,
+                          controller: _streetController,
+                          style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),
+                        ),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 8.0),
+                          child: Text(MyString.txt_blockNo,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      Container(
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                        ),
+                        child: FormField(builder: (FormFieldState state){
+                          return InputDecorator(
+                            decoration: InputDecoration(
+                                border: InputBorder.none),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                hint: Text("ရပ်ကွက်ရွေးချယ်ပါ",
+                                  style: TextStyle(
+                                      fontSize: FontSize.textSizeExtraSmall
+                                  ),),
+                                value: _selectedWard,
+                                isDense: true,
+                                onChanged: (value){
+                                  setState(() {
+                                    _selectedWard = value;
+                                  });
+                                  _streetNameFocusNode.unfocus();
+                                  FocusScope.of(context).requestFocus(_remarkFocusNode);
+                                },
+                                items: _dropDownMenuWard,
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 8.0),
+                          child: Text(MyString.txt_remark,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      Container(
+                        margin: EdgeInsets.only(bottom: 20.0),
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        height: 80.0,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(color: MyColor.colorPrimary,
+                                style: BorderStyle.solid,
+                                width: 0.80)
+                        ),
+                        child: TextField(
+                          focusNode: _remarkFocusNode,
+                          maxLines: null,
+                          controller: _remarkController,
+                          showCursor: true,
+                          cursorColor: MyColor.colorPrimary,
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                              border: InputBorder.none
+                          ),
+                          style: TextStyle(fontSize: FontSize.textSizeNormal),
+                        ),
+                      ),
+                      Container(
+                        width: double.maxFinite,
+                        margin: EdgeInsets.only(bottom: 10.0),
+                        child: CustomButtonWidget(
+                          onPress: (){
+                            if(_selectedWard == null){
+                              WarningSnackBar(_globalKey, MyString.txt_select_block);
+                            }else {
+                              setState(() {
+                                houseNo = _houseNoController.text;
+                                streetName = _streetController.text;
+                                blockNo = _selectedWard;
+                                remark = _remarkController.text;
+                                Navigator.pop(context);
+                              });
+                            }
+                          },
+                          child: Text(MyString.txt_save, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                          color: MyColor.colorPrimary,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    ).then((value){
+      setState(() {
+        dialogResponse = value;
+      });
+    });
+  }
+
+  List<DropdownMenuItem<String>> getDropDownMenuWard(List<String> wardList) {
+    List<DropdownMenuItem<String>> _ward = List();
+    for (String ward in wardList) {
+      _ward.add(DropdownMenuItem(value: ward, child: Text(ward)));
+    }
+    return _ward;
+  }
+
+  _getWard() async{
+    String _township;
+    await _sharepreferenceshelper.initSharePref();
+    String regionCode = _sharepreferenceshelper.getRegionCode();
+    print(regionCode);
+    switch(regionCode){
+      case MyString.TGY_REGION_CODE:
+        _township = MyString.TGY_CITY;
+        break;
+      case MyString.MLM_REGION_CODE:
+        _township = MyString.MLM_CITY;
+        break;
+      case MyString.LKW_REGION_CODE:
+        _township = MyString.LKW_CITY;
+        break;
+      case MyString.MGY_REGION_CODE:
+        _township = MyString.MGY_CITY;
+        break;
+      case MyString.HLY_REGION_CODE:
+        _township = MyString.HLY_CITY;
+        break;
+      case MyString.HPA_REGION_CODE:
+        _township = MyString.HPA_CITY;
+        break;
+    }
+    Response _response = await ServiceHelper().getWards(_township);
+    if(_response!=null){
+      var result = _response.data;
+      for(var i in result){
+        setState(() {
+          _wardList.add(WardModel.fromJson(i).wardName);
+        });
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     _locationInit();
     return CustomScaffoldWidget(
       title: Text(MyString.txt_add_flood_level_record,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
-      body: _body(context),
+      body: _body(),
       globalKey: _globalKey,
     );
   }

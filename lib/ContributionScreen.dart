@@ -111,8 +111,20 @@ class _ContributionScreenState extends State<ContributionScreen> {
     _userDb.closeUserDb();
     _userModel = model;
     try{
-      _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
-          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, false, _sharepreferenceshelper.getWardName(),0);
+      _response = await ServiceHelper().sendWardAdminSuggestion(
+          file: _image.path,
+          phoneNo: _userModel.phoneNo,
+          subject: _dropDownSubject,
+          message: _messController.text,
+          uniqueKey: _userModel.uniqueKey,
+          userName: _userModel.name,
+          lat: _lat,
+          lng: _lng,
+          regionCode: _userModel.currentRegionCode,
+          isAdmin: false,
+          wardName: _userModel.wardName,
+          floodLevel: 0,
+      );
       if(_response.data != null){
         CustomDialogWidget().customSuccessDialog(
             context: context,

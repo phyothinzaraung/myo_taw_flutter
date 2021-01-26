@@ -19,6 +19,7 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="Myotaw"
         android:icon="@mipmap/ic_launcher"
+        android:allowBackup="false"
         android:requestLegacyExternalStorage="true">
         <activity
             android:name="io.flutter.embedding.android.FlutterActivity"

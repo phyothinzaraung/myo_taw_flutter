@@ -34,8 +34,8 @@ import 'myWidget/NoConnectionWidget.dart';
 //import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
 class NewsFeedScreen extends StatefulWidget {
-  String channelType;
-  bool isWardAdmin;
+  final String channelType;
+  final bool isWardAdmin;
   NewsFeedScreen({this.channelType, this.isWardAdmin: false});
   @override
   _NewsFeedScreenState createState() => _NewsFeedScreenState();

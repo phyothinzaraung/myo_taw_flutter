@@ -341,6 +341,8 @@ class MyString{
   static const String txt_is_gov_building = 'အစိုးရအဆောက်အဦးဖြစ်သည်';
   static const String txt_to_read = 'ဖတ်မည်';
   static const String txt_select_block = 'ရပ်ကွက်ရွေးချယ်ပါ';
+  static const String txt_ward_admin_not_active = "သင်သည် ရပ်/ကျေးအုပ်ချုပ်ရေးမှူးမဟုတ်တော့ပါသဖြင့် log out ပြုလုပ်ရန်လိုအပ်သည်";
+  static const String txt_ward_contribute_location = 'တည်နေရာ';
 
   static const String NEWS_FEED_UPLOAD_TYPE_AUDIO= "AudioUpload";
   static const String NEWS_FEED_UPLOAD_TYPE_VIDEO= "VideoUpload";

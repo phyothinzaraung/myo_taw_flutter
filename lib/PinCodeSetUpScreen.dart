@@ -16,7 +16,7 @@ import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/CustomProgressIndicator.dart';
 
 class PinCodeSetUpScreen extends StatefulWidget {
-  UserModel model;
+  final UserModel model;
   PinCodeSetUpScreen(this.model);
   @override
   _PinCodeSetUpScreenState createState() => _PinCodeSetUpScreenState(this.model);

@@ -23,7 +23,7 @@ import 'myWidget/ButtonLoadingIndicatorWidget.dart';
 import 'myWidget/CustomButtonWidget.dart';
 
 class OtpScreen extends StatefulWidget {
-  String _phNo, _regionCode;
+  final String _phNo, _regionCode;
   OtpScreen(this._phNo, this._regionCode);
   @override
   _OtpScreenState createState() => _OtpScreenState(this._phNo, this._regionCode);
@@ -106,8 +106,12 @@ class _OtpScreenState extends State<OtpScreen> {
         _userDb.closeUserDb();
         if(_userModel.isWardAdmin){
 
-          NavigatorHelper.myNavigatorPushReplacement(context,
-              WardAdminFeatureChooseScreen(isForm: _isForm()), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
+          if(_userModel.isActive){
+            NavigatorHelper.myNavigatorPushReplacement(context,
+                WardAdminFeatureChooseScreen(isForm: _isForm()), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
+          }else{
+            NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);
+          }
         }else{
 
           NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);

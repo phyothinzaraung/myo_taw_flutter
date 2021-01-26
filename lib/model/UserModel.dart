@@ -20,9 +20,16 @@ class UserModel{
   String _wardName;
   String _meterNo;
   String _memberType;
+  bool _isActive;
 
   UserModel();
 
+
+  bool get isActive => _isActive;
+
+  set isActive(bool value) {
+    _isActive = value;
+  }
 
   String get memberType => _memberType;
 
@@ -158,7 +165,8 @@ class UserModel{
         _isWardAdmin = json['IsWardAdmin']??false,
         _wardName = json['WardName'],
         _meterNo = json['MeterNo'],
-        _memberType = json['MemberType'];
+        _memberType = json['MemberType'],
+        _isActive = json['IsActive']??false;
 
   Map<String, dynamic> toJson(){
     Map<String, dynamic> json =new Map<String, dynamic>();
@@ -181,6 +189,7 @@ class UserModel{
       json['WardName'] = _wardName;
       json['MeterNo'] = _meterNo;
       json['MemberType'] = _memberType;
+      json['IsActive'] = _isActive;
 
      return json;
   }
@@ -203,5 +212,6 @@ class UserModel{
         _isWardAdmin = map[DbHelper.COLUMN_USER_IS_WARD_ADMIN] ==1 ? true : false,
         _wardName = map[DbHelper.COLUMN_USER_WARD_NAME],
         _meterNo = map[DbHelper.COLUMN_USER_METER_NO],
-        _memberType = map[DbHelper.COLUMN_USER_MEMBER_TYPE];
+        _memberType = map[DbHelper.COLUMN_USER_MEMBER_TYPE],
+        _isActive = map[DbHelper.COLUMN_USER_IS_ACTIVE] == 1?true : false;
 }
