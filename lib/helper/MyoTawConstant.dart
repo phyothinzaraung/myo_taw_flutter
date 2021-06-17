@@ -50,7 +50,7 @@ class OrganizationId{
 
 class MyString{
   //for login without otp pass code
-  static const bool For_Testing = false;
+  static const bool For_Testing = true;
 
   static const String API_KEY = "B93979A51C8C46712DD2C8271587B262";
 
