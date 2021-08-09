@@ -316,7 +316,10 @@ class DefaultLoadMoreDelegate extends LoadMoreDelegate {
         width: double.infinity,
         height: 50.0,
         child: Container(
-          child: FlatButton(
+          child: TextButton(
+            onPressed: (){
+
+            },
             child: Image.asset('images/refresh.png', width: 40, height: 40,),
           ),
         ),
