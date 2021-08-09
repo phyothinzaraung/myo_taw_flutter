@@ -1,4 +1,5 @@
-import 'dart:io';
+
+import 'package:connectivity/connectivity.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:libphonenumber/libphonenumber.dart';
@@ -12,11 +13,11 @@ import 'package:myotaw/myWidget/DropDownWidget.dart';
 import 'package:myotaw/myWidget/IosPickerWidget.dart';
 import 'package:package_info/package_info.dart';
 import 'package:sms_autofill/sms_autofill.dart';
+
 import 'OtpScreen.dart';
 import 'helper/MyoTawConstant.dart';
 import 'helper/PlatformHelper.dart';
 import 'helper/ServiceHelper.dart';
-import 'package:connectivity/connectivity.dart';
 import 'helper/SharePreferencesHelper.dart';
 import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
@@ -201,22 +202,29 @@ class _LoginScreenState extends State<LoginScreen> {
                                 Container(
                                   width: double.maxFinite,
                                   child: CustomButtonWidget(onPress: () async{
-                                    if(_dropDownCity != 'နေရပ်ရွေးပါ' && _phoneNoController.text.isNotEmpty){
-                                      await _checkCon();
-                                      if(_isCon){
-                                        _regionCode = MyoTawCitySetUpHelper.getRegionCode(_dropDownCity);
-                                        //bool _isValid = await _checkPhNoValid();
-                                        FocusScope.of(context).requestFocus(FocusNode());
-                                        _getOtp();
-                                      }else{
-                                        WarningSnackBar(_globalKey, MyString.txt_no_internet);
-                                        }
-                                      }else if (_dropDownCity == 'နေရပ်ရွေးပါ'){
-                                        WarningSnackBar(_globalKey, MyString.txt_choose_city);
+
+                                    if(MyString.For_Testing){
+                                      //pass otp login for testing purpose
+                                      _regionCode = MyoTawCitySetUpHelper.getRegionCode(_dropDownCity);
+                                      _normalizedPhNo = await PhoneNumberUtil.normalizePhoneNumber(phoneNumber: _phoneNoController.text, isoCode: 'MM');
+                                      Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
+                                    }else{
+                                      if(_dropDownCity != 'နေရပ်ရွေးပါ' && _phoneNoController.text.isNotEmpty){
+                                        await _checkCon();
+                                        if(_isCon){
+                                          _regionCode = MyoTawCitySetUpHelper.getRegionCode(_dropDownCity);
+                                          FocusScope.of(context).requestFocus(FocusNode());
+                                          _getOtp();
                                         }else{
-                                          WarningSnackBar(_globalKey, MyString.txt_fill_phno);
-                                        }
-                                    //Navigator.push(context, MaterialPageRoute(builder: (context) => OtpScreen(_normalizedPhNo, _regionCode)));
+                                            WarningSnackBar(_globalKey, MyString.txt_no_internet);
+                                          }
+                                        }else if (_dropDownCity == 'နေရပ်ရွေးပါ'){
+                                            WarningSnackBar(_globalKey, MyString.txt_choose_city);
+                                          }else{
+                                            WarningSnackBar(_globalKey, MyString.txt_fill_phno);
+                                      }
+                                    }
+
                                     },
                                     child: Row(
                                       mainAxisAlignment: MainAxisAlignment.center,

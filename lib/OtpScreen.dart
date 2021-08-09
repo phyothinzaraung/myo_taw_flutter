@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/NewsFeedScreen.dart';
@@ -22,7 +23,7 @@ import 'myWidget/ButtonLoadingIndicatorWidget.dart';
 import 'myWidget/CustomButtonWidget.dart';
 
 class OtpScreen extends StatefulWidget {
-  String _phNo, _regionCode;
+  final String _phNo, _regionCode;
   OtpScreen(this._phNo, this._regionCode);
   @override
   _OtpScreenState createState() => _OtpScreenState(this._phNo, this._regionCode);
@@ -73,6 +74,14 @@ class _OtpScreenState extends State<OtpScreen> {
     });
   }
 
+  bool _isForm(){
+    if(MyStringList.isFormRegionCode.contains(_userModel.currentRegionCode)){
+      return true;
+    }else{
+      return false;
+    }
+  }
+
   void _logIn()async{
     setState(() {
       PlatformHelper.isAndroid()? _showLoading = true : _isCupertinoLoading = true;
@@ -84,7 +93,7 @@ class _OtpScreenState extends State<OtpScreen> {
       _platForm = 'Ios';
     }
     try{
-      print('$_phNo $_regionCode $fcmToken $_platForm' );
+      print('$_phNo $_regionCode $fcmToken $_platForm');
       response = await ServiceHelper().userLogin(_phNo, _regionCode, fcmToken, _platForm);
       var result = response.data;
       print('user : $result');
@@ -97,8 +106,12 @@ class _OtpScreenState extends State<OtpScreen> {
         _userDb.closeUserDb();
         if(_userModel.isWardAdmin){
 
-          NavigatorHelper.myNavigatorPushReplacement(context,
-              WardAdminFeatureChooseScreen(isHly: _userModel.currentRegionCode == MyString.HLY_REGION_CODE?true:false), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
+          if(_userModel.isActive){
+            NavigatorHelper.myNavigatorPushReplacement(context,
+                WardAdminFeatureChooseScreen(isForm: _isForm()), ScreenName.WARD_ADMIN_FEATURE_SCREEN);
+          }else{
+            NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);
+          }
         }else{
 
           NavigatorHelper.myNavigatorPushReplacement(context, MainScreen(), null);
@@ -249,29 +262,31 @@ class _OtpScreenState extends State<OtpScreen> {
                               width: double.maxFinite,
                               margin: EdgeInsets.only(bottom: 20),
                               child: CustomButtonWidget(onPress: () async{
-                                //_logIn();
-                                await _checkCon();
-                                if(_isCon){
-                                  if(_isExpire){
-                                    _getOtp();
-
-                                  }else{
-                                    if(_otpCodeController.text.isNotEmpty && _otpCodeController.text != null){
-                                      if(_otpCodeController.text.length == 4){
-                                        FocusScope.of(context).requestFocus(FocusNode());
-                                        _verifyOtp(_otpCodeController.text);
-                                        //_logIn();
-                                      }else{
-                                        WarningSnackBar(_globalKey, MyString.txt_otp_not_exceed_4);
-                                      }
+                                if(MyString.For_Testing){
+                                  _logIn();
+                                }else{
+                                    await _checkCon();
+                                    if(_isCon){
+                                        if(_isExpire){
+                                        _getOtp();
 
                                     }else{
-                                      WarningSnackBar(_globalKey, MyString.txt_enter_otp);
-                                    }
-                                  }
+                                      if(_otpCodeController.text.isNotEmpty && _otpCodeController.text != null){
+                                        if(_otpCodeController.text.length == 4){
+                                          FocusScope.of(context).requestFocus(FocusNode());
+                                          _verifyOtp(_otpCodeController.text);
+                                        }else{
+                                          WarningSnackBar(_globalKey, MyString.txt_otp_not_exceed_4);
+                                        }
 
-                                }else{
-                                  WarningSnackBar(_globalKey, MyString.txt_no_internet);
+                                      }else{
+                                        WarningSnackBar(_globalKey, MyString.txt_enter_otp);
+                                      }
+                                    }
+
+                                  }else{
+                                    WarningSnackBar(_globalKey, MyString.txt_no_internet);
+                                  }
                                 }
                               },
                                 child: Row(

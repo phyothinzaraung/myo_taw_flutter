@@ -5,7 +5,7 @@ class DropDownWidget extends StatelessWidget {
   final String value;
   final ValueChanged<String> onChange;
   final List<String> list;
-  double fontSize;
+  final double fontSize;
   DropDownWidget({this.value, this.onChange, this.list, this.fontSize : FontSize.textSizeSmall});
 
   @override

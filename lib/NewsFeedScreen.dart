@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +8,6 @@ import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/model/NewsFeedModel.dart';
 import 'package:myotaw/model/NewsFeedViewModel.dart';
-import 'package:myotaw/myWidget/CustomDialogWidget.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/NativePullRefresh.dart';
 import 'package:notifier/main_notifier.dart';
@@ -36,8 +34,8 @@ import 'myWidget/NoConnectionWidget.dart';
 //import 'package:date_range_picker/date_range_picker.dart' as DateRangePicker;
 
 class NewsFeedScreen extends StatefulWidget {
-  String channelType;
-  bool isWardAdmin;
+  final String channelType;
+  final bool isWardAdmin;
   NewsFeedScreen({this.channelType, this.isWardAdmin: false});
   @override
   _NewsFeedScreenState createState() => _NewsFeedScreenState();
@@ -261,7 +259,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     return _title;
   }
 
-  String _newsfeedContentTypeIcon(String type){
+  String _newsFeedContentTypeIcon(String type){
     var icon = '';
     switch (type){
       case MyString.NEWS_FEED_CONTENT_TYPE_PHOTO:
@@ -282,7 +280,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
 
   }
 
-  String _newsfeedContentType(String type){
+  String _newsFeedContentType(String type){
     var contentType = '';
     switch (type){
       case MyString.txt_content_type_photo:
@@ -318,7 +316,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
     String newsFeedThumbNail = newsFeedModel.thumbnail;
     String title = newsFeedModel.title;
     String body = newsFeedModel.body;
-    String date = ShowDateTimeHelper.showDateTimeDifference(newsFeedModel.accesstime);
+    String date = ShowDateTimeHelper.showDateTimeDifference(newsFeedModel.createdDate);
     bool isPhoto = _isPhoto(newsFeedModel.uploadType);
     String contentType = newsFeedModel.uploadType;
     return Card(
@@ -388,7 +386,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                                 height: 180,
                                 color: MyColor.colorGrey,
                               ),
-                              Image.asset('images/${_newsfeedContentTypeIcon(contentType)}.png', width: 50,
+                              Image.asset('images/${_newsFeedContentTypeIcon(contentType)}.png', width: 50,
                                   height: 50
                               ),
                             ],
@@ -943,7 +941,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 setState(() {
                   _dropDownContentType = value;
                   if(_dropDownContentType != MyString.txt_to_choose){
-                    _keyWord = _newsfeedContentType(value);
+                    _keyWord = _newsFeedContentType(value);
                   }
                 });
                 _handleRefresh();
@@ -975,7 +973,7 @@ class _NewsFeedScreenState extends State<NewsFeedScreen> with AutomaticKeepAlive
                 setState(() {
                   _dropDownContentType = _contentTypeList[_searchContentTypePickerIndex];
                   if(_dropDownContentType != MyString.txt_to_choose){
-                    _keyWord = _newsfeedContentType(_dropDownContentType);
+                    _keyWord = _newsFeedContentType(_dropDownContentType);
                   }
                 });
                 if(_dropDownContentType != MyString.txt_to_choose){

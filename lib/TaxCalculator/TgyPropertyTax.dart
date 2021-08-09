@@ -8,7 +8,7 @@ class TgyPropertyTax{
   static double buildingValue = 0, roadValue = 0, zoneValue = 0, rentalRate = 0, arv = 0;
   static const int base_value = 70;
   static double tax = 0;
-  static String getArv({buildingGrade, roadType, zone, length, width,story}){
+  static String getArv({buildingGrade, roadType, zone, length, width,story, isGov}){
     switch (buildingGrade){
       case MyString.BUILDING_GRADE_A:
         buildingValue = 0;
@@ -19,9 +19,9 @@ class TgyPropertyTax{
       case MyString.BUILDING_GRADE_C:
         buildingValue = -0.8;
         break;
-      case MyString.GOV_BUILDING:
+      /*case MyString.GOV_BUILDING:
         buildingValue = -0.15;
-        break;
+        break;*/
     }
 
     switch (roadType){
@@ -48,7 +48,7 @@ class TgyPropertyTax{
         break;
     }
 
-    rentalRate = base_value + buildingValue * base_value + roadValue *base_value + zoneValue *base_value;
+    rentalRate = base_value + buildingValue * base_value + roadValue * base_value + zoneValue *base_value + (isGov? base_value * -0.15 : 0);
     arv = double.parse(length) * double.parse(width) * rentalRate * story;
     int lastTwoDigit = arv.round() % 100;
     int finalArv;
@@ -58,10 +58,13 @@ class TgyPropertyTax{
     }else {
       finalArv = arv.round() - lastTwoDigit;
     }
-    buildingGrade == MyString.GOV_BUILDING? tax = 0.04 : tax = 0.02;
-    print('rentalRate : ${rentalRate} , tax : $tax, buildingValue : $buildingValue');
+    //isGov? tax = 0.04 : tax = 0.02;
+    tax = 0.04;
     var _finalValue = (finalArv * tax + finalArv * tax).round();
-    _finalValue < 1000 ? _finalValue = 1000 : _finalValue = _finalValue;
+    if(_finalValue < 2000){
+      _finalValue = 2000;
+    }
+    print('rentalRate : $rentalRate , tax : $tax, buildingValue : $buildingValue, finalvalue: $_finalValue');
 
     return NumConvertHelper.getMyanNumString(NumberFormatterHelper.numberFormat(_finalValue.toString()));
   }

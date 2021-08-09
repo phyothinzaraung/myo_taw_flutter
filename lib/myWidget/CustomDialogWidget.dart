@@ -186,6 +186,7 @@ class CustomDialogWidget {
     VoidCallback onPress,
   }) {
     return WillPopScope(
+      onWillPop: (){},
       child: SimpleDialog(
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(7)),
         children: <Widget>[
@@ -218,7 +219,7 @@ class CustomDialogWidget {
             ),
           )
         ],
-      ), onWillPop: () {},
+      ),
     );
   }
 

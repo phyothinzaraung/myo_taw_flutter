@@ -73,7 +73,7 @@ class _OnlineTaxChooseScreenState extends State<OnlineTaxChooseScreen> {
 
   _navigateToPinCodeSetupScreen()async{
     Map result = await NavigatorHelper.myNavigatorPush(context, PinCodeSetUpScreen(_userModel), ScreenName.PIN_CODE_SET_UP_SCREEN);
-    if(result != null && result.containsKey('isNeedRefresh')){
+    if(result != null && result['isRefresh'] == true){
       _handleRefresh();
     }
   }

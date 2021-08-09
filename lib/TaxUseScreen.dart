@@ -27,7 +27,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
   bool _isLoading = false;
   var _response;
   List<TaxUserModel> _taxUserModelList = new List<TaxUserModel>();
-  List<Widget> _legnedList = new List<Widget>();
+  List<Widget> _legendList = new List<Widget>();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   int _year;
   Icon _greyArrow;
@@ -57,7 +57,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
         print(i);
       }
       for(int i=0; i<_taxUserModelList.length; i++){
-        _legnedList.add(Container(
+        _legendList.add(Container(
           margin: EdgeInsets.only(bottom: 10.0),
           child: Row(
             children: <Widget>[
@@ -88,18 +88,25 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
                   .of(context)
                   .size
                   .width / 1.5,
-              showChartValuesInPercentage: true,
-              showChartValues: true,
-              showChartValuesOutside: true,
-              chartValuesColor: Colors.blueGrey[900].withOpacity(0.9),
-              showLegends: false,
+              legendOptions: LegendOptions(
+                showLegends: false
+              ),
+              chartValuesOptions: ChartValuesOptions(
+                showChartValuesInPercentage: true,
+                showChartValues: true,
+                showChartValuesOutside: true,
+                showChartValueBackground: true,
+                chartValueStyle: TextStyle(color: Colors.white),
+                chartValueBackgroundColor: Colors.blueGrey[900].withOpacity(0.9),
+              ),
+
               colorList: PieChartColorHelper.defaultColorList,
             ),
           ),
           Container(
               padding: EdgeInsets.all(20.0),
               child: Column(
-                  children: _legnedList
+                  children: _legendList
               )
           )
         ],
@@ -121,7 +128,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
 
   Future<Null> _handleRefresh() async {
     _taxUserModelList.clear();
-    _legnedList.clear();
+    _legendList.clear();
     asyncLoaderState.currentState.reloadState();
     return null;
   }
@@ -145,7 +152,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
                         _isLoading = true;
                         _year--;
                         _taxUserModelList.clear();
-                        _legnedList.clear();
+                        _legendList.clear();
                         _greyArrow = Icon(Icons.arrow_forward_ios, color: MyColor.colorPrimary);
                         dataMap.clear();
                       });
@@ -168,7 +175,7 @@ class _TaxUserScreenState extends State<TaxUserScreen> {
                           _isLoading = true;
                           _year++;
                           _taxUserModelList.clear();
-                          _legnedList.clear();
+                          _legendList.clear();
                           dataMap.clear();
                         });
                         //await _getTaxUse(_year);

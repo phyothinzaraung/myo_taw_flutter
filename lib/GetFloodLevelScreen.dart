@@ -99,7 +99,7 @@ class _GetFloodLevelScreenState extends State<GetFloodLevelScreen> {
                                   )
                               ),
                               hatchMark: FlutterSliderHatchMark(
-                                distanceFromTrackBar: 20,
+                                labelsDistanceFromTrackBar: 20,
                                 smallLine: FlutterSliderSizedBox(height: 10, width: 10, ),
                                 density: 1, // means 50 lines, from 0 to 100 percent
                                 labels: [

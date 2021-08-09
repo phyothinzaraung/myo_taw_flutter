@@ -9,8 +9,64 @@ import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'helper/MyoTawConstant.dart';
 
 class WardAdminContributionDetailScreen extends StatelessWidget {
-  ContributionModel _contributionModel;
+  final ContributionModel _contributionModel;
   WardAdminContributionDetailScreen(this._contributionModel);
+
+  String _houseNo(){
+    if(_contributionModel.houseNo.isNotEmpty){
+      return _contributionModel.houseNo;
+    }else{
+      return '';
+    }
+  }
+
+  String _streetName(){
+    if(_contributionModel.streetName.isNotEmpty){
+      return _contributionModel.streetName;
+    }else{
+      return '';
+    }
+  }
+
+  String _blockNo(){
+    if(_contributionModel.blockNo.isNotEmpty){
+      return _contributionModel.blockNo;
+    }else{
+      return '';
+    }
+  }
+
+  Widget _showLocationAddressWidget(){
+    if(_contributionModel.latitude == null && _contributionModel.longitude == null){
+      return Container(
+        margin: EdgeInsets.only(left: 0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Container(
+                margin: EdgeInsets.only(bottom: 0),
+                child: Text(MyString.txt_ward_contribute_location,
+                  style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack),)) ,
+            Container(
+                margin: EdgeInsets.only(left: 20),
+                child: Text(_houseNo() + '၊ ' + _streetName() + '၊ ' + _blockNo(),
+                  style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),)),
+            _contributionModel.remark!=null?Container(
+                margin: EdgeInsets.only(bottom: 0),
+                child: Text(MyString.txt_remark,
+                  style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack),)) : Container() ,
+            Container(
+                margin: EdgeInsets.only(left: 20),
+                child: Text(_contributionModel.remark??'',
+                  style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),)),
+          ],
+        ),
+      );
+    }else{
+      return Container();
+    }
+  }
+
 
   Widget _body(BuildContext context){
     return ListView(
@@ -45,17 +101,18 @@ class WardAdminContributionDetailScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               _contributionModel.floodLevel==0?Container(
-                  margin: EdgeInsets.only(bottom: 10),
+                  margin: EdgeInsets.only(bottom: 10,),
                   child: Text(MyString.txt_contribute_fact,
-                    style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack),)) : Container(),
+                    style: TextStyle(fontSize: FontSize.textSizeExtraNormal, color: MyColor.colorTextBlack),)) : Container() ,
               _contributionModel.floodLevel==0?Container(
-                  margin: EdgeInsets.only(left: 20),
+                  margin: EdgeInsets.only(left: 20, bottom: 10),
                   child: Text(_contributionModel.message,
                     style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),)) : Container(),
               _contributionModel.floodLevel!=0?Container(
-                  margin: EdgeInsets.only(left: 20),
+                  margin: EdgeInsets.only(bottom: 20),
                   child: Text(MyString.txt_flood_level_inch+FloodLevelFtInHelper.getFtInFromWaterLevel(_contributionModel.floodLevel),
                     style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),)) : Container(),
+              _showLocationAddressWidget()
 
             ],
           ),

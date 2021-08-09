@@ -1,35 +1,39 @@
+
+import 'package:dio/dio.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/NewsFeedScreen.dart';
 import 'package:myotaw/FormListScreen.dart';
 import 'package:myotaw/NotificationScreen.dart';
 import 'package:myotaw/ProfileScreen.dart';
 import 'package:myotaw/SaveNewsFeedScreen.dart';
 import 'package:myotaw/WardAdminContributionListScreen.dart';
-import 'package:myotaw/database/NotificationDb.dart';
 import 'package:myotaw/database/UserDb.dart';
 import 'package:myotaw/helper/MyoTawConstant.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
-import 'package:myotaw/main.dart';
 import 'package:myotaw/model/DashBoardModel.dart';
 import 'package:myotaw/model/UserModel.dart';
 import 'package:myotaw/myWidget/CustomDialogWidget.dart';
+import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:notifier/main_notifier.dart';
 import 'package:notifier/notifier_provider.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'FloodReportListScreen.dart';
+import 'LoginScreen.dart';
 import 'NotificationDetailScreen.dart';
+import 'database/SaveNewsFeedDb.dart';
 import 'helper/NavigatorHelper.dart';
 import 'dart:convert';
 import 'helper/PlatformHelper.dart';
 import 'model/NotificationModel.dart';
 
 class WardAdminFeatureChooseScreen extends StatefulWidget {
-  bool isHly = false;
-  WardAdminFeatureChooseScreen({this.isHly});
+  final bool isForm;
+  WardAdminFeatureChooseScreen({this.isForm:false});
   @override
   _WardAdminFeatureChooseScreenState createState() => _WardAdminFeatureChooseScreenState();
 }
@@ -40,8 +44,10 @@ class _WardAdminFeatureChooseScreenState extends State<WardAdminFeatureChooseScr
   FirebaseMessaging _firebaseMessaging = FirebaseMessaging();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
-  bool _isBadgeShow = false;
+  SaveNewsFeedDb _saveNewsFeedDb = SaveNewsFeedDb();
+  bool _isBadgeShow = false, _isLoading = false;
   Notifier _notifier;
+  UserModel _model;
 
   @override
   void initState() {
@@ -49,7 +55,7 @@ class _WardAdminFeatureChooseScreenState extends State<WardAdminFeatureChooseScr
     super.initState();
     _requestPermission();
     _init();
-    _initBadge();
+    _checkWardAdminActive();
   }
 
   _init()async{
@@ -81,10 +87,10 @@ class _WardAdminFeatureChooseScreenState extends State<WardAdminFeatureChooseScr
     model7.image = 'images/save_file.png';
     model7.title = MyString.txt_save_newsFeed;
 
-    _list = [model1,model3, model2, model4, model5, model6, model7];
+    _list = [model1,model3, model2, model5, model6, model7];
 
-    if(!widget.isHly){
-      _list.remove(model4);
+    if(widget.isForm){
+      _list.insert(3, model4);
     }
 
     _firebaseMessaging.subscribeToTopic('all');
@@ -137,14 +143,62 @@ class _WardAdminFeatureChooseScreenState extends State<WardAdminFeatureChooseScr
     });
   }
 
-  _initBadge()async{
+  _logOutClear()async{
+    setState(() {
+      _isLoading = true;
+    });
+    await _firebaseMessaging.unsubscribeFromTopic('all');
+    await _firebaseMessaging.deleteInstanceID();
+    await _sharepreferenceshelper.initSharePref();
+    _sharepreferenceshelper.logOutSharePref();
+
+    await _userDb.openUserDb();
+    await _userDb.deleteUser();
+    _userDb.closeUserDb();
+
+    await _saveNewsFeedDb.openSaveNfDb();
+    await _saveNewsFeedDb.deleteSavedNewsFeed();
+    _saveNewsFeedDb.closeSaveNfDb();
+    setState(() {
+      _isLoading = false;
+    });
+    NavigatorHelper.myNavigatorPushReplacement(context, LoginScreen(), ScreenName.LOGIN_SCREEN);
+  }
+
+
+
+  _checkWardAdminActive()async{
+    setState(() {
+      _isLoading = true;
+    });
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
-    UserModel model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
+    _model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     _userDb.closeUserDb();
+    try {
+      Response response = await ServiceHelper().isWardAdminActive(_sharepreferenceshelper.getUserUniqueKey());
+      if(response.data != null && response.data == false){
+        CustomDialogWidget().customSuccessDialog(
+            context: context,
+            content: MyString.txt_ward_admin_not_active,
+            img: 'logout_icon.png',
+            buttonText: MyString.txt_log_out,
+            onPress: (){
+              Navigator.pop(context);
+              _logOutClear();
+            }
+        );
+      }
+    }catch(e){
+      print(e);
+    }
+    _initBadge();
+  }
+
+  _initBadge()async{
     try{
       //for unRead count
-      var response = await ServiceHelper().getNotification(_sharepreferenceshelper.getRegionCode(),_sharepreferenceshelper.getUserUniqueKey(), model.wardName);
+      var response = await ServiceHelper().getNotification(_sharepreferenceshelper.getRegionCode(),_sharepreferenceshelper.getUserUniqueKey(), _model.wardName);
       if(response.data != null) {
         var _count = response.data['unReadCount'];
         if(_count != 0){
@@ -162,6 +216,10 @@ class _WardAdminFeatureChooseScreenState extends State<WardAdminFeatureChooseScr
     }catch(e){
       print(e);
     }
+
+    setState(() {
+      _isLoading = false;
+    });
   }
 
   _widget(BuildContext context, int i){
@@ -304,6 +362,18 @@ class _WardAdminFeatureChooseScreenState extends State<WardAdminFeatureChooseScr
           style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal),
         ),
         centerTitle: true,
-        body: _body());
+        body: ModalProgressHUD(
+            inAsyncCall: _isLoading,
+            progressIndicator: CustomProgressIndicatorWidget(),
+            child: _body()
+        )
+    );
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    super.dispose();
+    _notifier.dispose();
   }
 }

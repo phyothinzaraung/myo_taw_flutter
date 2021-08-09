@@ -19,7 +19,7 @@ class _WardAdminLocationUpdateScreenState extends State<WardAdminLocationUpdateS
   var _location = new Location();
   CameraPosition _cameraPosition;
   LatLng _latLng;
-  AnimationController _animatinController;
+  AnimationController _animationController;
   Tween<double> _tween = Tween(begin: 1, end: 2);
   StreamSubscription<LocationData> _streamSubscription;
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
@@ -28,13 +28,13 @@ class _WardAdminLocationUpdateScreenState extends State<WardAdminLocationUpdateS
   void initState() {
     // TODO: implement initState
     super.initState();
-    _animatinController = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
-    _animatinController.repeat(reverse: true);
+    _animationController = AnimationController(duration: const Duration(milliseconds: 1500), vsync: this);
+    _animationController.repeat(reverse: true);
     _location.serviceEnabled().then((isEnable){
       if(!isEnable){
         _location.requestService().then((value){
           if(value){
-            _streamSubscription = _location.onLocationChanged().listen((currentLocation){
+            _streamSubscription = _location.onLocationChanged.listen((currentLocation){
               setState(() {
                 _cameraPosition = CameraPosition(
                   target: LatLng(currentLocation.latitude, currentLocation.longitude),
@@ -48,7 +48,7 @@ class _WardAdminLocationUpdateScreenState extends State<WardAdminLocationUpdateS
           }
         });
       }else{
-        _streamSubscription = _location.onLocationChanged().listen((currentLocation){
+        _streamSubscription = _location.onLocationChanged.listen((currentLocation){
           if(mounted){
             setState(() {
               _cameraPosition = CameraPosition(
@@ -99,7 +99,7 @@ class _WardAdminLocationUpdateScreenState extends State<WardAdminLocationUpdateS
           ),
           Align(
             child: ScaleTransition(
-              scale: _tween.animate(CurvedAnimation(parent: _animatinController, curve: Curves.bounceIn)),
+              scale: _tween.animate(CurvedAnimation(parent: _animationController, curve: Curves.bounceIn)),
               child: SizedBox(
                 height: 25,
                 width: 25,
@@ -121,8 +121,8 @@ class _WardAdminLocationUpdateScreenState extends State<WardAdminLocationUpdateS
     // TODO: implement dispose
     //call before super.dispose for active tickerprovidermixing
     //_streamSubscription.cancel();
-    _animatinController.stop();
-    _animatinController.dispose();
+    _animationController.stop();
+    _animationController.dispose();
     super.dispose();
   }
 }

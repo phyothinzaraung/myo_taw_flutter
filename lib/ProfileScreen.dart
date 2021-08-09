@@ -238,32 +238,23 @@ class _ProfileScreenState extends State<ProfileScreen> {
 
   _navigateToProfileScreen()async{
     Map result = await NavigatorHelper.myNavigatorPush(context, ProfileFormScreen(_sharepreferenceshelper.isWardAdmin()), ScreenName.PROFILE_FORM_SCREEN);
-    if(result != null && result.containsKey('userName') == true){
-      //await _handleRefresh();
-      setState(() {
-        _userName = result['userName'];
-      });
+    if(result != null && result['isRefresh'] == true){
+      await _handleRefresh();
     }
   }
 
   _navigateToProfilePhotoScreen()async{
     Map result = await NavigatorHelper.myNavigatorPush(context, ProfilePhotoUploadScreen(), ScreenName.PROFILE_PHOTO_SCREEN);
-    if(result != null && result.containsKey('photoUrl') == true){
-      //await _getUser();
-      //await _handleRefresh();
-      setState(() {
-        _profilePhoto = _profileImageProvider(result['photoUrl']);
-      });
+    if(result != null && result['isRefresh'] == true){
+      await _getUser();
+      await _handleRefresh();
     }
   }
 
   _navigateToNewTaxRecordScreen()async{
     Map result = await NavigatorHelper.myNavigatorPush(context, NewTaxRecordScreen(), ScreenName.NEW_TAX_RECORD_SCREEN);
-    if(result != null && result.containsKey('data') == true){
-      //await _handleRefresh();
-      setState(() {
-        _taxRecordModelList.insert(0, TaxRecordModel.fromJson(result['data']));
-      });
+    if(result != null && result['isRefresh'] == true){
+      await _handleRefresh();
     }
   }
 

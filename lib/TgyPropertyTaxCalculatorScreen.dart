@@ -1,16 +1,19 @@
-import 'dart:io';
-
+import 'package:dio/dio.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/TaxCalculator/TgyPropertyTax.dart';
 import 'package:myotaw/helper/FireBaseAnalyticsHelper.dart';
 import 'package:myotaw/myWidget/CustomDialogWidget.dart';
+import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/HeaderTitleWidget.dart';
 import 'package:myotaw/myWidget/WarningSnackBarWidget.dart';
 import 'helper/MyoTawConstant.dart';
-import 'helper/NumConvertHelper.dart';
 import 'helper/PlatformHelper.dart';
+import 'helper/ServiceHelper.dart';
 import 'helper/SharePreferencesHelper.dart';
+import 'model/WardModel.dart';
 import 'myWidget/CustomButtonWidget.dart';
 import 'myWidget/DropDownWidget.dart';
 import 'myWidget/IosPickerWidget.dart';
@@ -26,10 +29,10 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
   String _dropDownRoad = MyString.txt_no_selected;
   List<String> _roadList;
   String _dropDownBlockNo = MyString.txt_no_selected;
-  List<String> _blockNoList;
-  TextEditingController _lengthContorller = new TextEditingController();
-  TextEditingController _widthContorller = new TextEditingController();
-  TextEditingController _storyContorller = new TextEditingController();
+  List<String> _blockNoList = List();
+  TextEditingController _lengthController = new TextEditingController();
+  TextEditingController _widthController = new TextEditingController();
+  TextEditingController _storyController = new TextEditingController();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
 
@@ -37,6 +40,8 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
   List<Widget> _roadTypeWidgetList = List();
   List<Widget> _blockNoWidgetList = List();
   int _buildingTypePickerIndex, _roadTypePickerIndex, _blockNoPickerIndex;
+
+  bool _isGov = false;
 
   @override
   void initState() {
@@ -46,7 +51,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
     _buildingTypeList.addAll(MyStringList.property_tgy_building_type);
     _roadList = [_dropDownRoad];
     _roadList.addAll(MyStringList.property_tgy_road);
-    _blockNoList = [_dropDownRoad];
+    _blockNoList = [_dropDownBlockNo];
     _blockNoList.addAll(MyStringList.property_tgy_block_no);
 
     _buildingTypePickerIndex = 0;
@@ -84,13 +89,14 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
       _dropDownBuildingType = MyString.txt_no_selected;
       _dropDownBlockNo = MyString.txt_no_selected;
       _dropDownRoad = MyString.txt_no_selected;
-      _widthContorller.clear();
-      _lengthContorller.clear();
-      _storyContorller.clear();
+      _widthController.clear();
+      _lengthController.clear();
+      _storyController.clear();
 
       _buildingTypePickerIndex = 0;
       _roadTypePickerIndex = 0;
       _blockNoPickerIndex = 0;
+      _isGov = false;
     });
   }
 
@@ -206,7 +212,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                             border: InputBorder.none,
                           ),
                           cursorColor: MyColor.colorPrimary,
-                          controller: _storyContorller,
+                          controller: _storyController,
                           keyboardType: TextInputType.number,
                           style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                         ),
@@ -324,7 +330,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                                           border: InputBorder.none,
                                         ),
                                         cursorColor: MyColor.colorPrimary,
-                                        controller: _lengthContorller,
+                                        controller: _lengthController,
                                         keyboardType: TextInputType.number,
                                         style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                                       ),
@@ -354,7 +360,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                                           border: InputBorder.none,
                                         ),
                                         cursorColor: MyColor.colorPrimary,
-                                        controller: _widthContorller,
+                                        controller: _widthController,
                                         keyboardType: TextInputType.number,
                                         style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),
                                       ),
@@ -369,12 +375,22 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                           ],
                         ),
                       ),
-                      /*Container(
+                      CheckboxListTile(
+                          value: _isGov,
+                          onChanged: (value){
+                            setState(() {
+                              _isGov = value;
+                            });
+                          },
+                          title: Text(MyString.txt_is_gov_building, style: TextStyle(fontSize: FontSize.textSizeExtraSmall),),
+                          contentPadding: EdgeInsets.all(0),
+                      ),
+                      Container(
                         margin: EdgeInsets.only(bottom: 10),
                         child: Divider(
-                          color: MyColor.colorPrimary,
+                          color: Colors.black,
                         ),
-                      ),*/
+                      ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
@@ -387,9 +403,9 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                           Text(MyString.BUILDING_GRADE_C_HINT,
                             style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack, fontWeight: FontWeight.bold),
                           ),
-                          Text(MyString.GOV_BUILDING,
+                          /*Text(MyString.GOV_BUILDING,
                             style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack, fontWeight: FontWeight.bold),
-                          ),
+                          ),*/
                         ],
                       ),
                       Container(
@@ -399,8 +415,8 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                           onPress: ()async{
 
                             if(_dropDownRoad != MyString.txt_no_selected && _dropDownBuildingType != MyString.txt_no_selected &&
-                                _dropDownBlockNo != MyString.txt_no_selected && _lengthContorller.text.isNotEmpty && _widthContorller.text.isNotEmpty &&
-                                _storyContorller.text.isNotEmpty){
+                                _dropDownBlockNo != MyString.txt_no_selected && _lengthController.text.isNotEmpty && _widthController.text.isNotEmpty &&
+                                _storyController.text.isNotEmpty){
                               CustomDialogWidget().customCalculateTaxDialog(
                                 context: context,
                                 titleTax: MyString.txt_biz_tax_property,
@@ -408,9 +424,10 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                                   buildingGrade: _dropDownBuildingType,
                                   roadType: _roadType(),
                                   zone: _zone(),
-                                  length: _lengthContorller.text,
-                                  width: _widthContorller.text,
-                                  story: double.parse(_storyContorller.text)
+                                  length: _lengthController.text,
+                                  width: _widthController.text,
+                                  story: double.parse(_storyController.text),
+                                  isGov: _isGov
                                 ),
                                 onPress: (){
                                   Navigator.of(context).pop();
@@ -425,7 +442,7 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                             }else if(_dropDownBuildingType == MyString.txt_no_selected){
                               WarningSnackBar(_globalKey, MyString.txt_choose_building_type);
 
-                            }else if (_storyContorller.text.isEmpty){
+                            }else if (_storyController.text.isEmpty){
                               WarningSnackBar(_globalKey, MyString.txt_type_story);
                               
                             }else if(_dropDownRoad == MyString.txt_no_selected){
@@ -434,10 +451,10 @@ class _TgyPropertyTaxCalculatorScreenState extends State<TgyPropertyTaxCalculato
                             }else if(_dropDownBlockNo == MyString.txt_no_selected){
                               WarningSnackBar(_globalKey, MyString.txt_choose_blockNo);
 
-                            }else if(_lengthContorller.text.isEmpty){
+                            }else if(_lengthController.text.isEmpty){
                               WarningSnackBar(_globalKey, MyString.txt_type_length);
 
-                            }else if(_widthContorller.text.isEmpty){
+                            }else if(_widthController.text.isEmpty){
                               WarningSnackBar(_globalKey, MyString.txt_type_width);
 
                             }

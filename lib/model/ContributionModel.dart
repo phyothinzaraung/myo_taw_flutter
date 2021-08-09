@@ -17,6 +17,10 @@ class ContributionModel {
   bool _isDeleted;
   bool _isWardAdmin;
   String _wardName;
+  String _houseNo;
+  String _streetName;
+  String _blockNo;
+  String _remark;
 
   ContributionModel(
       {int iD,
@@ -36,7 +40,11 @@ class ContributionModel {
         String accesstime,
         bool isDeleted,
         bool isWardAdmin,
-        String wardName}) {
+        String wardName,
+        String houseNo,
+        String streetName,
+        String blockNo,
+        String remark,}) {
     this._iD = iD;
     this._subject = subject;
     this._message = message;
@@ -55,6 +63,17 @@ class ContributionModel {
     this._isDeleted = isDeleted;
     this._isWardAdmin = isWardAdmin;
     this._wardName = wardName;
+    this._houseNo = houseNo;
+    this._streetName = streetName;
+    this._blockNo = blockNo;
+    this._remark = remark;
+  }
+
+
+  String get houseNo => _houseNo;
+
+  set houseNo(String value) {
+    _houseNo = value;
   }
 
   int get iD => _iD;
@@ -113,6 +132,10 @@ class ContributionModel {
     _isDeleted = json['IsDeleted'];
     _isWardAdmin = json['IsWardAdmin'];
     _wardName = json['WardName'];
+    _houseNo = json['HouseNo'];
+    _streetName = json['StreetName'];
+    _blockNo = json['BlockNo'];
+    _remark = json['Remark'];
   }
 
   Map<String, dynamic> toJson() {
@@ -135,6 +158,28 @@ class ContributionModel {
     data['IsDeleted'] = this._isDeleted;
     data['IsWardAdmin'] = this._isWardAdmin;
     data['WardName'] = this._wardName;
+    data['HouseNo'] = this._houseNo;
+    data['StreetName'] = this._streetName;
+    data['Remark'] = this._remark;
+    data['BlockNo'] = this._blockNo;
     return data;
+  }
+
+  String get streetName => _streetName;
+
+  set streetName(String value) {
+    _streetName = value;
+  }
+
+  String get blockNo => _blockNo;
+
+  set blockNo(String value) {
+    _blockNo = value;
+  }
+
+  String get remark => _remark;
+
+  set remark(String value) {
+    _remark = value;
   }
 }

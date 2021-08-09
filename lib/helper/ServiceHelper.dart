@@ -35,11 +35,11 @@ class ServiceHelper{
    return response;
  }
 
- userLogin<Response>(String PhoneNo, String RegionCode, String Token, String Resource) async{
+ userLogin<Response>(String phoneNo, String regionCode, String token, String resource) async{
    dio.options.connectTimeout = conTimeOut;
    dio.options.receiveTimeout = conTimeOut;
    response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Account/LoginForAndroid",
-       queryParameters: {"PhoneNO": PhoneNo, "RegionCode": RegionCode, "Token": Token, "Resource": Resource});
+       queryParameters: {"PhoneNO": phoneNo, "RegionCode": regionCode, "Token": token, "Resource": resource});
    return response;
  }
 
@@ -117,7 +117,7 @@ class ServiceHelper{
   return response;
  }
 
- sendSuggestion<Response>(String file, String phoneNo, String subject, String message,
+ /*sendSuggestion<Response>(String file, String phoneNo, String subject, String message,
      String uniqueKey, String userName, double lat, double lng, String regionCode, bool isAdmin, String wardName, double floodLevel) async{
   FormData formData = new FormData.fromMap({
    'file' : await MultipartFile.fromFile(file,filename: subject),
@@ -141,6 +141,51 @@ class ServiceHelper{
    response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Contribute/UpSertContributeWithPhoto",
        data: formData);
    return response;
+ }*/
+
+ sendWardAdminSuggestion<Response>(
+     {String file,
+      String phoneNo,
+      String subject,
+      String message,
+      String uniqueKey,
+      String userName,
+      double lat,
+      double lng,
+      String regionCode,
+      bool isAdmin,
+      String wardName,
+      double floodLevel,
+      String houseNo,
+      String streetName,
+      String remark,
+      String blockNo}) async{
+  FormData formData = new FormData.fromMap({
+   'file' : await MultipartFile.fromFile(file,filename: subject),
+   'UserPhoneNo' : phoneNo,
+   'Subject' : subject,
+   'Message' : message,
+   'UniqueKey' : uniqueKey,
+   'UserName' : userName,
+   'Latitude' : lat,
+   'Longitude' : lng,
+   'RegionCode' : regionCode,
+   'IsRead' : false,
+   'Fixed' : false,
+   'Source' : 'app',
+   'IsWardAdmin' : isAdmin,
+   'WardName' : wardName,
+   'FloodLevel' : floodLevel,
+   'HouseNo': houseNo,
+   'StreetName': streetName,
+   'Remark': remark,
+   'BlockNo': blockNo
+  });
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.post(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+"Contribute/UpSertContributeWithPhoto",
+      data: formData);
+  return response;
  }
 
  getBizLicense<Response>(String regionCode, int page, int pageSize) async{
@@ -344,6 +389,22 @@ class ServiceHelper{
   dio.options.connectTimeout = conTimeOut;
   dio.options.receiveTimeout = conTimeOut;
   response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+ "Form/getFormList");
+  return response;
+ }
+ 
+ getWards<Response>(String township) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+ "Custom/GetWards",
+  queryParameters: {"Township": township});
+  return response;
+ }
+
+ isWardAdminActive<Response>(String unique) async{
+  dio.options.connectTimeout = conTimeOut;
+  dio.options.receiveTimeout = conTimeOut;
+  response = await dio.get(BaseUrl.WEB_SERVICE_ROOT_ADDRESS+ "Account/WardAdminIsActiveOrNot",
+      queryParameters: {"UniqueKey": unique});
   return response;
  }
 

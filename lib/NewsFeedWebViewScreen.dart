@@ -7,7 +7,7 @@ import 'myWidget/CustomProgressIndicator.dart';
 
 class NewsFeedWebViewScreen extends StatefulWidget {
 
-  String _pdfOrAudioUrl;
+  final String _pdfOrAudioUrl;
 
   NewsFeedWebViewScreen(this._pdfOrAudioUrl);
 
@@ -18,7 +18,6 @@ class NewsFeedWebViewScreen extends StatefulWidget {
 class NewsFeedWebViewScreenState extends State<NewsFeedWebViewScreen> {
 
   Completer<WebViewController> _controller = Completer<WebViewController>();
-  WebViewController _webViewController;
   bool _isLoading = true;
 
   @override
@@ -32,7 +31,6 @@ class NewsFeedWebViewScreenState extends State<NewsFeedWebViewScreen> {
           initialUrl: widget._pdfOrAudioUrl,
           onWebViewCreated: (wv){
             _controller.complete(wv);
-            _webViewController = wv;
           },
           onPageFinished: (finish){
             if(_controller.isCompleted){

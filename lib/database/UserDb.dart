@@ -48,7 +48,8 @@ class UserDb {
             ${DbHelper.COLUMN_USER_IS_WARD_ADMIN} INTEGER,
             ${DbHelper.COLUMN_USER_WARD_NAME} TEXT,
             ${DbHelper.COLUMN_USER_METER_NO} TEXT,
-            ${DbHelper.COLUMN_USER_MEMBER_TYPE} TEXT)
+            ${DbHelper.COLUMN_USER_MEMBER_TYPE} TEXT,
+            ${DbHelper.COLUMN_USER_IS_ACTIVE} INTEGER)
           ''');
   }
 
@@ -72,7 +73,8 @@ class UserDb {
       DbHelper.COLUMN_USER_IS_WARD_ADMIN : model.isWardAdmin?1:0,
       DbHelper.COLUMN_USER_WARD_NAME : model.wardName,
       DbHelper.COLUMN_USER_METER_NO : model.meterNo,
-      DbHelper.COLUMN_USER_MEMBER_TYPE : model.memberType
+      DbHelper.COLUMN_USER_MEMBER_TYPE : model.memberType,
+      DbHelper.COLUMN_USER_IS_ACTIVE : model.isActive?1:0,
     };
     print('sqlInsert: ${row}');
     return await _database.insert(DbHelper.TABLE_NAME_USER, row, conflictAlgorithm: ConflictAlgorithm.replace);
@@ -139,7 +141,8 @@ class UserDb {
           DbHelper.COLUMN_USER_WARD_NAME,
           DbHelper.COLUMN_USER_IS_WARD_ADMIN,
           DbHelper.COLUMN_USER_METER_NO,
-          DbHelper.COLUMN_USER_MEMBER_TYPE
+          DbHelper.COLUMN_USER_MEMBER_TYPE,
+          DbHelper.COLUMN_USER_IS_ACTIVE,
         ],
         where: '${DbHelper.COLUMN_USER_UNIQUE} = ?', whereArgs: ['$uniqueKey']);
     if (result.length == 0) return null;
@@ -150,9 +153,28 @@ class UserDb {
     return userModel;
   }
 
+  Future<bool> _isColumnExist(Database db, String table, String columnName)async{
+    try{
+      await db.query(table, columns: [columnName]);
+      return true;
+    }catch (e){
+      print(e);
+      return false;
+    }
+  }
+
   _onUpgrade(Database db, int oldVersion, int newVersion) async{
+    bool isMemberTypeColumnExist = await _isColumnExist(db, DbHelper.TABLE_NAME_USER, DbHelper.COLUMN_USER_MEMBER_TYPE);
+    bool isActiveColumnExist = await _isColumnExist(db, DbHelper.TABLE_NAME_USER, DbHelper.COLUMN_USER_IS_ACTIVE);
     if (oldVersion < newVersion) {
-       await db.execute('ALTER TABLE ${DbHelper.TABLE_NAME_USER} ADD COLUMN ${DbHelper.COLUMN_USER_MEMBER_TYPE} TEXT');
+      if(!isMemberTypeColumnExist){
+        await db.execute('ALTER TABLE ${DbHelper.TABLE_NAME_USER} ADD COLUMN ${DbHelper.COLUMN_USER_MEMBER_TYPE} TEXT');
+      }
+
+      if(!isActiveColumnExist){
+        await db.execute('ALTER TABLE ${DbHelper.TABLE_NAME_USER} ADD COLUMN ${DbHelper.COLUMN_USER_IS_ACTIVE} INTEGER');
+      }
+
     }
   }
 }

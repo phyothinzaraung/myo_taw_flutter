@@ -38,17 +38,17 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
   }
 
   Future camera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
+    var image = await ImagePicker().getImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
     setState(() {
-      _image = image;
+      _image = File(image.path);
     });
   }
 
   Future gallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
+    var image = await ImagePicker().getImage(source: ImageSource.gallery, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
 
     setState(() {
-      _image = image;
+      _image = File(image.path);
     });
   }
 
@@ -80,7 +80,7 @@ class _NewTaxRecordScreenState extends State<NewTaxRecordScreen> {
               FocusScope.of(context).requestFocus(FocusNode());
               await _sharepreferenceshelper.initSharePref();
               Navigator.of(context).pop();
-              Navigator.of(context).pop({'data' : _response.data});
+              Navigator.of(context).pop({'isRefresh' : true});
             }
         );
       }else{

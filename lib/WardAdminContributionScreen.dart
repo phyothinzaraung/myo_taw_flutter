@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'package:dio/dio.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:location/location.dart';
 import 'package:connectivity/connectivity.dart';
@@ -13,6 +14,7 @@ import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
 import 'package:myotaw/myWidget/DropDownWidget.dart';
 import 'package:myotaw/myWidget/IosPickerWidget.dart';
+import 'helper/MyoTawCitySetUpHelper.dart';
 import 'helper/MyoTawConstant.dart';
 import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'helper/PlatformHelper.dart';
@@ -22,10 +24,12 @@ import 'model/UserModel.dart';
 import 'helper/ServiceHelper.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'WardAdminLocationUpdateScreen.dart';
+import 'model/WardModel.dart';
 import 'myWidget/NativeProgressIndicator.dart';
 import 'myWidget/WarningSnackBarWidget.dart';
 
 class WardAdminContributionScreen extends StatefulWidget {
+
   @override
   _WardAdminContributionScreenState createState() => _WardAdminContributionScreenState();
 }
@@ -34,21 +38,30 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   List<String> _subjectList = new List<String>();
   String _dropDownSubject = MyString.txt_choose_subject;
   double _lat, _lng;
-  bool _isCon, _isLoading;
+  bool _isCon, _isLoading = false;
   File _image;
   var _location = new Location();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
   UserModel _userModel;
-  var _response;
+  Response _response;
   Completer<GoogleMapController> _controller = Completer();
   CameraPosition _cameraPosition;
-  StreamSubscription<LocationData> _streamSubscription;
   Set<Marker> _markers = Set();
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   TextEditingController _messController = TextEditingController();
   List<Widget> _subjectWidgetList = List();
   int _pickerIndex = 0;
+  List<String> _wardList = List<String>();
+  TextEditingController _remarkController = TextEditingController();
+  TextEditingController _houseNoController = TextEditingController();
+  TextEditingController _streetController = TextEditingController();
+  String _selectedWard;
+  List<DropdownMenuItem<String>> _dropDownMenuWard;
+  var dialogResponse;
+  String houseNo, blockNo, streetName, remark;
+  FocusNode _remarkFocusNode = FocusNode();
+  FocusNode _streetNameFocusNode = FocusNode();
 
   @override
   void initState() {
@@ -56,64 +69,86 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     super.initState();
     _subjectList = [_dropDownSubject,];
     _subjectList.addAll(MyStringList.suggestion_subject_admin_ward);
-    _locationInit();
     for(var i in _subjectList){
       _subjectWidgetList.add(Padding(
         padding: const EdgeInsets.only(left: 5),
         child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
       ));
     }
-    _isLoading = false;
+    _getWard();
   }
 
-  void _locationInit(){
-    _location.changeSettings(accuracy: LocationAccuracy.HIGH, interval: 3000, distanceFilter: 0);
-    _location.serviceEnabled().then((isEnable){
-      if(!isEnable){
-        _location.requestService().then((value){
-          if(value){
-            _streamSubscription = _location.onLocationChanged().listen((currentLocation){
-              _lat = currentLocation.latitude;
-              _lng = currentLocation.longitude;
-              if(mounted){
-                setState(() {
-                  _cameraPosition = CameraPosition(
-                    target: LatLng(currentLocation.latitude, currentLocation.longitude),
-                    zoom: 17,
-                  );
-                  Marker _resultMarker = Marker(
-                    markerId: MarkerId(currentLocation.toString()),
-                    position: LatLng(currentLocation.latitude, currentLocation.longitude),
-                  );
-                  _markers.add(_resultMarker);
-                });
-              }
-            });
-            //Navigator.of(context).pop();
-          }else{
-            Navigator.of(context).pop();
-          }
-        });
+  void _locationInit()async{
+    _location.changeSettings(accuracy: LocationAccuracy.high, interval: 3000, distanceFilter: 0);
+    var isServiceEnable = await _location.serviceEnabled();
+    if(!isServiceEnable){
+      var isSuccess = await _location.requestService();
+      if(!isSuccess){
+        _locationInit();
       }else{
-        _streamSubscription = _location.onLocationChanged().listen((currentLocation){
-          _lat = currentLocation.latitude;
-          _lng = currentLocation.longitude;
-          if(mounted){
-            setState(() {
-              _cameraPosition = CameraPosition(
-                  target: LatLng(currentLocation.latitude, currentLocation.longitude),
-                  zoom: 17.0
-              );
-              Marker _resultMarker = Marker(
-                markerId: MarkerId(currentLocation.toString()),
-                position: LatLng(currentLocation.latitude, currentLocation.longitude),
-              );
-              _markers.add(_resultMarker);
-            });
-          }
-        });
+        if(_lat == null && _lng == null){
+          _getLocation();
+        }
+      }
+    }else{
+      if(_lat == null && _lng == null){
+        _getLocation();
+      }
+    }
+  }
+
+  _getLocation()async{
+    var location = await _location.getLocation();
+    setState(() {
+      _lat = location.latitude;
+      _lng = location.longitude;
+      if(mounted){
+        _cameraPosition = CameraPosition(
+            target: LatLng(_lat, _lng),
+            zoom: 17.0
+        );
+        Marker _resultMarker = Marker(
+          markerId: MarkerId(location.toString()),
+          position: LatLng(_lat, _lng),
+        );
+        _markers.add(_resultMarker);
       }
     });
+  }
+
+  _getWard() async{
+    String _township;
+    await _sharepreferenceshelper.initSharePref();
+    String regionCode = _sharepreferenceshelper.getRegionCode();
+    switch(regionCode){
+      case MyString.TGY_REGION_CODE:
+        _township = MyString.TGY_CITY;
+        break;
+      case MyString.MLM_REGION_CODE:
+        _township = MyString.MLM_CITY;
+        break;
+      case MyString.LKW_REGION_CODE:
+        _township = MyString.LKW_CITY;
+        break;
+      case MyString.MGY_REGION_CODE:
+        _township = MyString.MGY_CITY;
+        break;
+      case MyString.HLY_REGION_CODE:
+        _township = MyString.HLY_CITY;
+        break;
+      case MyString.HPA_REGION_CODE:
+        _township = MyString.HPA_CITY;
+        break;
+    }
+    _response = await ServiceHelper().getWards(_township);
+    if(_response!=null){
+      var result = _response.data;
+      for(var i in result){
+        setState(() {
+          _wardList.add(WardModel.fromJson(i).wardName);
+        });
+      }
+    }
   }
 
   _checkCon()async{
@@ -127,21 +162,24 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   }
 
   Future camera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
+    var image = await ImagePicker().getImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
     setState(() {
-      _image = image;
+      _image = File(image.path);
     });
   }
 
   Future gallery() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.gallery, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
+    var image = await ImagePicker().getImage(source: ImageSource.gallery, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
 
     setState(() {
-      _image = image;
+      _image = File(image.path);
     });
   }
 
   _sendSuggestion()async{
+    setState(() {
+      _isLoading = true;
+    });
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
@@ -150,9 +188,25 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
       _userModel = model;
     });
     try{
-      _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
-          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, true, _userModel.wardName,0);
-      //print('sendsuggest: ${_sharepreferenceshelper.isWardAdmin()} ${_userModel.wardName}');
+      _response = await ServiceHelper().sendWardAdminSuggestion(
+        file: _image.path,
+        phoneNo: _userModel.phoneNo,
+        subject: _dropDownSubject,
+        message: _messController.text,
+        uniqueKey: _userModel.uniqueKey,
+        userName: _userModel.name,
+        lat: _lat,
+        lng: _lng,
+        regionCode: _userModel.currentRegionCode,
+        isAdmin: true,
+        wardName: _userModel.wardName,
+        floodLevel: 0,
+        houseNo: houseNo,
+        streetName: streetName,
+        remark: remark,
+        blockNo: blockNo
+      );
+      print('sendsuggest: ${_response.data}');
       if(_response.data != null){
         CustomDialogWidget().customSuccessDialog(
             context: context,
@@ -163,7 +217,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
               await _sharepreferenceshelper.initSharePref();
               FireBaseAnalyticsHelper.trackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_SUCCESS_CLICK_EVENT, _sharepreferenceshelper.getUserUniqueKey());
               Navigator.of(context).pop();
-              Navigator.of(context).pop({'data' : _response.data});
+              Navigator.of(context).pop({'isRefresh' : true});
             }
         );
       }else{
@@ -180,11 +234,8 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
   }
 
   _navigateToAdminLocationUpdateScreen()async{
-    /*Map result = await Navigator.of(context).push(MaterialPageRoute(builder: (context) => WardAdminLocationUpdateScreen(),
-      settings: RouteSettings(name: ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN)
-    ));*/
     Map result = await NavigatorHelper.myNavigatorPush(context, WardAdminLocationUpdateScreen(), ScreenName.WARD_ADMIN_LOCATION_UPDATE_SCREEN);
-    if(result != null && result.containsKey('latLng') != null){
+    if(result != null && result['latLng'] != null){
       setState(() {
         LatLng latLng = result['latLng'];
         _lat = latLng.latitude;
@@ -404,6 +455,9 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                           ),
                           child: TextField(
                             maxLines: null,
+                            showCursor: true,
+                            cursorColor: MyColor.colorPrimary,
+                            autocorrect: false,
                             controller: _messController,
                             decoration: InputDecoration(
                                 border: InputBorder.none
@@ -420,13 +474,22 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
                               await _checkCon();
                               if(_isCon){
                                 if(_messController.text.isNotEmpty && _image != null && _dropDownSubject != MyString.txt_choose_subject){
-                                  setState(() {
-                                    _isLoading = true;
-                                  });
-                                  await _sharepreferenceshelper.initSharePref();
-                                  FireBaseAnalyticsHelper.trackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT,
-                                      _sharepreferenceshelper.getUserUniqueKey());
-                                  _sendSuggestion();
+                                  if(_lat != null && _lng != null){
+                                    _sendSuggestion();
+                                    FireBaseAnalyticsHelper.trackClickEvent(ScreenName.WARD_ADMIN_CONTRIBUTION_SCREEN, ClickEvent.SEND_WARD_ADMIN_CONTRIBUTION_CLICK_EVENT,
+                                        _sharepreferenceshelper.getUserUniqueKey());
+                                  }else{
+                                    // WarningSnackBar(_globalKey, MyString.txt_try_again_no_location);
+                                    // _locationInit();
+                                    print("no location");
+                                    if(blockNo!= null){
+                                      _sendSuggestion();
+                                    }else {
+                                      FocusScope.of(context).requestFocus(FocusNode());
+                                      showAddressDialog(context, _wardList);
+                                    }
+                                  }
+
                                 }else if(_image == null){
                                   WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
                                 }else if(_dropDownSubject == MyString.txt_choose_subject){
@@ -458,6 +521,7 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
 
   @override
   Widget build(BuildContext context) {
+    _locationInit();
     return CustomScaffoldWidget(
       title: Text(MyString.txt_suggestion,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
@@ -466,11 +530,185 @@ class _WardAdminContributionScreenState extends State<WardAdminContributionScree
     );
   }
 
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    //stop listen location
-    _streamSubscription.cancel();
+  Future<void> showAddressDialog(BuildContext context, List<String> wardList) async {
+    _dropDownMenuWard = getDropDownMenuWard(wardList);
+    dialogResponse = showDialog(
+      context: context,
+      builder: (context) {
+        return StatefulBuilder(
+          builder: (context, setState) {
+            return Dialog(
+              shape: RoundedRectangleBorder(
+                  borderRadius:
+                  BorderRadius.circular(8.0)), //this right here
+              child: Container(
+                height: 480,
+                child: Padding(
+                  padding: const EdgeInsets.all(12.0),
+                  child: ListView(
+                    children: [
+                      Container(
+                          alignment: Alignment.center,
+                          margin: EdgeInsets.only(bottom: 4.0),
+                          child: Text(MyString.txt_fill_address,
+                            style: TextStyle(fontSize: FontSize.textSizeExtraNormal,
+                                fontWeight: FontWeight.bold,
+                                color: MyColor.colorPrimary),)),
+                      Container(
+                          margin: EdgeInsets.only(top: 4.0),
+                          child: Text(MyString.txt_house_no,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      Container(
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                        ),
+                        child: TextField(
+                          maxLines: null,
+                          decoration: InputDecoration(
+                              border: InputBorder.none
+                          ),
+                          onChanged: (value) {
+                            setState(() {
+                              houseNo = value;
+                            });
+                          },
+                          showCursor: true,
+                          cursorColor: MyColor.colorPrimary,
+                          autocorrect: false,
+                          controller: _houseNoController,
+                          style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),
+                        ),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 8.0),
+                          child: Text(MyString.txt_owner_street_name,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      Container(
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                        ),
+                        child: TextField(
+                          maxLines: null,
+                          decoration: InputDecoration(
+                              border: InputBorder.none
+                          ),
+                          showCursor: true,
+                          focusNode: _streetNameFocusNode,
+                          cursorColor: MyColor.colorPrimary,
+                          autocorrect: false,
+                          controller: _streetController,
+                          style: TextStyle(fontSize: FontSize.textSizeExtraSmall, color: MyColor.colorTextBlack),
+                        ),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 8.0),
+                          child: Text(MyString.txt_blockNo,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      Container(
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(color: MyColor.colorPrimary, style: BorderStyle.solid, width: 0.80)
+                        ),
+                        child: FormField(builder: (FormFieldState state){
+                          return InputDecorator(
+                            decoration: InputDecoration(
+                                border: InputBorder.none),
+                            child: DropdownButtonHideUnderline(
+                              child: DropdownButton(
+                                hint: Text("ရပ်ကွက်ရွေးချယ်ပါ",
+                                  style: TextStyle(
+                                      fontSize: FontSize.textSizeExtraSmall
+                                  ),),
+                                value: _selectedWard,
+                                isDense: true,
+                                onChanged: (value){
+                                  setState(() {
+                                    _selectedWard = value;
+                                  });
+                                  _streetNameFocusNode.unfocus();
+                                  FocusScope.of(context).requestFocus(_remarkFocusNode);
+                                },
+                                items: _dropDownMenuWard,
+                              ),
+                            ),
+                          );
+                        }),
+                      ),
+                      Container(
+                          margin: EdgeInsets.only(top: 8.0),
+                          child: Text(MyString.txt_remark,
+                            style: TextStyle(fontSize: FontSize.textSizeSmall),)),
+                      Container(
+                        margin: EdgeInsets.only(bottom: 20.0),
+                        padding: EdgeInsets.only(left: 10.0, right: 10.0),
+                        height: 80.0,
+                        decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(7.0),
+                            border: Border.all(color: MyColor.colorPrimary,
+                                style: BorderStyle.solid,
+                                width: 0.80)
+                        ),
+                        child: TextField(
+                          focusNode: _remarkFocusNode,
+                          maxLines: null,
+                          controller: _remarkController,
+                          showCursor: true,
+                          cursorColor: MyColor.colorPrimary,
+                          autocorrect: false,
+                          decoration: InputDecoration(
+                              border: InputBorder.none
+                          ),
+                          style: TextStyle(fontSize: FontSize.textSizeNormal),
+                        ),
+                      ),
+                      Container(
+                        width: double.maxFinite,
+                        margin: EdgeInsets.only(bottom: 10.0),
+                        child: CustomButtonWidget(
+                          onPress: (){
+                            if(_selectedWard == null){
+                              WarningSnackBar(_globalKey, MyString.txt_select_block);
+                            }else {
+                              setState(() {
+                                houseNo = _houseNoController.text;
+                                streetName = _streetController.text;
+                                blockNo = _selectedWard;
+                                remark = _remarkController.text;
+                                Navigator.pop(context);
+                              });
+                            }
+                          },
+                          child: Text(MyString.txt_save, style: TextStyle(fontSize: FontSize.textSizeSmall, color: Colors.white),),
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.0)),
+                          color: MyColor.colorPrimary,
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ),
+            );
+          },
+        );
+      },
+    ).then((value){
+      setState(() {
+        dialogResponse = value;
+      });
+    });
+  }
+
+  List<DropdownMenuItem<String>> getDropDownMenuWard(List<String> wardList) {
+    List<DropdownMenuItem<String>> _ward = List();
+    for (String ward in wardList) {
+      _ward.add(DropdownMenuItem(value: ward, child: Text(ward)));
+    }
+    return _ward;
   }
 }

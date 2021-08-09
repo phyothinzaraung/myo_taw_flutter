@@ -1,13 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:myotaw/database/NotificationDb.dart';
 import 'package:myotaw/helper/MyoTawCitySetUpHelper.dart';
 import 'package:myotaw/helper/NavigatorHelper.dart';
 import 'package:myotaw/helper/ServiceHelper.dart';
 import 'package:myotaw/helper/SharePreferencesHelper.dart';
 import 'package:myotaw/helper/ShowDateTimeHelper.dart';
 import 'package:myotaw/model/UserModel.dart';
-import 'package:myotaw/myWidget/CustomProgressIndicator.dart';
 import 'package:myotaw/myWidget/CustomScaffoldWidget.dart';
 import 'package:myotaw/myWidget/NativeProgressIndicator.dart';
 import 'package:myotaw/myWidget/NativePullRefresh.dart';
@@ -20,7 +18,6 @@ import 'Database/UserDb.dart';
 import 'package:async_loader/async_loader.dart';
 import 'package:myotaw/myWidget/NoConnectionWidget.dart';
 import 'package:myotaw/myWidget/EmptyViewWidget.dart';
-import 'package:modal_progress_hud/modal_progress_hud.dart';
 import 'package:myotaw/NotificationDetailScreen.dart';
 
 class NotificationScreen extends StatefulWidget {
@@ -30,14 +27,13 @@ class NotificationScreen extends StatefulWidget {
   _NotificationScreenState createState() => _NotificationScreenState();
 }
 
-class _NotificationScreenState extends State<NotificationScreen> with AutomaticKeepAliveClientMixin<NotificationScreen>, TickerProviderStateMixin {
+class _NotificationScreenState extends State<NotificationScreen> with AutomaticKeepAliveClientMixin<NotificationScreen> {
   UserDb _userDb = UserDb();
   final GlobalKey<AsyncLoaderState> asyncLoaderState = new GlobalKey<AsyncLoaderState>();
   String _city, _regionCode;
   var response;
   List<NotificationModel> _notificationList = new List<NotificationModel>();
   Notifier _notifier;
-  AnimationController _animatinController;
   UserModel _userModel;
   int _unreadCount = 0;
 
@@ -46,7 +42,6 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
   void initState() {
     // TODO: implement initState
     super.initState();
-    _animatinController = AnimationController(duration: const Duration(milliseconds: 700), vsync: this);
     FireBaseAnalyticsHelper.trackCurrentScreen(ScreenName.NOTIFICATION_SCREEN);
   }
 
@@ -232,7 +227,5 @@ class _NotificationScreenState extends State<NotificationScreen> with AutomaticK
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _animatinController.stop();
-    _animatinController.dispose();
   }
 }

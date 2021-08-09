@@ -31,14 +31,13 @@ class _ContributionScreenState extends State<ContributionScreen> {
   List<String> _subjectList = new List<String>();
   String _dropDownSubject = MyString.txt_choose_subject;
   double _lat, _lng;
-  bool _isCon, _isLoading;
+  bool _isCon, _isLoading = false;
   File _image;
   var _location = new Location();
   Sharepreferenceshelper _sharepreferenceshelper = Sharepreferenceshelper();
   UserDb _userDb = UserDb();
   UserModel _userModel;
   var _response;
-  StreamSubscription<LocationData> _streamSubscription;
   GlobalKey<ScaffoldState> _globalKey = new GlobalKey();
   TextEditingController _messController = TextEditingController();
   List<Widget> _subjectWidgetList = List();
@@ -50,36 +49,38 @@ class _ContributionScreenState extends State<ContributionScreen> {
     super.initState();
     _subjectList = [_dropDownSubject,];
     _subjectList.addAll(MyStringList.suggestion_subject);
-    _locationInit();
     for(var i in _subjectList){
       _subjectWidgetList.add(Padding(
         padding: const EdgeInsets.only(left: 5),
         child: Text(i, style: TextStyle(fontSize: FontSize.textSizeNormal, color: MyColor.colorTextBlack),),
       ));
     }
-    _isLoading = false;
   }
 
-  void _locationInit(){
-    _location.changeSettings(accuracy: LocationAccuracy.HIGH, interval: 3000, distanceFilter: 0);
-    _location.serviceEnabled().then((isEnable){
-      if(!isEnable){
-        _location.requestService().then((value){
-          if(value){
-            _streamSubscription = _location.onLocationChanged().listen((currentLocation){
-              _lat = currentLocation.latitude;
-              _lng = currentLocation.longitude;
-            });
-          }else{
-            Navigator.of(context).pop();
-          }
-        });
+  void _locationInit()async{
+    _location.changeSettings(accuracy: LocationAccuracy.high, interval: 3000, distanceFilter: 0);
+    var isServiceEnable = await _location.serviceEnabled();
+    if(!isServiceEnable){
+      var isSuccess = await _location.requestService();
+      if(isSuccess){
+        if(_lat == null && _lng == null){
+          _getLocation();
+        }
       }else{
-        _streamSubscription = _location.onLocationChanged().listen((currentLocation){
-          _lat = currentLocation.latitude;
-          _lng = currentLocation.longitude;
-        });
+       _locationInit();
       }
+    }else{
+      if(_lat == null && _lng == null){
+        _getLocation();
+      }
+    }
+  }
+
+  _getLocation()async{
+    var location = await _location.getLocation();
+    setState(() {
+      _lat = location.latitude;
+      _lng = location.longitude;
     });
   }
 
@@ -93,22 +94,37 @@ class _ContributionScreenState extends State<ContributionScreen> {
   }
 
   Future camera() async {
-    var image = await ImagePicker.pickImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
+    var image = await ImagePicker().getImage(source: ImageSource.camera, maxWidth: MyString.PHOTO_MAX_WIDTH, maxHeight: MyString.PHOTO_MAX_HEIGHT);
     setState(() {
-      _image = image;
+      _image = File(image.path);
     });
   }
 
   _sendSuggestion()async{
+    print('sendsuggest: ${_dropDownSubject} ${_lat} ${_lng}');
+    setState(() {
+      _isLoading = true;
+    });
     await _sharepreferenceshelper.initSharePref();
     await _userDb.openUserDb();
     var model = await _userDb.getUserById(_sharepreferenceshelper.getUserUniqueKey());
     _userDb.closeUserDb();
     _userModel = model;
     try{
-      _response = await ServiceHelper().sendSuggestion(_image.path, _userModel.phoneNo, _dropDownSubject, _messController.text,
-          _userModel.uniqueKey, _userModel.name, _lat, _lng, _userModel.currentRegionCode, false, _sharepreferenceshelper.getWardName(),0);
-      //print('sendsuggest: ${_mess} ${_dropDownSubject} ${_lat} ${_lng}');
+      _response = await ServiceHelper().sendWardAdminSuggestion(
+          file: _image.path,
+          phoneNo: _userModel.phoneNo,
+          subject: _dropDownSubject,
+          message: _messController.text,
+          uniqueKey: _userModel.uniqueKey,
+          userName: _userModel.name,
+          lat: _lat,
+          lng: _lng,
+          regionCode: _userModel.currentRegionCode,
+          isAdmin: false,
+          wardName: _userModel.wardName,
+          floodLevel: 0,
+      );
       if(_response.data != null){
         CustomDialogWidget().customSuccessDialog(
             context: context,
@@ -255,14 +271,15 @@ class _ContributionScreenState extends State<ContributionScreen> {
                             await _checkCon();
                             if(_isCon){
                               if(_messController.text.isNotEmpty && _image != null && _dropDownSubject != MyString.txt_choose_subject){
-                                setState(() {
-                                  _isLoading = true;
-                                });
-                                _sendSuggestion();
-                                await _sharepreferenceshelper.initSharePref();
-                                FireBaseAnalyticsHelper.trackClickEvent(ScreenName.CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_CLICK_EVENT,
-                                    _sharepreferenceshelper.getUserUniqueKey());
-                                print('latlng: ${_lat} ${_lng}');
+                                if(_lat != null && _lng !=null){
+                                  _sendSuggestion();
+                                  await _sharepreferenceshelper.initSharePref();
+                                  FireBaseAnalyticsHelper.trackClickEvent(ScreenName.CONTRIBUTION_SCREEN, ClickEvent.SEND_CONTRIBUTION_CLICK_EVENT,
+                                      _sharepreferenceshelper.getUserUniqueKey());
+                                }else{
+                                  WarningSnackBar(_globalKey, MyString.txt_try_again_no_location);
+                                  _locationInit();
+                                }
                               }else if(_image == null){
                                 WarningSnackBar(_globalKey, MyString.txt_need_suggestion_photo);
 
@@ -297,19 +314,12 @@ class _ContributionScreenState extends State<ContributionScreen> {
 
   @override
   Widget build(BuildContext context) {
+    _locationInit();
     return CustomScaffoldWidget(
       title: Text(MyString.txt_suggestion,maxLines: 1, overflow: TextOverflow.ellipsis,
         style: TextStyle(color: Colors.white, fontSize: FontSize.textSizeNormal), ),
       body: _body(context),
       globalKey: _globalKey,
     );
-  }
-
-  @override
-  void dispose() {
-    // TODO: implement dispose
-    super.dispose();
-    //stop listen location
-    _streamSubscription.cancel();
   }
 }
